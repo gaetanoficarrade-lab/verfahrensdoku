@@ -56,7 +56,8 @@ export function AppSidebar() {
   const isActive = (path: string) => {
     if (path === '/admin' && currentPath === '/admin') return true;
     if (path === '/' && currentPath === '/') return true;
-    if (path !== '/' && path !== '/admin' && currentPath.startsWith(path)) return true;
+    if (path === '/client' && currentPath === '/client') return true;
+    if (path !== '/' && path !== '/admin' && path !== '/client' && currentPath.startsWith(path)) return true;
     return false;
   };
 
