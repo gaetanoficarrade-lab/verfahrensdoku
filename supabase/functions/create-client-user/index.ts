@@ -105,14 +105,16 @@ serve(async (req) => {
       console.error("Profile upsert error:", profileError);
     }
 
-    // Link user to client record
-    const { error: clientError } = await supabaseAdmin
-      .from("clients")
-      .update({ user_id: userId })
-      .eq("id", client_id);
+    // Link user to client record (only for client role)
+    if (client_id && assignRole === "client") {
+      const { error: clientError } = await supabaseAdmin
+        .from("clients")
+        .update({ user_id: userId })
+        .eq("id", client_id);
 
-    if (clientError) {
-      console.error("Client link error:", clientError);
+      if (clientError) {
+        console.error("Client link error:", clientError);
+      }
     }
 
     return new Response(
