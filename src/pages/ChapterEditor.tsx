@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, AlertTriangle, ChevronRight, Mic } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { logAudit } from '@/lib/auditLog';
+import { triggerWebhook } from '@/lib/webhookTrigger';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -186,6 +187,7 @@ export default function ChapterEditor() {
       setStatus('client_submitted');
       setSubmitPrecheckResult(null);
       logAudit('chapter_submitted', 'chapter', cdId, { chapter_key: chapterKey, project_id: projectId });
+      triggerWebhook('kapitel_eingereicht', { chapter_key: chapterKey, project_id: projectId, chapter_data_id: cdId });
       toast({ title: 'Eingereicht', description: 'Das Kapitel wurde an Ihren Berater übermittelt.' });
     }
   };

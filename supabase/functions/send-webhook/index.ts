@@ -53,7 +53,6 @@ serve(async (req) => {
 
     const userId = claimsData.claims.sub;
 
-    // Get user's tenant
     const { data: profile } = await supabaseAuth
       .from("profiles")
       .select("tenant_id")
@@ -67,86 +66,104 @@ serve(async (req) => {
       });
     }
 
-    const { webhook_id } = await req.json();
-    if (!webhook_id) {
-      return new Response(JSON.stringify({ error: "webhook_id required" }), {
+    const { event, data: eventData } = await req.json();
+
+    if (!event) {
+      return new Response(JSON.stringify({ error: "event required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Fetch webhook (RLS ensures tenant isolation)
-    const { data: webhook, error: whError } = await supabaseAuth
-      .from("tenant_webhooks")
-      .select("*")
-      .eq("id", webhook_id)
-      .single();
+    const tenantId = profile.tenant_id;
 
-    if (whError || !webhook) {
-      return new Response(JSON.stringify({ error: "Webhook not found" }), {
-        status: 404,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    // Build test payload
-    const testPayload = JSON.stringify({
-      event: "test",
-      timestamp: new Date().toISOString(),
-      data: {
-        message: "Dies ist ein Test-Webhook von der GoBD-Suite.",
-        webhook_id: webhook.id,
-      },
-    });
-
-    // Build headers
-    const fetchHeaders: Record<string, string> = {
-      "Content-Type": "application/json",
-    };
-
-    if (webhook.secret) {
-      const signature = await hmacSign(webhook.secret, testPayload);
-      fetchHeaders["X-GoBD-Signature"] = `sha256=${signature}`;
-    }
-
-    // Send webhook
-    let statusCode: number | null = null;
-    let responseBody = "";
-    let success = false;
-
-    try {
-      const resp = await fetch(webhook.url, {
-        method: "POST",
-        headers: fetchHeaders,
-        body: testPayload,
-      });
-      statusCode = resp.status;
-      responseBody = await resp.text();
-      success = resp.ok;
-    } catch (fetchErr: any) {
-      responseBody = fetchErr.message || "Connection failed";
-    }
-
-    // Log the result using service role to bypass RLS for insert
+    // Use service role to read webhooks and write logs (bypasses RLS)
     const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    await supabaseAdmin.from("webhook_logs").insert({
-      webhook_id: webhook.id,
-      event: "test",
-      payload: JSON.parse(testPayload),
-      response_status: statusCode,
-      response_body: responseBody?.substring(0, 2000),
-    });
+    // Fetch all active webhooks for this tenant that subscribe to this event
+    const { data: webhooks, error: whError } = await supabaseAdmin
+      .from("tenant_webhooks")
+      .select("*")
+      .eq("tenant_id", tenantId)
+      .eq("is_active", true);
+
+    if (whError) {
+      console.error("Error fetching webhooks:", whError);
+      return new Response(JSON.stringify({ error: "Failed to fetch webhooks" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Filter webhooks that subscribe to this event
+    const matchingWebhooks = (webhooks || []).filter(
+      (wh: any) => !wh.events || wh.events.length === 0 || wh.events.includes(event)
+    );
+
+    if (matchingWebhooks.length === 0) {
+      return new Response(
+        JSON.stringify({ success: true, dispatched: 0, message: "No matching webhooks" }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const results = [];
+
+    for (const webhook of matchingWebhooks) {
+      const payload = JSON.stringify({
+        event,
+        timestamp: new Date().toISOString(),
+        tenant_id: tenantId,
+        data: eventData || {},
+      });
+
+      const fetchHeaders: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      if (webhook.secret) {
+        const signature = await hmacSign(webhook.secret, payload);
+        fetchHeaders["X-GoBD-Signature"] = `sha256=${signature}`;
+      }
+
+      let statusCode: number | null = null;
+      let responseBody = "";
+      let success = false;
+
+      try {
+        const resp = await fetch(webhook.url, {
+          method: "POST",
+          headers: fetchHeaders,
+          body: payload,
+        });
+        statusCode = resp.status;
+        responseBody = await resp.text();
+        success = resp.ok;
+      } catch (fetchErr: any) {
+        responseBody = fetchErr.message || "Connection failed";
+      }
+
+      // Log result
+      await supabaseAdmin.from("webhook_logs").insert({
+        webhook_id: webhook.id,
+        event,
+        payload: JSON.parse(payload),
+        response_status: statusCode,
+        response_body: responseBody?.substring(0, 2000),
+      });
+
+      results.push({ webhook_id: webhook.id, success, status_code: statusCode });
+    }
 
     return new Response(
-      JSON.stringify({ success, status_code: statusCode, response: responseBody?.substring(0, 200) }),
+      JSON.stringify({ success: true, dispatched: results.length, results }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (e) {
-    console.error("test-webhook error:", e);
+    console.error("send-webhook error:", e);
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }

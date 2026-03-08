@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { generateVerfahrensdokumentation } from '@/lib/generatePdf';
 import { toast } from 'sonner';
 import { logAudit } from '@/lib/auditLog';
+import { triggerWebhook } from '@/lib/webhookTrigger';
 import { GOBD_CHAPTERS } from '@/lib/chapter-structure';
 import type { OnboardingAnswers } from '@/lib/onboarding-variables';
 
@@ -110,6 +111,7 @@ export default function ClientProjectDetail() {
         notes: `PDF erstellt am ${new Date().toLocaleDateString('de-DE')}`,
       });
       logAudit('pdf_created', 'project', id, { version: nextVersion, file: fileName });
+      triggerWebhook('dokument_finalisiert', { project_id: id, project_name: project.name, version: nextVersion });
       toast.success('PDF wurde erstellt und heruntergeladen.');
     } catch (err) {
       console.error(err);

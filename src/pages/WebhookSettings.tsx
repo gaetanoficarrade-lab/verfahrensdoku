@@ -35,9 +35,9 @@ interface Webhook {
 interface WebhookLog {
   id: string;
   event: string;
-  status_code: number | null;
+  payload: any;
+  response_status: number | null;
   response_body: string | null;
-  success: boolean;
   created_at: string;
 }
 
@@ -376,10 +376,10 @@ export default function WebhookSettings() {
                       <Badge variant="secondary" className="text-xs">{log.event}</Badge>
                     </TableCell>
                     <TableCell className="font-mono text-sm">
-                      {log.status_code || '–'}
+                      {log.response_status || '–'}
                     </TableCell>
                     <TableCell>
-                      {log.success ? (
+                      {log.response_status && log.response_status >= 200 && log.response_status < 300 ? (
                         <CheckCircle2 className="h-4 w-4 text-green-600" />
                       ) : (
                         <XCircle className="h-4 w-4 text-destructive" />

@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { logAudit } from '@/lib/auditLog';
+import { triggerWebhook } from '@/lib/webhookTrigger';
 
 interface Client {
   id: string;
@@ -91,6 +92,7 @@ export default function ClientDetail() {
       const link = `${window.location.origin}/client-register?token=${data.token}`;
       setInviteLink(link);
       logAudit('client_user_created', 'client', client.id, { email: inviteEmail.trim(), type: 'invite_link' });
+      triggerWebhook('mandant_eingeladen', { client_id: client.id, company: client.company, email: inviteEmail.trim() });
     } catch (err: any) {
       toast.error(err.message || 'Fehler beim Erstellen der Einladung.');
     } finally {
@@ -259,6 +261,7 @@ export default function ClientDetail() {
                 }
                 toast.success('Projekt wurde angelegt.');
                 logAudit('project_created', 'project', undefined, { name: newProjectName.trim(), client_id: id });
+                triggerWebhook('projekt_erstellt', { project_name: newProjectName.trim(), client_id: id });
                 setShowNewProject(false);
                 setNewProjectName('');
                 const { data } = await supabase
