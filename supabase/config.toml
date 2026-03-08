@@ -9,3 +9,6 @@ verify_jwt = false
 
 [functions.test-webhook]
 verify_jwt = false
+
+[functions.invite-team-member]
+verify_jwt = false
