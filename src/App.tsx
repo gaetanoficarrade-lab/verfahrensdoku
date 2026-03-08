@@ -134,6 +134,14 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/settings/activity-log"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin']}>
+                    <AppLayout><ActivityLog /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
 
               {/* Client portal routes */}
               <Route

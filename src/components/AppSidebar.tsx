@@ -156,6 +156,22 @@ export function AppSidebar() {
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive('/settings/activity-log')}
+                    tooltip="Aktivitäts-Log"
+                  >
+                    <NavLink
+                      to="/settings/activity-log"
+                      className="hover:bg-sidebar-accent/50"
+                      activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                    >
+                      <ScrollText className="h-4 w-4" />
+                      {!collapsed && <span>Aktivitäts-Log</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
