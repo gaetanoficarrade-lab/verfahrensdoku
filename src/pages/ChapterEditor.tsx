@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, AlertTriangle, ChevronRight, Mic } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { logAudit } from '@/lib/auditLog';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -184,6 +185,7 @@ export default function ChapterEditor() {
     } else {
       setStatus('client_submitted');
       setSubmitPrecheckResult(null);
+      logAudit('chapter_submitted', 'chapter', cdId, { chapter_key: chapterKey, project_id: projectId });
       toast({ title: 'Eingereicht', description: 'Das Kapitel wurde an Ihren Berater übermittelt.' });
     }
   };
@@ -241,6 +243,7 @@ export default function ChapterEditor() {
       if (error) throw error;
       const generatedText = data.generated_text || '';
       setEditorText(generatedText);
+      logAudit('text_generated', 'chapter', chapterDataId!, { chapter_key: chapterKey, project_id: projectId });
       toast({ title: 'Text generiert', description: `Qualitätsscore: ${data.quality_score || 0}/100` });
     } catch (err: any) {
       console.error('Generate error:', err);

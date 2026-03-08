@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Upload, Save, Palette, Building2, FileText, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { logAudit } from '@/lib/auditLog';
 
 export default function BrandingSettings() {
   const { effectiveTenantId } = useAuthContext();
@@ -70,6 +71,7 @@ export default function BrandingSettings() {
   const handleSave = async () => {
     try {
       await saveMutation.mutateAsync(form);
+      logAudit('settings_updated', 'tenant_settings', effectiveTenantId || undefined);
       toast.success('Einstellungen gespeichert');
     } catch (err: any) {
       toast.error('Fehler beim Speichern: ' + err.message);

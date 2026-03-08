@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import { logAudit } from '@/lib/auditLog';
 
 interface Client {
   id: string;
@@ -192,6 +193,7 @@ export default function ClientDetail() {
                   return;
                 }
                 toast.success('Projekt wurde angelegt.');
+                logAudit('project_created', 'project', undefined, { name: newProjectName.trim(), client_id: id });
                 setShowNewProject(false);
                 setNewProjectName('');
                 // Refresh projects
@@ -266,6 +268,7 @@ export default function ClientDetail() {
                   if (error) throw error;
                   if (data?.error) throw new Error(data.error);
                   toast.success(data.message || 'Zugang erstellt!');
+                  logAudit('client_user_created', 'client', client.id, { email: userEmail.trim() });
                   setShowCreateUser(false);
                   setUserEmail('');
                   setUserPassword('');
