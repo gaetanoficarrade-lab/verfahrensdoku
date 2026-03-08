@@ -105,8 +105,8 @@ export default function ProjectDetail() {
     );
   }
 
-  // Show onboarding wizard if not completed
-  if (onboarding && !onboarding.completed_at) {
+  // Show onboarding wizard if not completed (including when no row exists yet)
+  if (!onboarding || !onboarding.completed_at) {
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-3">
@@ -120,8 +120,8 @@ export default function ProjectDetail() {
         </div>
         <OnboardingWizard
           projectId={project.id}
-          onboardingId={onboarding.id}
-          initialAnswers={(onboarding.answers || {}) as OnboardingAnswers}
+          onboardingId={onboarding?.id || ''}
+          initialAnswers={((onboarding?.answers as OnboardingAnswers) || {})}
           onComplete={loadData}
         />
       </div>
