@@ -67,6 +67,7 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
         .from('project_onboarding')
         .upsert({ project_id: projectId, answers: initialAnswers as any }, { onConflict: 'project_id' });
       if (error) {
+        console.error('Onboarding init error:', error);
         toast({ title: 'Initialisierung fehlgeschlagen', description: error.message, variant: 'destructive' });
       }
       setInitialized(true);
