@@ -104,7 +104,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isSuperAdmin = roles.includes('super_admin');
 
   const signIn = useCallback(async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error, data } = await supabase.auth.signInWithPassword({ email, password });
+    // Log login on success
+    if (!error && data?.user) {
+      supabase.from('login_logs').insert({
+        user_id: data.user.id,
+        user_agent: navigator.userAgent,
+        ip_hash: null,
+      }).then(() => {});
+    }
     return { error };
   }, []);
 
