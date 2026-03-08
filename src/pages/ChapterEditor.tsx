@@ -103,6 +103,17 @@ export default function ChapterEditor() {
       setLoading(false);
     };
     fetchData();
+
+    // Fetch onboarding answers for precheck
+    const fetchOnboarding = async () => {
+      const { data } = await supabase
+        .from('project_onboarding')
+        .select('answers')
+        .eq('project_id', projectId)
+        .maybeSingle();
+      if (data?.answers) setOnboardingAnswers(data.answers as Record<string, any>);
+    };
+    fetchOnboarding();
   }, [projectId, chapterKey]);
 
   const ensureChapterData = async (): Promise<string | null> => {
