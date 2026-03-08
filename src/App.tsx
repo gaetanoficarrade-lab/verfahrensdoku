@@ -13,6 +13,10 @@ import Index from "./pages/Index";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminTenants from "./pages/AdminTenants";
 import AuditLog from "./pages/AuditLog";
+import Clients from "./pages/Clients";
+import ClientNew from "./pages/ClientNew";
+import ClientDetail from "./pages/ClientDetail";
+import Projects from "./pages/Projects";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
