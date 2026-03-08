@@ -8,16 +8,38 @@ const corsHeaders = {
 };
 
 const CHAPTER_CONTEXT: Record<string, string> = {
-  general_info:
-    "Allgemeine Informationen: Unternehmensname, Rechtsform, Branche, Gründungsjahr, Mitarbeiteranzahl, Geschäftsführung, Standorte, Organisationsstruktur.",
-  it_systems:
-    "IT-Umfeld: Hardware, Software, Betriebssysteme, Netzwerkinfrastruktur, ERP/Buchhaltungssysteme, Schnittstellen, Berechtigungskonzepte, Datensicherung.",
-  processes:
-    "Geschäftsprozesse: Einkauf, Verkauf, Lager, Zahlungsverkehr, Lohnabrechnung, Reisekostenabrechnung, steuerrelevante Prozesse, Belegfluss.",
-  archiving:
-    "Archivierung: Aufbewahrungsfristen, Speicherorte, Speichermedien, Zugriffsrechte, Löschkonzepte, Revisionssicherheit, Indexierung.",
-  controls:
-    "Internes Kontrollsystem (IKS): Zugriffskontrollen, Plausibilitätsprüfungen, Vier-Augen-Prinzip, Protokollierung, Schutzmaßnahmen gegen Manipulation.",
+  "1_1": "Unternehmensbeschreibung: Kerntätigkeit, Branche, Rechtsform, Geschäftsmodell",
+  "1_2": "Organisatorischer Aufbau: Abteilungen, Standorte, Organigramm",
+  "1_3": "Zuständigkeiten & Verantwortlichkeiten: Buchhaltung, IT, Vertretung",
+  "1_4": "Buchführungsgrundsätze: Kontenrahmen, Buchungssystematik, Vollständigkeit",
+  "1_5": "Pflege der Verfahrensdokumentation: Aktualisierung, Verantwortung, Versionierung",
+  "2_1": "Rechnungsausgang / Debitoren: Rechnungserstellung, Nummerierung, Versand, Archivierung",
+  "2_2": "Rechnungseingang / Kreditoren: Empfang, Prüfung, Freigabe, Verbuchung, Archivierung",
+  "2_3": "Kassenprozesse: Kassiervorgang, Tagesabschluss, Kassenbuch, Aufbewahrung",
+  "2_4": "Zahlungsanbieter: PayPal, Stripe, Klarna – Erfassung, Abgleich, Archivierung",
+  "2_5": "Marktplatz-/Plattformverkäufe: Amazon, eBay – Umsatzerfassung, Abrechnungen",
+  "2_6": "Digitalisierung / Scanprozess: Scanverfahren, Bildqualität, Originalverbleib",
+  "2_7": "Buchhaltungsverarbeitung: Belegfluss, Verbuchung, Kontierung, Periodenabschluss",
+  "2_8": "Zahlungsverkehr / Bank: Geschäftskonten, Kontoauszüge, Abgleich, Archivierung",
+  "2_9": "Personal / Lohn: Lohnabrechnung, Software, Übertragung in FiBu, Aufbewahrung",
+  "3_1": "Buchhaltungssoftware: Produkt, Version, Berechtigungen, Updates",
+  "3_2": "Schnittstellen: Anbindungen, Datenformate, Fehlerbehandlung",
+  "3_3": "E-Rechnungsprozesse: ZUGFeRD, XRechnung, Validierung, Archivierung",
+  "3_4": "Cloud-Software / SaaS: Anbieter, Serverstandort, Zugriff, Datensicherheit",
+  "3_5": "E-Mail-Systeme & Archivierung: E-Mail-Provider, steuerrelevante E-Mails, Aufbewahrung",
+  "3_6": "Zahlungsplattformen: Technische Anbindung, Transaktionslogs, Datenintegrität",
+  "4_1": "Datensicherung: Häufigkeit, Umfang, Speicherort, Verantwortlichkeit",
+  "4_2": "Wiederherstellung: Ablauf, Testzyklen, Wiederherstellungszeit",
+  "4_3": "Systemänderungen & Updates: Planung, Freigabe, Dokumentation, Datenintegrität",
+  "4_4": "Archivierung & Aufbewahrung: Fristen, Formate, Lesbarkeit, Speicherorte",
+  "4_5": "Datenzugriff der Finanzverwaltung: Z1/Z2/Z3, Ansprechpartner, Bereitstellungszeit",
+  "4_6": "Änderungs- und Versionsmanagement: Versionierung, Changelog, Genehmigung",
+  "4_7": "Digitalisierung von Papierbelegen: Verfahren, Qualitätssicherung, Originalverbleib",
+  "5_1": "Berechtigungen: Konzept, Vergabe, Entzug, Überprüfung",
+  "5_2": "Freigaben: Prozesse, Kompetenzen, Wertgrenzen, Dokumentation",
+  "5_3": "Plausibilitätskontrollen: Automatische Prüfungen, Abweichungen, Protokollierung",
+  "5_4": "Verantwortlichkeiten: IKS-Gesamtverantwortung, Verteilung, Überwachung",
+  "5_5": "Umgang mit Fehlern: Korrekturprozess, Dokumentation, Eskalation, Prävention",
 };
 
 serve(async (req) => {
