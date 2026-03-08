@@ -93,7 +93,7 @@ export default function AdminSettingsSystem() {
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Backend</span>
-              <span className="font-medium text-foreground">Supabase (Lovable Cloud)</span>
+              <span className="font-medium text-foreground">Supabase (Self-Hosted)</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Frontend</span>
