@@ -62,7 +62,7 @@ const Index = () => {
           <p className="text-muted-foreground">Verbindung wird getestet...</p>
         )}
         {error && (
-          <div className="mt-4 rounded-md border border-border bg-muted p-4 text-left">
+          <div className="mt-4 rounded-md border border-destructive bg-destructive/10 p-4 text-left">
             <p className="text-sm text-muted-foreground">{error}</p>
           </div>
         )}
