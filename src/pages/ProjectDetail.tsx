@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, FileText, CheckCircle2, Clock, AlertCircle, Circle, ChevronDown, Ban, Eye, FileDown, Plus } from 'lucide-react';
+import { ArrowLeft, Loader2, FileText, CheckCircle2, Clock, AlertCircle, Circle, ChevronDown, Ban, Eye, FileDown, Plus, ShieldCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -81,6 +82,10 @@ export default function ProjectDetail() {
   const [nextVersion, setNextVersion] = useState(1);
   const [creatingDoc, setCreatingDoc] = useState(false);
 
+  // Batch approval
+  const [selectedChapters, setSelectedChapters] = useState<Set<string>>(new Set());
+  const [batchApproving, setBatchApproving] = useState(false);
+
   const loadData = async () => {
     if (!id) return;
     setLoading(true);
@@ -95,7 +100,6 @@ export default function ProjectDetail() {
     setOnboarding(onbRes.data as Onboarding | null);
     setNextVersion((docRes.data?.version_number || 0) + 1);
 
-    // Get company name
     if (projRes.data?.client_id) {
       const { data: clientData } = await supabase.from('clients').select('company').eq('id', projRes.data.client_id).single();
       if (clientData) setCompanyName(clientData.company);
@@ -106,7 +110,6 @@ export default function ProjectDetail() {
   useEffect(() => { loadData(); }, [id]);
 
   const answers: OnboardingAnswers = (onboarding?.answers as OnboardingAnswers) || {};
-
   const hasApprovedChapters = chapters.some(c => c.status === 'advisor_approved' || c.status === 'approved');
 
   const getSubChapterStatus = (key: string, isActive: boolean) => {
@@ -130,11 +133,35 @@ export default function ProjectDetail() {
     );
   };
 
+  const toggleSelectChapter = (chapterId: string) => {
+    setSelectedChapters(prev => {
+      const next = new Set(prev);
+      if (next.has(chapterId)) next.delete(chapterId);
+      else next.add(chapterId);
+      return next;
+    });
+  };
+
+  const handleBatchApprove = async () => {
+    if (selectedChapters.size === 0) return;
+    setBatchApproving(true);
+    const promises = Array.from(selectedChapters).map(chId =>
+      supabase.from('chapter_data').update({ status: 'advisor_approved' }).eq('id', chId)
+    );
+    await Promise.all(promises);
+    toast({ title: 'Batch-Freigabe', description: `${selectedChapters.size} Kapitel wurden freigegeben.` });
+    setSelectedChapters(new Set());
+    setBatchApproving(false);
+    loadData();
+  };
+
+  // Get chapters eligible for batch approval
+  const batchEligible = chapters.filter(c => c.status === 'client_submitted');
+
   const handleCreateDocument = async () => {
     if (!id || !project) return;
     setCreatingDoc(true);
     try {
-      // Create document version
       const { error } = await supabase.from('document_versions').insert({
         project_id: id,
         version_number: nextVersion,
@@ -144,7 +171,6 @@ export default function ProjectDetail() {
       });
       if (error) throw error;
 
-      // Generate and download PDF
       const doc = generateVerfahrensdokumentation({
         companyName,
         projectName: project.name,
@@ -262,6 +288,29 @@ export default function ProjectDetail() {
         </div>
       </div>
 
+      {/* Batch approval bar */}
+      {batchEligible.length > 0 && (
+        <Card className="border-primary/30">
+          <CardContent className="flex items-center justify-between py-3">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium text-foreground">
+                {selectedChapters.size} von {batchEligible.length} eingereichten Kapiteln ausgewählt
+              </span>
+            </div>
+            <Button
+              size="sm"
+              disabled={selectedChapters.size === 0 || batchApproving}
+              onClick={handleBatchApprove}
+              className="gap-2"
+            >
+              {batchApproving && <Loader2 className="h-4 w-4 animate-spin" />}
+              Ausgewählte freigeben
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       <div>
         <h2 className="text-lg font-semibold text-foreground mb-3">Kapitel der Verfahrensdokumentation</h2>
         <div className="space-y-3">
@@ -297,9 +346,11 @@ export default function ProjectDetail() {
                       <div className="border-t px-4 pb-3 pt-1 space-y-1">
                         {mainCh.subChapters.map((sc) => {
                           const isActive = sc.isActive(answers);
-                          const status = getSubChapterStatus(sc.key, isActive);
-                          const config = statusConfig[status] || statusConfig.empty;
+                          const chStatus = getSubChapterStatus(sc.key, isActive);
+                          const config = statusConfig[chStatus] || statusConfig.empty;
                           const StatusIcon = config.icon;
+                          const chData = chapters.find(c => c.chapter_key === sc.key);
+                          const isBatchEligible = chData && chData.status === 'client_submitted';
 
                           return (
                             <div
@@ -309,13 +360,24 @@ export default function ProjectDetail() {
                                   ? 'hover:bg-muted/50 cursor-pointer'
                                   : 'opacity-60'
                               }`}
-                              onClick={() => {
-                                if (isActive) navigate(`/projects/${id}/chapters/${sc.key}`);
-                              }}
                             >
-                              <span className="text-xs font-mono text-muted-foreground w-8 shrink-0">{sc.number}</span>
-                              <span className={`flex-1 text-sm ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
-                                {sc.title}
+                              {isBatchEligible && (
+                                <Checkbox
+                                  checked={selectedChapters.has(chData!.id)}
+                                  onCheckedChange={() => toggleSelectChapter(chData!.id)}
+                                  onClick={(e) => e.stopPropagation()}
+                                />
+                              )}
+                              <span
+                                className="flex items-center gap-3 flex-1 min-w-0"
+                                onClick={() => {
+                                  if (isActive) navigate(`/projects/${id}/chapters/${sc.key}`);
+                                }}
+                              >
+                                <span className="text-xs font-mono text-muted-foreground w-8 shrink-0">{sc.number}</span>
+                                <span className={`flex-1 text-sm ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
+                                  {sc.title}
+                                </span>
                               </span>
                               <Badge variant="secondary" className={`gap-1 text-[10px] px-2 py-0.5 ${config.className}`}>
                                 <StatusIcon className="h-3 w-3" />

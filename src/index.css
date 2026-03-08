@@ -101,3 +101,31 @@
     font-family: 'JetBrains Mono', monospace;
   }
 }
+
+/* Print styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .print\:hidden,
+  nav,
+  aside,
+  [data-sidebar],
+  .sidebar,
+  header {
+    display: none !important;
+  }
+  
+  .print\:break-before-page {
+    break-before: page;
+  }
+  
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}

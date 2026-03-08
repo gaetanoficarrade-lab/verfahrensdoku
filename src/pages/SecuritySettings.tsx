@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Shield, Loader2, KeyRound } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Shield, Loader2, KeyRound, ScrollText } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,6 +7,21 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { HelpTooltip } from '@/components/HelpTooltip';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+
+interface LoginLog {
+  id: string;
+  user_agent: string | null;
+  ip_hash: string | null;
+  created_at: string;
+}
 
 export default function SecuritySettings() {
   const { user } = useAuthContext();
@@ -18,9 +33,11 @@ export default function SecuritySettings() {
   const [verifyCode, setVerifyCode] = useState('');
   const [verifying, setVerifying] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loginLogs, setLoginLogs] = useState<LoginLog[]>([]);
+  const [logsLoading, setLogsLoading] = useState(true);
 
   // Check MFA status on load
-  useState(() => {
+  useEffect(() => {
     const check = async () => {
       const { data } = await supabase.auth.mfa.listFactors();
       if (data?.totp && data.totp.length > 0) {
@@ -30,7 +47,24 @@ export default function SecuritySettings() {
       setLoading(false);
     };
     check();
-  });
+  }, []);
+
+  // Load login logs
+  useEffect(() => {
+    if (!user) return;
+    const loadLogs = async () => {
+      setLogsLoading(true);
+      const { data } = await supabase
+        .from('login_logs')
+        .select('id, user_agent, ip_hash, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(20);
+      setLoginLogs((data || []) as LoginLog[]);
+      setLogsLoading(false);
+    };
+    loadLogs();
+  }, [user]);
 
   const handleEnroll = async () => {
     setEnrolling(true);
@@ -153,6 +187,45 @@ export default function SecuritySettings() {
             <Button variant="destructive" onClick={handleUnenroll}>
               2FA deaktivieren
             </Button>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Login Protocol */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ScrollText className="h-5 w-5" />
+            Login-Protokoll
+          </CardTitle>
+          <CardDescription>Ihre letzten Anmeldungen</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {logsLoading ? (
+            <div className="flex justify-center py-4"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
+          ) : loginLogs.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Keine Anmeldungen protokolliert.</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Zeitpunkt</TableHead>
+                  <TableHead>Browser / Gerät</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {loginLogs.map(log => (
+                  <TableRow key={log.id}>
+                    <TableCell className="text-sm">
+                      {new Date(log.created_at).toLocaleString('de-DE')}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground truncate max-w-xs">
+                      {log.user_agent || 'Unbekannt'}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           )}
         </CardContent>
       </Card>

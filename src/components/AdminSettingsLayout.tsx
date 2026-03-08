@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Settings, Scale, Mail, CreditCard, Activity } from 'lucide-react';
+import { Settings, Scale, Mail, CreditCard, Activity, Tag } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const settingsNav = [
@@ -8,6 +8,7 @@ const settingsNav = [
   { title: 'Rechtliches', url: '/admin/settings/legal', icon: Scale },
   { title: 'E-Mail Vorlagen', url: '/admin/settings/email', icon: Mail },
   { title: 'Pläne', url: '/admin/settings/plans', icon: CreditCard },
+  { title: 'Rabatt-Codes', url: '/admin/settings/promo-codes', icon: Tag },
   { title: 'System', url: '/admin/settings/system', icon: Activity },
 ];
 
