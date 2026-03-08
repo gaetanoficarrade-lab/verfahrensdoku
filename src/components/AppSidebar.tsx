@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -49,8 +48,7 @@ export function AppSidebar() {
   const collapsed = state === 'collapsed';
   const location = useLocation();
   const navigate = useNavigate();
-  const { signOut } = useAuth();
-  const { isSuperAdmin, impersonation, roles } = useAuthContext();
+  const { signOut, isSuperAdmin, impersonation, roles } = useAuthContext();
 
   const currentPath = location.pathname;
   const isActive = (path: string) => {

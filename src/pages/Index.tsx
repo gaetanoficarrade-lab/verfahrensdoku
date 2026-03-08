@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Users, FolderOpen, Clock } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 
 const Index = () => {
-  const { user, loading } = useAuth();
-  const { roles, profileLoading, isSuperAdmin, impersonation, effectiveTenantId } = useAuthContext();
+  const { user, loading, roles, profileLoading, isSuperAdmin, impersonation, effectiveTenantId } = useAuthContext();
   const navigate = useNavigate();
   const [stats, setStats] = useState({ clients: 0, openProjects: 0 });
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
