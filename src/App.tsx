@@ -32,6 +32,8 @@ import ActivityLog from "./pages/ActivityLog";
 import TeamSettings from "./pages/TeamSettings";
 import WebhookSettings from "./pages/WebhookSettings";
 import ClientRegister from "./pages/ClientRegister";
+import AffiliateSettings from "./pages/AffiliateSettings";
+import AdminAffiliates from "./pages/AdminAffiliates";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
