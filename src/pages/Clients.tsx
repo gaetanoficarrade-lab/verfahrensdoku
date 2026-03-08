@@ -27,7 +27,6 @@ export default function Clients() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  const isSA = isSuperAdmin;
 
   useEffect(() => {
     const fetch = async () => {
