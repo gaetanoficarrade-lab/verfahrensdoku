@@ -18,3 +18,6 @@ verify_jwt = false
 
 [functions.send-webhook]
 verify_jwt = false
+
+[functions.seed-demo-data]
+verify_jwt = false

@@ -1,12 +1,24 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Building2, Users, FolderOpen, Eye, Loader2 } from 'lucide-react';
+import { Building2, Users, FolderOpen, Eye, Loader2, Database } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface Tenant {
   id: string;
@@ -28,32 +40,55 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState<Stats>({ tenants: 0, clients: 0, projects: 0 });
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [loading, setLoading] = useState(true);
+  const [seeding, setSeeding] = useState(false);
   const { startImpersonation } = useAuthContext();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const [tenantsRes, clientsRes, projectsRes] = await Promise.all([
-        supabase.from('tenants').select('*').order('created_at', { ascending: false }),
-        supabase.from('clients').select('id', { count: 'exact', head: true }),
-        supabase.from('projects').select('id', { count: 'exact', head: true }),
-      ]);
+  const fetchData = async () => {
+    setLoading(true);
+    const [tenantsRes, clientsRes, projectsRes] = await Promise.all([
+      supabase.from('tenants').select('*').order('created_at', { ascending: false }),
+      supabase.from('clients').select('id', { count: 'exact', head: true }),
+      supabase.from('projects').select('id', { count: 'exact', head: true }),
+    ]);
 
-      setTenants(tenantsRes.data || []);
-      setStats({
-        tenants: tenantsRes.data?.length || 0,
-        clients: clientsRes.count || 0,
-        projects: projectsRes.count || 0,
-      });
-      setLoading(false);
-    };
+    setTenants(tenantsRes.data || []);
+    setStats({
+      tenants: tenantsRes.data?.length || 0,
+      clients: clientsRes.count || 0,
+      projects: projectsRes.count || 0,
+    });
+    setLoading(false);
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
   const handleImpersonate = (tenant: Tenant) => {
     startImpersonation(tenant.id, tenant.name);
     navigate('/');
+  };
+
+  const handleSeedDemo = async () => {
+    setSeeding(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('seed-demo-data');
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      toast.success('Demo-Daten erfolgreich angelegt!', {
+        description: data.message,
+        duration: 6000,
+      });
+      await fetchData();
+    } catch (err: any) {
+      toast.error('Fehler beim Anlegen der Demo-Daten', {
+        description: err.message,
+      });
+    } finally {
+      setSeeding(false);
+    }
   };
 
   if (loading) {
@@ -72,9 +107,54 @@ const AdminDashboard = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Super-Admin Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">Systemübersicht und Verwaltung</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Super-Admin Dashboard</h1>
+          <p className="text-sm text-muted-foreground mt-1">Systemübersicht und Verwaltung</p>
+        </div>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline" className="gap-2" disabled={seeding}>
+              {seeding ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Database className="h-4 w-4" />
+              )}
+              Demo-Daten laden
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Demo-Daten laden?</AlertDialogTitle>
+              <AlertDialogDescription className="space-y-2">
+                <p>Folgende Daten werden neu angelegt:</p>
+                <ul className="list-disc pl-5 space-y-1 text-sm">
+                  <li><strong>Lizenznehmer:</strong> Musterkanzlei Müller & Partner (Plan: Professional)</li>
+                  <li><strong>Mandant:</strong> Beispiel GmbH (IT-Dienstleistungen, 3 Mitarbeiter)</li>
+                  <li><strong>Projekt:</strong> Verfahrensdokumentation 2024 mit vollständigem Onboarding</li>
+                  <li><strong>Kapitel:</strong> 6 Kapitel mit realistischen Mandanten-Texten, davon 1 mit fertigem Entwurf</li>
+                </ul>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Die Demo-Daten können anschließend per Impersonation eingesehen werden.
+                  Kapitel 1.4 enthält einen fertigen Editor-Text mit Demo-Wasserzeichen.
+                </p>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+              <AlertDialogAction onClick={handleSeedDemo}>
+                {seeding ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    Wird angelegt...
+                  </>
+                ) : (
+                  'Demo-Daten anlegen'
+                )}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
