@@ -34,6 +34,7 @@ import WebhookSettings from "./pages/WebhookSettings";
 import ClientRegister from "./pages/ClientRegister";
 import AffiliateSettings from "./pages/AffiliateSettings";
 import AdminAffiliates from "./pages/AdminAffiliates";
+import DocumentPreview from "./pages/DocumentPreview";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
