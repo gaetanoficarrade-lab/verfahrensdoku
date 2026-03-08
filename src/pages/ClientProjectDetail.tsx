@@ -47,8 +47,8 @@ export default function ClientProjectDetail() {
     const fetch = async () => {
       setLoading(true);
       const [projRes, chapRes] = await Promise.all([
-        supabase.from('projects').select('id, name, status, workflow_status').eq('id', id).single(),
-        supabase.from('chapter_data').select('id, chapter_key, status, client_notes').eq('project_id', id),
+        supabase.from('projects').select('id, name, status, workflow_status, client_id').eq('id', id).single(),
+        supabase.from('chapter_data').select('id, chapter_key, status, client_notes, editor_text, generated_text').eq('project_id', id),
       ]);
       setProject(projRes.data);
       setChapters(chapRes.data || []);
