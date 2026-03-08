@@ -27,9 +27,8 @@ export function ProtectedRoute({ children, requiredRoles, redirectTo = '/auth' }
   }
 
   if (requiredRoles && requiredRoles.length > 0) {
-    // Super admins impersonating a tenant can access tenant_admin/tenant_user routes
-    const isTenantRoute = requiredRoles.some((r) => r === 'tenant_admin' || r === 'tenant_user');
-    if (isSuperAdmin && impersonation.isImpersonating && isTenantRoute) {
+    // Super admins can access all routes (for testing/management)
+    if (isSuperAdmin) {
       return <>{children}</>;
     }
 
