@@ -21,7 +21,7 @@ interface Client {
 }
 
 export default function Clients() {
-  const { effectiveTenantId } = useAuthContext();
+  const { effectiveTenantId, isSuperAdmin } = useAuthContext();
   const navigate = useNavigate();
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
