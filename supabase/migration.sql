@@ -720,3 +720,140 @@ CREATE POLICY "Super admin manages platform settings" ON public.platform_setting
 CREATE POLICY "All users read legal settings" ON public.platform_settings
   FOR SELECT TO authenticated
   USING (key = 'legal');
+
+
+-- 12. AFFILIATE SYSTEM
+-- =====================================================
+
+-- Affiliate Programs (global config by super_admin)
+CREATE TABLE public.affiliate_programs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL DEFAULT 'Standard',
+  commission_percent NUMERIC(5,2) NOT NULL DEFAULT 10.00,
+  cookie_lifetime_days INTEGER NOT NULL DEFAULT 90,
+  min_payout NUMERIC(10,2) NOT NULL DEFAULT 50.00,
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Affiliate Links (one per tenant)
+CREATE TABLE public.affiliate_links (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE UNIQUE,
+  program_id UUID REFERENCES public.affiliate_programs(id),
+  slug TEXT NOT NULL UNIQUE,
+  previous_slugs JSONB DEFAULT '[]'::jsonb,
+  utm_source TEXT,
+  utm_medium TEXT,
+  utm_campaign TEXT,
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Affiliate Clicks (tracking)
+CREATE TABLE public.affiliate_clicks (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  affiliate_link_id UUID NOT NULL REFERENCES public.affiliate_links(id) ON DELETE CASCADE,
+  ip_hash TEXT,
+  referrer_url TEXT,
+  user_agent_category TEXT, -- 'desktop', 'mobile', 'tablet'
+  country_code TEXT, -- 'DE', 'AT', 'CH', 'OTHER'
+  landing_page TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Affiliate Conversions
+CREATE TABLE public.affiliate_conversions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  affiliate_link_id UUID NOT NULL REFERENCES public.affiliate_links(id) ON DELETE CASCADE,
+  click_id UUID REFERENCES public.affiliate_clicks(id),
+  converted_tenant_id UUID REFERENCES public.tenants(id),
+  status TEXT NOT NULL DEFAULT 'pending', -- 'pending', 'confirmed', 'rejected', 'paid'
+  commission_amount NUMERIC(10,2),
+  admin_comment TEXT,
+  is_manual BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  confirmed_at TIMESTAMPTZ,
+  paid_at TIMESTAMPTZ
+);
+
+ALTER TABLE public.affiliate_programs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.affiliate_links ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.affiliate_clicks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.affiliate_conversions ENABLE ROW LEVEL SECURITY;
+
+CREATE TRIGGER set_updated_at_affiliate_programs
+  BEFORE UPDATE ON public.affiliate_programs
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+CREATE TRIGGER set_updated_at_affiliate_links
+  BEFORE UPDATE ON public.affiliate_links
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+-- Indexes
+CREATE INDEX idx_affiliate_links_slug ON public.affiliate_links(slug);
+CREATE INDEX idx_affiliate_links_tenant_id ON public.affiliate_links(tenant_id);
+CREATE INDEX idx_affiliate_clicks_link_id ON public.affiliate_clicks(affiliate_link_id);
+CREATE INDEX idx_affiliate_clicks_created ON public.affiliate_clicks(created_at);
+CREATE INDEX idx_affiliate_conversions_link_id ON public.affiliate_conversions(affiliate_link_id);
+
+-- RLS: Affiliate Programs
+CREATE POLICY "All authenticated read programs" ON public.affiliate_programs
+  FOR SELECT TO authenticated USING (true);
+
+CREATE POLICY "Super admin manages programs" ON public.affiliate_programs
+  FOR ALL TO authenticated USING (public.has_role(auth.uid(), 'super_admin'));
+
+-- RLS: Affiliate Links
+CREATE POLICY "Tenant sees own affiliate link" ON public.affiliate_links
+  FOR SELECT TO authenticated
+  USING (tenant_id = public.get_user_tenant_id(auth.uid()) OR public.has_role(auth.uid(), 'super_admin'));
+
+CREATE POLICY "Tenant admin manages own link" ON public.affiliate_links
+  FOR ALL TO authenticated
+  USING (
+    (tenant_id = public.get_user_tenant_id(auth.uid()) AND public.has_role(auth.uid(), 'tenant_admin'))
+    OR public.has_role(auth.uid(), 'super_admin')
+  );
+
+-- Anon can read active links (for tracking endpoint)
+CREATE POLICY "Anon reads active links" ON public.affiliate_links
+  FOR SELECT TO anon USING (is_active = true);
+
+-- RLS: Affiliate Clicks
+CREATE POLICY "Tenant sees own clicks" ON public.affiliate_clicks
+  FOR SELECT TO authenticated
+  USING (
+    affiliate_link_id IN (
+      SELECT id FROM public.affiliate_links WHERE tenant_id = public.get_user_tenant_id(auth.uid())
+    ) OR public.has_role(auth.uid(), 'super_admin')
+  );
+
+-- Anon can insert clicks (tracking)
+CREATE POLICY "Anon inserts clicks" ON public.affiliate_clicks
+  FOR INSERT TO anon WITH CHECK (true);
+
+CREATE POLICY "Authenticated inserts clicks" ON public.affiliate_clicks
+  FOR INSERT TO authenticated WITH CHECK (true);
+
+-- Super admin sees all clicks
+CREATE POLICY "Super admin sees all clicks" ON public.affiliate_clicks
+  FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'super_admin'));
+
+-- RLS: Affiliate Conversions
+CREATE POLICY "Tenant sees own conversions" ON public.affiliate_conversions
+  FOR SELECT TO authenticated
+  USING (
+    affiliate_link_id IN (
+      SELECT id FROM public.affiliate_links WHERE tenant_id = public.get_user_tenant_id(auth.uid())
+    ) OR public.has_role(auth.uid(), 'super_admin')
+  );
+
+CREATE POLICY "Super admin manages conversions" ON public.affiliate_conversions
+  FOR ALL TO authenticated USING (public.has_role(auth.uid(), 'super_admin'));
+
+-- Seed default affiliate program
+INSERT INTO public.affiliate_programs (name, commission_percent, cookie_lifetime_days, min_payout)
+VALUES ('Standard', 10.00, 90, 50.00);

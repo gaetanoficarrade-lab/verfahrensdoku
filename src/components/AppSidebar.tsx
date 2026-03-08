@@ -11,6 +11,7 @@ import {
   Settings,
   Globe,
   Palette,
+  Link2,
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -34,6 +35,7 @@ import {
 const adminItems = [
   { title: 'Dashboard', url: '/admin', icon: LayoutDashboard },
   { title: 'Lizenznehmer', url: '/admin/tenants', icon: Building2 },
+  { title: 'Affiliates', url: '/admin/affiliates', icon: Link2 },
   { title: 'Audit-Log', url: '/audit-log', icon: ScrollText },
   { title: 'Einstellungen', url: '/admin/settings/general', icon: Settings },
 ];
@@ -170,6 +172,14 @@ export function AppSidebar() {
                     <NavLink to="/settings/activity-log" className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
                       <ScrollText className="h-4 w-4" />
                       {!collapsed && <span>Aktivitäts-Log</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={isActive('/settings/affiliate')} tooltip="Affiliate">
+                    <NavLink to="/settings/affiliate" className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
+                      <Link2 className="h-4 w-4" />
+                      {!collapsed && <span>Affiliate</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

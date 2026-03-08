@@ -32,6 +32,8 @@ import ActivityLog from "./pages/ActivityLog";
 import TeamSettings from "./pages/TeamSettings";
 import WebhookSettings from "./pages/WebhookSettings";
 import ClientRegister from "./pages/ClientRegister";
+import AffiliateSettings from "./pages/AffiliateSettings";
+import AdminAffiliates from "./pages/AdminAffiliates";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -126,6 +128,14 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/admin/affiliates"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminAffiliates /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
 
               <Route
                 path="/clients"
@@ -206,6 +216,14 @@ const App = () => (
                 element={
                   <ProtectedRoute requiredRoles={['tenant_admin']}>
                     <AppLayout><WebhookSettings /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/affiliate"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin']}>
+                    <AppLayout><AffiliateSettings /></AppLayout>
                   </ProtectedRoute>
                 }
               />
