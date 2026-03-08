@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Shield, Mail, Lock, User, Loader2 } from 'lucide-react';
+import { Shield, Mail, Lock, User, Loader2, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,12 +25,14 @@ const Register = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Determine if this is a team invite (no client_id) or client invite
+  const isTeamInvite = tokenData && !tokenData.client_id;
+
   useEffect(() => {
     if (!token) {
       setTokenValid(false);
       return;
     }
-    // Validate invite token
     const validate = async () => {
       const { data, error } = await supabase
         .from('invite_tokens')
@@ -75,7 +77,9 @@ const Register = () => {
       last_name: lastName,
       invite_token: token,
       tenant_id: tokenData?.tenant_id,
-      client_id: tokenData?.client_id,
+      client_id: tokenData?.client_id || null,
+      // Flag for team invites so the trigger knows to assign tenant_user
+      team_invite: isTeamInvite ? 'true' : null,
     });
 
     if (error) {
@@ -87,7 +91,9 @@ const Register = () => {
     } else {
       toast({
         title: 'Registrierung erfolgreich',
-        description: 'Prüfen Sie Ihr Postfach, um Ihre E-Mail zu bestätigen.',
+        description: isTeamInvite
+          ? 'Ihr Team-Konto wurde erstellt. Sie können sich jetzt anmelden.'
+          : 'Prüfen Sie Ihr Postfach, um Ihre E-Mail zu bestätigen.',
       });
       navigate('/auth');
     }
@@ -109,7 +115,7 @@ const Register = () => {
           <CardHeader>
             <CardTitle className="text-destructive">Ungültiger Einladungslink</CardTitle>
             <CardDescription>
-              Dieser Einladungslink ist ungültig oder abgelaufen. Bitte kontaktieren Sie Ihren Berater.
+              Dieser Einladungslink ist ungültig oder abgelaufen. Bitte kontaktieren Sie Ihren Administrator.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -127,17 +133,25 @@ const Register = () => {
       >
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary">
-            <Shield className="h-7 w-7 text-primary-foreground" />
+            {isTeamInvite ? (
+              <Users className="h-7 w-7 text-primary-foreground" />
+            ) : (
+              <Shield className="h-7 w-7 text-primary-foreground" />
+            )}
           </div>
           <h1 className="text-2xl font-bold text-foreground">GoBD-Suite</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Konto erstellen</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {isTeamInvite ? 'Team-Konto erstellen' : 'Mandanten-Konto erstellen'}
+          </p>
         </div>
 
         <Card>
           <CardHeader>
             <CardTitle>Registrierung</CardTitle>
             <CardDescription>
-              Erstellen Sie Ihr Konto, um auf die Verfahrensdokumentation zuzugreifen.
+              {isTeamInvite
+                ? 'Sie wurden als Team-Mitglied eingeladen. Erstellen Sie Ihr Konto.'
+                : 'Erstellen Sie Ihr Konto, um auf die Verfahrensdokumentation zuzugreifen.'}
             </CardDescription>
           </CardHeader>
           <CardContent>
