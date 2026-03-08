@@ -54,7 +54,7 @@ const Index = () => {
     <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="text-center max-w-lg mx-auto p-6">
         <h1 className="mb-4 text-3xl font-bold text-foreground">
-          Supabase Verbindungstest
+          Das ist dein Server
         </h1>
         {loading && (
           <p className="text-muted-foreground">Verbindung wird getestet...</p>
