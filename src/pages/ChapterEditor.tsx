@@ -508,6 +508,28 @@ export default function ChapterEditor() {
         </CardContent>
       </Card>
 
+      {/* Saved precheck hints (visible to advisor) */}
+      {isAdvisor && savedPrecheckHints.length > 0 && (
+        <Card className="border-yellow-500/40">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+              KI-Precheck-Hinweise (vom Mandanten beim Einreichen)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-1">
+              {savedPrecheckHints.map((hint, i) => (
+                <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                  <span className="text-yellow-600 dark:text-yellow-400 mt-0.5">•</span>
+                  {hint}
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Advisor action buttons */}
       {showAdvisorActions && (
         <Card className="border-primary/30">
@@ -516,15 +538,6 @@ export default function ChapterEditor() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-3">
-              <Button
-                variant="outline"
-                onClick={handlePrecheck}
-                disabled={precheckLoading}
-                className="gap-2"
-              >
-                {precheckLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ClipboardCheck className="h-4 w-4" />}
-                Precheck starten
-              </Button>
               <Button
                 variant="outline"
                 onClick={handleGenerateText}
@@ -558,48 +571,6 @@ export default function ChapterEditor() {
                 </AlertDialogContent>
               </AlertDialog>
             </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Precheck results */}
-      {precheckResult && (
-        <Card className="border-orange-300 dark:border-orange-700">
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-orange-500" />
-              Precheck-Ergebnisse
-              <Badge variant="secondary" className="ml-auto">
-                Confidence: {precheckResult.confidence}%
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {precheckResult.hints.length > 0 && (
-              <div>
-                <p className="text-sm font-medium text-foreground mb-2">Hinweise:</p>
-                <ul className="space-y-1">
-                  {precheckResult.hints.map((hint, i) => (
-                    <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                      <span className="text-orange-500 mt-0.5">•</span>
-                      {hint}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {precheckResult.missing_fields.length > 0 && (
-              <div>
-                <p className="text-sm font-medium text-foreground mb-2">Fehlende Felder:</p>
-                <div className="flex flex-wrap gap-2">
-                  {precheckResult.missing_fields.map((field, i) => (
-                    <Badge key={i} variant="outline" className="text-destructive border-destructive/30">
-                      {field}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
           </CardContent>
         </Card>
       )}
