@@ -68,6 +68,39 @@ const App = () => (
               }
             />
 
+            <Route
+              path="/clients"
+              element={
+                <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
+                  <AppLayout><Clients /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/clients/new"
+              element={
+                <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
+                  <AppLayout><ClientNew /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/clients/:id"
+              element={
+                <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
+                  <AppLayout><ClientDetail /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/projects"
+              element={
+                <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
+                  <AppLayout><Projects /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

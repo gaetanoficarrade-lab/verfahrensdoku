@@ -96,7 +96,7 @@ export default function Projects() {
                     className="border-b border-border"
                   >
                     <TableCell className="font-medium text-foreground">{p.name}</TableCell>
-                    <TableCell className="text-muted-foreground">{p.clients?.company || '–'}</TableCell>
+                    <TableCell className="text-muted-foreground">{p.clients?.[0]?.company || '–'}</TableCell>
                     <TableCell><Badge variant="secondary" className={statusColor(p.status)}>{p.status || 'draft'}</Badge></TableCell>
                     <TableCell className="text-muted-foreground text-sm">{new Date(p.created_at).toLocaleDateString('de-DE')}</TableCell>
                   </motion.tr>
