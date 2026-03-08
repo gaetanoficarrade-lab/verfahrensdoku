@@ -141,51 +141,48 @@ export default function ChapterEditor() {
     fetchOnboarding();
   }, [projectId, chapterKey]);
 
-  // Debounced real-time precheck for client
-  useEffect(() => {
-    if (isAdvisor || !canEdit || !notes.trim() || notes.trim().length < 20) {
-      setPrecheckResult(null);
-      return;
-    }
+  // Submit with precheck: runs precheck once on submit click
+  const handleSubmitWithPrecheck = async () => {
+    setPrecheckLoading(true);
+    setPrecheckResult(null);
 
-    if (precheckTimerRef.current) clearTimeout(precheckTimerRef.current);
+    try {
+      const cdId = await ensureChapterData();
+      if (!cdId) { setPrecheckLoading(false); return; }
 
-    precheckTimerRef.current = setTimeout(async () => {
-      setPrecheckLoading(true);
-      try {
-        const cdId = chapterDataId || await ensureChapterDataSilent();
-        if (!cdId) { setPrecheckLoading(false); return; }
+      const { data, error } = await supabase.functions.invoke('precheck-chapter-notes', {
+        body: {
+          project_id: projectId,
+          chapter_key: chapterKey,
+          client_notes: notes,
+          onboarding_answers: onboardingAnswers,
+        },
+      });
 
-        const { data, error } = await supabase.functions.invoke('precheck-chapter-notes', {
-          body: {
-            project_id: projectId,
-            chapter_key: chapterKey,
-            client_notes: notes,
-            onboarding_answers: onboardingAnswers,
-          },
-        });
+      if (error) throw error;
+      const result = data as PrecheckResult;
+      setPrecheckResult(result);
 
-        if (error) throw error;
-        const result = data as PrecheckResult;
-        setPrecheckResult(result);
+      // Save hints to DB
+      const allHints = [...(result.missing_fields || []), ...(result.hints || [])];
+      await supabase
+        .from('chapter_data')
+        .update({ client_precheck_hints: allHints })
+        .eq('id', cdId);
 
-        // Save hints to DB
-        const allHints = [...(result.missing_fields || []), ...(result.hints || [])];
-        await supabase
-          .from('chapter_data')
-          .update({ client_precheck_hints: allHints })
-          .eq('id', cdId);
-      } catch (err) {
-        console.error('Precheck error:', err);
-      } finally {
-        setPrecheckLoading(false);
+      // If no issues, submit directly
+      if ((result.hints?.length || 0) === 0 && (result.missing_fields?.length || 0) === 0) {
+        await handleSubmit();
       }
-    }, 3000);
-
-    return () => {
-      if (precheckTimerRef.current) clearTimeout(precheckTimerRef.current);
-    };
-  }, [notes, isAdvisor, canEdit]);
+    } catch (err: any) {
+      console.error('Precheck error:', err);
+      toast({ title: 'Fehler bei der Prüfung', description: 'Die KI-Prüfung konnte nicht durchgeführt werden. Sie können trotzdem einreichen.', variant: 'destructive' });
+      // Show empty result so user can still submit
+      setPrecheckResult({ hints: [], missing_fields: [], confidence: 0 });
+    } finally {
+      setPrecheckLoading(false);
+    }
+  };
 
   const ensureChapterDataSilent = async (): Promise<string | null> => {
     if (chapterDataId) return chapterDataId;
