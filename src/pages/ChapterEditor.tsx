@@ -414,14 +414,39 @@ export default function ChapterEditor() {
               ))}
             </div>
           )}
-          <Textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="Beschreiben Sie hier die relevanten Informationen für dieses Kapitel..."
-            rows={10}
-            disabled={isAdvisor || isSubmitted}
-            className="font-mono text-sm"
-          />
+          <div className="relative">
+            <Textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Beschreiben Sie hier die relevanten Informationen für dieses Kapitel..."
+              rows={10}
+              disabled={isAdvisor || isSubmitted}
+              className="font-mono text-sm pr-12"
+            />
+            {!isAdvisor && !isSubmitted && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className={`absolute top-2 right-2 ${notesSpeech.isListening ? 'text-destructive animate-pulse' : ''}`}
+                      onClick={notesSpeech.toggle}
+                      disabled={!notesSpeech.isSupported}
+                    >
+                      <Mic className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {notesSpeech.isSupported
+                      ? notesSpeech.isListening ? 'Aufnahme stoppen' : 'Spracheingabe starten'
+                      : 'Spracheingabe nicht unterstützt'}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
           {!isAdvisor && !isSubmitted && (
             <div className="space-y-4">
               <div className="flex gap-3">
