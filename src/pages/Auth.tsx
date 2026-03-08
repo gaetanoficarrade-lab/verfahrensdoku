@@ -7,14 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthContext } from '@/contexts/AuthContext';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isResetMode, setIsResetMode] = useState(false);
-  const { signIn, resetPassword, session, loading } = useAuth();
+  const { signIn, resetPassword, session, loading } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
 

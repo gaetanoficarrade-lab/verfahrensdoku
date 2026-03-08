@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
 import { useAuthContext } from '@/contexts/AuthContext';
 
 type AppRole = 'super_admin' | 'tenant_admin' | 'tenant_user' | 'client';
@@ -13,8 +12,7 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, requiredRoles, redirectTo = '/auth' }: ProtectedRouteProps) {
-  const { user, loading } = useAuth();
-  const { roles, profileLoading, isSuperAdmin, impersonation } = useAuthContext();
+  const { user, loading, roles, profileLoading, isSuperAdmin, impersonation } = useAuthContext();
 
   if (loading || profileLoading) {
     return (
