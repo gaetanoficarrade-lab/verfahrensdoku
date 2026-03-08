@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, FolderOpen, Plus, UserPlus, Mail, Lock } from 'lucide-react';
+import { ArrowLeft, Loader2, FolderOpen, Plus, UserPlus, Mail, Lock, Copy, Check, Send } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -50,6 +50,13 @@ export default function ClientDetail() {
   const [userPassword, setUserPassword] = useState('');
   const [creatingUser, setCreatingUser] = useState(false);
 
+  // Invite flow
+  const [showInvite, setShowInvite] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviting, setInviting] = useState(false);
+  const [inviteLink, setInviteLink] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
   useEffect(() => {
     if (!id || !effectiveTenantId) return;
     const fetch = async () => {
@@ -64,6 +71,49 @@ export default function ClientDetail() {
     };
     fetch();
   }, [id, effectiveTenantId]);
+
+  const handleInviteClient = async () => {
+    if (!client || !effectiveTenantId) return;
+    setInviting(true);
+    setInviteLink(null);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('invite-client', {
+        body: {
+          tenant_id: effectiveTenantId,
+          client_id: client.id,
+          email: inviteEmail.trim() || null,
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      const link = `${window.location.origin}/client-register?token=${data.token}`;
+      setInviteLink(link);
+      logAudit('client_user_created', 'client', client.id, { email: inviteEmail.trim(), type: 'invite_link' });
+    } catch (err: any) {
+      toast.error(err.message || 'Fehler beim Erstellen der Einladung.');
+    } finally {
+      setInviting(false);
+    }
+  };
+
+  const handleCopyLink = async () => {
+    if (!inviteLink) return;
+    await navigator.clipboard.writeText(inviteLink);
+    setCopied(true);
+    toast.success('Link kopiert.');
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleMailtoLink = () => {
+    if (!inviteLink || !inviteEmail) return;
+    const subject = encodeURIComponent(`Einladung zur Verfahrensdokumentation – ${client?.company || ''}`);
+    const body = encodeURIComponent(
+      `Sehr geehrte(r) ${client?.contact_name || 'Mandant'},\n\nSie wurden zur GoBD-Suite eingeladen. Bitte klicken Sie auf folgenden Link, um Ihr Konto zu erstellen:\n\n${inviteLink}\n\nDer Link ist 7 Tage gültig.\n\nMit freundlichen Grüßen`
+    );
+    window.open(`mailto:${inviteEmail}?subject=${subject}&body=${body}`, '_blank');
+  };
 
   if (loading) {
     return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
@@ -99,13 +149,27 @@ export default function ClientDetail() {
         </div>
         <Badge variant="secondary">{client.onboarding_status || 'pending'}</Badge>
         {!client.user_id && (
-          <Button variant="outline" size="sm" className="gap-1" onClick={() => {
-            setUserEmail(client.contact_email || '');
-            setShowCreateUser(true);
-          }}>
-            <UserPlus className="h-4 w-4" />
-            Zugang erstellen
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" className="gap-1" onClick={() => {
+              setInviteEmail(client.contact_email || '');
+              setInviteLink(null);
+              setCopied(false);
+              setShowInvite(true);
+            }}>
+              <Send className="h-4 w-4" />
+              Mandant einladen
+            </Button>
+            <Button variant="outline" size="sm" className="gap-1" onClick={() => {
+              setUserEmail(client.contact_email || '');
+              setShowCreateUser(true);
+            }}>
+              <UserPlus className="h-4 w-4" />
+              Zugang erstellen
+            </Button>
+          </div>
+        )}
+        {client.user_id && (
+          <Badge variant="default" className="text-xs">Zugang aktiv</Badge>
         )}
       </div>
 
@@ -160,6 +224,7 @@ export default function ClientDetail() {
         </Card>
       </div>
 
+      {/* New Project Dialog */}
       <Dialog open={showNewProject} onOpenChange={setShowNewProject}>
         <DialogContent>
           <DialogHeader>
@@ -196,7 +261,6 @@ export default function ClientDetail() {
                 logAudit('project_created', 'project', undefined, { name: newProjectName.trim(), client_id: id });
                 setShowNewProject(false);
                 setNewProjectName('');
-                // Refresh projects
                 const { data } = await supabase
                   .from('projects')
                   .select('id, name, status, workflow_status, created_at')
@@ -212,6 +276,8 @@ export default function ClientDetail() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Direct User Creation Dialog */}
       <Dialog open={showCreateUser} onOpenChange={setShowCreateUser}>
         <DialogContent>
           <DialogHeader>
@@ -272,7 +338,6 @@ export default function ClientDetail() {
                   setShowCreateUser(false);
                   setUserEmail('');
                   setUserPassword('');
-                  // Refresh client to show user_id is now set
                   const { data: updated } = await supabase.from('clients').select('*').eq('id', id!).eq('tenant_id', effectiveTenantId!).single();
                   if (updated) setClient(updated);
                 } catch (err: any) {
@@ -286,6 +351,71 @@ export default function ClientDetail() {
               Zugang erstellen
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Invite Client Dialog */}
+      <Dialog open={showInvite} onOpenChange={setShowInvite}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Mandanten einladen</DialogTitle>
+            <DialogDescription>
+              Generieren Sie einen Einladungslink für {client.company}. Der Mandant erstellt damit selbst sein Konto.
+            </DialogDescription>
+          </DialogHeader>
+
+          {!inviteLink ? (
+            <>
+              <div className="space-y-4 py-2">
+                <div className="space-y-2">
+                  <Label>E-Mail des Mandanten</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      type="email"
+                      value={inviteEmail}
+                      onChange={(e) => setInviteEmail(e.target.value)}
+                      className="pl-10"
+                      placeholder="mandant@beispiel.de"
+                    />
+                  </div>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowInvite(false)}>Abbrechen</Button>
+                <Button onClick={handleInviteClient} disabled={inviting}>
+                  {inviting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                  Link generieren
+                </Button>
+              </DialogFooter>
+            </>
+          ) : (
+            <div className="space-y-4 py-2">
+              <div className="space-y-2">
+                <Label>Einladungslink</Label>
+                <div className="flex gap-2">
+                  <Input value={inviteLink} readOnly className="font-mono text-xs" />
+                  <Button variant="outline" size="icon" onClick={handleCopyLink}>
+                    {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Der Link ist 7 Tage gültig. Der Mandant erstellt damit sein eigenes Konto.
+                </p>
+              </div>
+              <div className="flex gap-2">
+                {inviteEmail && (
+                  <Button variant="outline" size="sm" className="gap-1" onClick={handleMailtoLink}>
+                    <Mail className="h-4 w-4" />
+                    Per E-Mail senden
+                  </Button>
+                )}
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowInvite(false)}>Schließen</Button>
+              </DialogFooter>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
