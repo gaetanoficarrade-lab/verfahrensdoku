@@ -54,6 +54,7 @@ export default function ClientNew() {
       return;
     }
     toast({ title: 'Mandant erstellt', description: `${form.company} wurde erfolgreich angelegt.` });
+    logAudit('client_created', 'client', data.id, { company: form.company });
     navigate(`/clients/${data.id}`);
   };
 

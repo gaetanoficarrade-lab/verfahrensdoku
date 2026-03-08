@@ -71,6 +71,7 @@ export default function BrandingSettings() {
   const handleSave = async () => {
     try {
       await saveMutation.mutateAsync(form);
+      logAudit('settings_updated', 'tenant_settings', effectiveTenantId || undefined);
       toast.success('Einstellungen gespeichert');
     } catch (err: any) {
       toast.error('Fehler beim Speichern: ' + err.message);

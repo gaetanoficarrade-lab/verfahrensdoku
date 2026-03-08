@@ -109,6 +109,7 @@ export default function ClientProjectDetail() {
         status: 'draft', is_draft: true, created_by: user?.id,
         notes: `PDF erstellt am ${new Date().toLocaleDateString('de-DE')}`,
       });
+      logAudit('pdf_created', 'project', id, { version: nextVersion, file: fileName });
       toast.success('PDF wurde erstellt und heruntergeladen.');
     } catch (err) {
       console.error(err);

@@ -243,6 +243,7 @@ export default function ChapterEditor() {
       if (error) throw error;
       const generatedText = data.generated_text || '';
       setEditorText(generatedText);
+      logAudit('text_generated', 'chapter', chapterDataId!, { chapter_key: chapterKey, project_id: projectId });
       toast({ title: 'Text generiert', description: `Qualitätsscore: ${data.quality_score || 0}/100` });
     } catch (err: any) {
       console.error('Generate error:', err);

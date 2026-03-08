@@ -268,6 +268,7 @@ export default function ClientDetail() {
                   if (error) throw error;
                   if (data?.error) throw new Error(data.error);
                   toast.success(data.message || 'Zugang erstellt!');
+                  logAudit('client_user_created', 'client', client.id, { email: userEmail.trim() });
                   setShowCreateUser(false);
                   setUserEmail('');
                   setUserPassword('');
