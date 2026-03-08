@@ -12,6 +12,9 @@ import {
   Globe,
   Palette,
   Link2,
+  HelpCircle,
+  CreditCard,
+  KeyRound,
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -45,8 +48,19 @@ const tenantItems = [
   { title: 'Mandanten', url: '/clients', icon: Users },
 ];
 
+const tenantSettingsItems = [
+  { title: 'Branding', url: '/settings/branding', icon: Palette },
+  { title: 'Team', url: '/settings/team', icon: Users },
+  { title: 'Webhooks', url: '/settings/webhook', icon: Globe },
+  { title: 'Aktivitäts-Log', url: '/settings/activity-log', icon: ScrollText },
+  { title: 'Affiliate', url: '/settings/affiliate', icon: Link2 },
+  { title: 'Abrechnung', url: '/settings/billing', icon: CreditCard },
+  { title: 'Sicherheit', url: '/settings/security', icon: KeyRound },
+];
+
 const clientItems = [
   { title: 'Dashboard', url: '/client', icon: LayoutDashboard },
+  { title: 'Einstellungen', url: '/client/settings', icon: Settings },
 ];
 
 export function AppSidebar() {
@@ -78,6 +92,30 @@ export function AppSidebar() {
     await signOut();
     navigate('/auth');
   };
+
+  const renderMenuItems = (menuItems: typeof adminItems) => (
+    <SidebarMenu>
+      {menuItems.map((item) => (
+        <SidebarMenuItem key={item.title}>
+          <SidebarMenuButton
+            asChild
+            isActive={isActive(item.url)}
+            tooltip={item.title}
+          >
+            <NavLink
+              to={item.url}
+              end={item.url === '/' || item.url === '/admin' || item.url === '/client'}
+              className="hover:bg-sidebar-accent/50"
+              activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+            >
+              <item.icon className="h-4 w-4" />
+              {!collapsed && <span>{item.title}</span>}
+            </NavLink>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      ))}
+    </SidebarMenu>
+  );
 
   return (
     <Sidebar collapsible="icon">
@@ -111,27 +149,7 @@ export function AppSidebar() {
             {!collapsed && 'Navigation'}
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={isActive(item.url)}
-                    tooltip={item.title}
-                  >
-                    <NavLink
-                      to={item.url}
-                      end={item.url === '/' || item.url === '/admin'}
-                      className="hover:bg-sidebar-accent/50"
-                      activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                    >
-                      <item.icon className="h-4 w-4" />
-                      {!collapsed && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
+            {renderMenuItems(items)}
           </SidebarGroupContent>
         </SidebarGroup>
 
@@ -142,51 +160,26 @@ export function AppSidebar() {
               {!collapsed && 'Einstellungen'}
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={isActive('/settings/branding')} tooltip="Branding">
-                    <NavLink to="/settings/branding" className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
-                      <Palette className="h-4 w-4" />
-                      {!collapsed && <span>Branding</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={isActive('/settings/team')} tooltip="Team">
-                    <NavLink to="/settings/team" className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
-                      <Users className="h-4 w-4" />
-                      {!collapsed && <span>Team</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={isActive('/settings/webhook')} tooltip="Webhooks">
-                    <NavLink to="/settings/webhook" className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
-                      <Globe className="h-4 w-4" />
-                      {!collapsed && <span>Webhooks</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={isActive('/settings/activity-log')} tooltip="Aktivitäts-Log">
-                    <NavLink to="/settings/activity-log" className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
-                      <ScrollText className="h-4 w-4" />
-                      {!collapsed && <span>Aktivitäts-Log</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={isActive('/settings/affiliate')} tooltip="Affiliate">
-                    <NavLink to="/settings/affiliate" className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
-                      <Link2 className="h-4 w-4" />
-                      {!collapsed && <span>Affiliate</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
+              {renderMenuItems(tenantSettingsItems)}
             </SidebarGroupContent>
           </SidebarGroup>
         )}
+
+        {/* Help link for all */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive('/help')} tooltip="Hilfe">
+                  <NavLink to="/help" className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
+                    <HelpCircle className="h-4 w-4" />
+                    {!collapsed && <span>Hilfe</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-2">
