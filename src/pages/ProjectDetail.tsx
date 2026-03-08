@@ -122,7 +122,12 @@ export default function ProjectDetail() {
           projectId={project.id}
           onboardingId={onboarding?.id || ''}
           initialAnswers={((onboarding?.answers as OnboardingAnswers) || {})}
-          onComplete={loadData}
+          onComplete={() => {
+            // Instantly mark onboarding as completed to avoid full reload delay
+            setOnboarding(prev => prev ? { ...prev, completed_at: new Date().toISOString() } : prev);
+            // Then refresh data in background
+            loadData();
+          }}
         />
       </div>
     );
