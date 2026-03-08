@@ -35,6 +35,7 @@ const adminItems = [
   { title: 'Dashboard', url: '/admin', icon: LayoutDashboard },
   { title: 'Lizenznehmer', url: '/admin/tenants', icon: Building2 },
   { title: 'Audit-Log', url: '/audit-log', icon: ScrollText },
+  { title: 'Einstellungen', url: '/admin/settings/general', icon: Settings },
 ];
 
 const tenantItems = [

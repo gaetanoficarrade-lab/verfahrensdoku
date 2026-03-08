@@ -14,6 +14,11 @@ import Index from "./pages/Index";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminTenants from "./pages/AdminTenants";
 import AuditLog from "./pages/AuditLog";
+import AdminSettingsGeneral from "./pages/AdminSettingsGeneral";
+import AdminSettingsLegal from "./pages/AdminSettingsLegal";
+import AdminSettingsEmail from "./pages/AdminSettingsEmail";
+import AdminSettingsPlans from "./pages/AdminSettingsPlans";
+import AdminSettingsSystem from "./pages/AdminSettingsSystem";
 import Clients from "./pages/Clients";
 import ClientNew from "./pages/ClientNew";
 import ClientDetail from "./pages/ClientDetail";
@@ -76,6 +81,48 @@ const App = () => (
                 element={
                   <ProtectedRoute requiredRoles={['super_admin']}>
                     <AppLayout><AuditLog /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Admin Settings */}
+              <Route
+                path="/admin/settings/general"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminSettingsGeneral /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/settings/legal"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminSettingsLegal /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/settings/email"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminSettingsEmail /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/settings/plans"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminSettingsPlans /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/settings/system"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminSettingsSystem /></AppLayout>
                   </ProtectedRoute>
                 }
               />
