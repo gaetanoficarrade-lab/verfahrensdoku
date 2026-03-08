@@ -63,6 +63,14 @@ export default function ChapterEditor() {
   const [onboardingAnswers, setOnboardingAnswers] = useState<Record<string, any> | null>(null);
   const [editorTextSaving, setEditorTextSaving] = useState(false);
 
+  const notesSpeech = useSpeechRecognition(useCallback((text: string) => {
+    setNotes(prev => prev ? prev + ' ' + text : text);
+  }, []));
+
+  const editorSpeech = useSpeechRecognition(useCallback((text: string) => {
+    setEditorText(prev => prev ? prev + ' ' + text : text);
+  }, []));
+
   const title = CHAPTER_TITLE_MAP[chapterKey || ''] || chapterKey;
   const isSubmitted = status === 'client_submitted' || status === 'advisor_review' || status === 'approved' || status === 'advisor_approved';
 
