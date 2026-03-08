@@ -40,6 +40,10 @@ const tenantItems = [
   { title: 'Projekte', url: '/projects', icon: FolderOpen },
 ];
 
+const clientItems = [
+  { title: 'Dashboard', url: '/client', icon: LayoutDashboard },
+];
+
 export function AppSidebar() {
   const { state, toggleSidebar } = useSidebar();
   const collapsed = state === 'collapsed';
