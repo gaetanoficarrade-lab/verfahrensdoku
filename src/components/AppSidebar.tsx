@@ -15,6 +15,9 @@ import {
   HelpCircle,
   CreditCard,
   KeyRound,
+  Eye,
+  FileText,
+  Tag,
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -45,12 +48,14 @@ const adminItems = [
 
 const tenantItems = [
   { title: 'Dashboard', url: '/', icon: LayoutDashboard },
+  { title: 'Übersicht', url: '/overview', icon: Eye },
   { title: 'Mandanten', url: '/clients', icon: Users },
 ];
 
 const tenantSettingsItems = [
   { title: 'Branding', url: '/settings/branding', icon: Palette },
   { title: 'Team', url: '/settings/team', icon: Users },
+  { title: 'Vorlagen', url: '/settings/templates', icon: FileText },
   { title: 'Webhooks', url: '/settings/webhook', icon: Globe },
   { title: 'Aktivitäts-Log', url: '/settings/activity-log', icon: ScrollText },
   { title: 'Affiliate', url: '/settings/affiliate', icon: Link2 },

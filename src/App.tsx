@@ -19,6 +19,7 @@ import AdminSettingsLegal from "./pages/AdminSettingsLegal";
 import AdminSettingsEmail from "./pages/AdminSettingsEmail";
 import AdminSettingsPlans from "./pages/AdminSettingsPlans";
 import AdminSettingsSystem from "./pages/AdminSettingsSystem";
+import AdminPromoCodes from "./pages/AdminPromoCodes";
 import Clients from "./pages/Clients";
 import ClientNew from "./pages/ClientNew";
 import ClientDetail from "./pages/ClientDetail";
@@ -40,6 +41,8 @@ import HelpPage from "./pages/HelpPage";
 import BillingSettings from "./pages/BillingSettings";
 import ClientSettings from "./pages/ClientSettings";
 import TrialExpired from "./pages/TrialExpired";
+import AdvisorOverview from "./pages/AdvisorOverview";
+import TemplateSettings from "./pages/TemplateSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -65,6 +68,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <AppLayout><Index /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/overview"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
+                    <AppLayout><AdvisorOverview /></AppLayout>
                   </ProtectedRoute>
                 }
               />
@@ -131,6 +142,14 @@ const App = () => (
                 element={
                   <ProtectedRoute requiredRoles={['super_admin']}>
                     <AppLayout><AdminSettingsSystem /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/settings/promo-codes"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminPromoCodes /></AppLayout>
                   </ProtectedRoute>
                 }
               />
@@ -253,6 +272,14 @@ const App = () => (
                 element={
                   <ProtectedRoute requiredRoles={['tenant_admin']}>
                     <AppLayout><BillingSettings /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/templates"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
+                    <AppLayout><TemplateSettings /></AppLayout>
                   </ProtectedRoute>
                 }
               />
