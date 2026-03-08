@@ -900,3 +900,105 @@ CREATE POLICY "Enforce client limit" ON public.clients
     public.check_client_limit(tenant_id)
     OR public.has_role(auth.uid(), 'super_admin')
   );
+
+
+-- 14. NOTIFICATIONS
+-- =====================================================
+
+CREATE TABLE public.notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  link TEXT,
+  is_read BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
+CREATE INDEX idx_notifications_user_id ON public.notifications(user_id);
+CREATE INDEX idx_notifications_created ON public.notifications(created_at);
+
+CREATE POLICY "Users see own notifications" ON public.notifications
+  FOR SELECT TO authenticated USING (user_id = auth.uid());
+
+CREATE POLICY "Users update own notifications" ON public.notifications
+  FOR UPDATE TO authenticated USING (user_id = auth.uid());
+
+CREATE POLICY "Insert notifications" ON public.notifications
+  FOR INSERT TO authenticated WITH CHECK (true);
+
+
+-- 15. TRIAL PERIOD
+-- =====================================================
+
+ALTER TABLE public.tenants ADD COLUMN IF NOT EXISTS trial_ends_at TIMESTAMPTZ;
+ALTER TABLE public.tenants ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT;
+ALTER TABLE public.tenants ADD COLUMN IF NOT EXISTS stripe_subscription_id TEXT;
+ALTER TABLE public.tenants ADD COLUMN IF NOT EXISTS subscription_status TEXT;
+
+
+-- 16. DELETION REQUESTS (GDPR)
+-- =====================================================
+
+CREATE TABLE public.deletion_requests (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  status TEXT NOT NULL DEFAULT 'pending',
+  requested_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  processed_at TIMESTAMPTZ,
+  processed_by UUID REFERENCES auth.users(id)
+);
+
+ALTER TABLE public.deletion_requests ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users see own deletion requests" ON public.deletion_requests
+  FOR SELECT TO authenticated USING (user_id = auth.uid() OR public.has_role(auth.uid(), 'super_admin'));
+
+CREATE POLICY "Users create deletion requests" ON public.deletion_requests
+  FOR INSERT TO authenticated WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Super admin manages deletion requests" ON public.deletion_requests
+  FOR ALL TO authenticated USING (public.has_role(auth.uid(), 'super_admin'));
+
+
+-- 17. PAYMENT HISTORY (Stripe Prep)
+-- =====================================================
+
+CREATE TABLE public.payment_history (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE,
+  amount NUMERIC(10,2) NOT NULL,
+  currency TEXT NOT NULL DEFAULT 'EUR',
+  status TEXT NOT NULL DEFAULT 'pending',
+  stripe_payment_id TEXT,
+  description TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.payment_history ENABLE ROW LEVEL SECURITY;
+CREATE INDEX idx_payment_history_tenant_id ON public.payment_history(tenant_id);
+
+CREATE POLICY "Tenant admin sees own payments" ON public.payment_history
+  FOR SELECT TO authenticated
+  USING (
+    tenant_id = public.get_user_tenant_id(auth.uid())
+    OR public.has_role(auth.uid(), 'super_admin')
+  );
+
+CREATE POLICY "Super admin manages payments" ON public.payment_history
+  FOR ALL TO authenticated USING (public.has_role(auth.uid(), 'super_admin'));
+
+
+-- 18. PLATFORM SETTINGS SEED DATA
+-- =====================================================
+
+INSERT INTO public.platform_settings (key, value) VALUES
+  ('trial_enabled', '"true"'),
+  ('trial_days', '"14"'),
+  ('session_timeout_minutes', '"30"'),
+  ('session_warning_minutes', '"5"'),
+  ('affiliate_cookie_days', '"30"'),
+  ('affiliate_default_commission', '"20"'),
+  ('invite_expiry_days', '"7"')
+ON CONFLICT (key) DO NOTHING;
