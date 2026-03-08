@@ -22,6 +22,8 @@ import {
 
 import { CHAPTER_TITLE_MAP } from '@/lib/chapter-structure';
 import { CHAPTER_LEITFRAGEN } from '@/lib/chapter-leitfragen';
+import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ChapterFile {
   id: string;
