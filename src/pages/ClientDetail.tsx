@@ -130,7 +130,7 @@ export default function ClientDetail() {
                 </TableHeader>
                 <TableBody>
                   {projects.map((p) => (
-                    <TableRow key={p.id}>
+                    <TableRow key={p.id} className="cursor-pointer hover:bg-muted/50" onClick={() => navigate(`/projects/${p.id}`)}>
                       <TableCell className="font-medium text-foreground">{p.name}</TableCell>
                       <TableCell><Badge variant="secondary">{p.status || 'draft'}</Badge></TableCell>
                       <TableCell className="text-muted-foreground text-sm">{new Date(p.created_at).toLocaleDateString('de-DE')}</TableCell>
