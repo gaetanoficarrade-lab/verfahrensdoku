@@ -141,8 +141,8 @@ export default function ChapterEditor() {
     fetchOnboarding();
   }, [projectId, chapterKey]);
 
-  // Submit with precheck: runs precheck once on submit click
-  const handleSubmitWithPrecheck = async () => {
+  // Manual precheck triggered by "Prüfen" button
+  const handlePrecheck = async () => {
     setPrecheckLoading(true);
     setPrecheckResult(null);
 
@@ -169,16 +169,9 @@ export default function ChapterEditor() {
         .from('chapter_data')
         .update({ client_precheck_hints: allHints })
         .eq('id', cdId);
-
-      // If no issues, submit directly
-      if ((result.hints?.length || 0) === 0 && (result.missing_fields?.length || 0) === 0) {
-        await handleSubmit();
-      }
     } catch (err: any) {
       console.error('Precheck error:', err);
-      toast({ title: 'Fehler bei der Prüfung', description: 'Die KI-Prüfung konnte nicht durchgeführt werden. Sie können trotzdem einreichen.', variant: 'destructive' });
-      // Show empty result so user can still submit
-      setPrecheckResult({ hints: [], missing_fields: [], confidence: 0 });
+      toast({ title: 'Fehler bei der Prüfung', description: 'Die KI-Prüfung konnte nicht durchgeführt werden.', variant: 'destructive' });
     } finally {
       setPrecheckLoading(false);
     }
