@@ -19,6 +19,7 @@ import ClientDetail from "./pages/ClientDetail";
 import Projects from "./pages/Projects";
 import ClientDashboard from "./pages/ClientDashboard";
 import ClientProjectDetail from "./pages/ClientProjectDetail";
+import ProjectDetail from "./pages/ProjectDetail";
 import ChapterEditor from "./pages/ChapterEditor";
 import NotFound from "./pages/NotFound";
 
@@ -103,7 +104,14 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-
+            <Route
+              path="/projects/:id"
+              element={
+                <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
+                  <AppLayout><ProjectDetail /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
             {/* Client portal routes */}
             <Route
               path="/client"
