@@ -566,9 +566,61 @@ CREATE INDEX idx_invite_tokens_token ON public.invite_tokens(token);
 CREATE INDEX idx_invite_tokens_tenant_id ON public.invite_tokens(tenant_id);
 CREATE INDEX idx_audit_log_tenant_id ON public.audit_log(tenant_id);
 CREATE INDEX idx_audit_log_entity ON public.audit_log(entity_type, entity_id);
+CREATE INDEX idx_tenant_settings_tenant_id ON public.tenant_settings(tenant_id);
 
 
--- 8. SEED DATA: Plans
+-- 8. TENANT SETTINGS
+-- =====================================================
+
+CREATE TABLE public.tenant_settings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE UNIQUE,
+  brand_name TEXT,
+  logo_url TEXT,
+  primary_color TEXT DEFAULT '#1e3a5f',
+  address TEXT,
+  phone TEXT,
+  website TEXT,
+  imprint TEXT,
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.tenant_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE TRIGGER set_updated_at_tenant_settings
+  BEFORE UPDATE ON public.tenant_settings
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+-- RLS: tenant_admin can read and write own settings
+CREATE POLICY "Tenant admin reads own settings" ON public.tenant_settings
+  FOR SELECT TO authenticated
+  USING (
+    tenant_id = public.get_user_tenant_id(auth.uid())
+    OR public.has_role(auth.uid(), 'super_admin')
+  );
+
+CREATE POLICY "Tenant admin manages own settings" ON public.tenant_settings
+  FOR ALL TO authenticated
+  USING (
+    (tenant_id = public.get_user_tenant_id(auth.uid()) AND public.has_role(auth.uid(), 'tenant_admin'))
+    OR public.has_role(auth.uid(), 'super_admin')
+  );
+
+-- All tenant users can read settings (for branding display)
+CREATE POLICY "Tenant users read settings" ON public.tenant_settings
+  FOR SELECT TO authenticated
+  USING (tenant_id = public.get_user_tenant_id(auth.uid()));
+
+-- Storage bucket for tenant assets (logos etc.)
+INSERT INTO storage.buckets (id, name, public) VALUES ('tenant-assets', 'tenant-assets', true);
+
+CREATE POLICY "Tenant admins manage tenant assets"
+  ON storage.objects FOR ALL TO authenticated
+  USING (bucket_id = 'tenant-assets')
+  WITH CHECK (bucket_id = 'tenant-assets');
+
+
+-- 9. SEED DATA: Plans
 -- =====================================================
 
 INSERT INTO public.plans (name, max_clients, max_projects, price_monthly) VALUES
