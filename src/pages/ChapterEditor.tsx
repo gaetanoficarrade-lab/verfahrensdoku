@@ -20,17 +20,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 
-const CHAPTER_TITLES: Record<string, string> = {
-  general_info: 'Allgemeine Informationen',
-  it_systems: 'IT-Umfeld',
-  processes: 'Geschäftsprozesse',
-  archiving: 'Archivierung',
-  controls: 'Internes Kontrollsystem',
-  // Legacy keys
-  org_environment: 'Organisatorisches Umfeld',
-  it_environment: 'IT-Umfeld',
-  ics: 'Internes Kontrollsystem',
-};
+import { CHAPTER_TITLE_MAP } from '@/lib/chapter-structure';
 
 interface ChapterFile {
   id: string;
