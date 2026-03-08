@@ -193,6 +193,7 @@ export default function ClientDetail() {
                   return;
                 }
                 toast.success('Projekt wurde angelegt.');
+                logAudit('project_created', 'project', undefined, { name: newProjectName.trim(), client_id: id });
                 setShowNewProject(false);
                 setNewProjectName('');
                 // Refresh projects
