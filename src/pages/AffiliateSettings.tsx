@@ -441,7 +441,7 @@ export default function AffiliateSettings() {
             <Card>
               <CardContent className="pt-6">
                 <p className="text-sm text-muted-foreground">Ausstehend</p>
-                <p className="text-2xl font-bold text-yellow-600">{pendingCommission.toFixed(2)} €</p>
+                <p className="text-2xl font-bold text-warning">{pendingCommission.toFixed(2)} €</p>
               </CardContent>
             </Card>
             <Card>
