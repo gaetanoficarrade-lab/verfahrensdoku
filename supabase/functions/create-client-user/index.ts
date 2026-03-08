@@ -53,14 +53,17 @@ serve(async (req) => {
       });
     }
 
-    const { email, password, client_id, tenant_id } = await req.json();
+    const { email, password, client_id, tenant_id, role } = await req.json();
 
-    if (!email || !password || !client_id || !tenant_id) {
+    if (!email || !password || !tenant_id) {
       return new Response(
-        JSON.stringify({ error: "email, password, client_id, tenant_id required" }),
+        JSON.stringify({ error: "email, password, tenant_id required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    // Determine role: 'tenant_user' for team members, 'client' for client users
+    const assignRole = role === "tenant_user" ? "tenant_user" : "client";
 
     // Use service role to create user
     const supabaseAdmin = createClient(
