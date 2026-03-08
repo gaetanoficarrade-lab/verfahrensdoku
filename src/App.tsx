@@ -112,6 +112,14 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/projects/:id/chapters/:chapterKey"
+              element={
+                <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
+                  <AppLayout><ChapterEditor /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
             {/* Client portal routes */}
             <Route
               path="/client"
