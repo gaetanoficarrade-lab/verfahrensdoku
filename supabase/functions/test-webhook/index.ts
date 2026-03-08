@@ -135,11 +135,10 @@ serve(async (req) => {
 
     await supabaseAdmin.from("webhook_logs").insert({
       webhook_id: webhook.id,
-      tenant_id: profile.tenant_id,
       event: "test",
-      status_code: statusCode,
-      response_body: responseBody?.substring(0, 1000),
-      success,
+      payload: JSON.parse(testPayload),
+      response_status: statusCode,
+      response_body: responseBody?.substring(0, 2000),
     });
 
     return new Response(
