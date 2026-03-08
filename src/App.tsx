@@ -17,6 +17,9 @@ import Clients from "./pages/Clients";
 import ClientNew from "./pages/ClientNew";
 import ClientDetail from "./pages/ClientDetail";
 import Projects from "./pages/Projects";
+import ClientDashboard from "./pages/ClientDashboard";
+import ClientProjectDetail from "./pages/ClientProjectDetail";
+import ChapterEditor from "./pages/ChapterEditor";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
