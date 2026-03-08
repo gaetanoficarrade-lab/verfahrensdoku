@@ -21,6 +21,8 @@ interface Client {
   legal_form: string | null;
   founding_year: number | null;
   onboarding_status: string | null;
+  user_id: string | null;
+  tenant_id: string;
   created_at: string;
 }
 
