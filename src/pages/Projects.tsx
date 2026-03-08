@@ -40,7 +40,7 @@ export default function Projects() {
   }, [effectiveTenantId]);
 
   const filtered = projects.filter((p) =>
-    [p.name, p.clients?.company, p.status].filter(Boolean).some((v) => v!.toLowerCase().includes(search.toLowerCase()))
+    [p.name, p.clients?.[0]?.company, p.status].filter(Boolean).some((v) => v!.toLowerCase().includes(search.toLowerCase()))
   );
 
   const statusColor = (status: string | null) => {
