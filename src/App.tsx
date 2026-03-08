@@ -35,6 +35,11 @@ import ClientRegister from "./pages/ClientRegister";
 import AffiliateSettings from "./pages/AffiliateSettings";
 import AdminAffiliates from "./pages/AdminAffiliates";
 import DocumentPreview from "./pages/DocumentPreview";
+import SecuritySettings from "./pages/SecuritySettings";
+import HelpPage from "./pages/HelpPage";
+import BillingSettings from "./pages/BillingSettings";
+import ClientSettings from "./pages/ClientSettings";
+import TrialExpired from "./pages/TrialExpired";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -235,6 +240,39 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/settings/security"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout><SecuritySettings /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/billing"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin']}>
+                    <AppLayout><BillingSettings /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/help"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout><HelpPage /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/trial-expired"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout><TrialExpired /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+
               {/* Client portal routes */}
               <Route
                 path="/client"
@@ -257,6 +295,14 @@ const App = () => (
                 element={
                   <ProtectedRoute requiredRoles={['client']}>
                     <AppLayout><ChapterEditor /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/client/settings"
+                element={
+                  <ProtectedRoute requiredRoles={['client']}>
+                    <AppLayout><ClientSettings /></AppLayout>
                   </ProtectedRoute>
                 }
               />

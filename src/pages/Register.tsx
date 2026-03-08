@@ -5,6 +5,7 @@ import { Shield, Mail, Lock, User, Loader2, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { useAuthContext } from '@/contexts/AuthContext';
@@ -21,18 +22,16 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [tokenValid, setTokenValid] = useState<boolean | null>(null);
   const [tokenData, setTokenData] = useState<any>(null);
+  const [acceptPrivacy, setAcceptPrivacy] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const { signUp } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Determine if this is a team invite (no client_id) or client invite
   const isTeamInvite = tokenData && !tokenData.client_id;
 
   useEffect(() => {
-    if (!token) {
-      setTokenValid(false);
-      return;
-    }
+    if (!token) { setTokenValid(false); return; }
     const validate = async () => {
       const { data, error } = await supabase
         .from('invite_tokens')
@@ -41,33 +40,23 @@ const Register = () => {
         .eq('is_active', true)
         .gt('expires_at', new Date().toISOString())
         .maybeSingle();
-
-      if (error || !data) {
-        setTokenValid(false);
-      } else {
-        setTokenValid(true);
-        setTokenData(data);
-      }
+      if (error || !data) { setTokenValid(false); } else { setTokenValid(true); setTokenData(data); }
     };
     validate();
   }, [token]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!acceptPrivacy || !acceptTerms) {
+      toast({ variant: 'destructive', title: 'Fehler', description: 'Bitte stimmen Sie den Datenschutzbestimmungen und AGB zu.' });
+      return;
+    }
     if (password !== passwordConfirm) {
-      toast({
-        variant: 'destructive',
-        title: 'Fehler',
-        description: 'Die Passwörter stimmen nicht überein.',
-      });
+      toast({ variant: 'destructive', title: 'Fehler', description: 'Die Passwörter stimmen nicht überein.' });
       return;
     }
     if (password.length < 8) {
-      toast({
-        variant: 'destructive',
-        title: 'Fehler',
-        description: 'Das Passwort muss mindestens 8 Zeichen lang sein.',
-      });
+      toast({ variant: 'destructive', title: 'Fehler', description: 'Das Passwort muss mindestens 8 Zeichen lang sein.' });
       return;
     }
 
@@ -78,16 +67,13 @@ const Register = () => {
       invite_token: token,
       tenant_id: tokenData?.tenant_id,
       client_id: tokenData?.client_id || null,
-      // Flag for team invites so the trigger knows to assign tenant_user
       team_invite: isTeamInvite ? 'true' : null,
+      consent_privacy: new Date().toISOString(),
+      consent_terms: new Date().toISOString(),
     });
 
     if (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Registrierung fehlgeschlagen',
-        description: error.message,
-      });
+      toast({ variant: 'destructive', title: 'Registrierung fehlgeschlagen', description: error.message });
     } else {
       toast({
         title: 'Registrierung erfolgreich',
@@ -101,11 +87,7 @@ const Register = () => {
   };
 
   if (tokenValid === null) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <div className="flex min-h-screen items-center justify-center bg-background"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
 
   if (!tokenValid) {
@@ -114,9 +96,7 @@ const Register = () => {
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-destructive">Ungültiger Einladungslink</CardTitle>
-            <CardDescription>
-              Dieser Einladungslink ist ungültig oder abgelaufen. Bitte kontaktieren Sie Ihren Administrator.
-            </CardDescription>
+            <CardDescription>Dieser Einladungslink ist ungültig oder abgelaufen.</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -125,19 +105,10 @@ const Register = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full max-w-md"
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full max-w-md">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary">
-            {isTeamInvite ? (
-              <Users className="h-7 w-7 text-primary-foreground" />
-            ) : (
-              <Shield className="h-7 w-7 text-primary-foreground" />
-            )}
+            {isTeamInvite ? <Users className="h-7 w-7 text-primary-foreground" /> : <Shield className="h-7 w-7 text-primary-foreground" />}
           </div>
           <h1 className="text-2xl font-bold text-foreground">GoBD-Suite</h1>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -149,9 +120,7 @@ const Register = () => {
           <CardHeader>
             <CardTitle>Registrierung</CardTitle>
             <CardDescription>
-              {isTeamInvite
-                ? 'Sie wurden als Team-Mitglied eingeladen. Erstellen Sie Ihr Konto.'
-                : 'Erstellen Sie Ihr Konto, um auf die Verfahrensdokumentation zuzugreifen.'}
+              {isTeamInvite ? 'Sie wurden als Team-Mitglied eingeladen.' : 'Erstellen Sie Ihr Konto.'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -161,23 +130,12 @@ const Register = () => {
                   <Label htmlFor="firstName">Vorname</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      id="firstName"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="pl-10"
-                      required
-                    />
+                    <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="pl-10" required />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="lastName">Nachname</Label>
-                  <Input
-                    id="lastName"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    required
-                  />
+                  <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
                 </div>
               </div>
 
@@ -185,15 +143,7 @@ const Register = () => {
                 <Label htmlFor="email">E-Mail</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="name@firma.de"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
+                  <Input id="email" type="email" placeholder="name@firma.de" value={email} onChange={(e) => setEmail(e.target.value)} className="pl-10" required />
                 </div>
               </div>
 
@@ -201,15 +151,7 @@ const Register = () => {
                 <Label htmlFor="password">Passwort</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Min. 8 Zeichen"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
+                  <Input id="password" type="password" placeholder="Min. 8 Zeichen" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-10" required />
                 </div>
               </div>
 
@@ -217,18 +159,27 @@ const Register = () => {
                 <Label htmlFor="passwordConfirm">Passwort bestätigen</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    id="passwordConfirm"
-                    type="password"
-                    value={passwordConfirm}
-                    onChange={(e) => setPasswordConfirm(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
+                  <Input id="passwordConfirm" type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} className="pl-10" required />
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              {/* GDPR Consent */}
+              <div className="space-y-3 pt-2 border-t">
+                <div className="flex items-start gap-2">
+                  <Checkbox id="privacy" checked={acceptPrivacy} onCheckedChange={(v) => setAcceptPrivacy(v === true)} className="mt-1" />
+                  <Label htmlFor="privacy" className="text-sm text-muted-foreground leading-tight cursor-pointer">
+                    Ich habe die <span className="text-foreground underline">Datenschutzerklärung</span> gelesen und stimme zu.
+                  </Label>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Checkbox id="terms" checked={acceptTerms} onCheckedChange={(v) => setAcceptTerms(v === true)} className="mt-1" />
+                  <Label htmlFor="terms" className="text-sm text-muted-foreground leading-tight cursor-pointer">
+                    Ich stimme den <span className="text-foreground underline">AGB</span> zu.
+                  </Label>
+                </div>
+              </div>
+
+              <Button type="submit" className="w-full" disabled={isLoading || !acceptPrivacy || !acceptTerms}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Konto erstellen
               </Button>

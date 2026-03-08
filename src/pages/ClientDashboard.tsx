@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, FolderOpen } from 'lucide-react';
+import { Loader2, FolderOpen, BarChart3, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { motion } from 'framer-motion';
+import { GOBD_CHAPTERS } from '@/lib/chapter-structure';
 
 interface Project {
   id: string;
@@ -15,17 +17,24 @@ interface Project {
   created_at: string;
 }
 
+interface ChapterProgress {
+  project_id: string;
+  total: number;
+  submitted: number;
+  openChapters: string[];
+}
+
 export default function ClientDashboard() {
   const { user } = useAuthContext();
   const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [progressMap, setProgressMap] = useState<Record<string, ChapterProgress>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
     const fetchProjects = async () => {
       setLoading(true);
-      // Get client record for current user, then their projects
       const { data: clientData } = await supabase
         .from('clients')
         .select('id')
@@ -44,7 +53,32 @@ export default function ClientDashboard() {
         .in('client_id', clientIds)
         .order('created_at', { ascending: false });
 
-      setProjects(projectsData || []);
+      const projs = projectsData || [];
+      setProjects(projs);
+
+      // Fetch chapter progress for each project
+      if (projs.length > 0) {
+        const projectIds = projs.map(p => p.id);
+        const { data: chapters } = await supabase
+          .from('chapter_data')
+          .select('project_id, chapter_key, status')
+          .in('project_id', projectIds);
+
+        const map: Record<string, ChapterProgress> = {};
+        for (const p of projs) {
+          const pChapters = (chapters || []).filter(c => c.project_id === p.id);
+          const total = pChapters.length || GOBD_CHAPTERS.reduce((sum, ch) => sum + ch.subChapters.length, 0);
+          const submitted = pChapters.filter(c =>
+            c.status === 'client_submitted' || c.status === 'advisor_review' || c.status === 'approved' || c.status === 'advisor_approved'
+          ).length;
+          const openChapterKeys = pChapters
+            .filter(c => c.status === 'empty' || c.status === 'client_draft')
+            .map(c => c.chapter_key);
+          map[p.id] = { project_id: p.id, total, submitted, openChapters: openChapterKeys };
+        }
+        setProgressMap(map);
+      }
+
       setLoading(false);
     };
     fetchProjects();
@@ -93,34 +127,63 @@ export default function ClientDashboard() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((p, i) => (
-            <motion.div
-              key={p.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08 }}
-            >
-              <Card
-                className="cursor-pointer hover:border-primary/30 transition-colors"
-                onClick={() => navigate(`/client/projects/${p.id}`)}
+        <div className="space-y-4">
+          {projects.map((p, i) => {
+            const progress = progressMap[p.id];
+            const percent = progress && progress.total > 0 ? Math.round((progress.submitted / progress.total) * 100) : 0;
+
+            return (
+              <motion.div
+                key={p.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 }}
               >
-                <CardHeader className="pb-2">
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-base text-foreground">{p.name}</CardTitle>
-                    <Badge variant="secondary" className={statusColor(p.status)}>
-                      {statusLabel(p.status)}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs text-muted-foreground">
-                    Erstellt am {new Date(p.created_at).toLocaleDateString('de-DE')}
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                <Card
+                  className="cursor-pointer hover:border-primary/30 transition-colors"
+                  onClick={() => navigate(`/client/projects/${p.id}`)}
+                >
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between">
+                      <CardTitle className="text-base text-foreground">{p.name}</CardTitle>
+                      <Badge variant="secondary" className={statusColor(p.status)}>
+                        {statusLabel(p.status)}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <p className="text-xs text-muted-foreground">
+                      Erstellt am {new Date(p.created_at).toLocaleDateString('de-DE')}
+                    </p>
+
+                    {progress && (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="flex items-center gap-1 text-muted-foreground">
+                            <BarChart3 className="h-3.5 w-3.5" />
+                            Fortschritt
+                          </span>
+                          <span className="font-medium text-foreground">
+                            {progress.submitted} von {progress.total} Kapiteln eingereicht ({percent}%)
+                          </span>
+                        </div>
+                        <Progress value={percent} className="h-2" />
+
+                        {progress.openChapters.length > 0 && progress.openChapters.length <= 5 && (
+                          <div className="flex items-start gap-2 mt-2">
+                            <AlertCircle className="h-3.5 w-3.5 text-muted-foreground mt-0.5 shrink-0" />
+                            <p className="text-xs text-muted-foreground">
+                              Noch offen: {progress.openChapters.join(', ')}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </div>
       )}
     </div>
