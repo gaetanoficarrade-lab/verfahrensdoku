@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
+import OnboardingWizard from '@/components/OnboardingWizard';
+import type { OnboardingAnswers } from '@/lib/onboarding-variables';
 
 const CHAPTERS = [
   { key: 'general_info', title: 'Organisatorisches Umfeld', description: 'Unternehmensstruktur, Verantwortlichkeiten und Zuständigkeiten' },
@@ -55,27 +57,35 @@ interface Project {
   client_id: string;
 }
 
+interface Onboarding {
+  id: string;
+  answers: OnboardingAnswers;
+  completed_at: string | null;
+}
+
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [project, setProject] = useState<Project | null>(null);
   const [chapters, setChapters] = useState<ChapterData[]>([]);
+  const [onboarding, setOnboarding] = useState<Onboarding | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const loadData = async () => {
     if (!id) return;
-    const load = async () => {
-      setLoading(true);
-      const [projRes, chapRes] = await Promise.all([
-        supabase.from('projects').select('id, name, status, workflow_status, client_id').eq('id', id).single(),
-        supabase.from('chapter_data').select('id, chapter_key, status, client_notes, editor_text, generated_text').eq('project_id', id),
-      ]);
-      setProject(projRes.data);
-      setChapters(chapRes.data || []);
-      setLoading(false);
-    };
-    load();
-  }, [id]);
+    setLoading(true);
+    const [projRes, chapRes, onbRes] = await Promise.all([
+      supabase.from('projects').select('id, name, status, workflow_status, client_id').eq('id', id).single(),
+      supabase.from('chapter_data').select('id, chapter_key, status, client_notes, editor_text, generated_text').eq('project_id', id),
+      supabase.from('project_onboarding').select('id, answers, completed_at').eq('project_id', id).maybeSingle(),
+    ]);
+    setProject(projRes.data);
+    setChapters(chapRes.data || []);
+    setOnboarding(onbRes.data as Onboarding | null);
+    setLoading(false);
+  };
+
+  useEffect(() => { loadData(); }, [id]);
 
   const getChapterStatus = (key: string) => {
     const ch = chapters.find((c) => c.chapter_key === key);
@@ -91,6 +101,29 @@ export default function ProjectDetail() {
       <div className="text-center py-12">
         <p className="text-muted-foreground">Projekt nicht gefunden.</p>
         <Button variant="outline" className="mt-4" onClick={() => navigate(-1 as any)}>Zurück</Button>
+      </div>
+    );
+  }
+
+  // Show onboarding wizard if not completed
+  if (onboarding && !onboarding.completed_at) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" onClick={() => navigate(`/clients/${project.client_id}`)}>
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">{project.name}</h1>
+            <p className="text-sm text-muted-foreground">Projekt-Onboarding</p>
+          </div>
+        </div>
+        <OnboardingWizard
+          projectId={project.id}
+          onboardingId={onboarding.id}
+          initialAnswers={(onboarding.answers || {}) as OnboardingAnswers}
+          onComplete={loadData}
+        />
       </div>
     );
   }
