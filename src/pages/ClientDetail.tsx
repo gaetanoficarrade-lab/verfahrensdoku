@@ -210,6 +210,81 @@ export default function ClientDetail() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <Dialog open={showCreateUser} onOpenChange={setShowCreateUser}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Mandanten-Zugang erstellen</DialogTitle>
+            <DialogDescription>
+              Erstellt einen Login-Account für {client.company} und verknüpft ihn automatisch.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="userEmail">E-Mail</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="userEmail"
+                  type="email"
+                  value={userEmail}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  className="pl-10"
+                  placeholder="mandant@beispiel.de"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="userPassword">Passwort</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="userPassword"
+                  type="text"
+                  value={userPassword}
+                  onChange={(e) => setUserPassword(e.target.value)}
+                  className="pl-10"
+                  placeholder="Min. 8 Zeichen"
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowCreateUser(false)}>Abbrechen</Button>
+            <Button
+              disabled={!userEmail.trim() || !userPassword.trim() || userPassword.length < 8 || creatingUser}
+              onClick={async () => {
+                setCreatingUser(true);
+                try {
+                  const { data, error } = await supabase.functions.invoke('create-client-user', {
+                    body: {
+                      email: userEmail.trim(),
+                      password: userPassword,
+                      client_id: client.id,
+                      tenant_id: client.tenant_id,
+                    },
+                  });
+                  if (error) throw error;
+                  if (data?.error) throw new Error(data.error);
+                  toast.success(data.message || 'Zugang erstellt!');
+                  setShowCreateUser(false);
+                  setUserEmail('');
+                  setUserPassword('');
+                  // Refresh client to show user_id is now set
+                  const { data: updated } = await supabase.from('clients').select('*').eq('id', id!).eq('tenant_id', effectiveTenantId!).single();
+                  if (updated) setClient(updated);
+                } catch (err: any) {
+                  toast.error(err.message || 'Fehler beim Erstellen des Zugangs.');
+                } finally {
+                  setCreatingUser(false);
+                }
+              }}
+            >
+              {creatingUser && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              Zugang erstellen
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
