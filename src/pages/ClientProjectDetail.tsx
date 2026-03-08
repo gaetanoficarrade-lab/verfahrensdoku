@@ -22,6 +22,8 @@ interface ChapterData {
   chapter_key: string;
   status: string | null;
   client_notes: string | null;
+  editor_text: string | null;
+  generated_text: string | null;
 }
 
 interface Project {
@@ -29,6 +31,7 @@ interface Project {
   name: string;
   status: string | null;
   workflow_status: string | null;
+  client_id: string;
 }
 
 export default function ClientProjectDetail() {
