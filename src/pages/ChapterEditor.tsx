@@ -413,34 +413,78 @@ export default function ChapterEditor() {
             className="font-mono text-sm"
           />
           {!isAdvisor && !isSubmitted && (
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={handleSave} disabled={saving}>
-                {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                Speichern
-              </Button>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button disabled={submitting || !notes.trim()} className="gap-2">
+            <div className="space-y-4">
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={handleSave} disabled={saving}>
+                  {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                  Speichern
+                </Button>
+                <Button
+                  disabled={submitPrecheckLoading || submitting || !notes.trim()}
+                  className="gap-2"
+                  onClick={handleSubmitWithPrecheck}
+                >
+                  {submitPrecheckLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
                     <Send className="h-4 w-4" />
-                    Einreichen
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Kapitel einreichen?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Nach dem Einreichen können Sie keine Änderungen mehr vornehmen. Ihr Berater wird das Kapitel prüfen.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleSubmit}>
+                  )}
+                  {submitPrecheckLoading ? 'Wird geprüft…' : 'Einreichen'}
+                </Button>
+              </div>
+
+              {/* KI-Precheck Ergebnis */}
+              {submitPrecheckResult && (submitPrecheckResult.hints?.length > 0 || submitPrecheckResult.missing_fields?.length > 0) && (
+                <div className="rounded-lg border border-yellow-500/40 bg-yellow-50 dark:bg-yellow-950/20 p-4 space-y-3">
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
+                    <p className="text-sm font-medium text-yellow-800 dark:text-yellow-300">
+                      Die KI-Prüfung hat Hinweise zu Ihren Angaben:
+                    </p>
+                  </div>
+
+                  {submitPrecheckResult.missing_fields?.length > 0 && (
+                    <div className="space-y-1 pl-7">
+                      <p className="text-xs font-semibold text-yellow-700 dark:text-yellow-400 uppercase tracking-wide">Fehlende Angaben</p>
+                      {submitPrecheckResult.missing_fields.map((field, i) => (
+                        <p key={i} className="text-sm text-yellow-800 dark:text-yellow-300">• {field}</p>
+                      ))}
+                    </div>
+                  )}
+
+                  {submitPrecheckResult.hints?.length > 0 && (
+                    <div className="space-y-1 pl-7">
+                      <p className="text-xs font-semibold text-yellow-700 dark:text-yellow-400 uppercase tracking-wide">Verbesserungsvorschläge</p>
+                      {submitPrecheckResult.hints.map((hint, i) => (
+                        <p key={i} className="text-sm text-yellow-800 dark:text-yellow-300">• {hint}</p>
+                      ))}
+                    </div>
+                  )}
+
+                  <p className="text-sm text-yellow-700 dark:text-yellow-400 pl-7">
+                    Möchten Sie trotzdem einreichen oder die Angaben ergänzen?
+                  </p>
+
+                  <div className="flex gap-3 pl-7">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSubmitPrecheckResult(null)}
+                    >
+                      Angaben ergänzen
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={handleSubmit}
+                      disabled={submitting}
+                    >
                       {submitting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                      Einreichen
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+                      Trotzdem einreichen
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
           {isClient && isSubmitted && (
