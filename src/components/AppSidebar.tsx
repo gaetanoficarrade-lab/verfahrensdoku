@@ -40,24 +40,30 @@ const tenantItems = [
   { title: 'Projekte', url: '/projects', icon: FolderOpen },
 ];
 
+const clientItems = [
+  { title: 'Dashboard', url: '/client', icon: LayoutDashboard },
+];
+
 export function AppSidebar() {
   const { state, toggleSidebar } = useSidebar();
   const collapsed = state === 'collapsed';
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
-  const { isSuperAdmin, impersonation } = useAuthContext();
+  const { isSuperAdmin, impersonation, roles } = useAuthContext();
 
   const currentPath = location.pathname;
   const isActive = (path: string) => {
     if (path === '/admin' && currentPath === '/admin') return true;
     if (path === '/' && currentPath === '/') return true;
-    if (path !== '/' && path !== '/admin' && currentPath.startsWith(path)) return true;
+    if (path === '/client' && currentPath === '/client') return true;
+    if (path !== '/' && path !== '/admin' && path !== '/client' && currentPath.startsWith(path)) return true;
     return false;
   };
 
   const showAdmin = isSuperAdmin && !impersonation.isImpersonating;
-  const items = showAdmin ? adminItems : tenantItems;
+  const isClient = roles.includes('client');
+  const items = showAdmin ? adminItems : isClient ? clientItems : tenantItems;
 
   const handleSignOut = async () => {
     await signOut();
@@ -75,7 +81,7 @@ export function AppSidebar() {
             <div className="flex flex-col">
               <span className="text-sm font-bold text-sidebar-foreground">GoBD-Suite</span>
               <span className="text-xs text-sidebar-foreground/60">
-                {showAdmin ? 'Super-Admin' : 'Berater'}
+                {showAdmin ? 'Super-Admin' : isClient ? 'Mandant' : 'Berater'}
               </span>
             </div>
           )}

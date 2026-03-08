@@ -17,6 +17,9 @@ import Clients from "./pages/Clients";
 import ClientNew from "./pages/ClientNew";
 import ClientDetail from "./pages/ClientDetail";
 import Projects from "./pages/Projects";
+import ClientDashboard from "./pages/ClientDashboard";
+import ClientProjectDetail from "./pages/ClientProjectDetail";
+import ChapterEditor from "./pages/ChapterEditor";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -97,6 +100,32 @@ const App = () => (
               element={
                 <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
                   <AppLayout><Projects /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Client portal routes */}
+            <Route
+              path="/client"
+              element={
+                <ProtectedRoute requiredRoles={['client']}>
+                  <AppLayout><ClientDashboard /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/client/projects/:id"
+              element={
+                <ProtectedRoute requiredRoles={['client']}>
+                  <AppLayout><ClientProjectDetail /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/client/projects/:id/chapters/:chapterKey"
+              element={
+                <ProtectedRoute requiredRoles={['client']}>
+                  <AppLayout><ChapterEditor /></AppLayout>
                 </ProtectedRoute>
               }
             />
