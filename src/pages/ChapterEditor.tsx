@@ -350,9 +350,6 @@ export default function ChapterEditor() {
     return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   }
 
-  const precheckIsClean = precheckResult &&
-    (precheckResult.hints?.length || 0) === 0 &&
-    (precheckResult.missing_fields?.length || 0) === 0;
 
   const precheckHasIssues = precheckResult &&
     ((precheckResult.hints?.length || 0) > 0 || (precheckResult.missing_fields?.length || 0) > 0);
