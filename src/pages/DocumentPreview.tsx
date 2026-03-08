@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Download, Loader2, FileText } from 'lucide-react';
+import { ArrowLeft, Download, Loader2, FileText, Printer } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { GOBD_CHAPTERS } from '@/lib/chapter-structure';
@@ -57,6 +57,10 @@ export default function DocumentPreview() {
     doc.save(`${companyName || 'Verfahrensdokumentation'}.pdf`);
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   const getChapterContent = (ch: ChapterData) => {
     if (ch.editor_text) return ch.editor_text;
     if (ch.generated_text) return ch.generated_text;
@@ -72,8 +76,8 @@ export default function DocumentPreview() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-20">
-      {/* Header bar */}
-      <div className="flex items-center justify-between sticky top-0 z-10 bg-background/95 backdrop-blur py-4 border-b border-border -mx-4 px-4">
+      {/* Header bar - hidden in print */}
+      <div className="flex items-center justify-between sticky top-0 z-10 bg-background/95 backdrop-blur py-4 border-b border-border -mx-4 px-4 print:hidden">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => navigate(-1 as any)}>
             <ArrowLeft className="h-4 w-4" />
@@ -83,18 +87,24 @@ export default function DocumentPreview() {
             <p className="text-xs text-muted-foreground">{projectName}</p>
           </div>
         </div>
-        <Button onClick={handleDownload}>
-          <Download className="h-4 w-4 mr-2" />
-          Als PDF herunterladen
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handlePrint}>
+            <Printer className="h-4 w-4 mr-2" />
+            Drucken
+          </Button>
+          <Button onClick={handleDownload}>
+            <Download className="h-4 w-4 mr-2" />
+            Als PDF herunterladen
+          </Button>
+        </div>
       </div>
 
       {/* Cover page simulation */}
-      <div className="bg-zinc-900 text-white rounded-lg p-12 text-center space-y-4">
+      <div className="bg-zinc-900 text-white rounded-lg p-12 text-center space-y-4 print:bg-white print:text-black print:border print:border-border print:rounded-none">
         <FileText className="h-12 w-12 mx-auto opacity-50" />
         <h1 className="text-3xl font-bold">Verfahrensdokumentation</h1>
         <p className="text-lg opacity-80">nach GoBD</p>
-        <div className="w-16 h-px bg-zinc-500 mx-auto" />
+        <div className="w-16 h-px bg-zinc-500 mx-auto print:bg-border" />
         <p className="text-xl font-semibold">{companyName}</p>
         <p className="opacity-70">{projectName}</p>
         <p className="text-sm opacity-50">Erstellt am: {today}</p>
@@ -125,8 +135,8 @@ export default function DocumentPreview() {
 
       {/* Chapter content */}
       {GOBD_CHAPTERS.map((mainCh) => (
-        <div key={mainCh.key} className="space-y-6">
-          <div className="border-b-2 border-primary pb-2">
+        <div key={mainCh.key} className="space-y-6 print:break-before-page">
+          <div className="border-b-2 border-primary pb-2 print:border-black">
             <h2 className="text-2xl font-bold text-foreground">{mainCh.number}. {mainCh.title}</h2>
           </div>
 
@@ -136,15 +146,15 @@ export default function DocumentPreview() {
             const content = chData ? getChapterContent(chData) : null;
 
             return (
-              <div key={sc.key} className="rounded-lg border border-border p-6 space-y-3">
+              <div key={sc.key} className="rounded-lg border border-border p-6 space-y-3 print:border-gray-300 print:rounded-none">
                 <h3 className="text-lg font-semibold text-foreground">
                   {sc.number} {sc.title}
                 </h3>
                 {content ? (
-                  <div className="prose prose-sm dark:prose-invert max-w-none text-foreground/90 whitespace-pre-wrap leading-relaxed">
+                  <div className="prose prose-sm dark:prose-invert max-w-none text-foreground/90 whitespace-pre-wrap leading-relaxed print:text-black">
                     {content.split('\n').map((line, i) => {
                       if (line.startsWith('### ')) return <h4 key={i} className="text-base font-semibold text-foreground mt-4 mb-2">{line.replace('### ', '')}</h4>;
-                      if (line.startsWith('## ')) return null; // Skip h2 (already in header)
+                      if (line.startsWith('## ')) return null;
                       if (line.startsWith('| ')) return <p key={i} className="font-mono text-xs text-muted-foreground">{line}</p>;
                       if (line.startsWith('- **') || line.startsWith('- ')) return <p key={i} className="ml-4 text-sm">{line}</p>;
                       if (line.startsWith('1. ') || line.startsWith('2. ') || line.startsWith('3. ') || line.startsWith('4. ') || line.startsWith('5. ') || line.startsWith('6. ')) return <p key={i} className="ml-4 text-sm">{line}</p>;
@@ -155,7 +165,7 @@ export default function DocumentPreview() {
                     })}
                   </div>
                 ) : (
-                  <div className="rounded-md bg-muted/50 p-4 text-center">
+                  <div className="rounded-md bg-muted/50 p-4 text-center print:bg-gray-100">
                     <p className="text-sm text-muted-foreground italic">
                       {!isActive ? 'Dieses Kapitel ist für das Unternehmen nicht relevant.' : '[Noch nicht fertiggestellt]'}
                     </p>
