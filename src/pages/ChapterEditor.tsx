@@ -101,6 +101,9 @@ export default function ChapterEditor() {
         setNotes(chData.client_notes || '');
         setEditorText(chData.editor_text || chData.generated_text || '');
         setStatus(chData.status || 'empty');
+        setSavedPrecheckHints(
+          Array.isArray(chData.client_precheck_hints) ? chData.client_precheck_hints : []
+        );
 
         // Fetch files
         const { data: filesData } = await supabase
