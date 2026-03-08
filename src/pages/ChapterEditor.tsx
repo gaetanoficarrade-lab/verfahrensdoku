@@ -344,9 +344,6 @@ export default function ChapterEditor() {
   }
 
 
-  const precheckHasIssues = precheckResult &&
-    ((precheckResult.hints?.length || 0) > 0 || (precheckResult.missing_fields?.length || 0) > 0);
-
   const precheckIsClean = precheckResult &&
     (precheckResult.hints?.length || 0) === 0 &&
     (precheckResult.missing_fields?.length || 0) === 0;
