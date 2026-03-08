@@ -111,6 +111,10 @@ export default function ClientDetail() {
               <FolderOpen className="h-4 w-4 text-muted-foreground" />
               Projekte ({projects.length})
             </CardTitle>
+            <Button size="sm" className="gap-1" onClick={() => setShowNewProject(true)}>
+              <Plus className="h-4 w-4" />
+              Neues Projekt
+            </Button>
           </CardHeader>
           <CardContent className="p-0">
             {projects.length === 0 ? (
@@ -138,6 +142,58 @@ export default function ClientDetail() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={showNewProject} onOpenChange={setShowNewProject}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Neues Projekt anlegen</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <label className="text-sm font-medium text-foreground">Projektname</label>
+            <Input
+              placeholder="z.B. Verfahrensdokumentation 2025"
+              value={newProjectName}
+              onChange={(e) => setNewProjectName(e.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowNewProject(false)}>Abbrechen</Button>
+            <Button
+              disabled={!newProjectName.trim() || creating}
+              onClick={async () => {
+                if (!id || !effectiveTenantId) return;
+                setCreating(true);
+                const { error } = await supabase.from('projects').insert({
+                  tenant_id: effectiveTenantId,
+                  client_id: id,
+                  name: newProjectName.trim(),
+                  status: 'draft',
+                  workflow_status: 'onboarding',
+                });
+                setCreating(false);
+                if (error) {
+                  toast.error('Fehler beim Anlegen des Projekts.');
+                  return;
+                }
+                toast.success('Projekt wurde angelegt.');
+                setShowNewProject(false);
+                setNewProjectName('');
+                // Refresh projects
+                const { data } = await supabase
+                  .from('projects')
+                  .select('id, name, status, workflow_status, created_at')
+                  .eq('client_id', id)
+                  .eq('tenant_id', effectiveTenantId)
+                  .order('created_at', { ascending: false });
+                setProjects(data || []);
+              }}
+            >
+              {creating && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              Anlegen
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
