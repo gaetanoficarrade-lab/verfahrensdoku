@@ -219,6 +219,14 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/settings/affiliate"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin']}>
+                    <AppLayout><AffiliateSettings /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
               {/* Client portal routes */}
               <Route
                 path="/client"
