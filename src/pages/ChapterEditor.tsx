@@ -54,7 +54,6 @@ export default function ChapterEditor() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const precheckTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [chapterDataId, setChapterDataId] = useState<string | null>(null);
   const [notes, setNotes] = useState('');
