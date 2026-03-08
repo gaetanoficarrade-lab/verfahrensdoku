@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, FolderOpen, Plus, UserPlus, Mail, Lock, Copy, Check, Send } from 'lucide-react';
+import { ArrowLeft, Loader2, FolderOpen, Plus, UserPlus, Mail, Lock, Copy, Check, Send, Trash2, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { logAudit } from '@/lib/auditLog';
 import { triggerWebhook } from '@/lib/webhookTrigger';
@@ -26,6 +27,8 @@ interface Client {
   user_id: string | null;
   tenant_id: string;
   created_at: string;
+  is_deleted: boolean;
+  deleted_at: string | null;
 }
 
 interface Project {
@@ -38,7 +41,7 @@ interface Project {
 
 export default function ClientDetail() {
   const { id } = useParams<{ id: string }>();
-  const { effectiveTenantId } = useAuthContext();
+  const { effectiveTenantId, isSuperAdmin } = useAuthContext();
   const navigate = useNavigate();
   const [client, setClient] = useState<Client | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -50,6 +53,8 @@ export default function ClientDetail() {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [creatingUser, setCreatingUser] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [hasFinalizedDocs, setHasFinalizedDocs] = useState(false);
 
   // Invite flow
   const [showInvite, setShowInvite] = useState(false);
@@ -68,10 +73,44 @@ export default function ClientDetail() {
       ]);
       setClient(clientRes.data);
       setProjects(projRes.data || []);
+
+      // Check for finalized documents
+      if (projRes.data && projRes.data.length > 0) {
+        const projectIds = projRes.data.map(p => p.id);
+        const { count } = await supabase
+          .from('document_versions')
+          .select('id', { count: 'exact', head: true })
+          .in('project_id', projectIds)
+          .eq('is_draft', false);
+        setHasFinalizedDocs((count || 0) > 0);
+      }
+
       setLoading(false);
     };
     fetch();
   }, [id, effectiveTenantId]);
+
+  const handleSoftDelete = async () => {
+    if (!client || !id) return;
+    if (hasFinalizedDocs) {
+      toast.error('Dieser Mandant kann nicht gelöscht werden, da bereits eine Verfahrensdokumentation erstellt wurde.');
+      return;
+    }
+    setDeleting(true);
+    const { error } = await supabase
+      .from('clients')
+      .update({ is_deleted: true, deleted_at: new Date().toISOString() })
+      .eq('id', id);
+
+    if (error) {
+      toast.error('Fehler beim Löschen: ' + error.message);
+    } else {
+      toast.success(`${client.company} wurde als gelöscht markiert.`);
+      logAudit('client_deleted', 'client', id, { company: client.company });
+      navigate('/clients');
+    }
+    setDeleting(false);
+  };
 
   const handleInviteClient = async () => {
     if (!client || !effectiveTenantId) return;
@@ -141,6 +180,14 @@ export default function ClientDetail() {
 
   return (
     <div className="space-y-6">
+      {/* Deleted banner */}
+      {client.is_deleted && (
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 flex items-center gap-2 text-sm text-destructive">
+          <AlertTriangle className="h-4 w-4" />
+          Dieser Mandant wurde am {client.deleted_at ? new Date(client.deleted_at).toLocaleDateString('de-DE') : '–'} als gelöscht markiert.
+        </div>
+      )}
+
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" onClick={() => navigate('/clients')}>
           <ArrowLeft className="h-4 w-4" />
@@ -150,7 +197,7 @@ export default function ClientDetail() {
           <p className="text-sm text-muted-foreground mt-1">Mandantendetails und Projekte</p>
         </div>
         <Badge variant="secondary">{client.onboarding_status || 'pending'}</Badge>
-        {!client.user_id && (
+        {!client.user_id && !client.is_deleted && (
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="gap-1" onClick={() => {
               setInviteEmail(client.contact_email || '');
@@ -173,6 +220,40 @@ export default function ClientDetail() {
         {client.user_id && (
           <Badge variant="default" className="text-xs">Zugang aktiv</Badge>
         )}
+        {/* Delete button */}
+        {!client.is_deleted && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10">
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Mandant löschen?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {hasFinalizedDocs
+                    ? 'Dieser Mandant kann nicht gelöscht werden, da bereits eine Verfahrensdokumentation erstellt wurde.'
+                    : `Möchten Sie "${client.company}" wirklich als gelöscht markieren? Der Mandant wird aus der Liste entfernt, belegt aber weiterhin einen Platz im Kontingent. Diese Aktion kann nicht rückgängig gemacht werden.`
+                  }
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                {!hasFinalizedDocs && (
+                  <AlertDialogAction
+                    onClick={handleSoftDelete}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    disabled={deleting}
+                  >
+                    {deleting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                    Endgültig löschen
+                  </AlertDialogAction>
+                )}
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -194,10 +275,12 @@ export default function ClientDetail() {
               <FolderOpen className="h-4 w-4 text-muted-foreground" />
               Projekte ({projects.length})
             </CardTitle>
-            <Button size="sm" className="gap-1" onClick={() => setShowNewProject(true)}>
-              <Plus className="h-4 w-4" />
-              Neues Projekt
-            </Button>
+            {!client.is_deleted && (
+              <Button size="sm" className="gap-1" onClick={() => setShowNewProject(true)}>
+                <Plus className="h-4 w-4" />
+                Neues Projekt
+              </Button>
+            )}
           </CardHeader>
           <CardContent className="p-0">
             {projects.length === 0 ? (
@@ -399,7 +482,7 @@ export default function ClientDetail() {
                 <div className="flex gap-2">
                   <Input value={inviteLink} readOnly className="font-mono text-xs" />
                   <Button variant="outline" size="icon" onClick={handleCopyLink}>
-                    {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
