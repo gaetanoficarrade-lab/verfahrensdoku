@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { logAudit } from '@/lib/auditLog';
 import { useAuthContext } from '@/contexts/AuthContext';
@@ -8,13 +8,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 
 export default function ClientNew() {
-  const { effectiveTenantId } = useAuthContext();
+  const { effectiveTenantId, isSuperAdmin } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
+  const [limitInfo, setLimitInfo] = useState<{ current: number; max: number } | null>(null);
+  const [loadingLimit, setLoadingLimit] = useState(true);
   const [form, setForm] = useState({
     company: '',
     industry: '',
@@ -22,7 +25,25 @@ export default function ClientNew() {
     contact_email: '',
   });
 
+  useEffect(() => {
+    if (!effectiveTenantId) return;
+    const checkLimit = async () => {
+      setLoadingLimit(true);
+      const [countRes, tenantRes] = await Promise.all([
+        supabase.from('clients').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId),
+        supabase.from('tenants').select('plan_id, plans(max_clients)').eq('id', effectiveTenantId).single(),
+      ]);
+      const current = countRes.count || 0;
+      const max = (tenantRes.data as any)?.plans?.max_clients || 999;
+      setLimitInfo({ current, max });
+      setLoadingLimit(false);
+    };
+    checkLimit();
+  }, [effectiveTenantId]);
+
   const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
+
+  const isLimitReached = limitInfo ? limitInfo.current >= limitInfo.max : false;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +53,10 @@ export default function ClientNew() {
     }
     if (!effectiveTenantId) {
       toast({ title: 'Fehler', description: 'Kein Lizenznehmer zugewiesen.', variant: 'destructive' });
+      return;
+    }
+    if (isLimitReached && !isSuperAdmin) {
+      toast({ title: 'Limit erreicht', description: 'Sie haben die maximale Anzahl an Mandanten für Ihren Plan erreicht. Bitte upgraden Sie Ihren Plan.', variant: 'destructive' });
       return;
     }
 
@@ -50,7 +75,11 @@ export default function ClientNew() {
 
     setSaving(false);
     if (error) {
-      toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
+      if (error.message.includes('row-level security') || error.message.includes('check_client_limit')) {
+        toast({ title: 'Mandanten-Limit erreicht', description: 'Sie haben die maximale Anzahl an Mandanten für Ihren Plan erreicht.', variant: 'destructive' });
+      } else {
+        toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
+      }
       return;
     }
     toast({ title: 'Mandant erstellt', description: `${form.company} wurde erfolgreich angelegt.` });
@@ -69,6 +98,33 @@ export default function ClientNew() {
           <p className="text-sm text-muted-foreground mt-1">Mandant anlegen und später zum Onboarding einladen</p>
         </div>
       </div>
+
+      {/* Limit info */}
+      {!loadingLimit && limitInfo && (
+        <Card className={isLimitReached && !isSuperAdmin ? 'border-destructive' : ''}>
+          <CardContent className="pt-4 space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Mandanten-Kontingent</span>
+              <span className={`font-medium ${isLimitReached ? 'text-destructive' : 'text-foreground'}`}>
+                {limitInfo.current} / {limitInfo.max} genutzt
+              </span>
+            </div>
+            <Progress
+              value={(limitInfo.current / limitInfo.max) * 100}
+              className={`h-2 ${isLimitReached ? '[&>div]:bg-destructive' : ''}`}
+            />
+            {isLimitReached && !isSuperAdmin && (
+              <div className="flex items-center gap-2 text-sm text-destructive mt-2">
+                <AlertTriangle className="h-4 w-4" />
+                <span>Limit erreicht. Bitte kontaktieren Sie den Support für ein Upgrade.</span>
+              </div>
+            )}
+            {isLimitReached && isSuperAdmin && (
+              <p className="text-xs text-muted-foreground">Als Super-Admin können Sie das Limit überschreiben.</p>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
@@ -95,7 +151,7 @@ export default function ClientNew() {
               </div>
             </div>
             <div className="flex gap-3 pt-2">
-              <Button type="submit" disabled={saving}>
+              <Button type="submit" disabled={saving || (isLimitReached && !isSuperAdmin)}>
                 {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
                 Mandant anlegen
               </Button>
