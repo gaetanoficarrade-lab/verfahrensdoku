@@ -8,11 +8,11 @@ import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 
 const CHAPTERS = [
-  { key: 'org_environment', title: 'Organisatorisches Umfeld', description: 'Unternehmensstruktur, Verantwortlichkeiten und Zuständigkeiten' },
-  { key: 'it_environment', title: 'IT-Umfeld', description: 'IT-Systeme, Hardware, Software und Netzwerkinfrastruktur' },
+  { key: 'general_info', title: 'Organisatorisches Umfeld', description: 'Unternehmensstruktur, Verantwortlichkeiten und Zuständigkeiten' },
+  { key: 'it_systems', title: 'IT-Umfeld', description: 'IT-Systeme, Hardware, Software und Netzwerkinfrastruktur' },
   { key: 'processes', title: 'Geschäftsprozesse', description: 'Beschreibung der steuerrelevanten Geschäftsprozesse' },
   { key: 'archiving', title: 'Archivierung', description: 'Aufbewahrungsfristen, Speicherorte und Zugriffsrechte' },
-  { key: 'ics', title: 'Internes Kontrollsystem', description: 'Kontrollmaßnahmen, Plausibilitätsprüfungen und Schutzmaßnahmen' },
+  { key: 'controls', title: 'Internes Kontrollsystem', description: 'Kontrollmaßnahmen, Plausibilitätsprüfungen und Schutzmaßnahmen' },
 ];
 
 const statusConfig: Record<string, { label: string; icon: typeof Circle; className: string }> = {
