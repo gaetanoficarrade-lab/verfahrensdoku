@@ -28,7 +28,7 @@ export interface OnboardingAnswers {
 
   // 5. Software & Systeme
   SOFTWARE_LIST?: string;
-  USES_CLOUD?: 'yes' | 'no' | 'partial';
+  USES_CLOUD?: 'yes' | 'no' | 'partial' | 'unknown';
 
   // 6. Bank & Zahlungsverkehr
   HAS_BUSINESS_ACCOUNT?: boolean;
