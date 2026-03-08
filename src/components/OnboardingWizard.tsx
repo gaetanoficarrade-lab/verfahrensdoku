@@ -115,17 +115,24 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
 
   const completeOnboarding = async () => {
     setCompleting(true);
-    const { error } = await supabase
-      .from('project_onboarding')
-      .update({ answers: answers as any, completed_at: new Date().toISOString() })
-      .eq('id', onboardingId);
-    setCompleting(false);
-    if (error) {
-      toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
-      return;
+    try {
+      const { error } = await supabase
+        .from('project_onboarding')
+        .upsert(
+          { project_id: projectId, answers: answers as any, completed_at: new Date().toISOString() },
+          { onConflict: 'project_id' }
+        );
+      if (error) {
+        toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
+        return;
+      }
+      toast({ title: 'Onboarding abgeschlossen', description: 'Die Kapitel sind jetzt verfügbar.' });
+      onComplete();
+    } catch (e: any) {
+      toast({ title: 'Fehler', description: e?.message || 'Unbekannter Fehler', variant: 'destructive' });
+    } finally {
+      setCompleting(false);
     }
-    toast({ title: 'Onboarding abgeschlossen', description: 'Die Kapitel sind jetzt verfügbar.' });
-    onComplete();
   };
 
   const variants = {
