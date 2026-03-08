@@ -16,6 +16,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
+import { seedDemoData } from '@/lib/seedDemoData';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -73,12 +74,9 @@ const AdminDashboard = () => {
   const handleSeedDemo = async () => {
     setSeeding(true);
     try {
-      const { data, error } = await supabase.functions.invoke('seed-demo-data');
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
-
+      const result = await seedDemoData();
       toast.success('Demo-Daten erfolgreich angelegt!', {
-        description: data.message,
+        description: result.message,
         duration: 6000,
       });
       await fetchData();
