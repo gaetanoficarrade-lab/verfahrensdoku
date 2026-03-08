@@ -62,7 +62,8 @@ export function AppSidebar() {
   };
 
   const showAdmin = isSuperAdmin && !impersonation.isImpersonating;
-  const items = showAdmin ? adminItems : tenantItems;
+  const isClient = roles.includes('client');
+  const items = showAdmin ? adminItems : isClient ? clientItems : tenantItems;
 
   const handleSignOut = async () => {
     await signOut();
