@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, AlertTriangle, CheckCircle2, Mic, PenLine, Search } from 'lucide-react';
+import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, AlertTriangle, CheckCircle2, Mic, PenLine, Search, History, MessageSquare, FileText } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { logAudit } from '@/lib/auditLog';
 import { triggerWebhook } from '@/lib/webhookTrigger';
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
@@ -21,6 +22,19 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 import { CHAPTER_TITLE_MAP } from '@/lib/chapter-structure';
 import { CHAPTER_LEITFRAGEN_BLOCKS } from '@/lib/chapter-leitfragen';
@@ -40,6 +54,30 @@ interface PrecheckResult {
   confidence: number;
 }
 
+interface ChapterVersion {
+  id: string;
+  editor_text: string;
+  changed_by: string;
+  created_at: string;
+  profiles?: { first_name: string; last_name: string } | null;
+}
+
+interface ChapterComment {
+  id: string;
+  user_id: string;
+  message: string;
+  is_read: boolean;
+  created_at: string;
+  profiles?: { first_name: string; last_name: string } | null;
+}
+
+interface ChapterTemplate {
+  id: string;
+  title: string;
+  content: string;
+  chapter_key: string;
+}
+
 const BLOCK_COLORS: Record<string, string> = {
   Auslöser: 'bg-primary/10 text-primary',
   Durchführung: 'bg-accent/20 text-accent-foreground',
@@ -50,7 +88,7 @@ const BLOCK_COLORS: Record<string, string> = {
 
 export default function ChapterEditor() {
   const { id: projectId, chapterKey } = useParams<{ id: string; chapterKey: string }>();
-  const { user, roles, isSuperAdmin, impersonation } = useAuthContext();
+  const { user, roles, isSuperAdmin, impersonation, effectiveTenantId } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -76,6 +114,16 @@ export default function ChapterEditor() {
 
   // Amendment mode
   const [isAmending, setIsAmending] = useState(false);
+
+  // Versions & Comments
+  const [versions, setVersions] = useState<ChapterVersion[]>([]);
+  const [versionsOpen, setVersionsOpen] = useState(false);
+  const [comments, setComments] = useState<ChapterComment[]>([]);
+  const [newComment, setNewComment] = useState('');
+  const [commentSending, setCommentSending] = useState(false);
+
+  // Templates
+  const [templates, setTemplates] = useState<ChapterTemplate[]>([]);
 
   const notesSpeech = useSpeechRecognition(useCallback((text: string) => {
     setNotes(prev => prev ? prev + ' ' + text : text);
@@ -125,6 +173,14 @@ export default function ChapterEditor() {
           .select('id, file_name, file_path, file_type')
           .eq('chapter_data_id', chData.id);
         setFiles(filesData || []);
+
+        // Load comments
+        const { data: commentsData } = await supabase
+          .from('chapter_comments')
+          .select('id, user_id, message, is_read, created_at, profiles:user_id(first_name, last_name)')
+          .eq('chapter_data_id', chData.id)
+          .order('created_at', { ascending: true });
+        setComments((commentsData || []) as unknown as ChapterComment[]);
       }
       setLoading(false);
     };
@@ -140,6 +196,54 @@ export default function ChapterEditor() {
     };
     fetchOnboarding();
   }, [projectId, chapterKey]);
+
+  // Load templates for advisor
+  useEffect(() => {
+    if (!isAdvisor || !chapterKey || !effectiveTenantId) return;
+    const loadTemplates = async () => {
+      const { data } = await supabase
+        .from('chapter_templates')
+        .select('id, title, content, chapter_key')
+        .eq('tenant_id', effectiveTenantId)
+        .or(`chapter_key.eq.${chapterKey},chapter_key.eq._all`);
+      setTemplates((data || []) as ChapterTemplate[]);
+    };
+    loadTemplates();
+  }, [isAdvisor, chapterKey, effectiveTenantId]);
+
+  const loadVersions = async () => {
+    if (!chapterDataId) return;
+    const { data } = await supabase
+      .from('chapter_versions')
+      .select('id, editor_text, changed_by, created_at, profiles:changed_by(first_name, last_name)')
+      .eq('chapter_data_id', chapterDataId)
+      .order('created_at', { ascending: false });
+    setVersions((data || []) as unknown as ChapterVersion[]);
+    setVersionsOpen(true);
+  };
+
+  const restoreVersion = (text: string) => {
+    setEditorText(text);
+    setVersionsOpen(false);
+    toast({ title: 'Version wiederhergestellt', description: 'Der Text wurde eingefügt. Speichern Sie um die Änderung zu übernehmen.' });
+  };
+
+  const handleSendComment = async () => {
+    if (!chapterDataId || !newComment.trim() || !user) return;
+    setCommentSending(true);
+    const { data, error } = await supabase
+      .from('chapter_comments')
+      .insert({ chapter_data_id: chapterDataId, user_id: user.id, message: newComment.trim() })
+      .select('id, user_id, message, is_read, created_at')
+      .single();
+    if (error) {
+      toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
+    } else if (data) {
+      setComments(prev => [...prev, { ...data, profiles: null } as unknown as ChapterComment]);
+      setNewComment('');
+    }
+    setCommentSending(false);
+  };
 
   // Manual precheck triggered by "Prüfen" button
   const handlePrecheck = async () => {
@@ -242,7 +346,6 @@ export default function ChapterEditor() {
 
   const handleAmend = () => {
     setIsAmending(true);
-    // Reset status to client_draft so user can edit
     if (chapterDataId) {
       supabase
         .from('chapter_data')
@@ -275,6 +378,16 @@ export default function ChapterEditor() {
   const handleSaveEditorText = async () => {
     if (!chapterDataId) return;
     setEditorTextSaving(true);
+
+    // Save version before updating
+    if (editorText.trim()) {
+      await supabase.from('chapter_versions').insert({
+        chapter_data_id: chapterDataId,
+        editor_text: editorText,
+        changed_by: user?.id,
+      });
+    }
+
     const { error } = await supabase.from('chapter_data').update({ editor_text: editorText }).eq('id', chapterDataId);
     setEditorTextSaving(false);
     if (error) {
@@ -332,6 +445,11 @@ export default function ChapterEditor() {
     await supabase.from('chapter_files').delete().eq('id', fileId);
     setFiles(prev => prev.filter(f => f.id !== fileId));
     toast({ title: 'Gelöscht', description: 'Datei wurde entfernt.' });
+  };
+
+  const handleLoadTemplate = (template: ChapterTemplate) => {
+    setEditorText(template.content);
+    toast({ title: 'Vorlage geladen', description: `"${template.title}" wurde eingefügt.` });
   };
 
   const handleBack = () => {
@@ -542,6 +660,23 @@ export default function ChapterEditor() {
                 {generateLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                 Text generieren
               </Button>
+              {templates.length > 0 && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="gap-2">
+                      <FileText className="h-4 w-4" />
+                      Vorlage laden
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {templates.map(t => (
+                      <DropdownMenuItem key={t.id} onClick={() => handleLoadTemplate(t)}>
+                        {t.title}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button disabled={approveLoading} className="gap-2">
@@ -571,7 +706,15 @@ export default function ChapterEditor() {
       {isAdvisor && editorText && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Generierter / Bearbeiteter Text</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base">Generierter / Bearbeiteter Text</CardTitle>
+              {chapterDataId && (
+                <Button variant="ghost" size="sm" onClick={loadVersions} className="gap-1.5 text-muted-foreground">
+                  <History className="h-4 w-4" />
+                  Versionen
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="relative">
@@ -615,6 +758,79 @@ export default function ChapterEditor() {
           </CardContent>
         </Card>
       )}
+
+      {/* Version History Dialog */}
+      <Dialog open={versionsOpen} onOpenChange={setVersionsOpen}>
+        <DialogContent className="max-w-2xl max-h-[70vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Versionshistorie</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            {versions.length === 0 ? (
+              <p className="text-sm text-muted-foreground">Keine früheren Versionen vorhanden.</p>
+            ) : (
+              versions.map((v) => (
+                <Card key={v.id}>
+                  <CardContent className="py-3 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(v.created_at).toLocaleString('de-DE')}
+                        {v.profiles && ` • ${(v.profiles as any)?.first_name || ''} ${(v.profiles as any)?.last_name || ''}`}
+                      </span>
+                      <Button variant="outline" size="sm" onClick={() => restoreVersion(v.editor_text)}>
+                        Wiederherstellen
+                      </Button>
+                    </div>
+                    <pre className="text-xs text-muted-foreground whitespace-pre-wrap max-h-32 overflow-y-auto bg-muted/50 rounded p-2">
+                      {v.editor_text?.substring(0, 500)}{(v.editor_text?.length || 0) > 500 ? '…' : ''}
+                    </pre>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Comments */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <MessageSquare className="h-4 w-4" />
+            Kommentare ({comments.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {comments.length > 0 && (
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+              {comments.map(c => (
+                <div key={c.id} className={`rounded-lg p-3 text-sm ${c.user_id === user?.id ? 'bg-primary/10 ml-8' : 'bg-muted/50 mr-8'}`}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-medium text-foreground">
+                      {c.user_id === user?.id ? 'Sie' : ((c.profiles as any)?.first_name || 'Benutzer')}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(c.created_at).toLocaleString('de-DE')}
+                    </span>
+                  </div>
+                  <p className="text-foreground/90">{c.message}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="flex gap-2">
+            <Input
+              value={newComment}
+              onChange={e => setNewComment(e.target.value)}
+              placeholder="Kommentar schreiben…"
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendComment(); } }}
+            />
+            <Button size="icon" onClick={handleSendComment} disabled={commentSending || !newComment.trim()}>
+              {commentSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* File uploads */}
       <Card>
