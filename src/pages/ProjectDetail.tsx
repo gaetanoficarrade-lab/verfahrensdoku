@@ -125,7 +125,7 @@ export default function ProjectDetail() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.08 }}
               >
-                <Card className="hover:border-primary/30 transition-colors">
+                <Card className="hover:border-primary/30 transition-colors cursor-pointer" onClick={() => navigate(`/projects/${id}/chapters/${ch.key}`)}>
                   <CardContent className="flex items-center gap-4 py-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                       <FileText className="h-5 w-5 text-primary" />
