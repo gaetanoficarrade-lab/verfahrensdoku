@@ -53,14 +53,17 @@ serve(async (req) => {
       });
     }
 
-    const { email, password, client_id, tenant_id } = await req.json();
+    const { email, password, client_id, tenant_id, role } = await req.json();
 
-    if (!email || !password || !client_id || !tenant_id) {
+    if (!email || !password || !tenant_id) {
       return new Response(
-        JSON.stringify({ error: "email, password, client_id, tenant_id required" }),
+        JSON.stringify({ error: "email, password, tenant_id required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    // Determine role: 'tenant_user' for team members, 'client' for client users
+    const assignRole = role === "tenant_user" ? "tenant_user" : "client";
 
     // Use service role to create user
     const supabaseAdmin = createClient(
@@ -87,7 +90,7 @@ serve(async (req) => {
     // Assign client role
     const { error: roleError } = await supabaseAdmin
       .from("user_roles")
-      .insert({ user_id: userId, role: "client" });
+      .insert({ user_id: userId, role: assignRole });
 
     if (roleError) {
       console.error("Role insert error:", roleError);
@@ -102,14 +105,16 @@ serve(async (req) => {
       console.error("Profile upsert error:", profileError);
     }
 
-    // Link user to client record
-    const { error: clientError } = await supabaseAdmin
-      .from("clients")
-      .update({ user_id: userId })
-      .eq("id", client_id);
+    // Link user to client record (only for client role)
+    if (client_id && assignRole === "client") {
+      const { error: clientError } = await supabaseAdmin
+        .from("clients")
+        .update({ user_id: userId })
+        .eq("id", client_id);
 
-    if (clientError) {
-      console.error("Client link error:", clientError);
+      if (clientError) {
+        console.error("Client link error:", clientError);
+      }
     }
 
     return new Response(

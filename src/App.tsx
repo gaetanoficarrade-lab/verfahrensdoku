@@ -24,6 +24,8 @@ import ProjectDetail from "./pages/ProjectDetail";
 import ChapterEditor from "./pages/ChapterEditor";
 import BrandingSettings from "./pages/BrandingSettings";
 import ActivityLog from "./pages/ActivityLog";
+import TeamSettings from "./pages/TeamSettings";
+import WebhookSettings from "./pages/WebhookSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -142,7 +144,22 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
-
+              <Route
+                path="/settings/team"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin']}>
+                    <AppLayout><TeamSettings /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/webhook"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin']}>
+                    <AppLayout><WebhookSettings /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
               {/* Client portal routes */}
               <Route
                 path="/client"

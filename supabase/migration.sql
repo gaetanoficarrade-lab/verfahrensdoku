@@ -620,7 +620,61 @@ CREATE POLICY "Tenant admins manage tenant assets"
   WITH CHECK (bucket_id = 'tenant-assets');
 
 
--- 9. SEED DATA: Plans
+-- 9. WEBHOOK TABLES
+-- =====================================================
+
+CREATE TABLE public.tenant_webhooks (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE,
+  url TEXT NOT NULL,
+  secret TEXT,
+  events TEXT[] DEFAULT '{}',
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE public.webhook_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  webhook_id UUID NOT NULL REFERENCES public.tenant_webhooks(id) ON DELETE CASCADE,
+  tenant_id UUID NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE,
+  event TEXT NOT NULL,
+  status_code INTEGER,
+  response_body TEXT,
+  success BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.tenant_webhooks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.webhook_logs ENABLE ROW LEVEL SECURITY;
+
+CREATE INDEX idx_tenant_webhooks_tenant_id ON public.tenant_webhooks(tenant_id);
+CREATE INDEX idx_webhook_logs_webhook_id ON public.webhook_logs(webhook_id);
+CREATE INDEX idx_webhook_logs_tenant_id ON public.webhook_logs(tenant_id);
+
+-- RLS: tenant_admin can manage own webhooks
+CREATE POLICY "Tenant admin manages webhooks" ON public.tenant_webhooks
+  FOR ALL TO authenticated
+  USING (
+    (tenant_id = public.get_user_tenant_id(auth.uid()) AND public.has_role(auth.uid(), 'tenant_admin'))
+    OR public.has_role(auth.uid(), 'super_admin')
+  );
+
+CREATE POLICY "Tenant admin reads webhook logs" ON public.webhook_logs
+  FOR SELECT TO authenticated
+  USING (
+    (tenant_id = public.get_user_tenant_id(auth.uid()) AND public.has_role(auth.uid(), 'tenant_admin'))
+    OR public.has_role(auth.uid(), 'super_admin')
+  );
+
+CREATE POLICY "Webhook logs insert" ON public.webhook_logs
+  FOR INSERT TO authenticated
+  WITH CHECK (
+    tenant_id = public.get_user_tenant_id(auth.uid())
+    OR public.has_role(auth.uid(), 'super_admin')
+  );
+
+
+-- 10. SEED DATA: Plans
 -- =====================================================
 
 INSERT INTO public.plans (name, max_clients, max_projects, price_monthly) VALUES
