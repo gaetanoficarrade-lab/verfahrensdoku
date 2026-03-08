@@ -106,7 +106,7 @@ serve(async (req) => {
 
     if (webhook.secret) {
       const signature = await hmacSign(webhook.secret, testPayload);
-      fetchHeaders["X-Webhook-Signature"] = signature;
+      fetchHeaders["X-GoBD-Signature"] = `sha256=${signature}`;
     }
 
     // Send webhook
