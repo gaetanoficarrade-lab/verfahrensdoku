@@ -95,6 +95,15 @@ export default function ClientDetail() {
           <p className="text-sm text-muted-foreground mt-1">Mandantendetails und Projekte</p>
         </div>
         <Badge variant="secondary">{client.onboarding_status || 'pending'}</Badge>
+        {!client.user_id && (
+          <Button variant="outline" size="sm" className="gap-1" onClick={() => {
+            setUserEmail(client.contact_email || '');
+            setShowCreateUser(true);
+          }}>
+            <UserPlus className="h-4 w-4" />
+            Zugang erstellen
+          </Button>
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
