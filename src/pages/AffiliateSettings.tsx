@@ -56,8 +56,7 @@ export default function AffiliateSettings() {
   const [clicks, setClicks] = useState<any[]>([]);
   const [conversions, setConversions] = useState<any[]>([]);
   const [tenantName, setTenantName] = useState('');
-
-  const tenantId = profile?.tenant_id;
+  const tenantId = effectiveTenantId || authTenantId;
 
   useEffect(() => {
     if (!tenantId) return;
