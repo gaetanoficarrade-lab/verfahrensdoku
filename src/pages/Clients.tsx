@@ -27,20 +27,32 @@ export default function Clients() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
+  const { effectiveTenantId, isSuperAdmin } = useAuthContext();
+
   useEffect(() => {
-    if (!effectiveTenantId) return;
     const fetch = async () => {
       setLoading(true);
-      const { data } = await supabase
+      let query = supabase
         .from('clients')
         .select('id, company, industry, contact_name, contact_email, onboarding_status, created_at')
-        .eq('tenant_id', effectiveTenantId)
         .order('created_at', { ascending: false });
+
+      // Super-admin without impersonation sees all clients; otherwise filter by tenant
+      if (effectiveTenantId) {
+        query = query.eq('tenant_id', effectiveTenantId);
+      } else if (!isSuperAdmin) {
+        // No tenant and not super admin – nothing to show
+        setClients([]);
+        setLoading(false);
+        return;
+      }
+
+      const { data } = await query;
       setClients(data || []);
       setLoading(false);
     };
     fetch();
-  }, [effectiveTenantId]);
+  }, [effectiveTenantId, isSuperAdmin]);
 
   const filtered = clients.filter((c) =>
     [c.company, c.contact_name, c.contact_email, c.industry]
