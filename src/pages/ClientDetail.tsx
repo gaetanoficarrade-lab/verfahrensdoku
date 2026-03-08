@@ -260,6 +260,7 @@ export default function ClientDetail() {
                 }
                 toast.success('Projekt wurde angelegt.');
                 logAudit('project_created', 'project', undefined, { name: newProjectName.trim(), client_id: id });
+                triggerWebhook('projekt_erstellt', { project_name: newProjectName.trim(), client_id: id });
                 setShowNewProject(false);
                 setNewProjectName('');
                 const { data } = await supabase
