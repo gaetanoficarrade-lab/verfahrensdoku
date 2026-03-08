@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { logAudit } from '@/lib/auditLog';
+import { triggerWebhook } from '@/lib/webhookTrigger';
 
 interface Client {
   id: string;
