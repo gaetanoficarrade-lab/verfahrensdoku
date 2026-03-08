@@ -56,6 +56,9 @@ export default function ChapterEditor() {
   const [generateLoading, setGenerateLoading] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
   const [precheckResult, setPrecheckResult] = useState<PrecheckResult | null>(null);
+  const [submitPrecheckResult, setSubmitPrecheckResult] = useState<PrecheckResult | null>(null);
+  const [submitPrecheckLoading, setSubmitPrecheckLoading] = useState(false);
+  const [onboardingAnswers, setOnboardingAnswers] = useState<Record<string, any> | null>(null);
   const [editorTextSaving, setEditorTextSaving] = useState(false);
 
   const title = CHAPTER_TITLE_MAP[chapterKey || ''] || chapterKey;
