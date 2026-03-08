@@ -104,6 +104,32 @@ const App = () => (
               }
             />
 
+            {/* Client portal routes */}
+            <Route
+              path="/client"
+              element={
+                <ProtectedRoute requiredRoles={['client']}>
+                  <AppLayout><ClientDashboard /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/client/projects/:id"
+              element={
+                <ProtectedRoute requiredRoles={['client']}>
+                  <AppLayout><ClientProjectDetail /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/client/projects/:id/chapters/:chapterKey"
+              element={
+                <ProtectedRoute requiredRoles={['client']}>
+                  <AppLayout><ChapterEditor /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
