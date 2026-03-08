@@ -185,6 +185,7 @@ export default function ChapterEditor() {
     } else {
       setStatus('client_submitted');
       setSubmitPrecheckResult(null);
+      logAudit('chapter_submitted', 'chapter', cdId, { chapter_key: chapterKey, project_id: projectId });
       toast({ title: 'Eingereicht', description: 'Das Kapitel wurde an Ihren Berater übermittelt.' });
     }
   };
