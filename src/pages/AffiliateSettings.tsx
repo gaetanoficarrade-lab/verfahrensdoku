@@ -41,7 +41,7 @@ interface ClickStats {
 }
 
 export default function AffiliateSettings() {
-  const { profile } = useAuthContext();
+  const { tenantId: authTenantId, effectiveTenantId } = useAuthContext();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
