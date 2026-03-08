@@ -171,11 +171,45 @@ export default function ChapterEditor() {
       toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
     } else {
       setStatus('client_submitted');
+      setSubmitPrecheckResult(null);
       toast({ title: 'Eingereicht', description: 'Das Kapitel wurde an Ihren Berater übermittelt.' });
     }
   };
 
-  const handlePrecheck = async () => {
+  const handleSubmitWithPrecheck = async () => {
+    setSubmitPrecheckLoading(true);
+    setSubmitPrecheckResult(null);
+
+    try {
+      const cdId = await ensureChapterData();
+      if (!cdId) { setSubmitPrecheckLoading(false); return; }
+
+      const { data, error } = await supabase.functions.invoke('precheck-chapter-notes', {
+        body: {
+          project_id: projectId,
+          chapter_key: chapterKey,
+          client_notes: notes,
+          onboarding_answers: onboardingAnswers,
+        },
+      });
+
+      if (error) throw error;
+      const result = data as PrecheckResult;
+
+      if ((result.hints?.length || 0) === 0 && (result.missing_fields?.length || 0) === 0) {
+        // No issues — submit directly
+        await handleSubmit();
+      } else {
+        setSubmitPrecheckResult(result);
+      }
+    } catch (err: any) {
+      console.error('Submit precheck error:', err);
+      toast({ title: 'Fehler bei der Prüfung', description: 'Die KI-Prüfung konnte nicht durchgeführt werden. Sie können trotzdem einreichen.', variant: 'destructive' });
+      setSubmitPrecheckResult({ hints: [], missing_fields: [], confidence: 0 });
+    } finally {
+      setSubmitPrecheckLoading(false);
+    }
+  };
     if (!chapterDataId) return;
     setPrecheckLoading(true);
     setPrecheckResult(null);
