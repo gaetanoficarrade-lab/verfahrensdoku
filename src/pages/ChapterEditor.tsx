@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, ClipboardCheck, AlertTriangle, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, ClipboardCheck, AlertTriangle, ChevronRight, Mic } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,8 @@ import {
 
 import { CHAPTER_TITLE_MAP } from '@/lib/chapter-structure';
 import { CHAPTER_LEITFRAGEN } from '@/lib/chapter-leitfragen';
+import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ChapterFile {
   id: string;
@@ -60,6 +62,14 @@ export default function ChapterEditor() {
   const [submitPrecheckLoading, setSubmitPrecheckLoading] = useState(false);
   const [onboardingAnswers, setOnboardingAnswers] = useState<Record<string, any> | null>(null);
   const [editorTextSaving, setEditorTextSaving] = useState(false);
+
+  const notesSpeech = useSpeechRecognition(useCallback((text: string) => {
+    setNotes(prev => prev ? prev + ' ' + text : text);
+  }, []));
+
+  const editorSpeech = useSpeechRecognition(useCallback((text: string) => {
+    setEditorText(prev => prev ? prev + ' ' + text : text);
+  }, []));
 
   const title = CHAPTER_TITLE_MAP[chapterKey || ''] || chapterKey;
   const isSubmitted = status === 'client_submitted' || status === 'advisor_review' || status === 'approved' || status === 'advisor_approved';
@@ -404,14 +414,39 @@ export default function ChapterEditor() {
               ))}
             </div>
           )}
-          <Textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="Beschreiben Sie hier die relevanten Informationen für dieses Kapitel..."
-            rows={10}
-            disabled={isAdvisor || isSubmitted}
-            className="font-mono text-sm"
-          />
+          <div className="relative">
+            <Textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Beschreiben Sie hier die relevanten Informationen für dieses Kapitel..."
+              rows={10}
+              disabled={isAdvisor || isSubmitted}
+              className="font-mono text-sm pr-12"
+            />
+            {!isAdvisor && !isSubmitted && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className={`absolute top-2 right-2 ${notesSpeech.isListening ? 'text-destructive animate-pulse' : ''}`}
+                      onClick={notesSpeech.toggle}
+                      disabled={!notesSpeech.isSupported}
+                    >
+                      <Mic className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {notesSpeech.isSupported
+                      ? notesSpeech.isListening ? 'Aufnahme stoppen' : 'Spracheingabe starten'
+                      : 'Spracheingabe nicht unterstützt'}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
           {!isAdvisor && !isSubmitted && (
             <div className="space-y-4">
               <div className="flex gap-3">
@@ -598,13 +633,38 @@ export default function ChapterEditor() {
             <CardTitle className="text-base">Generierter / Bearbeiteter Text</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Textarea
-              value={editorText}
-              onChange={(e) => setEditorText(e.target.value)}
-              rows={15}
-              disabled={status === 'advisor_approved'}
-              className="font-mono text-sm"
-            />
+            <div className="relative">
+              <Textarea
+                value={editorText}
+                onChange={(e) => setEditorText(e.target.value)}
+                rows={15}
+                disabled={status === 'advisor_approved'}
+                className="font-mono text-sm pr-12"
+              />
+              {status !== 'advisor_approved' && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className={`absolute top-2 right-2 ${editorSpeech.isListening ? 'text-destructive animate-pulse' : ''}`}
+                        onClick={editorSpeech.toggle}
+                        disabled={!editorSpeech.isSupported}
+                      >
+                        <Mic className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {editorSpeech.isSupported
+                        ? editorSpeech.isListening ? 'Aufnahme stoppen' : 'Spracheingabe starten'
+                        : 'Spracheingabe nicht unterstützt'}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
             {status !== 'advisor_approved' && (
               <Button variant="outline" onClick={handleSaveEditorText} disabled={editorTextSaving}>
                 {editorTextSaving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
