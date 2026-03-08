@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, AlertTriangle, ChevronRight, Mic } from 'lucide-react';
+import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, AlertTriangle, CheckCircle2, ChevronRight, Mic, PenLine } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { logAudit } from '@/lib/auditLog';
 import { triggerWebhook } from '@/lib/webhookTrigger';
@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/alert-dialog';
 
 import { CHAPTER_TITLE_MAP } from '@/lib/chapter-structure';
-import { CHAPTER_LEITFRAGEN } from '@/lib/chapter-leitfragen';
+import { CHAPTER_LEITFRAGEN_BLOCKS } from '@/lib/chapter-leitfragen';
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -40,12 +40,21 @@ interface PrecheckResult {
   confidence: number;
 }
 
+const BLOCK_COLORS: Record<string, string> = {
+  Auslöser: 'bg-primary/10 text-primary',
+  Durchführung: 'bg-accent/20 text-accent-foreground',
+  Nachweis: 'bg-secondary text-secondary-foreground',
+  Aufbewahrung: 'bg-muted text-muted-foreground',
+  Zusatz: 'bg-muted/50 text-muted-foreground',
+};
+
 export default function ChapterEditor() {
   const { id: projectId, chapterKey } = useParams<{ id: string; chapterKey: string }>();
   const { user, roles, isSuperAdmin, impersonation } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const precheckTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [chapterDataId, setChapterDataId] = useState<string | null>(null);
   const [notes, setNotes] = useState('');
@@ -58,11 +67,16 @@ export default function ChapterEditor() {
   const [uploading, setUploading] = useState(false);
   const [generateLoading, setGenerateLoading] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
-  const [submitPrecheckResult, setSubmitPrecheckResult] = useState<PrecheckResult | null>(null);
-  const [submitPrecheckLoading, setSubmitPrecheckLoading] = useState(false);
   const [onboardingAnswers, setOnboardingAnswers] = useState<Record<string, any> | null>(null);
   const [editorTextSaving, setEditorTextSaving] = useState(false);
   const [savedPrecheckHints, setSavedPrecheckHints] = useState<string[]>([]);
+
+  // Real-time precheck state
+  const [precheckLoading, setPrecheckLoading] = useState(false);
+  const [precheckResult, setPrecheckResult] = useState<PrecheckResult | null>(null);
+
+  // Amendment mode
+  const [isAmending, setIsAmending] = useState(false);
 
   const notesSpeech = useSpeechRecognition(useCallback((text: string) => {
     setNotes(prev => prev ? prev + ' ' + text : text);
@@ -74,18 +88,18 @@ export default function ChapterEditor() {
 
   const title = CHAPTER_TITLE_MAP[chapterKey || ''] || chapterKey;
   const isSubmitted = status === 'client_submitted' || status === 'advisor_review' || status === 'approved' || status === 'advisor_approved';
+  const canEdit = !isSubmitted || isAmending;
 
-  // Determine if user is an advisor (tenant_admin/tenant_user or super_admin impersonating)
   const isAdvisor =
     roles.includes('tenant_admin') ||
     roles.includes('tenant_user') ||
     (isSuperAdmin && impersonation.isImpersonating);
 
-  // Determine if user is a client
   const isClient = roles.includes('client');
-
-  // Show advisor actions when status is client_submitted and user is advisor
   const showAdvisorActions = isAdvisor && status === 'client_submitted';
+
+  // Leitfragen blocks for this chapter
+  const leitfragenBlocks = chapterKey ? (CHAPTER_LEITFRAGEN_BLOCKS[chapterKey] || []) : [];
 
   useEffect(() => {
     if (!projectId || !chapterKey) return;
@@ -107,7 +121,6 @@ export default function ChapterEditor() {
           Array.isArray(chData.client_precheck_hints) ? chData.client_precheck_hints : []
         );
 
-        // Fetch files
         const { data: filesData } = await supabase
           .from('chapter_files')
           .select('id, file_name, file_path, file_type')
@@ -118,7 +131,6 @@ export default function ChapterEditor() {
     };
     fetchData();
 
-    // Fetch onboarding answers for precheck
     const fetchOnboarding = async () => {
       const { data } = await supabase
         .from('project_onboarding')
@@ -129,6 +141,65 @@ export default function ChapterEditor() {
     };
     fetchOnboarding();
   }, [projectId, chapterKey]);
+
+  // Debounced real-time precheck for client
+  useEffect(() => {
+    if (isAdvisor || !canEdit || !notes.trim() || notes.trim().length < 20) {
+      setPrecheckResult(null);
+      return;
+    }
+
+    if (precheckTimerRef.current) clearTimeout(precheckTimerRef.current);
+
+    precheckTimerRef.current = setTimeout(async () => {
+      setPrecheckLoading(true);
+      try {
+        const cdId = chapterDataId || await ensureChapterDataSilent();
+        if (!cdId) { setPrecheckLoading(false); return; }
+
+        const { data, error } = await supabase.functions.invoke('precheck-chapter-notes', {
+          body: {
+            project_id: projectId,
+            chapter_key: chapterKey,
+            client_notes: notes,
+            onboarding_answers: onboardingAnswers,
+          },
+        });
+
+        if (error) throw error;
+        const result = data as PrecheckResult;
+        setPrecheckResult(result);
+
+        // Save hints to DB
+        const allHints = [...(result.missing_fields || []), ...(result.hints || [])];
+        await supabase
+          .from('chapter_data')
+          .update({ client_precheck_hints: allHints })
+          .eq('id', cdId);
+      } catch (err) {
+        console.error('Precheck error:', err);
+      } finally {
+        setPrecheckLoading(false);
+      }
+    }, 3000);
+
+    return () => {
+      if (precheckTimerRef.current) clearTimeout(precheckTimerRef.current);
+    };
+  }, [notes, isAdvisor, canEdit]);
+
+  const ensureChapterDataSilent = async (): Promise<string | null> => {
+    if (chapterDataId) return chapterDataId;
+    const { data, error } = await supabase
+      .from('chapter_data')
+      .insert({ project_id: projectId!, chapter_key: chapterKey!, status: 'client_draft' })
+      .select('id')
+      .single();
+    if (error) return null;
+    setChapterDataId(data.id);
+    setStatus('client_draft');
+    return data.id;
+  };
 
   const ensureChapterData = async (): Promise<string | null> => {
     if (chapterDataId) return chapterDataId;
@@ -185,70 +256,39 @@ export default function ChapterEditor() {
       toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
     } else {
       setStatus('client_submitted');
-      setSubmitPrecheckResult(null);
+      setIsAmending(false);
       logAudit('chapter_submitted', 'chapter', cdId, { chapter_key: chapterKey, project_id: projectId });
       triggerWebhook('kapitel_eingereicht', { chapter_key: chapterKey, project_id: projectId, chapter_data_id: cdId });
       toast({ title: 'Eingereicht', description: 'Das Kapitel wurde an Ihren Berater übermittelt.' });
     }
   };
 
-  const handleSubmitWithPrecheck = async () => {
-    setSubmitPrecheckLoading(true);
-    setSubmitPrecheckResult(null);
-
-    try {
-      const cdId = await ensureChapterData();
-      if (!cdId) { setSubmitPrecheckLoading(false); return; }
-
-      const { data, error } = await supabase.functions.invoke('precheck-chapter-notes', {
-        body: {
-          project_id: projectId,
-          chapter_key: chapterKey,
-          client_notes: notes,
-          onboarding_answers: onboardingAnswers,
-        },
-      });
-
-      if (error) throw error;
-      const result = data as PrecheckResult;
-
-      if ((result.hints?.length || 0) === 0 && (result.missing_fields?.length || 0) === 0) {
-        // No issues — submit directly
-        await handleSubmit();
-      } else {
-        setSubmitPrecheckResult(result);
-      }
-    } catch (err: any) {
-      console.error('Submit precheck error:', err);
-      toast({ title: 'Fehler bei der Prüfung', description: 'Die KI-Prüfung konnte nicht durchgeführt werden. Sie können trotzdem einreichen.', variant: 'destructive' });
-      setSubmitPrecheckResult({ hints: [], missing_fields: [], confidence: 0 });
-    } finally {
-      setSubmitPrecheckLoading(false);
+  const handleAmend = () => {
+    setIsAmending(true);
+    // Reset status to client_draft so user can edit
+    if (chapterDataId) {
+      supabase
+        .from('chapter_data')
+        .update({ status: 'client_draft' })
+        .eq('id', chapterDataId)
+        .then(() => {
+          setStatus('client_draft');
+        });
     }
   };
-
-  // handlePrecheck removed — precheck runs automatically on submit and results are read from DB
 
   const handleGenerateText = async () => {
     if (!chapterDataId) return;
     setGenerateLoading(true);
-
     try {
       const { data, error } = await supabase.functions.invoke('generate-chapter-text', {
-        body: {
-          project_id: projectId,
-          chapter_key: chapterKey,
-          client_notes: notes,
-        },
+        body: { project_id: projectId, chapter_key: chapterKey, client_notes: notes },
       });
-
       if (error) throw error;
-      const generatedText = data.generated_text || '';
-      setEditorText(generatedText);
+      setEditorText(data.generated_text || '');
       logAudit('text_generated', 'chapter', chapterDataId!, { chapter_key: chapterKey, project_id: projectId });
       toast({ title: 'Text generiert', description: `Qualitätsscore: ${data.quality_score || 0}/100` });
     } catch (err: any) {
-      console.error('Generate error:', err);
       toast({ title: 'Fehler', description: err.message || 'Textgenerierung fehlgeschlagen', variant: 'destructive' });
     } finally {
       setGenerateLoading(false);
@@ -258,12 +298,7 @@ export default function ChapterEditor() {
   const handleSaveEditorText = async () => {
     if (!chapterDataId) return;
     setEditorTextSaving(true);
-
-    const { error } = await supabase
-      .from('chapter_data')
-      .update({ editor_text: editorText })
-      .eq('id', chapterDataId);
-
+    const { error } = await supabase.from('chapter_data').update({ editor_text: editorText }).eq('id', chapterDataId);
     setEditorTextSaving(false);
     if (error) {
       toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
@@ -275,16 +310,9 @@ export default function ChapterEditor() {
   const handleApprove = async () => {
     if (!chapterDataId) return;
     setApproveLoading(true);
-
-    // Save editor_text first if present
     const updatePayload: Record<string, any> = { status: 'advisor_approved' };
     if (editorText) updatePayload.editor_text = editorText;
-
-    const { error } = await supabase
-      .from('chapter_data')
-      .update(updatePayload)
-      .eq('id', chapterDataId);
-
+    const { error } = await supabase.from('chapter_data').update(updatePayload).eq('id', chapterDataId);
     setApproveLoading(false);
     if (error) {
       toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
@@ -297,67 +325,57 @@ export default function ChapterEditor() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     setUploading(true);
     const cdId = await ensureChapterData();
     if (!cdId) { setUploading(false); return; }
-
     const filePath = `${projectId}/${chapterKey}/${Date.now()}_${file.name}`;
-    const { error: uploadError } = await supabase.storage
-      .from('chapter-uploads')
-      .upload(filePath, file);
-
+    const { error: uploadError } = await supabase.storage.from('chapter-uploads').upload(filePath, file);
     if (uploadError) {
       toast({ title: 'Upload fehlgeschlagen', description: uploadError.message, variant: 'destructive' });
       setUploading(false);
       return;
     }
-
     const { data: fileRecord, error: insertError } = await supabase
       .from('chapter_files')
-      .insert({
-        chapter_data_id: cdId,
-        file_name: file.name,
-        file_path: filePath,
-        file_type: file.type || null,
-        uploaded_by: user?.id,
-      })
+      .insert({ chapter_data_id: cdId, file_name: file.name, file_path: filePath, file_type: file.type || null, uploaded_by: user?.id })
       .select('id, file_name, file_path, file_type')
       .single();
-
     setUploading(false);
     if (insertError) {
       toast({ title: 'Fehler', description: insertError.message, variant: 'destructive' });
     } else if (fileRecord) {
-      setFiles((prev) => [...prev, fileRecord]);
+      setFiles(prev => [...prev, fileRecord]);
       toast({ title: 'Hochgeladen', description: `${file.name} wurde hochgeladen.` });
     }
-
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleDeleteFile = async (fileId: string, filePath: string) => {
     await supabase.storage.from('chapter-uploads').remove([filePath]);
     await supabase.from('chapter_files').delete().eq('id', fileId);
-    setFiles((prev) => prev.filter((f) => f.id !== fileId));
+    setFiles(prev => prev.filter(f => f.id !== fileId));
     toast({ title: 'Gelöscht', description: 'Datei wurde entfernt.' });
   };
 
-  // Determine back navigation based on role
   const handleBack = () => {
-    if (isAdvisor) {
-      navigate(`/projects/${projectId}`);
-    } else {
-      navigate(`/client/projects/${projectId}`);
-    }
+    if (isAdvisor) navigate(`/projects/${projectId}`);
+    else navigate(`/client/projects/${projectId}`);
   };
 
   if (loading) {
     return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   }
 
+  const precheckIsClean = precheckResult &&
+    (precheckResult.hints?.length || 0) === 0 &&
+    (precheckResult.missing_fields?.length || 0) === 0;
+
+  const precheckHasIssues = precheckResult &&
+    ((precheckResult.hints?.length || 0) > 0 || (precheckResult.missing_fields?.length || 0) > 0);
+
   return (
     <div className="space-y-6 max-w-3xl">
+      {/* Header */}
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" onClick={handleBack}>
           <ArrowLeft className="h-4 w-4" />
@@ -378,7 +396,7 @@ export default function ChapterEditor() {
         </Badge>
       </div>
 
-      {/* Client notes (read-only for advisor, editable for client) */}
+      {/* Client notes card */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base">
@@ -386,35 +404,42 @@ export default function ChapterEditor() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {!isAdvisor && chapterKey && CHAPTER_LEITFRAGEN[chapterKey] && (
-            <div className="bg-muted rounded-lg p-4 space-y-2">
-              <p className="text-sm font-medium text-muted-foreground">Leitfragen</p>
-              {CHAPTER_LEITFRAGEN[chapterKey].map((frage, i) => (
-                <div key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <ChevronRight className="h-4 w-4 mt-0.5 shrink-0" />
-                  <span>{frage}</span>
-                </div>
-              ))}
+          {/* Leitfragen with 4-block structure */}
+          {!isAdvisor && leitfragenBlocks.length > 0 && (
+            <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
+              <p className="text-sm font-semibold text-foreground">Leitfragen – beantworten Sie diese Punkte:</p>
+              <div className="grid gap-2">
+                {leitfragenBlocks.map((block, i) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <Badge variant="outline" className={`text-[10px] px-1.5 py-0 shrink-0 mt-0.5 ${BLOCK_COLORS[block.label] || ''}`}>
+                      {block.label}
+                    </Badge>
+                    <span className="text-sm text-muted-foreground">{block.fragen[0]}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
+
+          {/* Textarea with mic button bottom-right */}
           <div className="relative">
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Beschreiben Sie hier die relevanten Informationen für dieses Kapitel..."
-              rows={10}
-              disabled={isAdvisor || isSubmitted}
-              className="font-mono text-sm pr-12"
+              placeholder="Beschreiben Sie hier die relevanten Informationen für dieses Kapitel. Orientieren Sie sich an den Leitfragen oben…"
+              rows={12}
+              disabled={isAdvisor || (isSubmitted && !isAmending)}
+              className="font-mono text-sm pb-12"
             />
-            {!isAdvisor && !isSubmitted && (
+            {!isAdvisor && canEdit && (
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
                       type="button"
-                      variant="ghost"
+                      variant={notesSpeech.isListening ? 'destructive' : 'secondary'}
                       size="icon"
-                      className={`absolute top-2 right-2 ${notesSpeech.isListening ? 'text-destructive animate-pulse' : ''}`}
+                      className={`absolute bottom-3 right-3 rounded-full h-10 w-10 shadow-md ${notesSpeech.isListening ? 'animate-pulse' : ''}`}
                       onClick={notesSpeech.toggle}
                       disabled={!notesSpeech.isSupported}
                     >
@@ -430,85 +455,76 @@ export default function ChapterEditor() {
               </TooltipProvider>
             )}
           </div>
-          {!isAdvisor && !isSubmitted && (
-            <div className="space-y-4">
-              <div className="flex gap-3">
-                <Button variant="outline" onClick={handleSave} disabled={saving}>
-                  {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                  Speichern
-                </Button>
-                <Button
-                  disabled={submitPrecheckLoading || submitting || !notes.trim()}
-                  className="gap-2"
-                  onClick={handleSubmitWithPrecheck}
-                >
-                  {submitPrecheckLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Send className="h-4 w-4" />
-                  )}
-                  {submitPrecheckLoading ? 'Wird geprüft…' : 'Einreichen'}
-                </Button>
-              </div>
 
-              {/* KI-Precheck Ergebnis */}
-              {submitPrecheckResult && (submitPrecheckResult.hints?.length > 0 || submitPrecheckResult.missing_fields?.length > 0) && (
-                <div className="rounded-lg border border-yellow-500/40 bg-yellow-50 dark:bg-yellow-950/20 p-4 space-y-3">
+          {/* Real-time precheck indicator */}
+          {!isAdvisor && canEdit && (
+            <div className="min-h-[2rem]">
+              {precheckLoading && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  <span>KI prüft Ihre Angaben…</span>
+                </div>
+              )}
+
+              {!precheckLoading && precheckIsClean && (
+                <div className="rounded-lg border border-green-500/40 bg-green-50 dark:bg-green-950/20 p-3 flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400 shrink-0" />
+                  <p className="text-sm text-green-700 dark:text-green-300 font-medium">
+                    Ihre Angaben sind vollständig. Sie können das Kapitel einreichen.
+                  </p>
+                </div>
+              )}
+
+              {!precheckLoading && precheckHasIssues && (
+                <div className="rounded-lg border border-yellow-500/40 bg-yellow-50 dark:bg-yellow-950/20 p-3 space-y-2">
                   <div className="flex items-start gap-2">
-                    <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
+                    <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
                     <p className="text-sm font-medium text-yellow-800 dark:text-yellow-300">
-                      Die KI-Prüfung hat Hinweise zu Ihren Angaben:
+                      Hinweise zu Ihren Angaben:
                     </p>
                   </div>
-
-                  {submitPrecheckResult.missing_fields?.length > 0 && (
-                    <div className="space-y-1 pl-7">
-                      <p className="text-xs font-semibold text-yellow-700 dark:text-yellow-400 uppercase tracking-wide">Fehlende Angaben</p>
-                      {submitPrecheckResult.missing_fields.map((field, i) => (
-                        <p key={i} className="text-sm text-yellow-800 dark:text-yellow-300">• {field}</p>
-                      ))}
-                    </div>
-                  )}
-
-                  {submitPrecheckResult.hints?.length > 0 && (
-                    <div className="space-y-1 pl-7">
-                      <p className="text-xs font-semibold text-yellow-700 dark:text-yellow-400 uppercase tracking-wide">Verbesserungsvorschläge</p>
-                      {submitPrecheckResult.hints.map((hint, i) => (
-                        <p key={i} className="text-sm text-yellow-800 dark:text-yellow-300">• {hint}</p>
-                      ))}
-                    </div>
-                  )}
-
-                  <p className="text-sm text-yellow-700 dark:text-yellow-400 pl-7">
-                    Möchten Sie trotzdem einreichen oder die Angaben ergänzen?
-                  </p>
-
-                  <div className="flex gap-3 pl-7">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSubmitPrecheckResult(null)}
-                    >
-                      Angaben ergänzen
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={handleSubmit}
-                      disabled={submitting}
-                    >
-                      {submitting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                      Trotzdem einreichen
-                    </Button>
-                  </div>
+                  {precheckResult!.missing_fields?.map((field, i) => (
+                    <p key={`mf-${i}`} className="text-sm text-yellow-800 dark:text-yellow-300 pl-6">• {field}</p>
+                  ))}
+                  {precheckResult!.hints?.map((hint, i) => (
+                    <p key={`h-${i}`} className="text-sm text-yellow-700 dark:text-yellow-400 pl-6">• {hint}</p>
+                  ))}
                 </div>
               )}
             </div>
           )}
-          {isClient && isSubmitted && (
-            <p className="text-sm text-muted-foreground">
-              Dieses Kapitel wurde eingereicht und kann nicht mehr bearbeitet werden.
-            </p>
+
+          {/* Action buttons for client */}
+          {!isAdvisor && canEdit && (
+            <div className="flex gap-3">
+              <Button variant="outline" onClick={handleSave} disabled={saving}>
+                {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                Speichern
+              </Button>
+              <Button
+                disabled={submitting || !notes.trim()}
+                className="gap-2"
+                onClick={handleSubmit}
+              >
+                {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                Einreichen
+              </Button>
+            </div>
+          )}
+
+          {/* Submitted state with amend option */}
+          {isClient && isSubmitted && !isAmending && (
+            <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 p-3">
+              <p className="text-sm text-muted-foreground">
+                Dieses Kapitel wurde eingereicht.
+              </p>
+              {status === 'client_submitted' && (
+                <Button variant="outline" size="sm" className="gap-1" onClick={handleAmend}>
+                  <PenLine className="h-3.5 w-3.5" />
+                  Ergänzen
+                </Button>
+              )}
+            </div>
           )}
         </CardContent>
       </Card>
@@ -519,7 +535,7 @@ export default function ChapterEditor() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-              KI-Precheck-Hinweise (vom Mandanten beim Einreichen)
+              KI-Precheck-Hinweise (vom Mandanten)
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -543,21 +559,13 @@ export default function ChapterEditor() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-3">
-              <Button
-                variant="outline"
-                onClick={handleGenerateText}
-                disabled={generateLoading}
-                className="gap-2"
-              >
+              <Button variant="outline" onClick={handleGenerateText} disabled={generateLoading} className="gap-2">
                 {generateLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                 Text generieren
               </Button>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button
-                    disabled={approveLoading}
-                    className="gap-2"
-                  >
+                  <Button disabled={approveLoading} className="gap-2">
                     {approveLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
                     Kapitel freigeben
                   </Button>
@@ -580,7 +588,7 @@ export default function ChapterEditor() {
         </Card>
       )}
 
-      {/* Editor text (advisor only, after generation or if exists) */}
+      {/* Editor text (advisor only) */}
       {isAdvisor && editorText && (
         <Card>
           <CardHeader>
@@ -601,9 +609,9 @@ export default function ChapterEditor() {
                     <TooltipTrigger asChild>
                       <Button
                         type="button"
-                        variant="ghost"
+                        variant={editorSpeech.isListening ? 'destructive' : 'secondary'}
                         size="icon"
-                        className={`absolute top-2 right-2 ${editorSpeech.isListening ? 'text-destructive animate-pulse' : ''}`}
+                        className={`absolute bottom-3 right-3 rounded-full h-10 w-10 shadow-md ${editorSpeech.isListening ? 'animate-pulse' : ''}`}
                         onClick={editorSpeech.toggle}
                         disabled={!editorSpeech.isSupported}
                       >
@@ -637,11 +645,11 @@ export default function ChapterEditor() {
         <CardContent className="space-y-4">
           {files.length > 0 && (
             <div className="space-y-2">
-              {files.map((f) => (
+              {files.map(f => (
                 <div key={f.id} className="flex items-center gap-3 rounded-md border border-border p-3">
                   <FileIcon className="h-4 w-4 text-muted-foreground shrink-0" />
                   <span className="flex-1 text-sm text-foreground truncate">{f.file_name}</span>
-                  {!isSubmitted && !isAdvisor && (
+                  {canEdit && !isAdvisor && (
                     <Button
                       variant="ghost"
                       size="icon"
@@ -656,14 +664,9 @@ export default function ChapterEditor() {
             </div>
           )}
 
-          {!isSubmitted && !isAdvisor && (
+          {canEdit && !isAdvisor && (
             <div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                className="hidden"
-                onChange={handleFileUpload}
-              />
+              <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileUpload} />
               <Button
                 variant="outline"
                 onClick={() => fileInputRef.current?.click()}
