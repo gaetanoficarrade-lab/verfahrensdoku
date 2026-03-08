@@ -498,9 +498,6 @@ export default function ChapterEditor() {
               )}
             </div>
           )}
-              </Button>
-            </div>
-          )}
 
           {/* Submitted state with amend option */}
           {isClient && isSubmitted && !isAmending && (
