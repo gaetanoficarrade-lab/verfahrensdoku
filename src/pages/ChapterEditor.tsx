@@ -47,8 +47,7 @@ interface PrecheckResult {
 
 export default function ChapterEditor() {
   const { id: projectId, chapterKey } = useParams<{ id: string; chapterKey: string }>();
-  const { user } = useAuth();
-  const { roles, isSuperAdmin, impersonation } = useAuthContext();
+  const { user, roles, isSuperAdmin, impersonation } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);

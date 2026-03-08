@@ -16,7 +16,7 @@ interface Project {
 }
 
 export default function ClientDashboard() {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);

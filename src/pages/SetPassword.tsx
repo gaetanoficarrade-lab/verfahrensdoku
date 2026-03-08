@@ -14,7 +14,7 @@ const SetPassword = () => {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRecovery, setIsRecovery] = useState(false);
-  const { updatePassword, session, loading } = useAuth();
+  const { updatePassword, session, loading } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
 

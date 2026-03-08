@@ -21,7 +21,7 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [tokenValid, setTokenValid] = useState<boolean | null>(null);
   const [tokenData, setTokenData] = useState<any>(null);
-  const { signUp } = useAuth();
+  const { signUp } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
 
