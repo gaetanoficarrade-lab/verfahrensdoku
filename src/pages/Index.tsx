@@ -1,95 +1,57 @@
-import { useEffect, useState } from "react";
-import { Check } from "lucide-react";
-import { supabase } from "@/integrations/supabase";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { useAuthContext } from '@/contexts/AuthContext';
 
 const Index = () => {
-  const [tables, setTables] = useState<string[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useAuth();
+  const { roles, profileLoading, isSuperAdmin, impersonation } = useAuthContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchTables = async () => {
-      try {
-        const { data, error } = await supabase.rpc("get_tables_list");
-        if (error) {
-          // Fallback: try querying information_schema via a simple test
-          const { data: testData, error: testError } = await supabase
-            .from("pg_catalog.pg_tables")
-            .select("tablename")
-            .eq("schemaname", "public");
+    if (loading || profileLoading) return;
 
-          if (testError) {
-            // Last fallback: just test the connection
-            const { error: healthError } = await supabase.auth.getSession();
-            if (healthError) {
-              setError(`Verbindungsfehler: ${healthError.message}`);
-            } else {
-              setError(
-                "Verbindung erfolgreich! Tabellen konnten nicht direkt abgefragt werden. Erstelle eine RPC-Funktion 'get_tables_list' oder nutze die Supabase-Oberfläche."
-              );
-              // Try to list some known tables by attempting selects
-              await probeKnownTables();
-            }
-          } else {
-            setTables((testData || []).map((t: any) => t.tablename));
-          }
-        } else {
-          setTables(data || []);
-        }
-      } catch (e: any) {
-        setError(e.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
 
-    const probeKnownTables = async () => {
-      // We can't easily list tables without an RPC, so just confirm connection works
-      setTables([]);
-    };
+    // If super_admin and not impersonating, go to admin
+    if (isSuperAdmin && !impersonation.isImpersonating) {
+      navigate('/admin');
+      return;
+    }
 
-    fetchTables();
-  }, []);
+    // If client role, go to client area
+    if (roles.includes('client')) {
+      navigate('/client');
+      return;
+    }
+
+    // tenant_admin / tenant_user stay here (future: tenant dashboard)
+  }, [user, loading, roles, profileLoading, isSuperAdmin, impersonation, navigate]);
+
+  if (loading || profileLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!user) return null;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center max-w-lg mx-auto p-6">
-        <Check className="mx-auto mb-4 text-primary" size={48} />
-        <h1 className="mb-4 text-3xl font-bold text-foreground">
-          Das ist dein Server
-        </h1>
-        <p className="mb-4 text-xl text-foreground">Herzlichen Glückwunsch!</p>
-        <p className="mb-4 text-lg text-foreground">das ist ein test</p>
-        {loading && (
-          <p className="text-muted-foreground">Verbindung wird getestet...</p>
-        )}
-        {error && (
-          <div className="mt-4 rounded-md border border-destructive bg-destructive/10 p-4 text-left">
-            <p className="text-sm text-muted-foreground">{error}</p>
-          </div>
-        )}
-        {!loading && !error && tables.length === 0 && (
-          <p className="text-muted-foreground">
-            Keine öffentlichen Tabellen gefunden.
-          </p>
-        )}
-        {tables.length > 0 && (
-          <div className="mt-4 text-left">
-            <h2 className="mb-2 text-lg font-semibold text-foreground">
-              Gefundene Tabellen ({tables.length}):
-            </h2>
-            <ul className="space-y-1">
-              {tables.map((t) => (
-                <li
-                  key={t}
-                  className="rounded bg-muted px-3 py-2 text-sm text-foreground font-mono"
-                >
-                  {t}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          Willkommen in der GoBD-Suite
+        </p>
+      </div>
+      <div className="rounded-lg border border-border bg-card p-8 text-center text-muted-foreground">
+        Berater-Dashboard kommt als nächstes.
       </div>
     </div>
   );
