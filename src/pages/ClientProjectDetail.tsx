@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, FileText, CheckCircle2, Clock, AlertCircle, Circle } from 'lucide-react';
+import { ArrowLeft, Loader2, FileText, CheckCircle2, Clock, AlertCircle, Circle, Download } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
+import { generateVerfahrensdokumentation } from '@/lib/generatePdf';
+import { toast } from 'sonner';
 
 const CHAPTERS = [
   { key: 'org_environment', title: 'Organisatorisches Umfeld', description: 'Unternehmensstruktur, Verantwortlichkeiten und Zuständigkeiten' },
@@ -20,6 +22,8 @@ interface ChapterData {
   chapter_key: string;
   status: string | null;
   client_notes: string | null;
+  editor_text: string | null;
+  generated_text: string | null;
 }
 
 interface Project {
@@ -27,6 +31,7 @@ interface Project {
   name: string;
   status: string | null;
   workflow_status: string | null;
+  client_id: string;
 }
 
 export default function ClientProjectDetail() {
@@ -35,14 +40,15 @@ export default function ClientProjectDetail() {
   const [project, setProject] = useState<Project | null>(null);
   const [chapters, setChapters] = useState<ChapterData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pdfLoading, setPdfLoading] = useState(false);
 
   useEffect(() => {
     if (!id) return;
     const fetch = async () => {
       setLoading(true);
       const [projRes, chapRes] = await Promise.all([
-        supabase.from('projects').select('id, name, status, workflow_status').eq('id', id).single(),
-        supabase.from('chapter_data').select('id, chapter_key, status, client_notes').eq('project_id', id),
+        supabase.from('projects').select('id, name, status, workflow_status, client_id').eq('id', id).single(),
+        supabase.from('chapter_data').select('id, chapter_key, status, client_notes, editor_text, generated_text').eq('project_id', id),
       ]);
       setProject(projRes.data);
       setChapters(chapRes.data || []);
@@ -62,6 +68,58 @@ export default function ClientProjectDetail() {
     client_submitted: { label: 'Eingereicht', icon: CheckCircle2, className: 'text-accent-foreground bg-accent/20' },
     advisor_review: { label: 'In Prüfung', icon: AlertCircle, className: 'text-orange-600 bg-orange-100 dark:text-orange-400 dark:bg-orange-900/30' },
     approved: { label: 'Freigegeben', icon: CheckCircle2, className: 'text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/30' },
+  };
+
+  const handleGeneratePdf = async () => {
+    if (!project || !id) return;
+    setPdfLoading(true);
+    try {
+      // Fetch company name from client
+      const { data: clientData } = await supabase
+        .from('clients')
+        .select('company')
+        .eq('id', project.client_id)
+        .single();
+
+      const companyName = clientData?.company || 'Unbekannt';
+
+      const doc = generateVerfahrensdokumentation({
+        companyName,
+        projectName: project.name,
+        chapters,
+      });
+
+      const fileName = `VfDoc_${companyName.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.pdf`;
+      doc.save(fileName);
+
+      // Save entry in document_versions
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data: existing } = await supabase
+        .from('document_versions')
+        .select('version_number')
+        .eq('project_id', id)
+        .order('version_number', { ascending: false })
+        .limit(1);
+
+      const nextVersion = (existing?.[0]?.version_number || 0) + 1;
+
+      await supabase.from('document_versions').insert({
+        project_id: id,
+        version_number: nextVersion,
+        pdf_path: fileName,
+        status: 'draft',
+        is_draft: true,
+        created_by: user?.id,
+        notes: `PDF erstellt am ${new Date().toLocaleDateString('de-DE')}`,
+      });
+
+      toast.success('PDF wurde erstellt und heruntergeladen.');
+    } catch (err) {
+      console.error(err);
+      toast.error('Fehler beim Erstellen des PDFs.');
+    } finally {
+      setPdfLoading(false);
+    }
   };
 
   if (loading) {
@@ -87,6 +145,10 @@ export default function ClientProjectDetail() {
           <h1 className="text-2xl font-bold text-foreground">{project.name}</h1>
           <p className="text-sm text-muted-foreground mt-1">Verfahrensdokumentation – Kapitelübersicht</p>
         </div>
+        <Button onClick={handleGeneratePdf} disabled={pdfLoading}>
+          {pdfLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Download className="h-4 w-4 mr-2" />}
+          PDF erstellen
+        </Button>
       </div>
 
       <div className="grid gap-4">
