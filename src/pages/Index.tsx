@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase";
 
 const Index = () => {
@@ -53,6 +54,7 @@ const Index = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="text-center max-w-lg mx-auto p-6">
+        <Check className="mx-auto mb-4 text-primary" size={48} />
         <h1 className="mb-4 text-3xl font-bold text-foreground">
           Das ist dein Server
         </h1>
