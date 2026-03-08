@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 export type AuditAction =
   | 'client_created'
   | 'client_updated'
+  | 'client_deleted'
   | 'client_user_created'
   | 'project_created'
   | 'chapter_submitted'

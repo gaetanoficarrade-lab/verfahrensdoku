@@ -88,6 +88,8 @@ CREATE TABLE public.clients (
   external_providers TEXT,
   prefill_confidence JSONB DEFAULT '{}'::jsonb,
   onboarding_status onboarding_status NOT NULL DEFAULT 'not_started',
+  is_deleted BOOLEAN NOT NULL DEFAULT false,
+  deleted_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
