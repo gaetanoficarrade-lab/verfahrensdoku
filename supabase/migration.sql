@@ -1002,3 +1002,126 @@ INSERT INTO public.platform_settings (key, value) VALUES
   ('affiliate_default_commission', '"20"'),
   ('invite_expiry_days', '"7"')
 ON CONFLICT (key) DO NOTHING;
+
+
+-- 19. CHAPTER VERSIONS (Version History)
+-- =====================================================
+
+CREATE TABLE public.chapter_versions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  chapter_data_id UUID REFERENCES public.chapter_data(id) ON DELETE CASCADE,
+  editor_text TEXT,
+  changed_by UUID REFERENCES auth.users(id),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.chapter_versions ENABLE ROW LEVEL SECURITY;
+CREATE INDEX idx_chapter_versions_chapter ON public.chapter_versions(chapter_data_id);
+
+CREATE POLICY "Users see versions for their chapters" ON public.chapter_versions
+  FOR SELECT TO authenticated USING (true);
+
+CREATE POLICY "Users insert versions" ON public.chapter_versions
+  FOR INSERT TO authenticated WITH CHECK (true);
+
+
+-- 20. CHAPTER COMMENTS
+-- =====================================================
+
+CREATE TABLE public.chapter_comments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  chapter_data_id UUID REFERENCES public.chapter_data(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id),
+  message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.chapter_comments ENABLE ROW LEVEL SECURITY;
+CREATE INDEX idx_chapter_comments_chapter ON public.chapter_comments(chapter_data_id);
+
+CREATE POLICY "Users see comments" ON public.chapter_comments
+  FOR SELECT TO authenticated USING (true);
+
+CREATE POLICY "Users insert comments" ON public.chapter_comments
+  FOR INSERT TO authenticated WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users update own comments" ON public.chapter_comments
+  FOR UPDATE TO authenticated USING (user_id = auth.uid());
+
+
+-- 21. PROMO CODES
+-- =====================================================
+
+CREATE TABLE public.promo_codes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  code TEXT NOT NULL UNIQUE,
+  discount_percent NUMERIC(5,2) NOT NULL DEFAULT 10,
+  max_uses INTEGER,
+  used_count INTEGER NOT NULL DEFAULT 0,
+  expires_at TIMESTAMPTZ,
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.promo_codes ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Super admin manages promo codes" ON public.promo_codes
+  FOR ALL TO authenticated USING (public.has_role(auth.uid(), 'super_admin'));
+
+CREATE POLICY "Authenticated read active codes" ON public.promo_codes
+  FOR SELECT TO authenticated USING (is_active = true);
+
+
+-- 22. CHAPTER TEMPLATES
+-- =====================================================
+
+CREATE TABLE public.chapter_templates (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID REFERENCES public.tenants(id) ON DELETE CASCADE,
+  chapter_key TEXT NOT NULL,
+  title TEXT NOT NULL,
+  content TEXT NOT NULL,
+  created_by UUID REFERENCES auth.users(id),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.chapter_templates ENABLE ROW LEVEL SECURITY;
+CREATE INDEX idx_chapter_templates_tenant ON public.chapter_templates(tenant_id);
+
+CREATE POLICY "Tenant sees own templates" ON public.chapter_templates
+  FOR SELECT TO authenticated
+  USING (
+    tenant_id = public.get_user_tenant_id(auth.uid())
+    OR public.has_role(auth.uid(), 'super_admin')
+  );
+
+CREATE POLICY "Tenant admin manages templates" ON public.chapter_templates
+  FOR ALL TO authenticated
+  USING (
+    (tenant_id = public.get_user_tenant_id(auth.uid()) AND (public.has_role(auth.uid(), 'tenant_admin') OR public.has_role(auth.uid(), 'tenant_user')))
+    OR public.has_role(auth.uid(), 'super_admin')
+  );
+
+
+-- 23. LOGIN LOGS
+-- =====================================================
+
+CREATE TABLE public.login_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  ip_hash TEXT,
+  user_agent TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.login_logs ENABLE ROW LEVEL SECURITY;
+CREATE INDEX idx_login_logs_user_id ON public.login_logs(user_id);
+CREATE INDEX idx_login_logs_created ON public.login_logs(created_at);
+
+CREATE POLICY "Users see own login logs" ON public.login_logs
+  FOR SELECT TO authenticated
+  USING (user_id = auth.uid() OR public.has_role(auth.uid(), 'super_admin'));
+
+CREATE POLICY "Users insert own login logs" ON public.login_logs
+  FOR INSERT TO authenticated WITH CHECK (user_id = auth.uid());
