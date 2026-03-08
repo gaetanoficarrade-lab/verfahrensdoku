@@ -339,7 +339,7 @@ export default function AdminAffiliates() {
                         {c.status === 'pending' && (
                           <>
                             <Button size="sm" variant="ghost" onClick={() => handleStatusChange(c.id, 'confirmed')}>
-                              <CheckCircle className="h-4 w-4 text-green-600" />
+                              <CheckCircle className="h-4 w-4 text-primary" />
                             </Button>
                             <Button size="sm" variant="ghost" onClick={() => handleStatusChange(c.id, 'rejected')}>
                               <XCircle className="h-4 w-4 text-destructive" />
