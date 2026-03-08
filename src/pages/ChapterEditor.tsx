@@ -433,28 +433,47 @@ export default function ChapterEditor() {
           {/* Action buttons for client */}
           {!isAdvisor && canEdit && (
             <div className="space-y-4">
-              <div className="flex gap-3">
+              <div className="flex gap-3 items-center">
                 <Button variant="outline" onClick={handleSave} disabled={saving || precheckLoading}>
                   {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
                   Speichern
                 </Button>
                 <Button
-                  disabled={precheckLoading || submitting || !notes.trim()}
-                  className="gap-2"
-                  onClick={handleSubmitWithPrecheck}
+                  variant="secondary"
+                  size="sm"
+                  disabled={precheckLoading || !notes.trim()}
+                  className="gap-1.5"
+                  onClick={handlePrecheck}
                 >
-                  {precheckLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                  {precheckLoading ? 'Wird geprüft…' : 'Einreichen'}
+                  {precheckLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Search className="h-3.5 w-3.5" />}
+                  {precheckLoading ? 'KI prüft…' : 'Prüfen'}
+                </Button>
+                <Button
+                  disabled={submitting || !notes.trim()}
+                  className="gap-2"
+                  onClick={handleSubmit}
+                >
+                  {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                  Einreichen
                 </Button>
               </div>
 
-              {/* Precheck result after submit attempt */}
+              {/* Precheck result */}
+              {precheckIsClean && (
+                <div className="rounded-lg border border-green-500/40 bg-green-50 dark:bg-green-950/20 p-3 flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400 shrink-0" />
+                  <p className="text-sm text-green-700 dark:text-green-300 font-medium">
+                    Ihre Angaben sind vollständig ✓
+                  </p>
+                </div>
+              )}
+
               {precheckHasIssues && (
-                <div className="rounded-lg border border-yellow-500/40 bg-yellow-50 dark:bg-yellow-950/20 p-4 space-y-3">
+                <div className="rounded-lg border border-yellow-500/40 bg-yellow-50 dark:bg-yellow-950/20 p-4 space-y-2">
                   <div className="flex items-start gap-2">
                     <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
                     <p className="text-sm font-medium text-yellow-800 dark:text-yellow-300">
-                      Die KI-Prüfung hat Hinweise zu Ihren Angaben:
+                      Hinweise zu Ihren Angaben:
                     </p>
                   </div>
                   {precheckResult!.missing_fields?.map((field, i) => (
@@ -463,15 +482,6 @@ export default function ChapterEditor() {
                   {precheckResult!.hints?.map((hint, i) => (
                     <p key={`h-${i}`} className="text-sm text-yellow-700 dark:text-yellow-400 pl-7">• {hint}</p>
                   ))}
-                  <div className="flex gap-3 pl-7 pt-1">
-                    <Button variant="outline" size="sm" onClick={() => setPrecheckResult(null)}>
-                      Angaben ergänzen
-                    </Button>
-                    <Button size="sm" variant="destructive" onClick={handleSubmit} disabled={submitting}>
-                      {submitting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                      Trotzdem einreichen
-                    </Button>
-                  </div>
                 </div>
               )}
             </div>
