@@ -633,13 +633,38 @@ export default function ChapterEditor() {
             <CardTitle className="text-base">Generierter / Bearbeiteter Text</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Textarea
-              value={editorText}
-              onChange={(e) => setEditorText(e.target.value)}
-              rows={15}
-              disabled={status === 'advisor_approved'}
-              className="font-mono text-sm"
-            />
+            <div className="relative">
+              <Textarea
+                value={editorText}
+                onChange={(e) => setEditorText(e.target.value)}
+                rows={15}
+                disabled={status === 'advisor_approved'}
+                className="font-mono text-sm pr-12"
+              />
+              {status !== 'advisor_approved' && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className={`absolute top-2 right-2 ${editorSpeech.isListening ? 'text-destructive animate-pulse' : ''}`}
+                        onClick={editorSpeech.toggle}
+                        disabled={!editorSpeech.isSupported}
+                      >
+                        <Mic className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {editorSpeech.isSupported
+                        ? editorSpeech.isListening ? 'Aufnahme stoppen' : 'Spracheingabe starten'
+                        : 'Spracheingabe nicht unterstützt'}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
             {status !== 'advisor_approved' && (
               <Button variant="outline" onClick={handleSaveEditorText} disabled={editorTextSaving}>
                 {editorTextSaving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
