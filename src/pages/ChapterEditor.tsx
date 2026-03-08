@@ -223,31 +223,7 @@ export default function ChapterEditor() {
     }
   };
 
-  const handlePrecheck = async () => {
-    if (!chapterDataId) return;
-    setPrecheckLoading(true);
-    setPrecheckResult(null);
-
-    try {
-      const { data: session } = await supabase.auth.getSession();
-      const { data, error } = await supabase.functions.invoke('precheck-chapter-notes', {
-        body: {
-          project_id: projectId,
-          chapter_key: chapterKey,
-          client_notes: notes,
-        },
-      });
-
-      if (error) throw error;
-      setPrecheckResult(data as PrecheckResult);
-      toast({ title: 'Precheck abgeschlossen', description: `${data.hints?.length || 0} Hinweise gefunden.` });
-    } catch (err: any) {
-      console.error('Precheck error:', err);
-      toast({ title: 'Fehler', description: err.message || 'Precheck fehlgeschlagen', variant: 'destructive' });
-    } finally {
-      setPrecheckLoading(false);
-    }
-  };
+  // handlePrecheck removed — precheck runs automatically on submit and results are read from DB
 
   const handleGenerateText = async () => {
     if (!chapterDataId) return;
