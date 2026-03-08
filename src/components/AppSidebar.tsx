@@ -50,7 +50,7 @@ export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
-  const { isSuperAdmin, impersonation } = useAuthContext();
+  const { isSuperAdmin, impersonation, roles } = useAuthContext();
 
   const currentPath = location.pathname;
   const isActive = (path: string) => {
