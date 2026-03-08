@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Upload, Save, Palette, Building2, FileText, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { logAudit } from '@/lib/auditLog';
 
 export default function BrandingSettings() {
   const { effectiveTenantId } = useAuthContext();
