@@ -15,7 +15,7 @@ interface Project {
   status: string | null;
   workflow_status: string | null;
   created_at: string;
-  clients: { company: string } | null;
+  clients: { company: string }[] | null;
 }
 
 export default function Projects() {
