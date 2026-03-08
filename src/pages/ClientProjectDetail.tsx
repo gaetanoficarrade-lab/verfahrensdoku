@@ -111,6 +111,7 @@ export default function ClientProjectDetail() {
         notes: `PDF erstellt am ${new Date().toLocaleDateString('de-DE')}`,
       });
       logAudit('pdf_created', 'project', id, { version: nextVersion, file: fileName });
+      triggerWebhook('dokument_finalisiert', { project_id: id, project_name: project.name, version: nextVersion });
       toast.success('PDF wurde erstellt und heruntergeladen.');
     } catch (err) {
       console.error(err);
