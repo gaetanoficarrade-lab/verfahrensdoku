@@ -210,6 +210,8 @@ export default function ChapterEditor() {
       setSubmitPrecheckLoading(false);
     }
   };
+
+  const handlePrecheck = async () => {
     if (!chapterDataId) return;
     setPrecheckLoading(true);
     setPrecheckResult(null);
