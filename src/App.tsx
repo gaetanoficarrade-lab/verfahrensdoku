@@ -13,6 +13,10 @@ import Index from "./pages/Index";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminTenants from "./pages/AdminTenants";
 import AuditLog from "./pages/AuditLog";
+import Clients from "./pages/Clients";
+import ClientNew from "./pages/ClientNew";
+import ClientDetail from "./pages/ClientDetail";
+import Projects from "./pages/Projects";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -60,6 +64,39 @@ const App = () => (
               element={
                 <ProtectedRoute requiredRoles={['super_admin']}>
                   <AppLayout><AuditLog /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/clients"
+              element={
+                <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
+                  <AppLayout><Clients /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/clients/new"
+              element={
+                <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
+                  <AppLayout><ClientNew /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/clients/:id"
+              element={
+                <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
+                  <AppLayout><ClientDetail /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/projects"
+              element={
+                <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
+                  <AppLayout><Projects /></AppLayout>
                 </ProtectedRoute>
               }
             />
