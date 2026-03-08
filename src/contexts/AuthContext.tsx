@@ -51,6 +51,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     impersonatedTenantName: null,
   });
 
+  // Single auth state listener
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, sess) => {
+        setSession(sess);
+        setUser(sess?.user ?? null);
+        setLoading(false);
+      }
+    );
+
+    supabase.auth.getSession().then(({ data: { session: sess } }) => {
+      setSession(sess);
+      setUser(sess?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Fetch roles & profile when user changes
   useEffect(() => {
     if (loading) return;
     if (!user) {
@@ -63,23 +83,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const fetchUserData = async () => {
       setProfileLoading(true);
       try {
-        // Fetch roles
-        const { data: rolesData } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', user.id);
+        const [rolesRes, profileRes] = await Promise.all([
+          supabase.from('user_roles').select('role').eq('user_id', user.id),
+          supabase.from('profiles').select('tenant_id').eq('user_id', user.id).maybeSingle(),
+        ]);
 
-        const userRoles = (rolesData || []).map((r: UserRole) => r.role);
-        setRoles(userRoles);
-
-        // Fetch tenant_id from profile
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('tenant_id')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        setTenantId(profile?.tenant_id || null);
+        setRoles((rolesRes.data || []).map((r: UserRole) => r.role));
+        setTenantId(profileRes.data?.tenant_id || null);
       } catch (err) {
         console.error('Error fetching user data:', err);
       } finally {
@@ -92,6 +102,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const hasRole = useCallback((role: AppRole) => roles.includes(role), [roles]);
   const isSuperAdmin = roles.includes('super_admin');
+
+  const signIn = useCallback(async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    return { error };
+  }, []);
+
+  const signUp = useCallback(async (email: string, password: string, metadata?: Record<string, any>) => {
+    const { error } = await supabase.auth.signUp({
+      email, password,
+      options: { data: metadata, emailRedirectTo: window.location.origin },
+    });
+    return { error };
+  }, []);
+
+  const signOut = useCallback(async () => {
+    await supabase.auth.signOut();
+  }, []);
+
+  const updatePassword = useCallback(async (password: string) => {
+    const { error } = await supabase.auth.updateUser({ password });
+    return { error };
+  }, []);
+
+  const resetPassword = useCallback(async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/set-password`,
+    });
+    return { error };
+  }, []);
 
   const startImpersonation = useCallback((targetTenantId: string, targetTenantName: string) => {
     setImpersonation({
@@ -118,6 +157,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider
       value={{
+        user,
+        session,
+        loading,
         roles,
         tenantId,
         profileLoading,
@@ -127,6 +169,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         startImpersonation,
         stopImpersonation,
         effectiveTenantId,
+        signIn,
+        signOut,
+        resetPassword,
+        updatePassword,
+        signUp,
       }}
     >
       {children}
