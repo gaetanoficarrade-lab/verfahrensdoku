@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, ClipboardCheck, AlertTriangle, ChevronRight, Mic } from 'lucide-react';
+import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, AlertTriangle, ChevronRight, Mic } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -54,14 +54,13 @@ export default function ChapterEditor() {
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [precheckLoading, setPrecheckLoading] = useState(false);
   const [generateLoading, setGenerateLoading] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
-  const [precheckResult, setPrecheckResult] = useState<PrecheckResult | null>(null);
   const [submitPrecheckResult, setSubmitPrecheckResult] = useState<PrecheckResult | null>(null);
   const [submitPrecheckLoading, setSubmitPrecheckLoading] = useState(false);
   const [onboardingAnswers, setOnboardingAnswers] = useState<Record<string, any> | null>(null);
   const [editorTextSaving, setEditorTextSaving] = useState(false);
+  const [savedPrecheckHints, setSavedPrecheckHints] = useState<string[]>([]);
 
   const notesSpeech = useSpeechRecognition(useCallback((text: string) => {
     setNotes(prev => prev ? prev + ' ' + text : text);
@@ -102,6 +101,9 @@ export default function ChapterEditor() {
         setNotes(chData.client_notes || '');
         setEditorText(chData.editor_text || chData.generated_text || '');
         setStatus(chData.status || 'empty');
+        setSavedPrecheckHints(
+          Array.isArray(chData.client_precheck_hints) ? chData.client_precheck_hints : []
+        );
 
         // Fetch files
         const { data: filesData } = await supabase
@@ -221,31 +223,7 @@ export default function ChapterEditor() {
     }
   };
 
-  const handlePrecheck = async () => {
-    if (!chapterDataId) return;
-    setPrecheckLoading(true);
-    setPrecheckResult(null);
-
-    try {
-      const { data: session } = await supabase.auth.getSession();
-      const { data, error } = await supabase.functions.invoke('precheck-chapter-notes', {
-        body: {
-          project_id: projectId,
-          chapter_key: chapterKey,
-          client_notes: notes,
-        },
-      });
-
-      if (error) throw error;
-      setPrecheckResult(data as PrecheckResult);
-      toast({ title: 'Precheck abgeschlossen', description: `${data.hints?.length || 0} Hinweise gefunden.` });
-    } catch (err: any) {
-      console.error('Precheck error:', err);
-      toast({ title: 'Fehler', description: err.message || 'Precheck fehlgeschlagen', variant: 'destructive' });
-    } finally {
-      setPrecheckLoading(false);
-    }
-  };
+  // handlePrecheck removed — precheck runs automatically on submit and results are read from DB
 
   const handleGenerateText = async () => {
     if (!chapterDataId) return;
@@ -530,6 +508,28 @@ export default function ChapterEditor() {
         </CardContent>
       </Card>
 
+      {/* Saved precheck hints (visible to advisor) */}
+      {isAdvisor && savedPrecheckHints.length > 0 && (
+        <Card className="border-yellow-500/40">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+              KI-Precheck-Hinweise (vom Mandanten beim Einreichen)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-1">
+              {savedPrecheckHints.map((hint, i) => (
+                <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                  <span className="text-yellow-600 dark:text-yellow-400 mt-0.5">•</span>
+                  {hint}
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Advisor action buttons */}
       {showAdvisorActions && (
         <Card className="border-primary/30">
@@ -538,15 +538,6 @@ export default function ChapterEditor() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-3">
-              <Button
-                variant="outline"
-                onClick={handlePrecheck}
-                disabled={precheckLoading}
-                className="gap-2"
-              >
-                {precheckLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ClipboardCheck className="h-4 w-4" />}
-                Precheck starten
-              </Button>
               <Button
                 variant="outline"
                 onClick={handleGenerateText}
@@ -580,48 +571,6 @@ export default function ChapterEditor() {
                 </AlertDialogContent>
               </AlertDialog>
             </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Precheck results */}
-      {precheckResult && (
-        <Card className="border-orange-300 dark:border-orange-700">
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-orange-500" />
-              Precheck-Ergebnisse
-              <Badge variant="secondary" className="ml-auto">
-                Confidence: {precheckResult.confidence}%
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {precheckResult.hints.length > 0 && (
-              <div>
-                <p className="text-sm font-medium text-foreground mb-2">Hinweise:</p>
-                <ul className="space-y-1">
-                  {precheckResult.hints.map((hint, i) => (
-                    <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                      <span className="text-orange-500 mt-0.5">•</span>
-                      {hint}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {precheckResult.missing_fields.length > 0 && (
-              <div>
-                <p className="text-sm font-medium text-foreground mb-2">Fehlende Felder:</p>
-                <div className="flex flex-wrap gap-2">
-                  {precheckResult.missing_fields.map((field, i) => (
-                    <Badge key={i} variant="outline" className="text-destructive border-destructive/30">
-                      {field}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
           </CardContent>
         </Card>
       )}
