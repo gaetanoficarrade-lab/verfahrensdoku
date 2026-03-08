@@ -111,7 +111,7 @@ const App = () => (
                   <AppLayout><ProjectDetail /></AppLayout>
                 </ProtectedRoute>
               }
-
+            />
             {/* Client portal routes */}
             <Route
               path="/client"
