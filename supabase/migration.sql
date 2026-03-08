@@ -590,6 +590,9 @@ CREATE TABLE public.tenant_settings (
   phone TEXT,
   website TEXT,
   imprint TEXT,
+  imprint_url TEXT,
+  privacy_text TEXT,
+  privacy_url TEXT,
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 

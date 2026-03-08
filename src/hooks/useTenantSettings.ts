@@ -12,6 +12,9 @@ export interface TenantSettings {
   phone: string | null;
   website: string | null;
   imprint: string | null;
+  imprint_url: string | null;
+  privacy_text: string | null;
+  privacy_url: string | null;
   updated_at: string;
 }
 

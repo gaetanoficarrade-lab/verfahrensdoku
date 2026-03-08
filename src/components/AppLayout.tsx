@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
 import { ImpersonationBanner } from '@/components/ImpersonationBanner';
+import { AppFooter } from '@/components/AppFooter';
 import { useAuthContext } from '@/contexts/AuthContext';
 
 interface AppLayoutProps {
@@ -25,6 +26,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             <SidebarTrigger className="mr-4" />
           </header>
           <main className="flex-1 p-6">{children}</main>
+          <AppFooter />
         </div>
       </div>
     </SidebarProvider>
