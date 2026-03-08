@@ -56,6 +56,9 @@ export default function ChapterEditor() {
   const [generateLoading, setGenerateLoading] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
   const [precheckResult, setPrecheckResult] = useState<PrecheckResult | null>(null);
+  const [submitPrecheckResult, setSubmitPrecheckResult] = useState<PrecheckResult | null>(null);
+  const [submitPrecheckLoading, setSubmitPrecheckLoading] = useState(false);
+  const [onboardingAnswers, setOnboardingAnswers] = useState<Record<string, any> | null>(null);
   const [editorTextSaving, setEditorTextSaving] = useState(false);
 
   const title = CHAPTER_TITLE_MAP[chapterKey || ''] || chapterKey;
@@ -100,6 +103,17 @@ export default function ChapterEditor() {
       setLoading(false);
     };
     fetchData();
+
+    // Fetch onboarding answers for precheck
+    const fetchOnboarding = async () => {
+      const { data } = await supabase
+        .from('project_onboarding')
+        .select('answers')
+        .eq('project_id', projectId)
+        .maybeSingle();
+      if (data?.answers) setOnboardingAnswers(data.answers as Record<string, any>);
+    };
+    fetchOnboarding();
   }, [projectId, chapterKey]);
 
   const ensureChapterData = async (): Promise<string | null> => {
@@ -157,7 +171,43 @@ export default function ChapterEditor() {
       toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
     } else {
       setStatus('client_submitted');
+      setSubmitPrecheckResult(null);
       toast({ title: 'Eingereicht', description: 'Das Kapitel wurde an Ihren Berater übermittelt.' });
+    }
+  };
+
+  const handleSubmitWithPrecheck = async () => {
+    setSubmitPrecheckLoading(true);
+    setSubmitPrecheckResult(null);
+
+    try {
+      const cdId = await ensureChapterData();
+      if (!cdId) { setSubmitPrecheckLoading(false); return; }
+
+      const { data, error } = await supabase.functions.invoke('precheck-chapter-notes', {
+        body: {
+          project_id: projectId,
+          chapter_key: chapterKey,
+          client_notes: notes,
+          onboarding_answers: onboardingAnswers,
+        },
+      });
+
+      if (error) throw error;
+      const result = data as PrecheckResult;
+
+      if ((result.hints?.length || 0) === 0 && (result.missing_fields?.length || 0) === 0) {
+        // No issues — submit directly
+        await handleSubmit();
+      } else {
+        setSubmitPrecheckResult(result);
+      }
+    } catch (err: any) {
+      console.error('Submit precheck error:', err);
+      toast({ title: 'Fehler bei der Prüfung', description: 'Die KI-Prüfung konnte nicht durchgeführt werden. Sie können trotzdem einreichen.', variant: 'destructive' });
+      setSubmitPrecheckResult({ hints: [], missing_fields: [], confidence: 0 });
+    } finally {
+      setSubmitPrecheckLoading(false);
     }
   };
 
@@ -363,34 +413,78 @@ export default function ChapterEditor() {
             className="font-mono text-sm"
           />
           {!isAdvisor && !isSubmitted && (
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={handleSave} disabled={saving}>
-                {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                Speichern
-              </Button>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button disabled={submitting || !notes.trim()} className="gap-2">
+            <div className="space-y-4">
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={handleSave} disabled={saving}>
+                  {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                  Speichern
+                </Button>
+                <Button
+                  disabled={submitPrecheckLoading || submitting || !notes.trim()}
+                  className="gap-2"
+                  onClick={handleSubmitWithPrecheck}
+                >
+                  {submitPrecheckLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
                     <Send className="h-4 w-4" />
-                    Einreichen
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Kapitel einreichen?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Nach dem Einreichen können Sie keine Änderungen mehr vornehmen. Ihr Berater wird das Kapitel prüfen.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleSubmit}>
+                  )}
+                  {submitPrecheckLoading ? 'Wird geprüft…' : 'Einreichen'}
+                </Button>
+              </div>
+
+              {/* KI-Precheck Ergebnis */}
+              {submitPrecheckResult && (submitPrecheckResult.hints?.length > 0 || submitPrecheckResult.missing_fields?.length > 0) && (
+                <div className="rounded-lg border border-yellow-500/40 bg-yellow-50 dark:bg-yellow-950/20 p-4 space-y-3">
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
+                    <p className="text-sm font-medium text-yellow-800 dark:text-yellow-300">
+                      Die KI-Prüfung hat Hinweise zu Ihren Angaben:
+                    </p>
+                  </div>
+
+                  {submitPrecheckResult.missing_fields?.length > 0 && (
+                    <div className="space-y-1 pl-7">
+                      <p className="text-xs font-semibold text-yellow-700 dark:text-yellow-400 uppercase tracking-wide">Fehlende Angaben</p>
+                      {submitPrecheckResult.missing_fields.map((field, i) => (
+                        <p key={i} className="text-sm text-yellow-800 dark:text-yellow-300">• {field}</p>
+                      ))}
+                    </div>
+                  )}
+
+                  {submitPrecheckResult.hints?.length > 0 && (
+                    <div className="space-y-1 pl-7">
+                      <p className="text-xs font-semibold text-yellow-700 dark:text-yellow-400 uppercase tracking-wide">Verbesserungsvorschläge</p>
+                      {submitPrecheckResult.hints.map((hint, i) => (
+                        <p key={i} className="text-sm text-yellow-800 dark:text-yellow-300">• {hint}</p>
+                      ))}
+                    </div>
+                  )}
+
+                  <p className="text-sm text-yellow-700 dark:text-yellow-400 pl-7">
+                    Möchten Sie trotzdem einreichen oder die Angaben ergänzen?
+                  </p>
+
+                  <div className="flex gap-3 pl-7">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSubmitPrecheckResult(null)}
+                    >
+                      Angaben ergänzen
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={handleSubmit}
+                      disabled={submitting}
+                    >
                       {submitting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                      Einreichen
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+                      Trotzdem einreichen
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
           {isClient && isSubmitted && (
