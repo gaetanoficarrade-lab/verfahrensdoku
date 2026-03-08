@@ -347,6 +347,13 @@ export default function ChapterEditor() {
   const precheckHasIssues = precheckResult &&
     ((precheckResult.hints?.length || 0) > 0 || (precheckResult.missing_fields?.length || 0) > 0);
 
+  const precheckIsClean = precheckResult &&
+    (precheckResult.hints?.length || 0) === 0 &&
+    (precheckResult.missing_fields?.length || 0) === 0;
+
+  const precheckHasIssues = precheckResult &&
+    ((precheckResult.hints?.length || 0) > 0 || (precheckResult.missing_fields?.length || 0) > 0);
+
   return (
     <div className="space-y-6 max-w-3xl">
       {/* Header */}
