@@ -55,8 +55,24 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
   const [saving, setSaving] = useState(false);
   const [completing, setCompleting] = useState(false);
   const [direction, setDirection] = useState(1);
+  const [initialized, setInitialized] = useState(!!onboardingId);
 
   const totalSteps = ONBOARDING_SECTIONS.length;
+
+  // Ensure a project_onboarding row exists on mount
+  useEffect(() => {
+    if (initialized) return;
+    const ensureRow = async () => {
+      const { error } = await supabase
+        .from('project_onboarding')
+        .upsert({ project_id: projectId, answers: initialAnswers as any }, { onConflict: 'project_id' });
+      if (error) {
+        toast({ title: 'Initialisierung fehlgeschlagen', description: error.message, variant: 'destructive' });
+      }
+      setInitialized(true);
+    };
+    ensureRow();
+  }, [initialized, projectId, initialAnswers, toast]);
 
   const set = useCallback(<K extends keyof OnboardingAnswers>(key: K, value: OnboardingAnswers[K]) => {
     setAnswers((prev) => ({ ...prev, [key]: value }));
@@ -64,15 +80,22 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
 
   const saveAnswers = useCallback(async (data?: OnboardingAnswers) => {
     setSaving(true);
-    const { error } = await supabase
-      .from('project_onboarding')
-      .update({ answers: (data ?? answers) as any })
-      .eq('id', onboardingId);
-    setSaving(false);
-    if (error) {
-      toast({ title: 'Speichern fehlgeschlagen', description: error.message, variant: 'destructive' });
+    try {
+      const { error } = await supabase
+        .from('project_onboarding')
+        .upsert(
+          { project_id: projectId, answers: (data ?? answers) as any },
+          { onConflict: 'project_id' }
+        );
+      if (error) {
+        toast({ title: 'Speichern fehlgeschlagen', description: error.message, variant: 'destructive' });
+      }
+    } catch (e: any) {
+      toast({ title: 'Speichern fehlgeschlagen', description: e?.message || 'Unbekannter Fehler', variant: 'destructive' });
+    } finally {
+      setSaving(false);
     }
-  }, [answers, onboardingId, toast]);
+  }, [answers, projectId, toast]);
 
   const goNext = async () => {
     await saveAnswers();
