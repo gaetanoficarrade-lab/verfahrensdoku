@@ -35,9 +35,9 @@ interface Webhook {
 interface WebhookLog {
   id: string;
   event: string;
-  status_code: number | null;
+  payload: any;
+  response_status: number | null;
   response_body: string | null;
-  success: boolean;
   created_at: string;
 }
 
