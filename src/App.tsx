@@ -26,6 +26,7 @@ import BrandingSettings from "./pages/BrandingSettings";
 import ActivityLog from "./pages/ActivityLog";
 import TeamSettings from "./pages/TeamSettings";
 import WebhookSettings from "./pages/WebhookSettings";
+import ClientRegister from "./pages/ClientRegister";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +44,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/register" element={<Register />} />
               <Route path="/set-password" element={<SetPassword />} />
+              <Route path="/client-register" element={<ClientRegister />} />
 
               {/* Protected routes with layout */}
               <Route
