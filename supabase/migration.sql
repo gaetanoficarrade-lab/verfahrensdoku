@@ -250,23 +250,31 @@ DECLARE
   _tenant_id UUID;
   _first_name TEXT;
   _last_name TEXT;
+  _is_team_invite BOOLEAN;
 BEGIN
   _first_name := NEW.raw_user_meta_data ->> 'first_name';
   _last_name := NEW.raw_user_meta_data ->> 'last_name';
   _tenant_id := (NEW.raw_user_meta_data ->> 'tenant_id')::UUID;
+  _is_team_invite := (NEW.raw_user_meta_data ->> 'team_invite') = 'true';
 
   INSERT INTO public.profiles (user_id, tenant_id, first_name, last_name, email)
   VALUES (NEW.id, _tenant_id, _first_name, _last_name, NEW.email);
 
-  -- If invite had a client_id, assign 'client' role and link user to client
   IF NEW.raw_user_meta_data ->> 'invite_token' IS NOT NULL THEN
-    INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'client')
-    ON CONFLICT DO NOTHING;
+    -- Team invite: assign tenant_user role
+    IF _is_team_invite THEN
+      INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'tenant_user')
+      ON CONFLICT DO NOTHING;
+    ELSE
+      -- Client invite: assign client role and link to client
+      INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'client')
+      ON CONFLICT DO NOTHING;
 
-    IF NEW.raw_user_meta_data ->> 'client_id' IS NOT NULL THEN
-      UPDATE public.clients
-      SET user_id = NEW.id
-      WHERE id = (NEW.raw_user_meta_data ->> 'client_id')::UUID;
+      IF NEW.raw_user_meta_data ->> 'client_id' IS NOT NULL THEN
+        UPDATE public.clients
+        SET user_id = NEW.id
+        WHERE id = (NEW.raw_user_meta_data ->> 'client_id')::UUID;
+      END IF;
     END IF;
 
     -- Mark invite token as used
