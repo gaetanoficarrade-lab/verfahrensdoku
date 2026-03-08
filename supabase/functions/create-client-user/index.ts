@@ -90,7 +90,7 @@ serve(async (req) => {
     // Assign client role
     const { error: roleError } = await supabaseAdmin
       .from("user_roles")
-      .insert({ user_id: userId, role: "client" });
+      .insert({ user_id: userId, role: assignRole });
 
     if (roleError) {
       console.error("Role insert error:", roleError);
