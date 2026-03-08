@@ -343,6 +343,17 @@ export default function ChapterEditor() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {!isAdvisor && chapterKey && CHAPTER_LEITFRAGEN[chapterKey] && (
+            <div className="bg-muted rounded-lg p-4 space-y-2">
+              <p className="text-sm font-medium text-muted-foreground">Leitfragen</p>
+              {CHAPTER_LEITFRAGEN[chapterKey].map((frage, i) => (
+                <div key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <ChevronRight className="h-4 w-4 mt-0.5 shrink-0" />
+                  <span>{frage}</span>
+                </div>
+              ))}
+            </div>
+          )}
           <Textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
