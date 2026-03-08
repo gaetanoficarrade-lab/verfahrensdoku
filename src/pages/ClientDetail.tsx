@@ -42,6 +42,10 @@ export default function ClientDetail() {
   const [showNewProject, setShowNewProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [creating, setCreating] = useState(false);
+  const [showCreateUser, setShowCreateUser] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [userPassword, setUserPassword] = useState('');
+  const [creatingUser, setCreatingUser] = useState(false);
 
   useEffect(() => {
     if (!id || !effectiveTenantId) return;
