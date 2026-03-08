@@ -89,6 +89,7 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
           { onConflict: 'project_id' }
         );
       if (error) {
+        console.error('Onboarding save error:', error);
         toast({ title: 'Speichern fehlgeschlagen', description: error.message, variant: 'destructive' });
       }
     } catch (e: any) {
