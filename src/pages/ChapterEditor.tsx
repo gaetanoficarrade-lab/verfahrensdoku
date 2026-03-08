@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/alert-dialog';
 
 import { CHAPTER_TITLE_MAP } from '@/lib/chapter-structure';
+import { CHAPTER_LEITFRAGEN } from '@/lib/chapter-leitfragen';
 
 interface ChapterFile {
   id: string;
