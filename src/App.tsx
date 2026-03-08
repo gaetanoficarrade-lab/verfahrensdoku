@@ -144,7 +144,22 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
-
+              <Route
+                path="/settings/team"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin']}>
+                    <AppLayout><TeamSettings /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/webhook"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin']}>
+                    <AppLayout><WebhookSettings /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
               {/* Client portal routes */}
               <Route
                 path="/client"

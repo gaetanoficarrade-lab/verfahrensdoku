@@ -142,32 +142,32 @@ export function AppSidebar() {
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={isActive('/settings/branding')}
-                    tooltip="Branding"
-                  >
-                    <NavLink
-                      to="/settings/branding"
-                      className="hover:bg-sidebar-accent/50"
-                      activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                    >
-                      <Settings className="h-4 w-4" />
+                  <SidebarMenuButton asChild isActive={isActive('/settings/branding')} tooltip="Branding">
+                    <NavLink to="/settings/branding" className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
+                      <Palette className="h-4 w-4" />
                       {!collapsed && <span>Branding</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={isActive('/settings/activity-log')}
-                    tooltip="Aktivitäts-Log"
-                  >
-                    <NavLink
-                      to="/settings/activity-log"
-                      className="hover:bg-sidebar-accent/50"
-                      activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                    >
+                  <SidebarMenuButton asChild isActive={isActive('/settings/team')} tooltip="Team">
+                    <NavLink to="/settings/team" className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
+                      <Users className="h-4 w-4" />
+                      {!collapsed && <span>Team</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={isActive('/settings/webhook')} tooltip="Webhooks">
+                    <NavLink to="/settings/webhook" className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
+                      <Globe className="h-4 w-4" />
+                      {!collapsed && <span>Webhooks</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={isActive('/settings/activity-log')} tooltip="Aktivitäts-Log">
+                    <NavLink to="/settings/activity-log" className="hover:bg-sidebar-accent/50" activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium">
                       <ScrollText className="h-4 w-4" />
                       {!collapsed && <span>Aktivitäts-Log</span>}
                     </NavLink>
