@@ -57,7 +57,7 @@ export default function ChapterEditor() {
   const [precheckResult, setPrecheckResult] = useState<PrecheckResult | null>(null);
   const [editorTextSaving, setEditorTextSaving] = useState(false);
 
-  const title = CHAPTER_TITLES[chapterKey || ''] || chapterKey;
+  const title = CHAPTER_TITLE_MAP[chapterKey || ''] || chapterKey;
   const isSubmitted = status === 'client_submitted' || status === 'advisor_review' || status === 'approved' || status === 'advisor_approved';
 
   // Determine if user is an advisor (tenant_admin/tenant_user or super_admin impersonating)
