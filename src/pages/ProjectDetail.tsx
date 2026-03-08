@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, FileText, CheckCircle2, Clock, AlertCircle, Circle, ChevronDown, Ban } from 'lucide-react';
+import { ArrowLeft, Loader2, FileText, CheckCircle2, Clock, AlertCircle, Circle, ChevronDown, Ban, Eye, FileDown, Plus } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import OnboardingWizard from '@/components/OnboardingWizard';
 import { GOBD_CHAPTERS } from '@/lib/chapter-structure';
+import { generateVerfahrensdokumentation } from '@/lib/generatePdf';
 import type { OnboardingAnswers } from '@/lib/onboarding-variables';
 
 const statusConfig: Record<string, { label: string; icon: typeof Circle; className: string }> = {
@@ -63,29 +69,45 @@ interface Onboarding {
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [project, setProject] = useState<Project | null>(null);
   const [chapters, setChapters] = useState<ChapterData[]>([]);
   const [onboarding, setOnboarding] = useState<Onboarding | null>(null);
   const [loading, setLoading] = useState(true);
   const [openChapters, setOpenChapters] = useState<string[]>(['1']);
+  const [companyName, setCompanyName] = useState('');
+  const [createDocOpen, setCreateDocOpen] = useState(false);
+  const [docNotes, setDocNotes] = useState('');
+  const [nextVersion, setNextVersion] = useState(1);
+  const [creatingDoc, setCreatingDoc] = useState(false);
 
   const loadData = async () => {
     if (!id) return;
     setLoading(true);
-    const [projRes, chapRes, onbRes] = await Promise.all([
+    const [projRes, chapRes, onbRes, docRes] = await Promise.all([
       supabase.from('projects').select('id, name, status, workflow_status, client_id').eq('id', id).single(),
       supabase.from('chapter_data').select('id, chapter_key, status, client_notes, editor_text, generated_text').eq('project_id', id),
       supabase.from('project_onboarding').select('id, answers, completed_at').eq('project_id', id).maybeSingle(),
+      supabase.from('document_versions').select('version_number').eq('project_id', id).order('version_number', { ascending: false }).limit(1).maybeSingle(),
     ]);
     setProject(projRes.data);
     setChapters(chapRes.data || []);
     setOnboarding(onbRes.data as Onboarding | null);
+    setNextVersion((docRes.data?.version_number || 0) + 1);
+
+    // Get company name
+    if (projRes.data?.client_id) {
+      const { data: clientData } = await supabase.from('clients').select('company').eq('id', projRes.data.client_id).single();
+      if (clientData) setCompanyName(clientData.company);
+    }
     setLoading(false);
   };
 
   useEffect(() => { loadData(); }, [id]);
 
   const answers: OnboardingAnswers = (onboarding?.answers as OnboardingAnswers) || {};
+
+  const hasApprovedChapters = chapters.some(c => c.status === 'advisor_approved' || c.status === 'approved');
 
   const getSubChapterStatus = (key: string, isActive: boolean) => {
     if (!isActive) return 'inactive';
@@ -106,6 +128,43 @@ export default function ProjectDetail() {
     setOpenChapters((prev) =>
       prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
     );
+  };
+
+  const handleCreateDocument = async () => {
+    if (!id || !project) return;
+    setCreatingDoc(true);
+    try {
+      // Create document version
+      const { error } = await supabase.from('document_versions').insert({
+        project_id: id,
+        version_number: nextVersion,
+        is_draft: false,
+        status: 'finalized',
+        notes: docNotes || `Version ${nextVersion}`,
+      });
+      if (error) throw error;
+
+      // Generate and download PDF
+      const doc = generateVerfahrensdokumentation({
+        companyName,
+        projectName: project.name,
+        chapters: chapters.map(c => ({
+          chapter_key: c.chapter_key,
+          editor_text: c.editor_text,
+          generated_text: c.generated_text,
+        })),
+        answers,
+      });
+      doc.save(`${companyName || 'Verfahrensdokumentation'}_V${nextVersion}.pdf`);
+
+      toast({ title: `Verfahrensdokumentation V${nextVersion} erstellt`, description: 'PDF wurde heruntergeladen.' });
+      setCreateDocOpen(false);
+      setDocNotes('');
+      loadData();
+    } catch (err: any) {
+      toast({ title: 'Fehler', description: err.message, variant: 'destructive' });
+    }
+    setCreatingDoc(false);
   };
 
   if (loading) {
@@ -158,6 +217,48 @@ export default function ProjectDetail() {
             <Badge variant="outline">{statusLabels[project.status || ''] || project.status}</Badge>
             <Badge variant="secondary">{workflowLabels[project.workflow_status || ''] || project.workflow_status}</Badge>
           </div>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => navigate(`/projects/${id}/preview`)}>
+            <Eye className="h-4 w-4 mr-2" />
+            Vorschau
+          </Button>
+          {hasApprovedChapters && (
+            <Dialog open={createDocOpen} onOpenChange={setCreateDocOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <FileDown className="h-4 w-4 mr-2" />
+                  Verfahrensdokumentation erstellen
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Verfahrensdokumentation erstellen</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label>Versionsnummer</Label>
+                    <Input value={nextVersion} disabled />
+                  </div>
+                  <div>
+                    <Label>Notizen (optional)</Label>
+                    <Textarea
+                      value={docNotes}
+                      onChange={e => setDocNotes(e.target.value)}
+                      placeholder="z.B. Erstversion, Änderungen an Kapitel 3..."
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Das PDF wird automatisch generiert und heruntergeladen. Es enthält alle Kapitel mit dem aktuellen editor_text (Fallback: generated_text).
+                  </p>
+                  <Button onClick={handleCreateDocument} disabled={creatingDoc} className="w-full">
+                    {creatingDoc && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    Version {nextVersion} erstellen & herunterladen
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
       </div>
 
