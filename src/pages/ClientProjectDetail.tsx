@@ -40,6 +40,7 @@ export default function ClientProjectDetail() {
   const [project, setProject] = useState<Project | null>(null);
   const [chapters, setChapters] = useState<ChapterData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pdfLoading, setPdfLoading] = useState(false);
 
   useEffect(() => {
     if (!id) return;
