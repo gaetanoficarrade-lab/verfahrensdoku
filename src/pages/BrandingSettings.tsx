@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Upload, Save, Palette, Building2, FileText, Loader2 } from 'lucide-react';
+import { Upload, Save, Palette, Building2, FileText, Shield, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { logAudit } from '@/lib/auditLog';
 
@@ -25,6 +25,9 @@ export default function BrandingSettings() {
     phone: '',
     website: '',
     imprint: '',
+    imprint_url: '',
+    privacy_text: '',
+    privacy_url: '',
     logo_url: '',
   });
 
@@ -37,6 +40,9 @@ export default function BrandingSettings() {
         phone: settings.phone || '',
         website: settings.website || '',
         imprint: settings.imprint || '',
+        imprint_url: settings.imprint_url || '',
+        privacy_text: settings.privacy_text || '',
+        privacy_url: settings.privacy_url || '',
         logo_url: settings.logo_url || '',
       });
     }
@@ -228,22 +234,77 @@ export default function BrandingSettings() {
         </CardContent>
       </Card>
 
-      {/* Imprint */}
+      {/* Impressum */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
             Impressum
           </CardTitle>
-          <CardDescription>Wird im Footer / Impressums-Bereich angezeigt</CardDescription>
+          <CardDescription>
+            Hinterlegen Sie einen Impressumstext und/oder einen Link zu Ihrem Impressum.
+            Beides ist optional.
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Textarea
-            value={form.imprint}
-            onChange={(e) => handleChange('imprint', e.target.value)}
-            placeholder="Impressum-Text eingeben..."
-            rows={6}
-          />
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Impressum-Text</Label>
+            <Textarea
+              value={form.imprint}
+              onChange={(e) => handleChange('imprint', e.target.value)}
+              placeholder="Impressum-Text eingeben..."
+              rows={6}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Impressum-URL</Label>
+            <Input
+              value={form.imprint_url}
+              onChange={(e) => handleChange('imprint_url', e.target.value)}
+              placeholder="https://www.example.de/impressum"
+              type="url"
+            />
+            <p className="text-xs text-muted-foreground">
+              Wenn eine URL angegeben ist, wird im Footer ein Link angezeigt. Ansonsten wird der Text in einem Modal dargestellt.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Datenschutz */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Shield className="h-5 w-5" />
+            Datenschutz
+          </CardTitle>
+          <CardDescription>
+            Hinterlegen Sie einen Datenschutztext und/oder einen Link zu Ihrer Datenschutzerklärung.
+            Beides ist optional.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Datenschutz-Text</Label>
+            <Textarea
+              value={form.privacy_text}
+              onChange={(e) => handleChange('privacy_text', e.target.value)}
+              placeholder="Datenschutzerklärung eingeben..."
+              rows={6}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Datenschutz-URL</Label>
+            <Input
+              value={form.privacy_url}
+              onChange={(e) => handleChange('privacy_url', e.target.value)}
+              placeholder="https://www.example.de/datenschutz"
+              type="url"
+            />
+            <p className="text-xs text-muted-foreground">
+              Wenn eine URL angegeben ist, wird im Footer ein Link angezeigt. Ansonsten wird der Text in einem Modal dargestellt.
+            </p>
+          </div>
         </CardContent>
       </Card>
 
