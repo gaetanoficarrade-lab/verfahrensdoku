@@ -14,7 +14,7 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({ children, requiredRoles, redirectTo = '/auth' }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
-  const { roles, profileLoading } = useAuthContext();
+  const { roles, profileLoading, isSuperAdmin, impersonation } = useAuthContext();
 
   if (loading || profileLoading) {
     return (
@@ -29,6 +29,12 @@ export function ProtectedRoute({ children, requiredRoles, redirectTo = '/auth' }
   }
 
   if (requiredRoles && requiredRoles.length > 0) {
+    // Super admins impersonating a tenant can access tenant_admin/tenant_user routes
+    const isTenantRoute = requiredRoles.some((r) => r === 'tenant_admin' || r === 'tenant_user');
+    if (isSuperAdmin && impersonation.isImpersonating && isTenantRoute) {
+      return <>{children}</>;
+    }
+
     const hasRequired = requiredRoles.some((r) => roles.includes(r));
     if (!hasRequired) {
       return <Navigate to="/" replace />;
