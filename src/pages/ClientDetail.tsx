@@ -92,6 +92,7 @@ export default function ClientDetail() {
       const link = `${window.location.origin}/client-register?token=${data.token}`;
       setInviteLink(link);
       logAudit('client_user_created', 'client', client.id, { email: inviteEmail.trim(), type: 'invite_link' });
+      triggerWebhook('mandant_eingeladen', { client_id: client.id, company: client.company, email: inviteEmail.trim() });
     } catch (err: any) {
       toast.error(err.message || 'Fehler beim Erstellen der Einladung.');
     } finally {
