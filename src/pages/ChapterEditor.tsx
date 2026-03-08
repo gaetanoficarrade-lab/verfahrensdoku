@@ -184,18 +184,6 @@ export default function ChapterEditor() {
     }
   };
 
-  const ensureChapterDataSilent = async (): Promise<string | null> => {
-    if (chapterDataId) return chapterDataId;
-    const { data, error } = await supabase
-      .from('chapter_data')
-      .insert({ project_id: projectId!, chapter_key: chapterKey!, status: 'client_draft' })
-      .select('id')
-      .single();
-    if (error) return null;
-    setChapterDataId(data.id);
-    setStatus('client_draft');
-    return data.id;
-  };
 
   const ensureChapterData = async (): Promise<string | null> => {
     if (chapterDataId) return chapterDataId;
