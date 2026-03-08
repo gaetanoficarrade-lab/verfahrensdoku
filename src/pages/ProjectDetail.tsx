@@ -8,11 +8,11 @@ import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 
 const CHAPTERS = [
-  { key: 'org_environment', title: 'Organisatorisches Umfeld', description: 'Unternehmensstruktur, Verantwortlichkeiten und Zuständigkeiten' },
-  { key: 'it_environment', title: 'IT-Umfeld', description: 'IT-Systeme, Hardware, Software und Netzwerkinfrastruktur' },
+  { key: 'general_info', title: 'Organisatorisches Umfeld', description: 'Unternehmensstruktur, Verantwortlichkeiten und Zuständigkeiten' },
+  { key: 'it_systems', title: 'IT-Umfeld', description: 'IT-Systeme, Hardware, Software und Netzwerkinfrastruktur' },
   { key: 'processes', title: 'Geschäftsprozesse', description: 'Beschreibung der steuerrelevanten Geschäftsprozesse' },
   { key: 'archiving', title: 'Archivierung', description: 'Aufbewahrungsfristen, Speicherorte und Zugriffsrechte' },
-  { key: 'ics', title: 'Internes Kontrollsystem', description: 'Kontrollmaßnahmen, Plausibilitätsprüfungen und Schutzmaßnahmen' },
+  { key: 'controls', title: 'Internes Kontrollsystem', description: 'Kontrollmaßnahmen, Plausibilitätsprüfungen und Schutzmaßnahmen' },
 ];
 
 const statusConfig: Record<string, { label: string; icon: typeof Circle; className: string }> = {
@@ -125,7 +125,7 @@ export default function ProjectDetail() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.08 }}
               >
-                <Card className="hover:border-primary/30 transition-colors">
+                <Card className="hover:border-primary/30 transition-colors cursor-pointer" onClick={() => navigate(`/projects/${id}/chapters/${ch.key}`)}>
                   <CardContent className="flex items-center gap-4 py-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                       <FileText className="h-5 w-5 text-primary" />
