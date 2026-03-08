@@ -81,7 +81,7 @@ export function AppSidebar() {
             <div className="flex flex-col">
               <span className="text-sm font-bold text-sidebar-foreground">GoBD-Suite</span>
               <span className="text-xs text-sidebar-foreground/60">
-                {showAdmin ? 'Super-Admin' : 'Berater'}
+                {showAdmin ? 'Super-Admin' : isClient ? 'Mandant' : 'Berater'}
               </span>
             </div>
           )}
