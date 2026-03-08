@@ -19,6 +19,7 @@ import ClientDetail from "./pages/ClientDetail";
 import Projects from "./pages/Projects";
 import ClientDashboard from "./pages/ClientDashboard";
 import ClientProjectDetail from "./pages/ClientProjectDetail";
+import ProjectDetail from "./pages/ProjectDetail";
 import ChapterEditor from "./pages/ChapterEditor";
 import NotFound from "./pages/NotFound";
 
