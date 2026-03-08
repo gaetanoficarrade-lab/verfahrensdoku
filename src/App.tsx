@@ -23,6 +23,7 @@ import ClientProjectDetail from "./pages/ClientProjectDetail";
 import ProjectDetail from "./pages/ProjectDetail";
 import ChapterEditor from "./pages/ChapterEditor";
 import BrandingSettings from "./pages/BrandingSettings";
+import ActivityLog from "./pages/ActivityLog";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
