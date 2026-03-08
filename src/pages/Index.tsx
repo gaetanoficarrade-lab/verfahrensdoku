@@ -56,6 +56,7 @@ const Index = () => {
         <h1 className="mb-4 text-3xl font-bold text-foreground">
           Das ist dein Server
         </h1>
+        <p className="mb-4 text-xl text-foreground">Herzlichen Glückwunsch!</p>
         {loading && (
           <p className="text-muted-foreground">Verbindung wird getestet...</p>
         )}
