@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Settings,
+  ScrollText,
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useLocation, useNavigate } from 'react-router-dom';
