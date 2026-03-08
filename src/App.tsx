@@ -128,6 +128,14 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/admin/affiliates"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminAffiliates /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
 
               <Route
                 path="/clients"
