@@ -70,6 +70,58 @@ export default function ClientProjectDetail() {
     approved: { label: 'Freigegeben', icon: CheckCircle2, className: 'text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/30' },
   };
 
+  const handleGeneratePdf = async () => {
+    if (!project || !id) return;
+    setPdfLoading(true);
+    try {
+      // Fetch company name from client
+      const { data: clientData } = await supabase
+        .from('clients')
+        .select('company')
+        .eq('id', project.client_id)
+        .single();
+
+      const companyName = clientData?.company || 'Unbekannt';
+
+      const doc = generateVerfahrensdokumentation({
+        companyName,
+        projectName: project.name,
+        chapters,
+      });
+
+      const fileName = `VfDoc_${companyName.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.pdf`;
+      doc.save(fileName);
+
+      // Save entry in document_versions
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data: existing } = await supabase
+        .from('document_versions')
+        .select('version_number')
+        .eq('project_id', id)
+        .order('version_number', { ascending: false })
+        .limit(1);
+
+      const nextVersion = (existing?.[0]?.version_number || 0) + 1;
+
+      await supabase.from('document_versions').insert({
+        project_id: id,
+        version_number: nextVersion,
+        pdf_path: fileName,
+        status: 'draft',
+        is_draft: true,
+        created_by: user?.id,
+        notes: `PDF erstellt am ${new Date().toLocaleDateString('de-DE')}`,
+      });
+
+      toast.success('PDF wurde erstellt und heruntergeladen.');
+    } catch (err) {
+      console.error(err);
+      toast.error('Fehler beim Erstellen des PDFs.');
+    } finally {
+      setPdfLoading(false);
+    }
+  };
+
   if (loading) {
     return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   }
@@ -93,6 +145,10 @@ export default function ClientProjectDetail() {
           <h1 className="text-2xl font-bold text-foreground">{project.name}</h1>
           <p className="text-sm text-muted-foreground mt-1">Verfahrensdokumentation – Kapitelübersicht</p>
         </div>
+        <Button onClick={handleGeneratePdf} disabled={pdfLoading}>
+          {pdfLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Download className="h-4 w-4 mr-2" />}
+          PDF erstellen
+        </Button>
       </div>
 
       <div className="grid gap-4">
