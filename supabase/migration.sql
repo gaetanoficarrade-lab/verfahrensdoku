@@ -692,3 +692,31 @@ INSERT INTO public.plans (name, max_clients, max_projects, price_monthly) VALUES
   ('Starter', 5, 10, 49.00),
   ('Professional', 25, 50, 149.00),
   ('Enterprise', 100, 500, 399.00);
+
+
+-- 11. PLATFORM SETTINGS (Super-Admin)
+-- =====================================================
+
+CREATE TABLE public.platform_settings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  key TEXT NOT NULL UNIQUE,
+  value JSONB NOT NULL DEFAULT '{}'::jsonb,
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.platform_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE TRIGGER set_updated_at_platform_settings
+  BEFORE UPDATE ON public.platform_settings
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+-- Only super_admin can read and write platform settings
+CREATE POLICY "Super admin manages platform settings" ON public.platform_settings
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'super_admin'))
+  WITH CHECK (public.has_role(auth.uid(), 'super_admin'));
+
+-- All authenticated users can read legal settings (for footer display)
+CREATE POLICY "All users read legal settings" ON public.platform_settings
+  FOR SELECT TO authenticated
+  USING (key = 'legal');
