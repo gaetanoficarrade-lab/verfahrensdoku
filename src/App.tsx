@@ -186,8 +186,15 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/projects/:id/preview"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
+                    <AppLayout><DocumentPreview /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
 
-              {/* Settings */}
               <Route
                 path="/settings/branding"
                 element={
