@@ -54,14 +54,13 @@ export default function ChapterEditor() {
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [precheckLoading, setPrecheckLoading] = useState(false);
   const [generateLoading, setGenerateLoading] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
-  const [precheckResult, setPrecheckResult] = useState<PrecheckResult | null>(null);
   const [submitPrecheckResult, setSubmitPrecheckResult] = useState<PrecheckResult | null>(null);
   const [submitPrecheckLoading, setSubmitPrecheckLoading] = useState(false);
   const [onboardingAnswers, setOnboardingAnswers] = useState<Record<string, any> | null>(null);
   const [editorTextSaving, setEditorTextSaving] = useState(false);
+  const [savedPrecheckHints, setSavedPrecheckHints] = useState<string[]>([]);
 
   const notesSpeech = useSpeechRecognition(useCallback((text: string) => {
     setNotes(prev => prev ? prev + ' ' + text : text);
