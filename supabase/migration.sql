@@ -859,3 +859,44 @@ CREATE POLICY "Super admin manages conversions" ON public.affiliate_conversions
 -- Seed default affiliate program
 INSERT INTO public.affiliate_programs (name, commission_percent, cookie_lifetime_days, min_payout)
 VALUES ('Standard', 10.00, 90, 50.00);
+
+
+-- 13. CLIENT LIMIT ENFORCEMENT
+-- =====================================================
+
+-- Check if tenant can still create clients (counts ALL clients including deleted)
+CREATE OR REPLACE FUNCTION public.check_client_limit(tenant_uuid UUID)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  current_count INTEGER;
+  max_allowed INTEGER;
+BEGIN
+  SELECT COUNT(*) INTO current_count
+  FROM public.clients
+  WHERE tenant_id = tenant_uuid;
+
+  SELECT p.max_clients INTO max_allowed
+  FROM public.tenants t
+  JOIN public.plans p ON t.plan_id = p.id
+  WHERE t.id = tenant_uuid;
+
+  IF max_allowed IS NULL THEN
+    RETURN true;
+  END IF;
+
+  RETURN current_count < max_allowed;
+END;
+$$;
+
+-- Enforce client limit on INSERT (super_admin can override)
+CREATE POLICY "Enforce client limit" ON public.clients
+  FOR INSERT TO authenticated
+  WITH CHECK (
+    public.check_client_limit(tenant_id)
+    OR public.has_role(auth.uid(), 'super_admin')
+  );
