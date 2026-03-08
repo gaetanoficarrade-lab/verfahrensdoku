@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, AlertTriangle, CheckCircle2, ChevronRight, Mic, PenLine } from 'lucide-react';
+import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, AlertTriangle, Mic, PenLine } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { logAudit } from '@/lib/auditLog';
 import { triggerWebhook } from '@/lib/webhookTrigger';
@@ -54,7 +54,6 @@ export default function ChapterEditor() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const precheckTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [chapterDataId, setChapterDataId] = useState<string | null>(null);
   const [notes, setNotes] = useState('');
@@ -142,64 +141,49 @@ export default function ChapterEditor() {
     fetchOnboarding();
   }, [projectId, chapterKey]);
 
-  // Debounced real-time precheck for client
-  useEffect(() => {
-    if (isAdvisor || !canEdit || !notes.trim() || notes.trim().length < 20) {
-      setPrecheckResult(null);
-      return;
-    }
+  // Submit with precheck: runs precheck once on submit click
+  const handleSubmitWithPrecheck = async () => {
+    setPrecheckLoading(true);
+    setPrecheckResult(null);
 
-    if (precheckTimerRef.current) clearTimeout(precheckTimerRef.current);
+    try {
+      const cdId = await ensureChapterData();
+      if (!cdId) { setPrecheckLoading(false); return; }
 
-    precheckTimerRef.current = setTimeout(async () => {
-      setPrecheckLoading(true);
-      try {
-        const cdId = chapterDataId || await ensureChapterDataSilent();
-        if (!cdId) { setPrecheckLoading(false); return; }
+      const { data, error } = await supabase.functions.invoke('precheck-chapter-notes', {
+        body: {
+          project_id: projectId,
+          chapter_key: chapterKey,
+          client_notes: notes,
+          onboarding_answers: onboardingAnswers,
+        },
+      });
 
-        const { data, error } = await supabase.functions.invoke('precheck-chapter-notes', {
-          body: {
-            project_id: projectId,
-            chapter_key: chapterKey,
-            client_notes: notes,
-            onboarding_answers: onboardingAnswers,
-          },
-        });
+      if (error) throw error;
+      const result = data as PrecheckResult;
+      setPrecheckResult(result);
 
-        if (error) throw error;
-        const result = data as PrecheckResult;
-        setPrecheckResult(result);
+      // Save hints to DB
+      const allHints = [...(result.missing_fields || []), ...(result.hints || [])];
+      await supabase
+        .from('chapter_data')
+        .update({ client_precheck_hints: allHints })
+        .eq('id', cdId);
 
-        // Save hints to DB
-        const allHints = [...(result.missing_fields || []), ...(result.hints || [])];
-        await supabase
-          .from('chapter_data')
-          .update({ client_precheck_hints: allHints })
-          .eq('id', cdId);
-      } catch (err) {
-        console.error('Precheck error:', err);
-      } finally {
-        setPrecheckLoading(false);
+      // If no issues, submit directly
+      if ((result.hints?.length || 0) === 0 && (result.missing_fields?.length || 0) === 0) {
+        await handleSubmit();
       }
-    }, 3000);
-
-    return () => {
-      if (precheckTimerRef.current) clearTimeout(precheckTimerRef.current);
-    };
-  }, [notes, isAdvisor, canEdit]);
-
-  const ensureChapterDataSilent = async (): Promise<string | null> => {
-    if (chapterDataId) return chapterDataId;
-    const { data, error } = await supabase
-      .from('chapter_data')
-      .insert({ project_id: projectId!, chapter_key: chapterKey!, status: 'client_draft' })
-      .select('id')
-      .single();
-    if (error) return null;
-    setChapterDataId(data.id);
-    setStatus('client_draft');
-    return data.id;
+    } catch (err: any) {
+      console.error('Precheck error:', err);
+      toast({ title: 'Fehler bei der Prüfung', description: 'Die KI-Prüfung konnte nicht durchgeführt werden. Sie können trotzdem einreichen.', variant: 'destructive' });
+      // Show empty result so user can still submit
+      setPrecheckResult({ hints: [], missing_fields: [], confidence: 0 });
+    } finally {
+      setPrecheckLoading(false);
+    }
   };
+
 
   const ensureChapterData = async (): Promise<string | null> => {
     if (chapterDataId) return chapterDataId;
@@ -366,9 +350,6 @@ export default function ChapterEditor() {
     return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   }
 
-  const precheckIsClean = precheckResult &&
-    (precheckResult.hints?.length || 0) === 0 &&
-    (precheckResult.missing_fields?.length || 0) === 0;
 
   const precheckHasIssues = precheckResult &&
     ((precheckResult.hints?.length || 0) > 0 || (precheckResult.missing_fields?.length || 0) > 0);
@@ -456,59 +437,50 @@ export default function ChapterEditor() {
             )}
           </div>
 
-          {/* Real-time precheck indicator */}
+          {/* Action buttons for client */}
           {!isAdvisor && canEdit && (
-            <div className="min-h-[2rem]">
-              {precheckLoading && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  <span>KI prüft Ihre Angaben…</span>
-                </div>
-              )}
+            <div className="space-y-4">
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={handleSave} disabled={saving || precheckLoading}>
+                  {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                  Speichern
+                </Button>
+                <Button
+                  disabled={precheckLoading || submitting || !notes.trim()}
+                  className="gap-2"
+                  onClick={handleSubmitWithPrecheck}
+                >
+                  {precheckLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                  {precheckLoading ? 'Wird geprüft…' : 'Einreichen'}
+                </Button>
+              </div>
 
-              {!precheckLoading && precheckIsClean && (
-                <div className="rounded-lg border border-green-500/40 bg-green-50 dark:bg-green-950/20 p-3 flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400 shrink-0" />
-                  <p className="text-sm text-green-700 dark:text-green-300 font-medium">
-                    Ihre Angaben sind vollständig. Sie können das Kapitel einreichen.
-                  </p>
-                </div>
-              )}
-
-              {!precheckLoading && precheckHasIssues && (
-                <div className="rounded-lg border border-yellow-500/40 bg-yellow-50 dark:bg-yellow-950/20 p-3 space-y-2">
+              {/* Precheck result after submit attempt */}
+              {precheckHasIssues && (
+                <div className="rounded-lg border border-yellow-500/40 bg-yellow-50 dark:bg-yellow-950/20 p-4 space-y-3">
                   <div className="flex items-start gap-2">
-                    <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
+                    <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
                     <p className="text-sm font-medium text-yellow-800 dark:text-yellow-300">
-                      Hinweise zu Ihren Angaben:
+                      Die KI-Prüfung hat Hinweise zu Ihren Angaben:
                     </p>
                   </div>
                   {precheckResult!.missing_fields?.map((field, i) => (
-                    <p key={`mf-${i}`} className="text-sm text-yellow-800 dark:text-yellow-300 pl-6">• {field}</p>
+                    <p key={`mf-${i}`} className="text-sm text-yellow-800 dark:text-yellow-300 pl-7">• {field}</p>
                   ))}
                   {precheckResult!.hints?.map((hint, i) => (
-                    <p key={`h-${i}`} className="text-sm text-yellow-700 dark:text-yellow-400 pl-6">• {hint}</p>
+                    <p key={`h-${i}`} className="text-sm text-yellow-700 dark:text-yellow-400 pl-7">• {hint}</p>
                   ))}
+                  <div className="flex gap-3 pl-7 pt-1">
+                    <Button variant="outline" size="sm" onClick={() => setPrecheckResult(null)}>
+                      Angaben ergänzen
+                    </Button>
+                    <Button size="sm" variant="destructive" onClick={handleSubmit} disabled={submitting}>
+                      {submitting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                      Trotzdem einreichen
+                    </Button>
+                  </div>
                 </div>
               )}
-            </div>
-          )}
-
-          {/* Action buttons for client */}
-          {!isAdvisor && canEdit && (
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={handleSave} disabled={saving}>
-                {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                Speichern
-              </Button>
-              <Button
-                disabled={submitting || !notes.trim()}
-                className="gap-2"
-                onClick={handleSubmit}
-              >
-                {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                Einreichen
-              </Button>
             </div>
           )}
 
