@@ -3,3 +3,6 @@ verify_jwt = false
 
 [functions.generate-chapter-text]
 verify_jwt = false
+
+[functions.create-client-user]
+verify_jwt = false
