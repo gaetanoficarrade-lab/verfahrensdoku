@@ -348,7 +348,7 @@ export default function AdminAffiliates() {
                         )}
                         {c.status === 'confirmed' && (
                           <Button size="sm" variant="ghost" onClick={() => handleStatusChange(c.id, 'paid')}>
-                            <DollarSign className="h-4 w-4 text-green-600" />
+                            <DollarSign className="h-4 w-4 text-primary" />
                           </Button>
                         )}
                       </div>

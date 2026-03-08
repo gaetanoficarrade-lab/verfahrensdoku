@@ -447,7 +447,7 @@ export default function AffiliateSettings() {
             <Card>
               <CardContent className="pt-6">
                 <p className="text-sm text-muted-foreground">Bestätigt</p>
-                <p className="text-2xl font-bold text-green-600">{confirmedCommission.toFixed(2)} €</p>
+                <p className="text-2xl font-bold text-primary">{confirmedCommission.toFixed(2)} €</p>
               </CardContent>
             </Card>
             <Card>
