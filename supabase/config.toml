@@ -1,0 +1,5 @@
+[functions.precheck-chapter-notes]
+verify_jwt = false
+
+[functions.generate-chapter-text]
+verify_jwt = false
