@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Upload, X, FileIcon, Send } from 'lucide-react';
+import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, ClipboardCheck, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,10 +22,14 @@ import {
 } from '@/components/ui/alert-dialog';
 
 const CHAPTER_TITLES: Record<string, string> = {
-  org_environment: 'Organisatorisches Umfeld',
-  it_environment: 'IT-Umfeld',
+  general_info: 'Allgemeine Informationen',
+  it_systems: 'IT-Umfeld',
   processes: 'Geschäftsprozesse',
   archiving: 'Archivierung',
+  controls: 'Internes Kontrollsystem',
+  // Legacy keys
+  org_environment: 'Organisatorisches Umfeld',
+  it_environment: 'IT-Umfeld',
   ics: 'Internes Kontrollsystem',
 };
 
@@ -35,32 +40,57 @@ interface ChapterFile {
   file_type: string | null;
 }
 
+interface PrecheckResult {
+  hints: string[];
+  missing_fields: string[];
+  confidence: number;
+}
+
 export default function ChapterEditor() {
   const { id: projectId, chapterKey } = useParams<{ id: string; chapterKey: string }>();
   const { user } = useAuth();
+  const { roles, isSuperAdmin, impersonation } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [chapterDataId, setChapterDataId] = useState<string | null>(null);
   const [notes, setNotes] = useState('');
+  const [editorText, setEditorText] = useState('');
   const [status, setStatus] = useState('empty');
   const [files, setFiles] = useState<ChapterFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [precheckLoading, setPrecheckLoading] = useState(false);
+  const [generateLoading, setGenerateLoading] = useState(false);
+  const [approveLoading, setApproveLoading] = useState(false);
+  const [precheckResult, setPrecheckResult] = useState<PrecheckResult | null>(null);
+  const [editorTextSaving, setEditorTextSaving] = useState(false);
 
   const title = CHAPTER_TITLES[chapterKey || ''] || chapterKey;
-  const isSubmitted = status === 'client_submitted' || status === 'advisor_review' || status === 'approved';
+  const isSubmitted = status === 'client_submitted' || status === 'advisor_review' || status === 'approved' || status === 'advisor_approved';
+
+  // Determine if user is an advisor (tenant_admin/tenant_user or super_admin impersonating)
+  const isAdvisor =
+    roles.includes('tenant_admin') ||
+    roles.includes('tenant_user') ||
+    (isSuperAdmin && impersonation.isImpersonating);
+
+  // Determine if user is a client
+  const isClient = roles.includes('client');
+
+  // Show advisor actions when status is client_submitted and user is advisor
+  const showAdvisorActions = isAdvisor && status === 'client_submitted';
 
   useEffect(() => {
     if (!projectId || !chapterKey) return;
-    const fetch = async () => {
+    const fetchData = async () => {
       setLoading(true);
       const { data: chData } = await supabase
         .from('chapter_data')
-        .select('id, client_notes, status')
+        .select('id, client_notes, status, editor_text, generated_text, client_precheck_hints')
         .eq('project_id', projectId)
         .eq('chapter_key', chapterKey)
         .maybeSingle();
@@ -68,6 +98,7 @@ export default function ChapterEditor() {
       if (chData) {
         setChapterDataId(chData.id);
         setNotes(chData.client_notes || '');
+        setEditorText(chData.editor_text || chData.generated_text || '');
         setStatus(chData.status || 'empty');
 
         // Fetch files
@@ -79,7 +110,7 @@ export default function ChapterEditor() {
       }
       setLoading(false);
     };
-    fetch();
+    fetchData();
   }, [projectId, chapterKey]);
 
   const ensureChapterData = async (): Promise<string | null> => {
@@ -141,6 +172,96 @@ export default function ChapterEditor() {
     }
   };
 
+  const handlePrecheck = async () => {
+    if (!chapterDataId) return;
+    setPrecheckLoading(true);
+    setPrecheckResult(null);
+
+    try {
+      const { data: session } = await supabase.auth.getSession();
+      const { data, error } = await supabase.functions.invoke('precheck-chapter-notes', {
+        body: {
+          project_id: projectId,
+          chapter_key: chapterKey,
+          client_notes: notes,
+        },
+      });
+
+      if (error) throw error;
+      setPrecheckResult(data as PrecheckResult);
+      toast({ title: 'Precheck abgeschlossen', description: `${data.hints?.length || 0} Hinweise gefunden.` });
+    } catch (err: any) {
+      console.error('Precheck error:', err);
+      toast({ title: 'Fehler', description: err.message || 'Precheck fehlgeschlagen', variant: 'destructive' });
+    } finally {
+      setPrecheckLoading(false);
+    }
+  };
+
+  const handleGenerateText = async () => {
+    if (!chapterDataId) return;
+    setGenerateLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-chapter-text', {
+        body: {
+          project_id: projectId,
+          chapter_key: chapterKey,
+          client_notes: notes,
+        },
+      });
+
+      if (error) throw error;
+      const generatedText = data.generated_text || '';
+      setEditorText(generatedText);
+      toast({ title: 'Text generiert', description: `Qualitätsscore: ${data.quality_score || 0}/100` });
+    } catch (err: any) {
+      console.error('Generate error:', err);
+      toast({ title: 'Fehler', description: err.message || 'Textgenerierung fehlgeschlagen', variant: 'destructive' });
+    } finally {
+      setGenerateLoading(false);
+    }
+  };
+
+  const handleSaveEditorText = async () => {
+    if (!chapterDataId) return;
+    setEditorTextSaving(true);
+
+    const { error } = await supabase
+      .from('chapter_data')
+      .update({ editor_text: editorText })
+      .eq('id', chapterDataId);
+
+    setEditorTextSaving(false);
+    if (error) {
+      toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: 'Gespeichert', description: 'Editor-Text wurde gespeichert.' });
+    }
+  };
+
+  const handleApprove = async () => {
+    if (!chapterDataId) return;
+    setApproveLoading(true);
+
+    // Save editor_text first if present
+    const updatePayload: Record<string, any> = { status: 'advisor_approved' };
+    if (editorText) updatePayload.editor_text = editorText;
+
+    const { error } = await supabase
+      .from('chapter_data')
+      .update(updatePayload)
+      .eq('id', chapterDataId);
+
+    setApproveLoading(false);
+    if (error) {
+      toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
+    } else {
+      setStatus('advisor_approved');
+      toast({ title: 'Freigegeben', description: 'Das Kapitel wurde freigegeben.' });
+    }
+  };
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -180,7 +301,6 @@ export default function ChapterEditor() {
       toast({ title: 'Hochgeladen', description: `${file.name} wurde hochgeladen.` });
     }
 
-    // Reset input
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -191,6 +311,15 @@ export default function ChapterEditor() {
     toast({ title: 'Gelöscht', description: 'Datei wurde entfernt.' });
   };
 
+  // Determine back navigation based on role
+  const handleBack = () => {
+    if (isAdvisor) {
+      navigate(`/projects/${projectId}`);
+    } else {
+      navigate(`/client/projects/${projectId}`);
+    }
+  };
+
   if (loading) {
     return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   }
@@ -198,12 +327,14 @@ export default function ChapterEditor() {
   return (
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={() => navigate(`/client/projects/${projectId}`)}>
+        <Button variant="ghost" size="icon" onClick={handleBack}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div className="flex-1">
           <h1 className="text-2xl font-bold text-foreground">{title}</h1>
-          <p className="text-sm text-muted-foreground mt-1">Kapitel bearbeiten und einreichen</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            {isAdvisor ? 'Kapitel prüfen und bearbeiten' : 'Kapitel bearbeiten und einreichen'}
+          </p>
         </div>
         <Badge variant="secondary">
           {status === 'empty' && 'Offen'}
@@ -211,13 +342,16 @@ export default function ChapterEditor() {
           {status === 'client_submitted' && 'Eingereicht'}
           {status === 'advisor_review' && 'In Prüfung'}
           {status === 'approved' && 'Freigegeben'}
+          {status === 'advisor_approved' && 'Freigegeben'}
         </Badge>
       </div>
 
-      {/* Notes editor */}
+      {/* Client notes (read-only for advisor, editable for client) */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Ihre Angaben</CardTitle>
+          <CardTitle className="text-base">
+            {isAdvisor ? 'Mandanten-Angaben' : 'Ihre Angaben'}
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <Textarea
@@ -225,10 +359,10 @@ export default function ChapterEditor() {
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Beschreiben Sie hier die relevanten Informationen für dieses Kapitel..."
             rows={10}
-            disabled={isSubmitted}
+            disabled={isAdvisor || isSubmitted}
             className="font-mono text-sm"
           />
-          {!isSubmitted && (
+          {!isAdvisor && !isSubmitted && (
             <div className="flex gap-3">
               <Button variant="outline" onClick={handleSave} disabled={saving}>
                 {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
@@ -259,13 +393,133 @@ export default function ChapterEditor() {
               </AlertDialog>
             </div>
           )}
-          {isSubmitted && (
+          {isClient && isSubmitted && (
             <p className="text-sm text-muted-foreground">
               Dieses Kapitel wurde eingereicht und kann nicht mehr bearbeitet werden.
             </p>
           )}
         </CardContent>
       </Card>
+
+      {/* Advisor action buttons */}
+      {showAdvisorActions && (
+        <Card className="border-primary/30">
+          <CardHeader>
+            <CardTitle className="text-base">Berater-Aktionen</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-3">
+              <Button
+                variant="outline"
+                onClick={handlePrecheck}
+                disabled={precheckLoading}
+                className="gap-2"
+              >
+                {precheckLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ClipboardCheck className="h-4 w-4" />}
+                Precheck starten
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleGenerateText}
+                disabled={generateLoading}
+                className="gap-2"
+              >
+                {generateLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                Text generieren
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    disabled={approveLoading}
+                    className="gap-2"
+                  >
+                    {approveLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
+                    Kapitel freigeben
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Kapitel freigeben?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Das Kapitel wird als freigegeben markiert. Der aktuelle Editor-Text wird gespeichert.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleApprove}>Freigeben</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Precheck results */}
+      {precheckResult && (
+        <Card className="border-orange-300 dark:border-orange-700">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-orange-500" />
+              Precheck-Ergebnisse
+              <Badge variant="secondary" className="ml-auto">
+                Confidence: {precheckResult.confidence}%
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {precheckResult.hints.length > 0 && (
+              <div>
+                <p className="text-sm font-medium text-foreground mb-2">Hinweise:</p>
+                <ul className="space-y-1">
+                  {precheckResult.hints.map((hint, i) => (
+                    <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                      <span className="text-orange-500 mt-0.5">•</span>
+                      {hint}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {precheckResult.missing_fields.length > 0 && (
+              <div>
+                <p className="text-sm font-medium text-foreground mb-2">Fehlende Felder:</p>
+                <div className="flex flex-wrap gap-2">
+                  {precheckResult.missing_fields.map((field, i) => (
+                    <Badge key={i} variant="outline" className="text-destructive border-destructive/30">
+                      {field}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Editor text (advisor only, after generation or if exists) */}
+      {isAdvisor && editorText && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Generierter / Bearbeiteter Text</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Textarea
+              value={editorText}
+              onChange={(e) => setEditorText(e.target.value)}
+              rows={15}
+              disabled={status === 'advisor_approved'}
+              className="font-mono text-sm"
+            />
+            {status !== 'advisor_approved' && (
+              <Button variant="outline" onClick={handleSaveEditorText} disabled={editorTextSaving}>
+                {editorTextSaving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                Text speichern
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* File uploads */}
       <Card>
@@ -279,7 +533,7 @@ export default function ChapterEditor() {
                 <div key={f.id} className="flex items-center gap-3 rounded-md border border-border p-3">
                   <FileIcon className="h-4 w-4 text-muted-foreground shrink-0" />
                   <span className="flex-1 text-sm text-foreground truncate">{f.file_name}</span>
-                  {!isSubmitted && (
+                  {!isSubmitted && !isAdvisor && (
                     <Button
                       variant="ghost"
                       size="icon"
@@ -294,7 +548,7 @@ export default function ChapterEditor() {
             </div>
           )}
 
-          {!isSubmitted && (
+          {!isSubmitted && !isAdvisor && (
             <div>
               <input
                 ref={fileInputRef}
