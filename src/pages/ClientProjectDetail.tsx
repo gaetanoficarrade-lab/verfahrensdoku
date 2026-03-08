@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { generateVerfahrensdokumentation } from '@/lib/generatePdf';
 import { toast } from 'sonner';
 import { logAudit } from '@/lib/auditLog';
+import { triggerWebhook } from '@/lib/webhookTrigger';
 import { GOBD_CHAPTERS } from '@/lib/chapter-structure';
 import type { OnboardingAnswers } from '@/lib/onboarding-variables';
 
