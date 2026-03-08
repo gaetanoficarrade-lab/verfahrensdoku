@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
 
 type AppRole = 'super_admin' | 'tenant_admin' | 'tenant_user' | 'client';
 
@@ -16,6 +16,9 @@ interface ImpersonationState {
 }
 
 interface AuthContextType {
+  user: User | null;
+  session: Session | null;
+  loading: boolean;
   roles: AppRole[];
   tenantId: string | null;
   profileLoading: boolean;
@@ -25,12 +28,19 @@ interface AuthContextType {
   startImpersonation: (tenantId: string, tenantName: string) => void;
   stopImpersonation: () => void;
   effectiveTenantId: string | null;
+  signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<{ error: any }>;
+  updatePassword: (password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, metadata?: Record<string, any>) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { user, loading } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [tenantId, setTenantId] = useState<string | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
