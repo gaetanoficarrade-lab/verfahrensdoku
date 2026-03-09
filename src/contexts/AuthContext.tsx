@@ -44,11 +44,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [tenantId, setTenantId] = useState<string | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
-  const [impersonation, setImpersonation] = useState<ImpersonationState>({
-    isImpersonating: false,
-    originalTenantId: null,
-    impersonatedTenantId: null,
-    impersonatedTenantName: null,
+  const [impersonation, setImpersonation] = useState<ImpersonationState>(() => {
+    try {
+      const stored = sessionStorage.getItem('impersonation');
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return {
+      isImpersonating: false,
+      originalTenantId: null,
+      impersonatedTenantId: null,
+      impersonatedTenantName: null,
+    };
   });
 
   // Single auth state listener
@@ -141,21 +147,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const startImpersonation = useCallback((targetTenantId: string, targetTenantName: string) => {
-    setImpersonation({
+    const state: ImpersonationState = {
       isImpersonating: true,
       originalTenantId: tenantId,
       impersonatedTenantId: targetTenantId,
       impersonatedTenantName: targetTenantName,
-    });
+    };
+    setImpersonation(state);
+    sessionStorage.setItem('impersonation', JSON.stringify(state));
   }, [tenantId]);
 
   const stopImpersonation = useCallback(() => {
-    setImpersonation({
+    const state: ImpersonationState = {
       isImpersonating: false,
       originalTenantId: null,
       impersonatedTenantId: null,
       impersonatedTenantName: null,
-    });
+    };
+    setImpersonation(state);
+    sessionStorage.removeItem('impersonation');
   }, []);
 
   const effectiveTenantId = impersonation.isImpersonating
