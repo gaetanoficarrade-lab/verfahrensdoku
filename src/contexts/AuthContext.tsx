@@ -147,21 +147,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const startImpersonation = useCallback((targetTenantId: string, targetTenantName: string) => {
-    setImpersonation({
+    const state: ImpersonationState = {
       isImpersonating: true,
       originalTenantId: tenantId,
       impersonatedTenantId: targetTenantId,
       impersonatedTenantName: targetTenantName,
-    });
+    };
+    setImpersonation(state);
+    sessionStorage.setItem('impersonation', JSON.stringify(state));
   }, [tenantId]);
 
   const stopImpersonation = useCallback(() => {
-    setImpersonation({
+    const state: ImpersonationState = {
       isImpersonating: false,
       originalTenantId: null,
       impersonatedTenantId: null,
       impersonatedTenantName: null,
-    });
+    };
+    setImpersonation(state);
+    sessionStorage.removeItem('impersonation');
   }, []);
 
   const effectiveTenantId = impersonation.isImpersonating
