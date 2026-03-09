@@ -44,11 +44,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [tenantId, setTenantId] = useState<string | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
-  const [impersonation, setImpersonation] = useState<ImpersonationState>({
-    isImpersonating: false,
-    originalTenantId: null,
-    impersonatedTenantId: null,
-    impersonatedTenantName: null,
+  const [impersonation, setImpersonation] = useState<ImpersonationState>(() => {
+    try {
+      const stored = sessionStorage.getItem('impersonation');
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return {
+      isImpersonating: false,
+      originalTenantId: null,
+      impersonatedTenantId: null,
+      impersonatedTenantName: null,
+    };
   });
 
   // Single auth state listener
