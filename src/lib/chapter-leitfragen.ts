@@ -192,9 +192,7 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
     { label: "Frage 4", fragen: ["Wo werden Buchungsbelege und Journale aufbewahrt?"],
       leitfragen: [{ question: "Wo werden Buchungsbelege und Journale aufbewahrt?" }] },
     { label: "Frage 5", fragen: ["Wie werden regelmäßige Ausgaben behandelt die jeden Monat gleich sind? (z. B. Miete, Versicherungen)"],
-      leitfragen: [{ question: "Wie werden regelmäßige Ausgaben behandelt die jeden Monat gleich sind? (z. B. Miete, Versicherungen)",
-        prefillFrom: (v) => v.INVOICE_CREATION_TYPE ? `Buchhaltungssoftware: ${v.INVOICE_CREATION_TYPE}` : ""
-      }] },
+      leitfragen: [{ question: "Wie werden regelmäßige Ausgaben behandelt die jeden Monat gleich sind? (z. B. Miete, Versicherungen)" }] },
   ],
   "2_8": [
     { label: "Frage 1", fragen: ["Wie viele Geschäftskonten haben Sie und bei welcher Bank?"],
