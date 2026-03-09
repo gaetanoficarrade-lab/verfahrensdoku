@@ -27,8 +27,6 @@ interface Client {
   user_id: string | null;
   tenant_id: string;
   created_at: string;
-  is_deleted: boolean;
-  deleted_at: string | null;
 }
 
 interface Project {
