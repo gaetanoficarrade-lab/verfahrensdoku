@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Building2, Users, FolderOpen, Eye, Loader2, Database, Search, CheckCircle2, XCircle } from 'lucide-react';
+import { Building2, Users, FolderOpen, Eye, Loader2, Database } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,13 +15,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { seedDemoData } from '@/lib/seedDemoData';
 import { useAuthContext } from '@/contexts/AuthContext';
@@ -44,24 +37,12 @@ interface Stats {
   projects: number;
 }
 
-interface DemoCheckResult {
-  tenant: { id: string; name: string } | null;
-  client: { id: string; company: string } | null;
-  project: { id: string; name: string; status: string | null } | null;
-  onboarding: { id: string; completed_at: string | null } | null;
-  chapterCount: number;
-  docVersions: number;
-}
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState<Stats>({ tenants: 0, clients: 0, projects: 0 });
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [loading, setLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
-  const [checking, setChecking] = useState(false);
-  const [checkResult, setCheckResult] = useState<DemoCheckResult | null>(null);
-  const [checkOpen, setCheckOpen] = useState(false);
-  const [lastSeedIds, setLastSeedIds] = useState<{ tenantId: string; clientId: string; projectId: string } | null>(null);
   const { startImpersonation } = useAuthContext();
   const navigate = useNavigate();
 
@@ -95,7 +76,7 @@ const AdminDashboard = () => {
     setSeeding(true);
     try {
       const result = await seedDemoData();
-      setLastSeedIds({ tenantId: result.tenantId, clientId: result.clientId, projectId: result.projectId });
+      
       const v = result.verification;
       toast.success('Demo-Daten erfolgreich angelegt!', {
         description: (
@@ -124,72 +105,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleCheckDemoData = async () => {
-    setChecking(true);
-    setCheckResult(null);
-    try {
-      // Find the most recent Musterkanzlei tenant
-      const { data: tenantData } = await supabase
-        .from('tenants')
-        .select('id, name')
-        .eq('name', 'Musterkanzlei Müller & Partner')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (!tenantData) {
-        setCheckResult({ tenant: null, client: null, project: null, onboarding: null, chapterCount: 0, docVersions: 0 });
-        setChecking(false);
-        return;
-      }
-
-      // Check client
-      const { data: clientData } = await supabase
-        .from('clients')
-        .select('id, company')
-        .eq('tenant_id', tenantData.id)
-        .eq('company', 'Beispiel GmbH')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      // Check project
-      const { data: projectData } = await supabase
-        .from('projects')
-        .select('id, name, status')
-        .eq('tenant_id', tenantData.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      let onboardingData = null;
-      let chapterCount = 0;
-      let docVersions = 0;
-
-      if (projectData) {
-        const [onbRes, chapRes, docRes] = await Promise.all([
-          supabase.from('project_onboarding').select('id, completed_at').eq('project_id', projectData.id).maybeSingle(),
-          supabase.from('chapter_data').select('id', { count: 'exact', head: true }).eq('project_id', projectData.id),
-          supabase.from('document_versions').select('id', { count: 'exact', head: true }).eq('project_id', projectData.id),
-        ]);
-        onboardingData = onbRes.data;
-        chapterCount = chapRes.count || 0;
-        docVersions = docRes.count || 0;
-      }
-
-      setCheckResult({
-        tenant: tenantData,
-        client: clientData,
-        project: projectData,
-        onboarding: onboardingData,
-        chapterCount,
-        docVersions,
-      });
-    } catch (err: any) {
-      toast.error('Fehler beim Prüfen', { description: err.message });
-    }
-    setChecking(false);
-  };
 
   if (loading) {
     return (
@@ -205,8 +120,6 @@ const AdminDashboard = () => {
     { label: 'Projekte', value: stats.projects, icon: FolderOpen },
   ];
 
-  const StatusIcon = ({ ok }: { ok: boolean }) =>
-    ok ? <CheckCircle2 className="h-4 w-4 text-green-500" /> : <XCircle className="h-4 w-4 text-destructive" />;
 
   return (
     <div className="space-y-6">
@@ -216,108 +129,6 @@ const AdminDashboard = () => {
           <p className="text-sm text-muted-foreground mt-1">Systemübersicht und Verwaltung</p>
         </div>
         <div className="flex gap-2">
-          {/* Demo-Daten prüfen Button */}
-          <Dialog open={checkOpen} onOpenChange={setCheckOpen}>
-            <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="gap-2"
-                onClick={() => { setCheckOpen(true); handleCheckDemoData(); }}
-              >
-                {checking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-                Demo-Daten prüfen
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-lg">
-              <DialogHeader>
-                <DialogTitle>Demo-Daten Diagnose</DialogTitle>
-              </DialogHeader>
-              {checking ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                  <span className="ml-2 text-sm text-muted-foreground">Prüfe Datenbank...</span>
-                </div>
-              ) : checkResult ? (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <StatusIcon ok={!!checkResult.tenant} />
-                    <span className="text-sm font-medium">Lizenznehmer</span>
-                    {checkResult.tenant ? (
-                      <span className="text-xs text-muted-foreground font-mono ml-auto">{checkResult.tenant.id}</span>
-                    ) : (
-                      <span className="text-xs text-destructive ml-auto">Nicht gefunden</span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <StatusIcon ok={!!checkResult.client} />
-                    <span className="text-sm font-medium">Mandant (Beispiel GmbH)</span>
-                    {checkResult.client ? (
-                      <div className="ml-auto flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground font-mono">{checkResult.client.id}</span>
-                      </div>
-                    ) : (
-                      <span className="text-xs text-destructive ml-auto">Nicht gefunden</span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <StatusIcon ok={!!checkResult.project} />
-                    <span className="text-sm font-medium">Projekt</span>
-                    {checkResult.project ? (
-                      <div className="ml-auto flex items-center gap-2">
-                        <Badge variant="secondary" className="text-xs">{checkResult.project.status}</Badge>
-                        <span className="text-xs text-muted-foreground font-mono">{checkResult.project.id}</span>
-                      </div>
-                    ) : (
-                      <span className="text-xs text-destructive ml-auto">Nicht gefunden</span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <StatusIcon ok={!!checkResult.onboarding} />
-                    <span className="text-sm font-medium">Onboarding</span>
-                    {checkResult.onboarding ? (
-                      <span className="text-xs text-muted-foreground ml-auto">
-                        {checkResult.onboarding.completed_at ? '✓ Abgeschlossen' : 'Offen'}
-                      </span>
-                    ) : (
-                      <span className="text-xs text-destructive ml-auto">Nicht gefunden</span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <StatusIcon ok={checkResult.chapterCount > 0} />
-                    <span className="text-sm font-medium">Kapitel</span>
-                    <span className="text-xs text-muted-foreground ml-auto">{checkResult.chapterCount} vorhanden</span>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <StatusIcon ok={checkResult.docVersions > 0} />
-                    <span className="text-sm font-medium">Dokumentversionen</span>
-                    <span className="text-xs text-muted-foreground ml-auto">{checkResult.docVersions} vorhanden</span>
-                  </div>
-
-                  {lastSeedIds && (
-                    <div className="mt-4 p-3 rounded-md bg-muted/50 space-y-1">
-                      <p className="text-xs font-medium text-muted-foreground">Zuletzt erstellte IDs:</p>
-                      <p className="text-xs font-mono">Tenant: {lastSeedIds.tenantId}</p>
-                      <p className="text-xs font-mono">Client: {lastSeedIds.clientId}</p>
-                      <p className="text-xs font-mono">Project: {lastSeedIds.projectId}</p>
-                    </div>
-                  )}
-
-                  <Button variant="outline" size="sm" className="w-full mt-2" onClick={handleCheckDemoData}>
-                    <Search className="h-3 w-3 mr-2" />
-                    Erneut prüfen
-                  </Button>
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground text-center py-4">Keine Ergebnisse</p>
-              )}
-            </DialogContent>
-          </Dialog>
-
           {/* Demo-Daten laden Button */}
           <AlertDialog>
             <AlertDialogTrigger asChild>
