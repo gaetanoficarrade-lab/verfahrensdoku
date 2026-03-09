@@ -135,8 +135,6 @@ const AdminDashboard = () => {
     { label: 'Projekte', value: stats.projects, icon: FolderOpen },
   ];
 
-  const StatusIcon = ({ ok }: { ok: boolean }) =>
-    ok ? <CheckCircle2 className="h-4 w-4 text-green-500" /> : <XCircle className="h-4 w-4 text-destructive" />;
 
   return (
     <div className="space-y-6">
