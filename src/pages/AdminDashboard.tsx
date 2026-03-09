@@ -88,7 +88,7 @@ const AdminDashboard = () => {
 
   const handleImpersonate = (tenant: Tenant) => {
     startImpersonation(tenant.id, tenant.name);
-    navigate('/');
+    navigate('/clients');
   };
 
   const handleSeedDemo = async () => {

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Users, FolderOpen, Clock, TrendingUp } from 'lucide-react';
 import { useAuthContext } from '@/contexts/AuthContext';
@@ -14,15 +14,15 @@ const Index = () => {
   const [stats, setStats] = useState({ clients: 0, openProjects: 0, maxClients: 0, maxProjects: 0, planName: '' });
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
-  const hasRedirected = useRef(false);
+  
 
   useEffect(() => {
     if (loading || profileLoading) return;
-    if (hasRedirected.current) return;
     if (!user) { navigate('/auth'); return; }
-    if (isSuperAdmin && !impersonation.isImpersonating) { hasRedirected.current = true; navigate('/admin'); return; }
-    if (roles.includes('client')) { hasRedirected.current = true; navigate('/client'); return; }
-  }, [user, loading, roles, profileLoading, isSuperAdmin, impersonation, navigate]);
+    // Only redirect to /admin if super_admin is NOT impersonating
+    if (isSuperAdmin && !impersonation.isImpersonating) { navigate('/admin'); return; }
+    if (roles.includes('client')) { navigate('/client'); return; }
+  }, [user, loading, roles, profileLoading, isSuperAdmin, impersonation.isImpersonating, navigate]);
 
   useEffect(() => {
     if (!effectiveTenantId) return;
