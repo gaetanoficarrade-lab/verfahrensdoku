@@ -178,13 +178,6 @@ export default function ClientDetail() {
 
   return (
     <div className="space-y-6">
-      {/* Deleted banner */}
-      {client.is_deleted && (
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 flex items-center gap-2 text-sm text-destructive">
-          <AlertTriangle className="h-4 w-4" />
-          Dieser Mandant wurde am {client.deleted_at ? new Date(client.deleted_at).toLocaleDateString('de-DE') : '–'} als gelöscht markiert.
-        </div>
-      )}
 
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" onClick={() => navigate('/clients')}>
