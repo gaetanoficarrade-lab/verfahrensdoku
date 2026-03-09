@@ -149,6 +149,15 @@ export default function ChapterEditor() {
   // Leitfragen blocks for this chapter
   const leitfragenBlocks = chapterKey ? (CHAPTER_LEITFRAGEN_BLOCKS[chapterKey] || []) : [];
 
+  // Dynamic filtering based on onboarding answers
+  const filteredLeitfragen = chapterKey && onboardingAnswers
+    ? getFilteredLeitfragen(chapterKey, onboardingAnswers as OnboardingAnswers)
+    : null;
+  const negativvermerk = chapterKey && onboardingAnswers
+    ? getNegativvermerk(chapterKey, onboardingAnswers as OnboardingAnswers)
+    : null;
+  const displayBlocks = filteredLeitfragen ? filteredLeitfragen.visibleBlocks : leitfragenBlocks;
+
   useEffect(() => {
     if (!projectId || !chapterKey) return;
     const fetchData = async () => {
