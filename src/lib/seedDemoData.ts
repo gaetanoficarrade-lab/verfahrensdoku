@@ -993,6 +993,8 @@ Die Beispiel GmbH nutzt keine Zahlungsplattformen oder Online-Marktplätze. Dies
 };
 
 export async function seedDemoData() {
+  const errors: string[] = [];
+
   // ─── 1. Find or create Professional plan ───
   let planId: string;
   const { data: existingPlan } = await supabase
@@ -1009,9 +1011,10 @@ export async function seedDemoData() {
       .insert({ name: 'Professional', max_clients: 25, max_projects: 50, price_monthly: 149.0 })
       .select()
       .single();
-    if (error) throw error;
+    if (error) throw new Error(`Plan-Fehler: ${error.message}`);
     planId = newPlan.id;
   }
+  console.log('[SEED] Plan ID:', planId);
 
   // ─── 2. Tenant ───
   const { data: tenant, error: tenantErr } = await supabase
@@ -1025,11 +1028,12 @@ export async function seedDemoData() {
     })
     .select()
     .single();
-  if (tenantErr) throw tenantErr;
+  if (tenantErr) throw new Error(`Tenant-Fehler: ${tenantErr.message}`);
   const tenantId = tenant.id;
+  console.log('[SEED] Tenant ID:', tenantId);
 
   // ─── Tenant Settings ───
-  await supabase.from('tenant_settings').insert({
+  const { error: tsErr } = await supabase.from('tenant_settings').insert({
     tenant_id: tenantId,
     brand_name: 'Musterkanzlei Müller & Partner',
     primary_color: '#1e3a5f',
@@ -1038,8 +1042,9 @@ export async function seedDemoData() {
     website: 'https://www.musterkanzlei-mueller.de',
     imprint: 'Musterkanzlei Müller & Partner\nKanzleistraße 12\n80333 München\nTel: +49 89 1234567\nE-Mail: info@musterkanzlei-mueller.de\nUSt-IdNr.: DE123456789',
   });
+  if (tsErr) errors.push(`Tenant-Settings: ${tsErr.message}`);
 
-  // ─── 3. Client ───
+  // ─── 3. Client (Mandant) ───
   const { data: client, error: clientErr } = await supabase
     .from('clients')
     .insert({
@@ -1069,8 +1074,21 @@ export async function seedDemoData() {
     })
     .select()
     .single();
-  if (clientErr) throw clientErr;
+  if (clientErr) throw new Error(`Client-Fehler: ${clientErr.message} (Code: ${clientErr.code}, Details: ${clientErr.details})`);
+  if (!client) throw new Error('Client wurde nicht erstellt – kein Datensatz zurückgegeben');
   const clientId = client.id;
+  console.log('[SEED] Client ID:', clientId);
+
+  // ─── Verify client was actually persisted ───
+  const { data: verifyClient, error: verifyErr } = await supabase
+    .from('clients')
+    .select('id, company, tenant_id')
+    .eq('id', clientId)
+    .single();
+  if (verifyErr || !verifyClient) {
+    throw new Error(`Client-Verifizierung fehlgeschlagen: ${verifyErr?.message || 'Nicht gefunden'}. Der Mandant wurde möglicherweise durch RLS blockiert.`);
+  }
+  console.log('[SEED] Client verified:', verifyClient);
 
   // ─── 4. Project ───
   const { data: project, error: projErr } = await supabase
@@ -1084,15 +1102,18 @@ export async function seedDemoData() {
     })
     .select()
     .single();
-  if (projErr) throw projErr;
+  if (projErr) throw new Error(`Project-Fehler: ${projErr.message} (Code: ${projErr.code})`);
+  if (!project) throw new Error('Projekt wurde nicht erstellt');
   const projectId = project.id;
+  console.log('[SEED] Project ID:', projectId);
 
   // ─── 5. Onboarding ───
-  await supabase.from('project_onboarding').insert({
+  const { error: onbErr } = await supabase.from('project_onboarding').insert({
     project_id: projectId,
     answers: DEMO_ONBOARDING,
     completed_at: new Date().toISOString(),
   });
+  if (onbErr) errors.push(`Onboarding: ${onbErr.message}`);
 
   // ─── 6. All Chapter Data ───
   const now = new Date().toISOString();
@@ -1135,7 +1156,8 @@ export async function seedDemoData() {
   }
 
   const { error: chapterErr } = await supabase.from('chapter_data').insert(chapterInserts);
-  if (chapterErr) throw chapterErr;
+  if (chapterErr) errors.push(`Kapitel: ${chapterErr.message}`);
+  console.log('[SEED] Chapters inserted:', chapterInserts.length);
 
   // ─── 7. Document Version (finalized) ───
   const { error: docErr } = await supabase.from('document_versions').insert({
@@ -1145,12 +1167,31 @@ export async function seedDemoData() {
     status: 'finalized',
     notes: 'Erstversion der Verfahrensdokumentation – Demo-Datensatz',
   });
-  if (docErr) throw docErr;
+  if (docErr) errors.push(`Dokumentversion: ${docErr.message}`);
+
+  // ─── Final verification ───
+  const [vClient, vProject, vChapters, vOnb] = await Promise.all([
+    supabase.from('clients').select('id').eq('id', clientId).single(),
+    supabase.from('projects').select('id').eq('id', projectId).single(),
+    supabase.from('chapter_data').select('id', { count: 'exact', head: true }).eq('project_id', projectId),
+    supabase.from('project_onboarding').select('id').eq('project_id', projectId).maybeSingle(),
+  ]);
+
+  const verification = {
+    clientExists: !!vClient.data,
+    projectExists: !!vProject.data,
+    chapterCount: vChapters.count || 0,
+    onboardingExists: !!vOnb.data,
+  };
+  console.log('[SEED] Final verification:', verification);
+
+  const warningMsg = errors.length > 0 ? `\n⚠️ Warnungen: ${errors.join(', ')}` : '';
 
   return {
     tenantId,
     clientId,
     projectId,
-    message: 'Vollständiger Demo-Datensatz angelegt: Musterkanzlei Müller & Partner → Beispiel GmbH → Verfahrensdokumentation 2024 (alle Kapitel ausgefüllt, PDF-bereit)',
+    verification,
+    message: `Vollständiger Demo-Datensatz angelegt:\n• Tenant: ${tenantId}\n• Client: ${clientId} (${verification.clientExists ? '✓' : '✗'})\n• Projekt: ${projectId} (${verification.projectExists ? '✓' : '✗'})\n• Kapitel: ${verification.chapterCount}\n• Onboarding: ${verification.onboardingExists ? '✓' : '✗'}${warningMsg}`,
   };
 }
