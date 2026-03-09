@@ -501,9 +501,11 @@ export default function ChapterEditor() {
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Leitfragen with 4-block structure */}
-          {!isAdvisor && leitfragenBlocks.length > 0 && (
+          {leitfragenBlocks.length > 0 && (
             <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
-              <p className="text-sm font-semibold text-foreground">Leitfragen – beantworten Sie diese Punkte:</p>
+              <p className="text-sm font-semibold text-foreground">
+                {isAdvisor ? 'Leitfragen für dieses Kapitel:' : 'Leitfragen – beantworten Sie diese Punkte:'}
+              </p>
               <div className="grid gap-2">
                 {leitfragenBlocks.map((block, i) => (
                   <div key={i} className="flex items-start gap-2">

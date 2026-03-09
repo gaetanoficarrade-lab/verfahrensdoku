@@ -80,6 +80,9 @@ const AdminDashboard = () => {
         duration: 6000,
       });
       await fetchData();
+      // Auto-impersonate and navigate to the demo project
+      startImpersonation(result.tenantId, 'Musterkanzlei Müller & Partner');
+      navigate(`/projects/${result.projectId}`);
     } catch (err: any) {
       toast.error('Fehler beim Anlegen der Demo-Daten', {
         description: err.message,
@@ -130,11 +133,11 @@ const AdminDashboard = () => {
                   <li><strong>Lizenznehmer:</strong> Musterkanzlei Müller & Partner (Plan: Professional)</li>
                   <li><strong>Mandant:</strong> Beispiel GmbH (IT-Dienstleistungen, 3 Mitarbeiter)</li>
                   <li><strong>Projekt:</strong> Verfahrensdokumentation 2024 mit vollständigem Onboarding</li>
-                  <li><strong>Kapitel:</strong> 6 Kapitel mit realistischen Mandanten-Texten, davon 1 mit fertigem Entwurf</li>
+                  <li><strong>Kapitel:</strong> Alle 30 Unterkapitel mit realistischen Texten, vollständig freigegeben und PDF-bereit</li>
+                  <li><strong>Dokumentversion:</strong> Finalisierte Version 1</li>
                 </ul>
                 <p className="text-xs text-muted-foreground mt-2">
-                  Die Demo-Daten können anschließend per Impersonation eingesehen werden.
-                  Kapitel 1.4 enthält einen fertigen Editor-Text mit Demo-Wasserzeichen.
+                  Nach dem Anlegen werden Sie automatisch als Musterkanzlei eingeloggt und zum Projekt weitergeleitet.
                 </p>
               </AlertDialogDescription>
             </AlertDialogHeader>
