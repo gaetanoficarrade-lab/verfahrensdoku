@@ -146,7 +146,7 @@ const AdminDashboard = () => {
       // Check client
       const { data: clientData } = await supabase
         .from('clients')
-        .select('id, company, is_deleted')
+        .select('id, company')
         .eq('tenant_id', tenantData.id)
         .eq('company', 'Beispiel GmbH')
         .order('created_at', { ascending: false })
