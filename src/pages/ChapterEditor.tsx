@@ -79,13 +79,6 @@ interface ChapterTemplate {
   chapter_key: string;
 }
 
-const BLOCK_COLORS: Record<string, string> = {
-  Auslöser: 'bg-primary/10 text-primary',
-  Durchführung: 'bg-accent/20 text-accent-foreground',
-  Nachweis: 'bg-secondary text-secondary-foreground',
-  Aufbewahrung: 'bg-muted text-muted-foreground',
-  Zusatz: 'bg-muted/50 text-muted-foreground',
-};
 
 export default function ChapterEditor() {
   const { id: projectId, chapterKey } = useParams<{ id: string; chapterKey: string }>();
@@ -527,9 +520,7 @@ export default function ChapterEditor() {
               <div className="grid gap-2">
                 {displayBlocks.map((block, i) => (
                   <div key={i} className="flex items-start gap-2">
-                    <Badge variant="outline" className={`text-[10px] px-1.5 py-0 shrink-0 mt-0.5 ${BLOCK_COLORS[block.label] || ''}`}>
-                      {block.label}
-                    </Badge>
+                    <span className="text-sm text-muted-foreground shrink-0 mt-0.5">–</span>
                     <span className="text-sm text-muted-foreground">{block.fragen[0]}</span>
                   </div>
                 ))}
@@ -723,58 +714,76 @@ export default function ChapterEditor() {
       )}
 
       {/* Editor text (advisor only) */}
-      {isAdvisor && editorText && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base">Generierter / Bearbeiteter Text</CardTitle>
-              {chapterDataId && (
-                <Button variant="ghost" size="sm" onClick={loadVersions} className="gap-1.5 text-muted-foreground">
-                  <History className="h-4 w-4" />
-                  Versionen
-                </Button>
-              )}
+      {isAdvisor && (
+        <>
+          {editorText ? (
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base">Generierter / Bearbeiteter Text</CardTitle>
+                  {chapterDataId && (
+                    <Button variant="ghost" size="sm" onClick={loadVersions} className="gap-1.5 text-muted-foreground">
+                      <History className="h-4 w-4" />
+                      Versionen
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="relative">
+                  <Textarea
+                    value={editorText}
+                    onChange={(e) => setEditorText(e.target.value)}
+                    rows={15}
+                    disabled={status === 'advisor_approved'}
+                    className="font-mono text-sm pr-12"
+                  />
+                  {status !== 'advisor_approved' && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            type="button"
+                            variant={editorSpeech.isListening ? 'destructive' : 'secondary'}
+                            size="icon"
+                            className={`absolute bottom-3 right-3 rounded-full h-10 w-10 shadow-md ${editorSpeech.isListening ? 'animate-pulse' : ''}`}
+                            onClick={editorSpeech.toggle}
+                            disabled={!editorSpeech.isSupported}
+                          >
+                            <Mic className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {editorSpeech.isSupported
+                            ? editorSpeech.isListening ? 'Aufnahme stoppen' : 'Spracheingabe starten'
+                            : 'Spracheingabe nicht unterstützt'}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                </div>
+                {status !== 'advisor_approved' && (
+                  <Button variant="outline" onClick={handleSaveEditorText} disabled={editorTextSaving}>
+                    {editorTextSaving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                    Text speichern
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          ) : null}
+        </>
+      )}
+
+      {/* Client: success message after submission */}
+      {isClient && isSubmitted && !isAmending && editorText && (
+        <Card className="border-primary/30">
+          <CardContent className="py-4">
+            <div className="flex items-center gap-3">
+              <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
+              <p className="text-sm text-foreground">
+                Ihre Angaben wurden gespeichert. Ihr Steuerberater wird das Kapitel prüfen und freigeben.
+              </p>
             </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="relative">
-              <Textarea
-                value={editorText}
-                onChange={(e) => setEditorText(e.target.value)}
-                rows={15}
-                disabled={status === 'advisor_approved'}
-                className="font-mono text-sm pr-12"
-              />
-              {status !== 'advisor_approved' && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        type="button"
-                        variant={editorSpeech.isListening ? 'destructive' : 'secondary'}
-                        size="icon"
-                        className={`absolute bottom-3 right-3 rounded-full h-10 w-10 shadow-md ${editorSpeech.isListening ? 'animate-pulse' : ''}`}
-                        onClick={editorSpeech.toggle}
-                        disabled={!editorSpeech.isSupported}
-                      >
-                        <Mic className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      {editorSpeech.isSupported
-                        ? editorSpeech.isListening ? 'Aufnahme stoppen' : 'Spracheingabe starten'
-                        : 'Spracheingabe nicht unterstützt'}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )}
-            </div>
-            {status !== 'advisor_approved' && (
-              <Button variant="outline" onClick={handleSaveEditorText} disabled={editorTextSaving}>
-                {editorTextSaving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                Text speichern
-              </Button>
-            )}
           </CardContent>
         </Card>
       )}
