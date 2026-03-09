@@ -14,7 +14,7 @@ const Index = () => {
   const [stats, setStats] = useState({ clients: 0, openProjects: 0, maxClients: 0, maxProjects: 0, planName: '' });
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
-  const hasRedirected = useRef(false);
+  
 
   useEffect(() => {
     if (loading || profileLoading) return;
