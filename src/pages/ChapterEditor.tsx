@@ -549,7 +549,7 @@ export default function ChapterEditor() {
                       <span className="text-sm text-muted-foreground">{block.fragen[0]}</span>
                       {'prefillValue' in block && block.prefillValue && (
                         <span className="block text-xs text-primary mt-0.5">
-                          → Vorausgefüllt: {block.prefillValue}
+                          → Vorausgefüllt: {String(block.prefillValue)}
                         </span>
                       )}
                     </div>
