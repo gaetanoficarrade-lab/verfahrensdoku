@@ -79,13 +79,6 @@ interface ChapterTemplate {
   chapter_key: string;
 }
 
-const BLOCK_COLORS: Record<string, string> = {
-  Auslöser: 'bg-primary/10 text-primary',
-  Durchführung: 'bg-accent/20 text-accent-foreground',
-  Nachweis: 'bg-secondary text-secondary-foreground',
-  Aufbewahrung: 'bg-muted text-muted-foreground',
-  Zusatz: 'bg-muted/50 text-muted-foreground',
-};
 
 export default function ChapterEditor() {
   const { id: projectId, chapterKey } = useParams<{ id: string; chapterKey: string }>();
