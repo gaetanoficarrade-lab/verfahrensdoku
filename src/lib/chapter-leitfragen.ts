@@ -51,8 +51,7 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
   "1_2": [
     { label: "Frage 1", fragen: ["Wie viele Personen arbeiten in Ihrem Unternehmen und was sind ihre Aufgaben?"],
       leitfragen: [{ question: "Wie viele Personen arbeiten in Ihrem Unternehmen und was sind ihre Aufgaben?",
-        hideIf: hideIfNoEmployees,
-        prefillFrom: (v) => v.HAS_EMPLOYEES ? "Unternehmen hat Mitarbeiter" : ""
+        hideIf: (v) => v.HAS_EMPLOYEES === false || v.HAS_EMPLOYEES === true
       }] },
     { label: "Frage 2", fragen: ["Wer ist für was zuständig? (z. B. Wer kümmert sich um Rechnungen, wer um IT, wer um Einkauf?)"],
       leitfragen: [{ question: "Wer ist für was zuständig? (z. B. Wer kümmert sich um Rechnungen, wer um IT, wer um Einkauf?)" }] },
