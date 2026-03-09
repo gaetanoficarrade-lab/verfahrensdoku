@@ -201,8 +201,7 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
       }] },
     { label: "Frage 2", fragen: ["Wie rufen Sie Ihre Kontoauszüge ab? (Online-Banking, automatischer Import in Buchhaltungssoftware)"],
       leitfragen: [{ question: "Wie rufen Sie Ihre Kontoauszüge ab? (Online-Banking, automatischer Import in Buchhaltungssoftware)",
-        hideIf: (v) => v.USES_ONLINE_BANKING === false,
-        prefillFrom: (v) => v.USES_ONLINE_BANKING ? "Online-Banking wird genutzt" : ""
+        hideIf: (v) => v.USES_ONLINE_BANKING !== undefined
       }] },
     { label: "Frage 3", fragen: ["Wie werden Zahlungseingänge und -ausgänge den richtigen Rechnungen zugeordnet?"],
       leitfragen: [{ question: "Wie werden Zahlungseingänge und -ausgänge den richtigen Rechnungen zugeordnet?" }] },
