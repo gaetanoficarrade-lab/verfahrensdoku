@@ -30,7 +30,7 @@ const Index = () => {
       setDataLoading(true);
       try {
         const [clientsRes, projectsRes, activityRes, tenantRes] = await Promise.all([
-          supabase.from('clients').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId).eq('is_deleted', false),
+          supabase.from('clients').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId),
           supabase.from('projects').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId).neq('status', 'finalized'),
           supabase.from('audit_log').select('*').eq('tenant_id', effectiveTenantId).order('created_at', { ascending: false }).limit(10),
           supabase.from('tenants').select('plan_id, plans(name, max_clients, max_projects)').eq('id', effectiveTenantId).single(),

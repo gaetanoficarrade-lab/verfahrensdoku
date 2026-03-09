@@ -119,12 +119,11 @@ export default function Clients() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: i * 0.03 }}
-                    className={`cursor-pointer hover:bg-muted/50 border-b border-border ${c.is_deleted ? 'opacity-50' : ''}`}
+                    className="cursor-pointer hover:bg-muted/50 border-b border-border"
                     onClick={() => navigate(`/clients/${c.id}`)}
                   >
                     <TableCell className="font-medium text-foreground">
                       {c.company}
-                      {c.is_deleted && <Badge variant="destructive" className="ml-2 text-xs">Gelöscht</Badge>}
                     </TableCell>
                     <TableCell className="text-muted-foreground">{c.industry || '–'}</TableCell>
                     <TableCell>

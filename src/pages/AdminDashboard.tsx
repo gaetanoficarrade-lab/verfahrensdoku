@@ -250,11 +250,10 @@ const AdminDashboard = () => {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <StatusIcon ok={!!checkResult.client && !checkResult.client.is_deleted} />
+                    <StatusIcon ok={!!checkResult.client} />
                     <span className="text-sm font-medium">Mandant (Beispiel GmbH)</span>
                     {checkResult.client ? (
                       <div className="ml-auto flex items-center gap-2">
-                        {checkResult.client.is_deleted && <Badge variant="destructive" className="text-xs">gelöscht</Badge>}
                         <span className="text-xs text-muted-foreground font-mono">{checkResult.client.id}</span>
                       </div>
                     ) : (

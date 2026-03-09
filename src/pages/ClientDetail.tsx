@@ -266,7 +266,7 @@ export default function ClientDetail() {
               <FolderOpen className="h-4 w-4 text-muted-foreground" />
               Projekte ({projects.length})
             </CardTitle>
-            {!client.is_deleted && (
+            {(
               <Button size="sm" className="gap-1" onClick={() => setShowNewProject(true)}>
                 <Plus className="h-4 w-4" />
                 Neues Projekt

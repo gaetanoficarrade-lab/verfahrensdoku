@@ -40,8 +40,7 @@ export default function AdvisorOverview() {
       const { data: clientsData } = await supabase
         .from('clients')
         .select('id, company')
-        .eq('tenant_id', effectiveTenantId)
-        .eq('is_deleted', false);
+        .eq('tenant_id', effectiveTenantId);
 
       if (!clientsData) { setLoading(false); return; }
 
