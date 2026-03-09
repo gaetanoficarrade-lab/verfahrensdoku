@@ -15,13 +15,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { seedDemoData } from '@/lib/seedDemoData';
 import { useAuthContext } from '@/contexts/AuthContext';
