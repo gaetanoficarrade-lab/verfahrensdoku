@@ -450,21 +450,18 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
 
 /**
  * Utility: Get visible (non-hidden) leitfragen for a chapter based on onboarding answers.
- * Returns { visible, hidden, prefilled } with counts and data.
  */
 export function getFilteredLeitfragen(
   chapterKey: string,
   answers: OnboardingAnswers
 ): {
-  visibleBlocks: (LeitfragenBlock & { prefillValue?: string })[];
+  visibleBlocks: LeitfragenBlock[];
   hiddenCount: number;
-  prefilledCount: number;
   allHidden: boolean;
 } {
   const blocks = CHAPTER_LEITFRAGEN_BLOCKS[chapterKey] || [];
-  const visibleBlocks: (LeitfragenBlock & { prefillValue?: string })[] = [];
+  const visibleBlocks: LeitfragenBlock[] = [];
   let hiddenCount = 0;
-  let prefilledCount = 0;
 
   for (const block of blocks) {
     const lf = block.leitfragen?.[0];
@@ -472,23 +469,12 @@ export function getFilteredLeitfragen(
       hiddenCount++;
       continue;
     }
-
-    let prefillValue: string | undefined;
-    if (lf?.prefillFrom) {
-      const val = lf.prefillFrom(answers);
-      if (val) {
-        prefillValue = val;
-        prefilledCount++;
-      }
-    }
-
-    visibleBlocks.push({ ...block, prefillValue });
+    visibleBlocks.push(block);
   }
 
   return {
     visibleBlocks,
     hiddenCount,
-    prefilledCount,
     allHidden: hiddenCount === blocks.length && blocks.length > 0,
   };
 }
