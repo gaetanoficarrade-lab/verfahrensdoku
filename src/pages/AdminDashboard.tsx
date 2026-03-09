@@ -80,6 +80,9 @@ const AdminDashboard = () => {
         duration: 6000,
       });
       await fetchData();
+      // Auto-impersonate and navigate to the demo project
+      startImpersonation(result.tenantId, 'Musterkanzlei Müller & Partner');
+      navigate(`/projects/${result.projectId}`);
     } catch (err: any) {
       toast.error('Fehler beim Anlegen der Demo-Daten', {
         description: err.message,
