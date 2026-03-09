@@ -7,7 +7,6 @@ import { OnboardingAnswers } from './onboarding-variables';
 export interface Leitfrage {
   question: string;
   hideIf?: (variables: OnboardingAnswers) => boolean;
-  prefillFrom?: (variables: OnboardingAnswers) => string;
 }
 
 export interface LeitfragenBlock {
