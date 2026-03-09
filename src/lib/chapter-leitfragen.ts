@@ -87,7 +87,7 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
       }] },
     { label: "Frage 3", fragen: ["Welche Software nutzen Sie für die Buchhaltung? (z. B. DATEV, Lexoffice, sevDesk)"],
       leitfragen: [{ question: "Welche Software nutzen Sie für die Buchhaltung? (z. B. DATEV, Lexoffice, sevDesk)",
-        prefillFrom: (v) => v.INVOICE_CREATION_TYPE && v.INVOICE_CREATION_TYPE !== 'manual' ? `Software: ${v.INVOICE_CREATION_TYPE}` : ""
+        hideIf: (v) => !!v.INVOICE_CREATION_TYPE
       }] },
     { label: "Frage 4", fragen: ["Wie oft werden Belege an den Steuerberater übergeben? (täglich, wöchentlich, monatlich)"],
       leitfragen: [{ question: "Wie oft werden Belege an den Steuerberater übergeben? (täglich, wöchentlich, monatlich)" }] },
