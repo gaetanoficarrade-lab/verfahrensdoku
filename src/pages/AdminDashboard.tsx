@@ -46,7 +46,7 @@ interface Stats {
 
 interface DemoCheckResult {
   tenant: { id: string; name: string } | null;
-  client: { id: string; company: string; is_deleted: boolean } | null;
+  client: { id: string; company: string } | null;
   project: { id: string; name: string; status: string | null } | null;
   onboarding: { id: string; completed_at: string | null } | null;
   chapterCount: number;
