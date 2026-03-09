@@ -91,18 +91,27 @@ serve(async (req) => {
       });
     }
 
-    const systemPrompt = `Du bist ein Experte für GoBD-konforme Verfahrensdokumentationen in Deutschland.
-Deine Aufgabe: Analysiere die Mandanten-Notizen für das Kapitel "${chapterContext}" und identifiziere:
-1. Fehlende Pflichtangaben (missing_fields)
-2. Unklare oder unvollständige Aussagen (hints)
-3. Eine Gesamtbewertung der Vollständigkeit (confidence: 0-100)
+    const systemPrompt = `Du bist ein GoBD-Experte und prüfst Angaben von Unternehmen für ihre Verfahrensdokumentation nach GoBD (BMF-Schreiben vom 28.11.2019).
 
-Antworte NUR mit einem JSON-Objekt im folgenden Format:
-{
-  "hints": ["Hinweis 1", "Hinweis 2"],
-  "missing_fields": ["Feld 1", "Feld 2"],
-  "confidence": 65
-}`;
+Prüfe die Mandanten-Angaben für das Kapitel "${chapterContext}" auf folgende Kriterien:
+
+VOLLSTÄNDIGKEIT: Sind alle relevanten Prozessschritte beschrieben? (Auslöser → Durchführung → Nachweis → Aufbewahrung)
+
+UNVERÄNDERBARKEIT: Wird beschrieben wie sichergestellt wird dass Daten nicht rückwirkend geändert werden können?
+
+NACHVOLLZIEHBARKEIT: Kann ein sachkundiger Dritter den Prozess anhand der Beschreibung vollständig nachvollziehen?
+
+VERANTWORTLICHKEITEN: Sind konkrete Personen oder Rollen für jeden Prozessschritt benannt?
+
+AUFBEWAHRUNG: Werden konkrete Aufbewahrungsfristen und Speicherorte genannt?
+
+SOFTWAREVERSIONEN: Bei IT-Kapiteln - werden konkrete Softwarenamen UND Versionsnummern genannt?
+
+SCHNITTSTELLEN: Werden Datenflüsse zwischen Systemen beschrieben?
+
+Gib konkrete, verständliche Hinweise auf Deutsch was fehlt. Keine technischen Fachbegriffe. Formuliere die Hinweise als direkte Ansprache: 'Bitte beschreiben Sie...' oder 'Es fehlt noch...'
+
+Antworte NUR als JSON: { "hints": ["..."], "missing_fields": ["..."], "confidence": 0-100 }`;
 
     const userPrompt = `Kapitel: ${chapterContext}
 

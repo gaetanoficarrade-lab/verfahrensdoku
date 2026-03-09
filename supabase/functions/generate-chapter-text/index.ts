@@ -100,25 +100,28 @@ serve(async (req) => {
       });
     }
 
-    const systemPrompt = `Du bist ein erfahrener Steuerberater und Experte für GoBD-konforme Verfahrensdokumentationen in Deutschland.
+    const systemPrompt = `Du bist ein erfahrener Steuerberater und GoBD-Experte. Du erstellst professionelle Verfahrensdokumentationen nach GoBD (BMF-Schreiben vom 28.11.2019) für deutsche Unternehmen.
 
-Deine Aufgabe: Erstelle den professionellen Text für das Kapitel "${chapter.title}" einer Verfahrensdokumentation gemäß GoBD.
+Deine Aufgabe: Erstelle den professionellen Text für das Kapitel "${chapter.title}" einer Verfahrensdokumentation.
+Relevante Aspekte: ${chapter.description}
 
-Anforderungen an den Text:
-- Professioneller, sachlicher Stil passend für eine offizielle Verfahrensdokumentation
-- Alle relevanten Aspekte abdecken: ${chapter.description}
-- GoBD-konform und revisionssicher formuliert
-- Klare Struktur mit Überschriften und Absätzen
-- Fachbegriffe korrekt verwenden
-- Wenn Informationen fehlen, kennzeichne diese mit [ERGÄNZEN: ...]
+WICHTIGE REGELN:
 
-Antworte NUR mit einem JSON-Objekt:
-{
-  "generated_text": "Der vollständige Kapiteltext mit Markdown-Formatierung",
-  "quality_score": 85
-}
+- Schreibe im Stil einer professionellen Verfahrensdokumentation (sachlich, präzise, vollständig)
+- Verwende die Ich/Wir-Form basierend auf HAS_EMPLOYEES (Einzelunternehmer = 'ich/der Inhaber', mit Mitarbeitern = 'wir/das Unternehmen')
+- Integriere alle Onboarding-Informationen automatisch ohne sie nochmal abzufragen
+- Füge bei IT-Kapiteln immer einen Hinweis zur Versionsdokumentation ein
+- Beschreibe immer: Auslöser → Durchführung → Nachweis → Aufbewahrung
+- Nenne immer konkrete Aufbewahrungsfristen (§ 147 AO: 10 Jahre für Buchungsbelege, 6 Jahre für Handelsbriefe)
+- Bei deaktivierten Modulen: Formuliere professionelle Negativvermerke die bestätigen dass dieser Prozess nicht stattfindet und was bei zukünftiger Aktivierung zu tun ist
+- Mindestlänge: 200 Wörter pro Kapitel
+- Bei Berechtigungskapiteln: Erstelle immer eine Berechtigungsmatrix als Tabelle
+- Bei Freigabekapiteln: Beschreibe das Vier-Augen-Prinzip und Vertretungsregelungen
+- Zitiere relevante Gesetzesgrundlagen (§ 147 AO, § 257 HGB, GoBD)
 
-quality_score (0-100): Wie vollständig und professionell der Text basierend auf den gegebenen Informationen ist.`;
+QUALITÄTSSTANDARD: Der Text muss einer Betriebsprüfung standhalten. Ein Betriebsprüfer muss anhand des Textes alle Prozesse vollständig nachvollziehen können.
+
+Antworte NUR als JSON: { "generated_text": "Kapiteltext mit Markdown-Formatierung", "quality_score": 0-100 }`;
 
     const userPrompt = `Kapitel: ${chapter.title}
 Beschreibung: ${chapter.description}
