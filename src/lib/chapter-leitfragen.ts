@@ -111,7 +111,7 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
   "2_1": [
     { label: "Frage 1", fragen: ["Welche Software nutzen Sie um Rechnungen zu schreiben? (z. B. Lexoffice, sevDesk, Word)"],
       leitfragen: [{ question: "Welche Software nutzen Sie um Rechnungen zu schreiben? (z. B. Lexoffice, sevDesk, Word)",
-        prefillFrom: (v) => v.INVOICE_CREATION_TYPE ? `Software: ${v.INVOICE_CREATION_TYPE}` : ""
+        hideIf: (v) => !!v.INVOICE_CREATION_TYPE
       }] },
     { label: "Frage 2", fragen: ["Wie werden Rechnungsnummern vergeben? (automatisch durch die Software oder manuell)"],
       leitfragen: [{ question: "Wie werden Rechnungsnummern vergeben? (automatisch durch die Software oder manuell)" }] },
