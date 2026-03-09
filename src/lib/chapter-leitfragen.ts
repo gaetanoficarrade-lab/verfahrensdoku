@@ -71,7 +71,7 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
       }] },
     { label: "Frage 3", fragen: ["Wer darf auf Ihre Buchhaltungssoftware, Ihr Online-Banking und Ihre Steuerdaten zugreifen?"],
       leitfragen: [{ question: "Wer darf auf Ihre Buchhaltungssoftware, Ihr Online-Banking und Ihre Steuerdaten zugreifen?",
-        prefillFrom: (v) => v.INVOICE_CREATION_TYPE ? `Buchhaltungssoftware: ${v.INVOICE_CREATION_TYPE}` : ""
+        hideIf: (v) => !!v.INVOICE_CREATION_TYPE
       }] },
     { label: "Frage 4", fragen: ["Wo ist schriftlich festgehalten wer welche Zugriffsrechte hat?"],
       leitfragen: [{ question: "Wo ist schriftlich festgehalten wer welche Zugriffsrechte hat?" }] },
