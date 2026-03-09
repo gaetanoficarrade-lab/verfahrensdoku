@@ -45,12 +45,7 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
       leitfragen: [{ question: "Wo bewahren Sie diese Dokumente auf und wie lange?" }] },
     { label: "Frage 5", fragen: ["Welche Rechtsform hat Ihr Unternehmen (z. B. GmbH, UG, Einzelunternehmen) und seit wann gibt es es?"],
       leitfragen: [{ question: "Welche Rechtsform hat Ihr Unternehmen (z. B. GmbH, UG, Einzelunternehmen) und seit wann gibt es es?",
-        prefillFrom: (v) => {
-          const parts: string[] = [];
-          if (v.legal_form) parts.push(`Rechtsform: ${v.legal_form}`);
-          if (v.founding_year) parts.push(`Gründungsjahr: ${v.founding_year}`);
-          return parts.join(', ');
-        }
+        hideIf: (v) => !!(v.legal_form || v.founding_year)
       }] },
   ],
   "1_2": [
