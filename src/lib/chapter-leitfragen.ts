@@ -227,7 +227,7 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
   "3_1": [
     { label: "Frage 1", fragen: ["Welche Buchhaltungssoftware nutzen Sie? (Name und aktuelle Version)"],
       leitfragen: [{ question: "Welche Buchhaltungssoftware nutzen Sie? (Name und aktuelle Version)",
-        prefillFrom: (v) => v.INVOICE_CREATION_TYPE && v.INVOICE_CREATION_TYPE !== 'manual' ? `Software: ${v.INVOICE_CREATION_TYPE}` : ""
+        hideIf: (v) => !!v.INVOICE_CREATION_TYPE && v.INVOICE_CREATION_TYPE !== 'manual'
       }] },
     { label: "Frage 2", fragen: ["Wer hat Zugriff auf die Software und welche Rechte haben die einzelnen Personen?"],
       leitfragen: [{ question: "Wer hat Zugriff auf die Software und welche Rechte haben die einzelnen Personen?" }] },
