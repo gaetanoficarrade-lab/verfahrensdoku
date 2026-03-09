@@ -32,7 +32,7 @@ export default function Clients() {
       setLoading(true);
       let query = supabase
         .from('clients')
-        .select('id, company, industry, contact_name, contact_email, onboarding_status, created_at, is_deleted')
+        .select('id, company, industry, contact_name, contact_email, onboarding_status, created_at')
         .order('created_at', { ascending: false });
 
       // Super-admin without impersonation sees all clients; otherwise filter by tenant
@@ -42,12 +42,6 @@ export default function Clients() {
         setClients([]);
         setLoading(false);
         return;
-      }
-
-      // Non-super-admin (or impersonating) only sees non-deleted
-      const showDeleted = isSuperAdmin && !impersonation.isImpersonating;
-      if (!showDeleted) {
-        query = query.eq('is_deleted', false);
       }
 
       const { data } = await query;
