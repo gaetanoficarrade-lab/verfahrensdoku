@@ -37,7 +37,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { CHAPTER_TITLE_MAP } from '@/lib/chapter-structure';
-import { CHAPTER_LEITFRAGEN_BLOCKS } from '@/lib/chapter-leitfragen';
+import { CHAPTER_LEITFRAGEN_BLOCKS, getFilteredLeitfragen, getNegativvermerk } from '@/lib/chapter-leitfragen';
+import type { OnboardingAnswers } from '@/lib/onboarding-variables';
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
