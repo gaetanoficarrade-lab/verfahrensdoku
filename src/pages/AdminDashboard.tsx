@@ -58,10 +58,6 @@ const AdminDashboard = () => {
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [loading, setLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
-  const [checking, setChecking] = useState(false);
-  const [checkResult, setCheckResult] = useState<DemoCheckResult | null>(null);
-  const [checkOpen, setCheckOpen] = useState(false);
-  const [lastSeedIds, setLastSeedIds] = useState<{ tenantId: string; clientId: string; projectId: string } | null>(null);
   const { startImpersonation } = useAuthContext();
   const navigate = useNavigate();
 
