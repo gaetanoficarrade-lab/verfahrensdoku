@@ -212,7 +212,7 @@ export default function ClientDetail() {
           <Badge variant="default" className="text-xs">Zugang aktiv</Badge>
         )}
         {/* Delete button */}
-        {!client.is_deleted && (
+        {(
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10">
