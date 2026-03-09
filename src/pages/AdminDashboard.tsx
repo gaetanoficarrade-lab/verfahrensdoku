@@ -76,7 +76,7 @@ const AdminDashboard = () => {
     setSeeding(true);
     try {
       const result = await seedDemoData();
-      setLastSeedIds({ tenantId: result.tenantId, clientId: result.clientId, projectId: result.projectId });
+      
       const v = result.verification;
       toast.success('Demo-Daten erfolgreich angelegt!', {
         description: (
