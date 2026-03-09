@@ -518,21 +518,6 @@ export default function ChapterEditor() {
             </div>
           )}
 
-          {/* Prefill / hidden info banner */}
-          {filteredLeitfragen && !filteredLeitfragen.allHidden && (filteredLeitfragen.prefilledCount > 0 || filteredLeitfragen.hiddenCount > 0) && (
-            <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-primary shrink-0" />
-              <p className="text-sm text-foreground">
-                {filteredLeitfragen.prefilledCount > 0 && (
-                  <span>{filteredLeitfragen.prefilledCount} Frage{filteredLeitfragen.prefilledCount > 1 ? 'n wurden' : ' wurde'} automatisch aus Ihren Onboarding-Angaben befüllt. </span>
-                )}
-                {filteredLeitfragen.hiddenCount > 0 && (
-                  <span>{filteredLeitfragen.hiddenCount} Frage{filteredLeitfragen.hiddenCount > 1 ? 'n sind' : ' ist'} für Ihr Unternehmen nicht relevant und {filteredLeitfragen.hiddenCount > 1 ? 'wurden' : 'wurde'} ausgeblendet.</span>
-                )}
-              </p>
-            </div>
-          )}
-
           {/* Leitfragen with dynamic filtering */}
           {displayBlocks.length > 0 && !filteredLeitfragen?.allHidden && (
             <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
@@ -545,14 +530,7 @@ export default function ChapterEditor() {
                     <Badge variant="outline" className={`text-[10px] px-1.5 py-0 shrink-0 mt-0.5 ${BLOCK_COLORS[block.label] || ''}`}>
                       {block.label}
                     </Badge>
-                    <div className="flex-1">
-                      <span className="text-sm text-muted-foreground">{block.fragen[0]}</span>
-                      {'prefillValue' in block && block.prefillValue && (
-                        <span className="block text-xs text-primary mt-0.5">
-                          → Vorausgefüllt: {String(block.prefillValue)}
-                        </span>
-                      )}
-                    </div>
+                    <span className="text-sm text-muted-foreground">{block.fragen[0]}</span>
                   </div>
                 ))}
               </div>

@@ -7,7 +7,6 @@ import { OnboardingAnswers } from './onboarding-variables';
 export interface Leitfrage {
   question: string;
   hideIf?: (variables: OnboardingAnswers) => boolean;
-  prefillFrom?: (variables: OnboardingAnswers) => string;
 }
 
 export interface LeitfragenBlock {
@@ -46,19 +45,13 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
       leitfragen: [{ question: "Wo bewahren Sie diese Dokumente auf und wie lange?" }] },
     { label: "Frage 5", fragen: ["Welche Rechtsform hat Ihr Unternehmen (z. B. GmbH, UG, Einzelunternehmen) und seit wann gibt es es?"],
       leitfragen: [{ question: "Welche Rechtsform hat Ihr Unternehmen (z. B. GmbH, UG, Einzelunternehmen) und seit wann gibt es es?",
-        prefillFrom: (v) => {
-          const parts: string[] = [];
-          if (v.legal_form) parts.push(`Rechtsform: ${v.legal_form}`);
-          if (v.founding_year) parts.push(`Gründungsjahr: ${v.founding_year}`);
-          return parts.join(', ');
-        }
+        hideIf: (v) => !!(v.legal_form || v.founding_year)
       }] },
   ],
   "1_2": [
     { label: "Frage 1", fragen: ["Wie viele Personen arbeiten in Ihrem Unternehmen und was sind ihre Aufgaben?"],
       leitfragen: [{ question: "Wie viele Personen arbeiten in Ihrem Unternehmen und was sind ihre Aufgaben?",
-        hideIf: hideIfNoEmployees,
-        prefillFrom: (v) => v.HAS_EMPLOYEES ? "Unternehmen hat Mitarbeiter" : ""
+        hideIf: (v) => v.HAS_EMPLOYEES === false || v.HAS_EMPLOYEES === true
       }] },
     { label: "Frage 2", fragen: ["Wer ist für was zuständig? (z. B. Wer kümmert sich um Rechnungen, wer um IT, wer um Einkauf?)"],
       leitfragen: [{ question: "Wer ist für was zuständig? (z. B. Wer kümmert sich um Rechnungen, wer um IT, wer um Einkauf?)" }] },
@@ -78,7 +71,7 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
       }] },
     { label: "Frage 3", fragen: ["Wer darf auf Ihre Buchhaltungssoftware, Ihr Online-Banking und Ihre Steuerdaten zugreifen?"],
       leitfragen: [{ question: "Wer darf auf Ihre Buchhaltungssoftware, Ihr Online-Banking und Ihre Steuerdaten zugreifen?",
-        prefillFrom: (v) => v.INVOICE_CREATION_TYPE ? `Buchhaltungssoftware: ${v.INVOICE_CREATION_TYPE}` : ""
+        hideIf: (v) => !!v.INVOICE_CREATION_TYPE
       }] },
     { label: "Frage 4", fragen: ["Wo ist schriftlich festgehalten wer welche Zugriffsrechte hat?"],
       leitfragen: [{ question: "Wo ist schriftlich festgehalten wer welche Zugriffsrechte hat?" }] },
@@ -90,16 +83,11 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
       leitfragen: [{ question: "Wann stellen Sie Ihren Kunden Rechnungen? Sofort nach der Leistung oder erst wenn Sie bezahlt werden? (Das bestimmt ob Sie Soll- oder Ist-Versteuerung nutzen)" }] },
     { label: "Frage 2", fragen: ["Führen Sie die Buchhaltung selbst oder macht das Ihr Steuerberater?"],
       leitfragen: [{ question: "Führen Sie die Buchhaltung selbst oder macht das Ihr Steuerberater?",
-        prefillFrom: (v) => {
-          if (v.BOOKKEEPING_BY === 'self') return "Buchhaltung wird selbst geführt";
-          if (v.BOOKKEEPING_BY === 'tax_advisor') return "Buchhaltung wird vom Steuerberater erledigt";
-          if (v.BOOKKEEPING_BY === 'shared') return "Buchhaltung wird gemeinsam mit dem Steuerberater erledigt";
-          return "";
-        }
+        hideIf: (v) => !!v.BOOKKEEPING_BY
       }] },
     { label: "Frage 3", fragen: ["Welche Software nutzen Sie für die Buchhaltung? (z. B. DATEV, Lexoffice, sevDesk)"],
       leitfragen: [{ question: "Welche Software nutzen Sie für die Buchhaltung? (z. B. DATEV, Lexoffice, sevDesk)",
-        prefillFrom: (v) => v.INVOICE_CREATION_TYPE && v.INVOICE_CREATION_TYPE !== 'manual' ? `Software: ${v.INVOICE_CREATION_TYPE}` : ""
+        hideIf: (v) => !!v.INVOICE_CREATION_TYPE
       }] },
     { label: "Frage 4", fragen: ["Wie oft werden Belege an den Steuerberater übergeben? (täglich, wöchentlich, monatlich)"],
       leitfragen: [{ question: "Wie oft werden Belege an den Steuerberater übergeben? (täglich, wöchentlich, monatlich)" }] },
@@ -123,7 +111,7 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
   "2_1": [
     { label: "Frage 1", fragen: ["Welche Software nutzen Sie um Rechnungen zu schreiben? (z. B. Lexoffice, sevDesk, Word)"],
       leitfragen: [{ question: "Welche Software nutzen Sie um Rechnungen zu schreiben? (z. B. Lexoffice, sevDesk, Word)",
-        prefillFrom: (v) => v.INVOICE_CREATION_TYPE ? `Software: ${v.INVOICE_CREATION_TYPE}` : ""
+        hideIf: (v) => !!v.INVOICE_CREATION_TYPE
       }] },
     { label: "Frage 2", fragen: ["Wie werden Rechnungsnummern vergeben? (automatisch durch die Software oder manuell)"],
       leitfragen: [{ question: "Wie werden Rechnungsnummern vergeben? (automatisch durch die Software oder manuell)" }] },
@@ -204,24 +192,16 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
     { label: "Frage 4", fragen: ["Wo werden Buchungsbelege und Journale aufbewahrt?"],
       leitfragen: [{ question: "Wo werden Buchungsbelege und Journale aufbewahrt?" }] },
     { label: "Frage 5", fragen: ["Wie werden regelmäßige Ausgaben behandelt die jeden Monat gleich sind? (z. B. Miete, Versicherungen)"],
-      leitfragen: [{ question: "Wie werden regelmäßige Ausgaben behandelt die jeden Monat gleich sind? (z. B. Miete, Versicherungen)",
-        prefillFrom: (v) => v.INVOICE_CREATION_TYPE ? `Buchhaltungssoftware: ${v.INVOICE_CREATION_TYPE}` : ""
-      }] },
+      leitfragen: [{ question: "Wie werden regelmäßige Ausgaben behandelt die jeden Monat gleich sind? (z. B. Miete, Versicherungen)" }] },
   ],
   "2_8": [
     { label: "Frage 1", fragen: ["Wie viele Geschäftskonten haben Sie und bei welcher Bank?"],
       leitfragen: [{ question: "Wie viele Geschäftskonten haben Sie und bei welcher Bank?",
-        prefillFrom: (v) => {
-          const parts: string[] = [];
-          if (v.HAS_BUSINESS_ACCOUNT) parts.push("Geschäftskonto vorhanden");
-          if (v.USES_ONLINE_BANKING) parts.push("Online-Banking wird genutzt");
-          return parts.join(', ');
-        }
+        hideIf: (v) => v.HAS_BUSINESS_ACCOUNT !== undefined
       }] },
     { label: "Frage 2", fragen: ["Wie rufen Sie Ihre Kontoauszüge ab? (Online-Banking, automatischer Import in Buchhaltungssoftware)"],
       leitfragen: [{ question: "Wie rufen Sie Ihre Kontoauszüge ab? (Online-Banking, automatischer Import in Buchhaltungssoftware)",
-        hideIf: (v) => v.USES_ONLINE_BANKING === false,
-        prefillFrom: (v) => v.USES_ONLINE_BANKING ? "Online-Banking wird genutzt" : ""
+        hideIf: (v) => v.USES_ONLINE_BANKING !== undefined
       }] },
     { label: "Frage 3", fragen: ["Wie werden Zahlungseingänge und -ausgänge den richtigen Rechnungen zugeordnet?"],
       leitfragen: [{ question: "Wie werden Zahlungseingänge und -ausgänge den richtigen Rechnungen zugeordnet?" }] },
@@ -247,7 +227,7 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
   "3_1": [
     { label: "Frage 1", fragen: ["Welche Buchhaltungssoftware nutzen Sie? (Name und aktuelle Version)"],
       leitfragen: [{ question: "Welche Buchhaltungssoftware nutzen Sie? (Name und aktuelle Version)",
-        prefillFrom: (v) => v.INVOICE_CREATION_TYPE && v.INVOICE_CREATION_TYPE !== 'manual' ? `Software: ${v.INVOICE_CREATION_TYPE}` : ""
+        hideIf: (v) => !!v.INVOICE_CREATION_TYPE && v.INVOICE_CREATION_TYPE !== 'manual'
       }] },
     { label: "Frage 2", fragen: ["Wer hat Zugriff auf die Software und welche Rechte haben die einzelnen Personen?"],
       leitfragen: [{ question: "Wer hat Zugriff auf die Software und welche Rechte haben die einzelnen Personen?" }] },
@@ -470,21 +450,18 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
 
 /**
  * Utility: Get visible (non-hidden) leitfragen for a chapter based on onboarding answers.
- * Returns { visible, hidden, prefilled } with counts and data.
  */
 export function getFilteredLeitfragen(
   chapterKey: string,
   answers: OnboardingAnswers
 ): {
-  visibleBlocks: (LeitfragenBlock & { prefillValue?: string })[];
+  visibleBlocks: LeitfragenBlock[];
   hiddenCount: number;
-  prefilledCount: number;
   allHidden: boolean;
 } {
   const blocks = CHAPTER_LEITFRAGEN_BLOCKS[chapterKey] || [];
-  const visibleBlocks: (LeitfragenBlock & { prefillValue?: string })[] = [];
+  const visibleBlocks: LeitfragenBlock[] = [];
   let hiddenCount = 0;
-  let prefilledCount = 0;
 
   for (const block of blocks) {
     const lf = block.leitfragen?.[0];
@@ -492,23 +469,12 @@ export function getFilteredLeitfragen(
       hiddenCount++;
       continue;
     }
-
-    let prefillValue: string | undefined;
-    if (lf?.prefillFrom) {
-      const val = lf.prefillFrom(answers);
-      if (val) {
-        prefillValue = val;
-        prefilledCount++;
-      }
-    }
-
-    visibleBlocks.push({ ...block, prefillValue });
+    visibleBlocks.push(block);
   }
 
   return {
     visibleBlocks,
     hiddenCount,
-    prefilledCount,
     allHidden: hiddenCount === blocks.length && blocks.length > 0,
   };
 }
