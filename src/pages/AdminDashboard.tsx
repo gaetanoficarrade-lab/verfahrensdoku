@@ -96,18 +96,20 @@ const AdminDashboard = () => {
     try {
       const result = await seedDemoData();
       setLastSeedIds({ tenantId: result.tenantId, clientId: result.clientId, projectId: result.projectId });
+      const v = result.verification;
       toast.success('Demo-Daten erfolgreich angelegt!', {
         description: (
           <div className="space-y-1 text-xs mt-1">
-            <p>{result.message}</p>
             <div className="bg-muted/50 rounded p-2 font-mono space-y-0.5">
-              <p>Lizenznehmer-ID: {result.tenantId}</p>
-              <p>Mandanten-ID: {result.clientId}</p>
-              <p>Projekt-ID: {result.projectId}</p>
+              <p>Lizenznehmer: {result.tenantId}</p>
+              <p>Mandant: {result.clientId} {v.clientExists ? '✅' : '❌ FEHLT!'}</p>
+              <p>Projekt: {result.projectId} {v.projectExists ? '✅' : '❌ FEHLT!'}</p>
+              <p>Kapitel: {v.chapterCount} {v.chapterCount > 0 ? '✅' : '❌'}</p>
+              <p>Onboarding: {v.onboardingExists ? '✅' : '❌'}</p>
             </div>
           </div>
         ),
-        duration: 15000,
+        duration: 20000,
       });
       await fetchData();
       // Auto-impersonate and navigate to the demo project
