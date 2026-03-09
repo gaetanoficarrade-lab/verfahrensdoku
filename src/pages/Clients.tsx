@@ -18,7 +18,6 @@ interface Client {
   contact_email: string | null;
   onboarding_status: string | null;
   created_at: string;
-  is_deleted: boolean;
 }
 
 export default function Clients() {
@@ -33,7 +32,7 @@ export default function Clients() {
       setLoading(true);
       let query = supabase
         .from('clients')
-        .select('id, company, industry, contact_name, contact_email, onboarding_status, created_at, is_deleted')
+        .select('id, company, industry, contact_name, contact_email, onboarding_status, created_at')
         .order('created_at', { ascending: false });
 
       // Super-admin without impersonation sees all clients; otherwise filter by tenant
@@ -43,12 +42,6 @@ export default function Clients() {
         setClients([]);
         setLoading(false);
         return;
-      }
-
-      // Non-super-admin (or impersonating) only sees non-deleted
-      const showDeleted = isSuperAdmin && !impersonation.isImpersonating;
-      if (!showDeleted) {
-        query = query.eq('is_deleted', false);
       }
 
       const { data } = await query;
@@ -126,12 +119,11 @@ export default function Clients() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: i * 0.03 }}
-                    className={`cursor-pointer hover:bg-muted/50 border-b border-border ${c.is_deleted ? 'opacity-50' : ''}`}
+                    className="cursor-pointer hover:bg-muted/50 border-b border-border"
                     onClick={() => navigate(`/clients/${c.id}`)}
                   >
                     <TableCell className="font-medium text-foreground">
                       {c.company}
-                      {c.is_deleted && <Badge variant="destructive" className="ml-2 text-xs">Gelöscht</Badge>}
                     </TableCell>
                     <TableCell className="text-muted-foreground">{c.industry || '–'}</TableCell>
                     <TableCell>

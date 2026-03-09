@@ -27,8 +27,6 @@ interface Client {
   user_id: string | null;
   tenant_id: string;
   created_at: string;
-  is_deleted: boolean;
-  deleted_at: string | null;
 }
 
 interface Project {
@@ -99,7 +97,7 @@ export default function ClientDetail() {
     setDeleting(true);
     const { error } = await supabase
       .from('clients')
-      .update({ is_deleted: true, deleted_at: new Date().toISOString() })
+      .delete()
       .eq('id', id);
 
     if (error) {
@@ -180,13 +178,6 @@ export default function ClientDetail() {
 
   return (
     <div className="space-y-6">
-      {/* Deleted banner */}
-      {client.is_deleted && (
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 flex items-center gap-2 text-sm text-destructive">
-          <AlertTriangle className="h-4 w-4" />
-          Dieser Mandant wurde am {client.deleted_at ? new Date(client.deleted_at).toLocaleDateString('de-DE') : '–'} als gelöscht markiert.
-        </div>
-      )}
 
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" onClick={() => navigate('/clients')}>
@@ -197,7 +188,7 @@ export default function ClientDetail() {
           <p className="text-sm text-muted-foreground mt-1">Mandantendetails und Projekte</p>
         </div>
         <Badge variant="secondary">{client.onboarding_status || 'pending'}</Badge>
-        {!client.user_id && !client.is_deleted && (
+        {!client.user_id && (
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="gap-1" onClick={() => {
               setInviteEmail(client.contact_email || '');
@@ -221,7 +212,7 @@ export default function ClientDetail() {
           <Badge variant="default" className="text-xs">Zugang aktiv</Badge>
         )}
         {/* Delete button */}
-        {!client.is_deleted && (
+        {(
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10">
@@ -275,7 +266,7 @@ export default function ClientDetail() {
               <FolderOpen className="h-4 w-4 text-muted-foreground" />
               Projekte ({projects.length})
             </CardTitle>
-            {!client.is_deleted && (
+            {(
               <Button size="sm" className="gap-1" onClick={() => setShowNewProject(true)}>
                 <Plus className="h-4 w-4" />
                 Neues Projekt
