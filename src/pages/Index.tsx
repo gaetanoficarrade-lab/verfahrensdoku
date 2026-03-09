@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Users, FolderOpen, Clock, TrendingUp } from 'lucide-react';
 import { useAuthContext } from '@/contexts/AuthContext';
