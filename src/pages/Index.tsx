@@ -18,11 +18,11 @@ const Index = () => {
 
   useEffect(() => {
     if (loading || profileLoading) return;
-    if (hasRedirected.current) return;
     if (!user) { navigate('/auth'); return; }
-    if (isSuperAdmin && !impersonation.isImpersonating) { hasRedirected.current = true; navigate('/admin'); return; }
-    if (roles.includes('client')) { hasRedirected.current = true; navigate('/client'); return; }
-  }, [user, loading, roles, profileLoading, isSuperAdmin, impersonation, navigate]);
+    // Only redirect to /admin if super_admin is NOT impersonating
+    if (isSuperAdmin && !impersonation.isImpersonating) { navigate('/admin'); return; }
+    if (roles.includes('client')) { navigate('/client'); return; }
+  }, [user, loading, roles, profileLoading, isSuperAdmin, impersonation.isImpersonating, navigate]);
 
   useEffect(() => {
     if (!effectiveTenantId) return;
