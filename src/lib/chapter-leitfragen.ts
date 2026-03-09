@@ -83,12 +83,7 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
       leitfragen: [{ question: "Wann stellen Sie Ihren Kunden Rechnungen? Sofort nach der Leistung oder erst wenn Sie bezahlt werden? (Das bestimmt ob Sie Soll- oder Ist-Versteuerung nutzen)" }] },
     { label: "Frage 2", fragen: ["Führen Sie die Buchhaltung selbst oder macht das Ihr Steuerberater?"],
       leitfragen: [{ question: "Führen Sie die Buchhaltung selbst oder macht das Ihr Steuerberater?",
-        prefillFrom: (v) => {
-          if (v.BOOKKEEPING_BY === 'self') return "Buchhaltung wird selbst geführt";
-          if (v.BOOKKEEPING_BY === 'tax_advisor') return "Buchhaltung wird vom Steuerberater erledigt";
-          if (v.BOOKKEEPING_BY === 'shared') return "Buchhaltung wird gemeinsam mit dem Steuerberater erledigt";
-          return "";
-        }
+        hideIf: (v) => !!v.BOOKKEEPING_BY
       }] },
     { label: "Frage 3", fragen: ["Welche Software nutzen Sie für die Buchhaltung? (z. B. DATEV, Lexoffice, sevDesk)"],
       leitfragen: [{ question: "Welche Software nutzen Sie für die Buchhaltung? (z. B. DATEV, Lexoffice, sevDesk)",
