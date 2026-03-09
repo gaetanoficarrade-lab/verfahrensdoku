@@ -18,7 +18,6 @@ interface Client {
   contact_email: string | null;
   onboarding_status: string | null;
   created_at: string;
-  is_deleted: boolean;
 }
 
 export default function Clients() {
