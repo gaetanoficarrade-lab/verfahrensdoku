@@ -527,9 +527,7 @@ export default function ChapterEditor() {
               <div className="grid gap-2">
                 {displayBlocks.map((block, i) => (
                   <div key={i} className="flex items-start gap-2">
-                    <Badge variant="outline" className={`text-[10px] px-1.5 py-0 shrink-0 mt-0.5 ${BLOCK_COLORS[block.label] || ''}`}>
-                      {block.label}
-                    </Badge>
+                    <span className="text-sm text-muted-foreground shrink-0 mt-0.5">–</span>
                     <span className="text-sm text-muted-foreground">{block.fragen[0]}</span>
                   </div>
                 ))}
