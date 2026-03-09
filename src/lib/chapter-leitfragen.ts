@@ -197,12 +197,7 @@ export const CHAPTER_LEITFRAGEN_BLOCKS: Record<string, LeitfragenBlock[]> = {
   "2_8": [
     { label: "Frage 1", fragen: ["Wie viele Geschäftskonten haben Sie und bei welcher Bank?"],
       leitfragen: [{ question: "Wie viele Geschäftskonten haben Sie und bei welcher Bank?",
-        prefillFrom: (v) => {
-          const parts: string[] = [];
-          if (v.HAS_BUSINESS_ACCOUNT) parts.push("Geschäftskonto vorhanden");
-          if (v.USES_ONLINE_BANKING) parts.push("Online-Banking wird genutzt");
-          return parts.join(', ');
-        }
+        hideIf: (v) => v.HAS_BUSINESS_ACCOUNT !== undefined
       }] },
     { label: "Frage 2", fragen: ["Wie rufen Sie Ihre Kontoauszüge ab? (Online-Banking, automatischer Import in Buchhaltungssoftware)"],
       leitfragen: [{ question: "Wie rufen Sie Ihre Kontoauszüge ab? (Online-Banking, automatischer Import in Buchhaltungssoftware)",
