@@ -451,7 +451,7 @@ export default function AdminSettingsEmail() {
                       {(() => {
                         let s = currentTemplate.subject;
                         for (const p of currentPlaceholders) {
-                          s = s.replaceAll(p.key, p.example);
+                          s = s.split(p.key).join(p.example);
                         }
                         return s;
                       })()}
