@@ -118,7 +118,7 @@ const Register = () => {
           <CardHeader>
             <CardTitle>Registrierung</CardTitle>
             <CardDescription>
-              {isTeamInvite ? 'Sie wurden als Team-Mitglied eingeladen.' : 'Erstellen Sie Ihr Konto.'}
+              Sie wurden eingeladen. Erstellen Sie jetzt Ihr Konto.
             </CardDescription>
           </CardHeader>
           <CardContent>
