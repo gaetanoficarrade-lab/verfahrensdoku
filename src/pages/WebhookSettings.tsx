@@ -420,6 +420,92 @@ export default function WebhookSettings() {
         </Card>
       )}
 
+      {/* API Keys */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Key className="h-4 w-4" />
+              API-Keys
+            </CardTitle>
+            <CardDescription>Generieren Sie API-Keys für externe Systeme</CardDescription>
+          </div>
+          {!showNewKeyForm && (
+            <Button size="sm" className="gap-1" onClick={() => setShowNewKeyForm(true)}>
+              <Plus className="h-4 w-4" />
+              Neuer API-Key
+            </Button>
+          )}
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {showNewKeyForm && (
+            <div className="flex gap-2 items-end">
+              <div className="flex-1 space-y-1">
+                <Label>Bezeichnung</Label>
+                <Input
+                  value={newKeyName}
+                  onChange={(e) => setNewKeyName(e.target.value)}
+                  placeholder="z.B. Integration CRM"
+                  className="text-sm"
+                />
+              </div>
+              <Button onClick={handleCreateApiKey} disabled={creatingKey} size="sm">
+                {creatingKey ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Plus className="h-4 w-4 mr-1" />}
+                Erstellen
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => { setShowNewKeyForm(false); setNewKeyName(''); }}>
+                Abbrechen
+              </Button>
+            </div>
+          )}
+
+          {apiKeys.length === 0 && !showNewKeyForm ? (
+            <div className="text-center py-8 text-muted-foreground text-sm">
+              Noch keine API-Keys erstellt.
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {apiKeys.map((key) => (
+                <div key={key.id} className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-medium text-sm">{key.name}</span>
+                      <Badge variant={key.is_active ? 'default' : 'secondary'} className="text-[10px]">
+                        {key.is_active ? 'Aktiv' : 'Inaktiv'}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <code className="text-xs text-muted-foreground font-mono">
+                        {visibleKeys.has(key.id) ? key.api_key : `${key.api_key.slice(0, 8)}${'•'.repeat(24)}`}
+                      </code>
+                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => toggleKeyVisibility(key.id)}>
+                        {visibleKeys.has(key.id) ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => copyToClipboard(key.api_key)}>
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                    </div>
+                    <div className="text-[11px] text-muted-foreground mt-1">
+                      Erstellt: {format(new Date(key.created_at), 'dd.MM.yyyy', { locale: de })}
+                      {key.last_used_at && ` · Zuletzt verwendet: ${format(new Date(key.last_used_at), 'dd.MM.yyyy HH:mm', { locale: de })}`}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Switch
+                      checked={key.is_active}
+                      onCheckedChange={(checked) => handleToggleApiKey(key.id, checked)}
+                    />
+                    <Button variant="ghost" size="icon" onClick={() => handleDeleteApiKey(key.id)}>
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Webhook Logs */}
       <Card>
         <CardHeader>
