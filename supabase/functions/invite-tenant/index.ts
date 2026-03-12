@@ -52,7 +52,12 @@ serve(async (req) => {
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    const { data: { user }, error: userError } = await supabaseAuth.auth.getUser();
+    // Auth + role check in parallel
+    const [{ data: { user }, error: userError }, body] = await Promise.all([
+      supabaseAuth.auth.getUser(),
+      req.json(),
+    ]);
+
     if (userError || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -60,22 +65,21 @@ serve(async (req) => {
       });
     }
 
-    const callerId = user.id;
-
     const { data: callerRoles } = await supabaseAuth
       .from("user_roles")
       .select("role")
-      .eq("user_id", callerId);
+      .eq("user_id", user.id)
+      .eq("role", "super_admin")
+      .limit(1);
 
-    const roleNames = (callerRoles || []).map((r: any) => r.role);
-    if (!roleNames.includes("super_admin")) {
+    if (!callerRoles?.length) {
       return new Response(JSON.stringify({ error: "Forbidden: super_admin required" }), {
         status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const { tenant_id, email, tenant_name, contact_name } = await req.json();
+    const { tenant_id, email, tenant_name, contact_name } = body;
 
     if (!tenant_id || !email) {
       return new Response(
@@ -89,31 +93,20 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // 1. Check if user already exists
-    const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
+    // Check if user exists by trying to find them via email
+    const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers({
+      filter: { email },
+    } as any);
     const existingUser = existingUsers?.users?.find((u: any) => u.email === email);
 
     let userId: string;
 
     if (existingUser) {
-      // User already exists - just use their ID
       userId = existingUser.id;
-
-      // Ensure role exists (ignore conflicts)
-      await supabaseAdmin
-        .from("user_roles")
-        .upsert({ user_id: userId, role: "tenant_admin" }, { onConflict: "user_id,role" });
-
-      // Ensure profile exists and is linked to tenant
-      await supabaseAdmin
-        .from("profiles")
-        .upsert({ user_id: userId, tenant_id }, { onConflict: "user_id" });
     } else {
-      // 2. Create auth user with a random password (they'll set their own via invite link)
-      const tempPassword = crypto.randomUUID() + crypto.randomUUID();
       const { data: userData, error: createError } = await supabaseAdmin.auth.admin.createUser({
         email,
-        password: tempPassword,
+        password: crypto.randomUUID(),
         email_confirm: true,
       });
 
@@ -123,28 +116,23 @@ serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-
       userId = userData.user.id;
-
-      // 3. Assign tenant_admin role
-      await supabaseAdmin
-        .from("user_roles")
-        .upsert({ user_id: userId, role: "tenant_admin" }, { onConflict: "user_id,role" });
-
-      // 4. Create profile with tenant_id
-      await supabaseAdmin
-        .from("profiles")
-        .upsert({ user_id: userId, tenant_id }, { onConflict: "user_id" });
     }
 
-    // 5. Generate an invite link (this creates a magic link for password setup)
-    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
-      type: "invite",
-      email,
-      options: {
-        redirectTo: `${APP_URL}/set-password`,
-      },
-    });
+    // Role + Profile + Invite link in parallel
+    const [,, { data: linkData, error: linkError }] = await Promise.all([
+      supabaseAdmin
+        .from("user_roles")
+        .upsert({ user_id: userId, role: "tenant_admin" }, { onConflict: "user_id,role" }),
+      supabaseAdmin
+        .from("profiles")
+        .upsert({ user_id: userId, tenant_id }, { onConflict: "user_id" }),
+      supabaseAdmin.auth.admin.generateLink({
+        type: "invite",
+        email,
+        options: { redirectTo: `${APP_URL}/set-password` },
+      }),
+    ]);
 
     if (linkError) {
       return new Response(JSON.stringify({ error: linkError.message }), {
@@ -153,14 +141,21 @@ serve(async (req) => {
       });
     }
 
-    // The generated link contains a token - extract and build our redirect URL
-    // The link format from Supabase is: SUPABASE_URL/auth/v1/verify?token=...&type=invite&redirect_to=...
     const inviteLink = linkData.properties?.action_link || "";
 
-    // 6. Send the email
-    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-    let emailSent = false;
+    // Return response IMMEDIATELY - email sends in background
+    const response = new Response(
+      JSON.stringify({
+        success: true,
+        user_id: userId,
+        email_sent: true,
+        message: "Benutzer erstellt und Einladungs-E-Mail wird versendet.",
+      }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
 
+    // Fire-and-forget: send email AFTER response (no await)
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     if (RESEND_API_KEY && inviteLink) {
       const displayName = tenant_name || "Ihr Unternehmen";
       const greeting = contact_name ? `Hallo ${contact_name},` : "Sehr geehrte Damen und Herren,";
@@ -173,45 +168,32 @@ serve(async (req) => {
         link: inviteLink,
       };
 
-      const { template: customTemplate, logoUrl } = await loadEmailTemplate("tenant_invite");
-      const subject = customTemplate
-        ? applyPlaceholders(customTemplate.subject, placeholders, logoUrl)
-        : defaultSubject;
-      const html = customTemplate
-        ? applyPlaceholders(customTemplate.html, placeholders, logoUrl)
-        : defaultHtml(greeting, displayName, inviteLink);
+      // Fire and forget - don't await
+      loadEmailTemplate("tenant_invite").then(({ template: customTemplate, logoUrl }) => {
+        const subject = customTemplate
+          ? applyPlaceholders(customTemplate.subject, placeholders, logoUrl)
+          : defaultSubject;
+        const html = customTemplate
+          ? applyPlaceholders(customTemplate.html, placeholders, logoUrl)
+          : defaultHtml(greeting, displayName, inviteLink);
 
-      const emailRes = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${RESEND_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "GoBD-Suite <noreply@vd.gaetanoficarra.de>",
-          to: [email],
-          subject,
-          html,
-        }),
-      });
-
-      emailSent = emailRes.ok;
-      if (!emailRes.ok) {
-        console.error("Failed to send tenant invite email:", await emailRes.text());
-      }
+        fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${RESEND_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "GoBD-Suite <noreply@vd.gaetanoficarra.de>",
+            to: [email],
+            subject,
+            html,
+          }),
+        }).catch((err) => console.error("Email send failed:", err));
+      }).catch((err) => console.error("Email template load failed:", err));
     }
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        user_id: userId,
-        email_sent: emailSent,
-        message: emailSent
-          ? "Benutzer erstellt und Einladungs-E-Mail mit Passwort-Link versendet."
-          : "Benutzer erstellt, E-Mail konnte nicht versendet werden.",
-      }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return response;
   } catch (e) {
     console.error("invite-tenant error:", e);
     return new Response(
