@@ -77,9 +77,7 @@ const Register = () => {
     } else {
       toast({
         title: 'Registrierung erfolgreich',
-        description: isTeamInvite
-          ? 'Ihr Team-Konto wurde erstellt. Sie können sich jetzt anmelden.'
-          : 'Prüfen Sie Ihr Postfach, um Ihre E-Mail zu bestätigen.',
+        description: 'Ihr Konto wurde erstellt. Sie können sich jetzt anmelden.',
       });
       navigate('/auth');
     }
@@ -111,16 +109,14 @@ const Register = () => {
             {isTeamInvite ? <Users className="h-7 w-7 text-primary-foreground" /> : <Shield className="h-7 w-7 text-primary-foreground" />}
           </div>
           <h1 className="text-2xl font-bold text-foreground">GoBD-Suite</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {isTeamInvite ? 'Team-Konto erstellen' : 'Mandanten-Konto erstellen'}
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">Konto erstellen</p>
         </div>
 
         <Card>
           <CardHeader>
             <CardTitle>Registrierung</CardTitle>
             <CardDescription>
-              {isTeamInvite ? 'Sie wurden als Team-Mitglied eingeladen.' : 'Erstellen Sie Ihr Konto.'}
+              Sie wurden eingeladen. Erstellen Sie jetzt Ihr Konto.
             </CardDescription>
           </CardHeader>
           <CardContent>
