@@ -347,6 +347,67 @@ export default function ClientDetail() {
         </Card>
       </div>
 
+      {/* Pending Invites */}
+      {pendingInvites.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              Ausstehende Einladungen ({pendingInvites.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Einladungslink</TableHead>
+                  <TableHead>Erstellt</TableHead>
+                  <TableHead>Läuft ab</TableHead>
+                  <TableHead className="text-right">Aktionen</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {pendingInvites.map((inv) => {
+                  const link = `${window.location.origin}/client-register?token=${inv.token}`;
+                  return (
+                    <TableRow key={inv.id}>
+                      <TableCell className="font-mono text-xs max-w-[200px] truncate">
+                        {link}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {new Date(inv.created_at).toLocaleDateString('de-DE')}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {new Date(inv.expires_at).toLocaleDateString('de-DE')}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-1">
+                          <Button variant="ghost" size="sm" onClick={() => handleCopyPendingLink(inv.token)} title="Link kopieren">
+                            <Copy className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedResendToken(inv.token);
+                              setResendEmail(client?.contact_email || '');
+                              setShowResendDialog(true);
+                            }}
+                            title="Einladung erneut per E-Mail senden"
+                          >
+                            <RefreshCw className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
+
       {/* New Project Dialog */}
       <Dialog open={showNewProject} onOpenChange={setShowNewProject}>
         <DialogContent>
