@@ -245,6 +245,14 @@ const App = () => (
                 }
               />
               <Route
+                path="/settings/email"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin']}>
+                    <AppLayout><TenantEmailSettings /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/settings/webhook"
                 element={
                   <ProtectedRoute requiredRoles={['tenant_admin']}>
