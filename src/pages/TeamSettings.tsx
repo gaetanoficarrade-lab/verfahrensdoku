@@ -382,14 +382,27 @@ export default function TeamSettings() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
-                          <Button variant="ghost" size="sm" onClick={() => handleCopyLink(link)}>
+                          <Button variant="ghost" size="sm" onClick={() => handleCopyLink(link)} title="Link kopieren">
                             <Copy className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedResendToken(inv.token);
+                              setResendEmail('');
+                              setShowResendDialog(true);
+                            }}
+                            title="Einladung erneut per E-Mail senden"
+                          >
+                            <RefreshCw className="h-3 w-3" />
                           </Button>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleRevokeInvite(inv.id)}
                             className="text-destructive hover:text-destructive"
+                            title="Einladung widerrufen"
                           >
                             <UserX className="h-3 w-3" />
                           </Button>
