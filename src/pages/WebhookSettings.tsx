@@ -96,6 +96,7 @@ export default function WebhookSettings() {
 
     setWebhooks((whRes.data as Webhook[]) || []);
     setLogs((logRes.data as WebhookLog[]) || []);
+    setApiKeys((keyRes.data as ApiKey[]) || []);
     setLoading(false);
   };
 
