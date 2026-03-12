@@ -41,7 +41,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: from || "GoBD-Suite <noreply@gaetanoficarra.de>",
+        from: from || "GoBD-Suite <noreply@vd.gaetanoficarra.de>",
         to: Array.isArray(to) ? to : [to],
         subject,
         html,
