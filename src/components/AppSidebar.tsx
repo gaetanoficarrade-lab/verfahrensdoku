@@ -54,6 +54,7 @@ const tenantItems = [
 
 const tenantSettingsItems = [
   { title: 'Branding', url: '/settings/branding', icon: Palette },
+  { title: 'E-Mail-Vorlagen', url: '/settings/email', icon: Mail },
   { title: 'Team', url: '/settings/team', icon: Users },
   { title: 'Vorlagen', url: '/settings/templates', icon: FileText },
   { title: 'Webhooks', url: '/settings/webhook', icon: Globe },

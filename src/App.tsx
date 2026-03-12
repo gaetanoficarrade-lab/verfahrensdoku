@@ -43,6 +43,7 @@ import ClientSettings from "./pages/ClientSettings";
 import TrialExpired from "./pages/TrialExpired";
 import AdvisorOverview from "./pages/AdvisorOverview";
 import TemplateSettings from "./pages/TemplateSettings";
+import TenantEmailSettings from "./pages/TenantEmailSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
