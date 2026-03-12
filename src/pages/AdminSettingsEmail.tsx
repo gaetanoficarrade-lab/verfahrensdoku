@@ -348,7 +348,7 @@ export default function AdminSettingsEmail() {
                   {cat.templates.map((t) => (
                     <button
                       key={t.key}
-                      onClick={() => setActiveTemplate(t.key)}
+                      onClick={() => setActiveTemplate(t.key as keyof AllEmailTemplates)}
                       className={cn(
                         'flex items-center gap-2 w-full rounded-lg px-3 py-2 text-sm transition-colors text-left',
                         activeTemplate === t.key
