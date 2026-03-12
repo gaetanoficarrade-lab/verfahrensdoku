@@ -59,6 +59,53 @@ const AdminTenants = () => {
   const [resendEmail, setResendEmail] = useState('');
   const [resending, setResending] = useState(false);
 
+  const buildInviteHtml = (greeting: string, displayName: string, inviteLink: string) => `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <h2 style="color: #1a1a1a;">Willkommen bei GoBD-Suite</h2>
+  <p style="color: #555; font-size: 16px; line-height: 1.6;">${greeting}</p>
+  <p style="color: #555; font-size: 16px; line-height: 1.6;">
+    Ihr Lizenznehmer-Konto <strong>${displayName}</strong> wurde erstellt. 
+    Bitte klicken Sie auf den folgenden Link, um Ihr Passwort festzulegen:
+  </p>
+  <div style="text-align: center; margin: 30px 0;">
+    <a href="${inviteLink}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">
+      Passwort festlegen
+    </a>
+  </div>
+  <p style="color: #999; font-size: 13px;">
+    Falls der Button nicht funktioniert, kopieren Sie diesen Link in Ihren Browser:<br/>
+    <a href="${inviteLink}" style="color: #999;">${inviteLink}</a>
+  </p>
+  <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
+  <p style="color: #999; font-size: 12px;">Der Link ist 24 Stunden gültig. Diese E-Mail wurde von GoBD-Suite versendet.</p>
+</div>`;
+
+  const sendTenantInvite = async (tenantId: string, email: string, tenantName?: string | null, contactName?: string | null) => {
+    // Step 1: Create user + generate invite link via Edge Function
+    const { data, error } = await supabase.functions.invoke('invite-tenant', {
+      body: { tenant_id: tenantId, email },
+    });
+    if (error) throw error;
+    if (data?.error) throw new Error(data.error);
+
+    const inviteLink = data?.invite_link;
+    if (!inviteLink) throw new Error('Kein Einladungslink generiert');
+
+    // Step 2: Send email via minimal Edge Function (no DB access)
+    const displayName = tenantName || 'Ihr Unternehmen';
+    const greeting = contactName ? `Hallo ${contactName},` : 'Sehr geehrte Damen und Herren,';
+
+    const { data: emailData, error: emailError } = await supabase.functions.invoke('send-invite-email', {
+      body: {
+        to: email,
+        subject: 'Willkommen bei GoBD-Suite – Ihr Zugang',
+        html: buildInviteHtml(greeting, displayName, inviteLink),
+      },
+    });
+    if (emailError) throw emailError;
+    if (emailData?.error) throw new Error(emailData.error);
+  };
+
   const fetchData = async () => {
     setLoading(true);
     const [tenantsRes, plansRes] = await Promise.all([
