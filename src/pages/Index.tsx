@@ -96,16 +96,11 @@ const Index = () => {
                 <span className="text-2xl font-bold text-foreground">
                   {dataLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : stats.clients}
                 </span>
-                {stats.maxClients > 0 && (
-                  <span className={`text-sm ${clientLimitReached ? 'text-destructive font-medium' : 'text-muted-foreground'}`}>
-                    / {stats.maxClients}
-                  </span>
-                )}
               </div>
-              {stats.maxClients > 0 && !dataLoading && (
+              {!dataLoading && (
                 <Progress
                   value={clientPercent}
-                  className={`h-2 ${clientLimitReached ? '[&>div]:bg-destructive' : ''}`}
+                  className="h-2"
                 />
               )}
               {clientLimitReached && !dataLoading && (
