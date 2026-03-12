@@ -173,28 +173,28 @@ const defaultTemplates: AllEmailTemplates = {
   },
 };
 
-const templateCategories = [
+const templateCategories: Array<{ label: string; templates: Array<{ key: string; label: string; icon: string }> }> = [
   {
     label: 'Einladungen',
     templates: [
-      { key: 'tenant_invite' as const, label: 'Lizenznehmer-Einladung', icon: '🏢' },
-      { key: 'client_invite' as const, label: 'Mandanten-Einladung', icon: '👤' },
-      { key: 'team_invite' as const, label: 'Team-Einladung', icon: '👥' },
+      { key: 'tenant_invite', label: 'Lizenznehmer-Einladung', icon: '🏢' },
+      { key: 'client_invite', label: 'Mandanten-Einladung', icon: '👤' },
+      { key: 'team_invite', label: 'Team-Einladung', icon: '👥' },
     ],
   },
   {
     label: 'Authentifizierung',
     templates: [
-      { key: 'password_reset' as const, label: 'Passwort-Reset', icon: '🔑' },
+      { key: 'password_reset', label: 'Passwort-Reset', icon: '🔑' },
     ],
   },
   {
     label: 'Benachrichtigungen',
     templates: [
-      { key: 'notification_chapter_submitted' as const, label: 'Kapitel eingereicht', icon: '📝' },
-      { key: 'notification_chapter_approved' as const, label: 'Kapitel freigegeben', icon: '✅' },
-      { key: 'notification_document_finalized' as const, label: 'Dokument fertiggestellt', icon: '📄' },
-      { key: 'notification_new_tenant' as const, label: 'Neuer Lizenznehmer', icon: '🆕' },
+      { key: 'notification_chapter_submitted', label: 'Kapitel eingereicht', icon: '📝' },
+      { key: 'notification_chapter_approved', label: 'Kapitel freigegeben', icon: '✅' },
+      { key: 'notification_document_finalized', label: 'Dokument fertiggestellt', icon: '📄' },
+      { key: 'notification_new_tenant', label: 'Neuer Lizenznehmer', icon: '🆕' },
     ],
   },
 ];
