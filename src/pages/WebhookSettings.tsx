@@ -54,9 +54,14 @@ export default function WebhookSettings() {
   const { effectiveTenantId } = useAuthContext();
   const [webhooks, setWebhooks] = useState<Webhook[]>([]);
   const [logs, setLogs] = useState<WebhookLog[]>([]);
+  const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState<string | null>(null);
+  const [creatingKey, setCreatingKey] = useState(false);
+  const [newKeyName, setNewKeyName] = useState('');
+  const [showNewKeyForm, setShowNewKeyForm] = useState(false);
+  const [visibleKeys, setVisibleKeys] = useState<Set<string>>(new Set());
 
   // New/edit form
   const [editId, setEditId] = useState<string | null>(null);
