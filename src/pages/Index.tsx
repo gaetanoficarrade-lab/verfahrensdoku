@@ -122,16 +122,11 @@ const Index = () => {
                 <span className="text-2xl font-bold text-foreground">
                   {dataLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : stats.openProjects}
                 </span>
-                {stats.maxProjects > 0 && (
-                  <span className={`text-sm ${projectLimitReached ? 'text-destructive font-medium' : 'text-muted-foreground'}`}>
-                    / {stats.maxProjects}
-                  </span>
-                )}
               </div>
-              {stats.maxProjects > 0 && !dataLoading && (
+              {!dataLoading && (
                 <Progress
                   value={projectPercent}
-                  className={`h-2 ${projectLimitReached ? '[&>div]:bg-destructive' : ''}`}
+                  className="h-2"
                 />
               )}
               {projectLimitReached && !dataLoading && (
