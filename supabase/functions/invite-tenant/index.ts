@@ -17,11 +17,11 @@ const defaultHtml = (greeting: string, displayName: string, inviteLink: string) 
   <p style="color: #555; font-size: 16px; line-height: 1.6;">${greeting}</p>
   <p style="color: #555; font-size: 16px; line-height: 1.6;">
     Ihr Lizenznehmer-Konto <strong>${displayName}</strong> wurde erstellt. 
-    Bitte klicken Sie auf den folgenden Link, um Ihren persönlichen Zugang einzurichten:
+    Bitte klicken Sie auf den folgenden Link, um Ihr Passwort festzulegen:
   </p>
   <div style="text-align: center; margin: 30px 0;">
     <a href="${inviteLink}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">
-      Zugang einrichten
+      Passwort festlegen
     </a>
   </div>
   <p style="color: #999; font-size: 13px;">
@@ -29,7 +29,7 @@ const defaultHtml = (greeting: string, displayName: string, inviteLink: string) 
     <a href="${inviteLink}" style="color: #999;">${inviteLink}</a>
   </p>
   <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
-  <p style="color: #999; font-size: 12px;">Der Link ist 7 Tage gültig. Diese E-Mail wurde von GoBD-Suite versendet.</p>
+  <p style="color: #999; font-size: 12px;">Der Link ist 24 Stunden gültig. Diese E-Mail wurde von GoBD-Suite versendet.</p>
 </div>`;
 
 serve(async (req) => {
@@ -89,24 +89,77 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    const { data: invite, error: inviteError } = await supabaseAdmin
-      .from("invite_tokens")
-      .insert({ tenant_id, client_id: null })
-      .select("id, token")
-      .single();
+    // 1. Check if user already exists
+    const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
+    const existingUser = existingUsers?.users?.find((u: any) => u.email === email);
 
-    if (inviteError) {
-      return new Response(JSON.stringify({ error: inviteError.message }), {
+    let userId: string;
+
+    if (existingUser) {
+      // User already exists - just use their ID
+      userId = existingUser.id;
+    } else {
+      // 2. Create auth user with a random password (they'll set their own via invite link)
+      const tempPassword = crypto.randomUUID() + crypto.randomUUID();
+      const { data: userData, error: createError } = await supabaseAdmin.auth.admin.createUser({
+        email,
+        password: tempPassword,
+        email_confirm: true,
+      });
+
+      if (createError) {
+        return new Response(JSON.stringify({ error: createError.message }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      userId = userData.user.id;
+
+      // 3. Assign tenant_admin role
+      const { error: roleError } = await supabaseAdmin
+        .from("user_roles")
+        .insert({ user_id: userId, role: "tenant_admin" });
+
+      if (roleError) {
+        console.error("Role insert error:", roleError);
+      }
+
+      // 4. Create profile with tenant_id
+      const { error: profileError } = await supabaseAdmin
+        .from("profiles")
+        .upsert({ user_id: userId, tenant_id });
+
+      if (profileError) {
+        console.error("Profile upsert error:", profileError);
+      }
+    }
+
+    // 5. Generate an invite link (this creates a magic link for password setup)
+    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
+      type: "invite",
+      email,
+      options: {
+        redirectTo: `${APP_URL}/set-password`,
+      },
+    });
+
+    if (linkError) {
+      return new Response(JSON.stringify({ error: linkError.message }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
+    // The generated link contains a token - extract and build our redirect URL
+    // The link format from Supabase is: SUPABASE_URL/auth/v1/verify?token=...&type=invite&redirect_to=...
+    const inviteLink = linkData.properties?.action_link || "";
+
+    // 6. Send the email
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     let emailSent = false;
 
-    if (RESEND_API_KEY) {
-      const inviteLink = `${APP_URL}/register?token=${invite.token}`;
+    if (RESEND_API_KEY && inviteLink) {
       const displayName = tenant_name || "Ihr Unternehmen";
       const greeting = contact_name ? `Hallo ${contact_name},` : "Sehr geehrte Damen und Herren,";
 
@@ -149,12 +202,11 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        invite_id: invite.id,
-        token: invite.token,
+        user_id: userId,
         email_sent: emailSent,
         message: emailSent
-          ? "Einladung erstellt und E-Mail versendet."
-          : "Einladung erstellt, E-Mail konnte nicht versendet werden.",
+          ? "Benutzer erstellt und Einladungs-E-Mail mit Passwort-Link versendet."
+          : "Benutzer erstellt, E-Mail konnte nicht versendet werden.",
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
