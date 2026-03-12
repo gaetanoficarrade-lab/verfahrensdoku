@@ -11,7 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
-import { Globe, Save, Loader2, Play, CheckCircle2, XCircle, Plus, Trash2, Key } from 'lucide-react';
+import { Globe, Save, Loader2, Play, CheckCircle2, XCircle, Plus, Trash2, Key, Copy, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
