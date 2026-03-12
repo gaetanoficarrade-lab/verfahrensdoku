@@ -7,6 +7,8 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const APP_URL = "https://vd.gaetanoficarra.de";
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -38,7 +40,6 @@ serve(async (req) => {
 
     const callerId = claimsData.claims.sub;
 
-    // Verify caller is tenant_admin or super_admin
     const { data: callerRoles } = await supabaseAuth
       .from("user_roles")
       .select("role")
@@ -83,12 +84,75 @@ serve(async (req) => {
       });
     }
 
+    // Get tenant branding
+    let brandName = "GoBD-Suite";
+    const { data: tenantSettings } = await supabaseAdmin
+      .from("tenant_settings")
+      .select("brand_name")
+      .eq("tenant_id", tenant_id)
+      .maybeSingle();
+    if (tenantSettings?.brand_name) {
+      brandName = tenantSettings.brand_name;
+    }
+
+    // Send invitation email if email provided
+    let emailSent = false;
+    if (email) {
+      const inviteLink = `${APP_URL}/client-register?token=${invite.token}`;
+      const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+      if (RESEND_API_KEY) {
+        const emailRes = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${RESEND_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: `${brandName} <noreply@gaetanoficarra.de>`,
+            to: [email],
+            subject: `Einladung zur Verfahrensdokumentation – ${brandName}`,
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <h2 style="color: #1a1a1a;">Einladung zur Verfahrensdokumentation</h2>
+                <p style="color: #555; font-size: 16px; line-height: 1.6;">
+                  Sie wurden eingeladen, an einer Verfahrensdokumentation nach GoBD mitzuarbeiten.
+                </p>
+                <p style="color: #555; font-size: 16px; line-height: 1.6;">
+                  Klicken Sie auf den folgenden Link, um sich zu registrieren und Ihre Daten einzugeben:
+                </p>
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="${inviteLink}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">
+                    Registrierung starten
+                  </a>
+                </div>
+                <p style="color: #999; font-size: 13px;">
+                  Falls der Button nicht funktioniert, kopieren Sie diesen Link in Ihren Browser:<br/>
+                  <a href="${inviteLink}" style="color: #999;">${inviteLink}</a>
+                </p>
+                <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
+                <p style="color: #999; font-size: 12px;">
+                  Diese E-Mail wurde von ${brandName} versendet.
+                </p>
+              </div>
+            `,
+          }),
+        });
+        emailSent = emailRes.ok;
+        if (!emailRes.ok) {
+          console.error("Failed to send invite email:", await emailRes.text());
+        }
+      }
+    }
+
     return new Response(
       JSON.stringify({
         success: true,
         invite_id: invite.id,
         token: invite.token,
-        message: "Einladungslink für Mandant erstellt.",
+        email_sent: emailSent,
+        message: emailSent
+          ? "Einladungslink erstellt und E-Mail versendet."
+          : "Einladungslink für Mandant erstellt.",
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
