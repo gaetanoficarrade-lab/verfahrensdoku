@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, FolderOpen, Plus, UserPlus, Mail, Lock, Copy, Check, Send, Trash2, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Loader2, FolderOpen, Plus, UserPlus, Mail, Lock, Copy, Check, Send, Trash2, AlertTriangle, RefreshCw, Clock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -61,6 +61,13 @@ export default function ClientDetail() {
   const [inviteLink, setInviteLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
+  // Pending invites
+  const [pendingInvites, setPendingInvites] = useState<Array<{ id: string; token: string; created_at: string; expires_at: string }>>([]);
+  const [resendingInvite, setResendingInvite] = useState<string | null>(null);
+  const [resendEmail, setResendEmail] = useState('');
+  const [showResendDialog, setShowResendDialog] = useState(false);
+  const [selectedResendToken, setSelectedResendToken] = useState<string | null>(null);
+
   useEffect(() => {
     if (!id || !effectiveTenantId) return;
     const fetch = async () => {
@@ -71,6 +78,18 @@ export default function ClientDetail() {
       ]);
       setClient(clientRes.data);
       setProjects(projRes.data || []);
+
+      // Fetch pending invites for this client
+      const { data: invites } = await supabase
+        .from('invite_tokens')
+        .select('id, token, created_at, expires_at')
+        .eq('tenant_id', effectiveTenantId)
+        .eq('client_id', id)
+        .eq('is_active', true)
+        .is('used_by', null)
+        .gt('expires_at', new Date().toISOString())
+        .order('created_at', { ascending: false });
+      setPendingInvites(invites || []);
 
       // Check for finalized documents
       if (projRes.data && projRes.data.length > 0) {
@@ -152,6 +171,34 @@ export default function ClientDetail() {
       `Sehr geehrte(r) ${client?.contact_name || 'Mandant'},\n\nSie wurden zur GoBD-Suite eingeladen. Bitte klicken Sie auf folgenden Link, um Ihr Konto zu erstellen:\n\n${inviteLink}\n\nDer Link ist 7 Tage gültig.\n\nMit freundlichen Grüßen`
     );
     window.open(`mailto:${inviteEmail}?subject=${subject}&body=${body}`, '_blank');
+  };
+
+  const handleResendInvite = async () => {
+    if (!selectedResendToken || !resendEmail.trim()) return;
+    setResendingInvite(selectedResendToken);
+    try {
+      const { data, error } = await supabase.functions.invoke('resend-invite', {
+        body: {
+          invite_token: selectedResendToken,
+          email: resendEmail.trim(),
+          type: 'client',
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      toast.success('Einladung erneut versendet.');
+      setShowResendDialog(false);
+    } catch (err: any) {
+      toast.error(err.message || 'Fehler beim erneuten Versenden.');
+    } finally {
+      setResendingInvite(null);
+    }
+  };
+
+  const handleCopyPendingLink = async (token: string) => {
+    const link = `${window.location.origin}/client-register?token=${token}`;
+    await navigator.clipboard.writeText(link);
+    toast.success('Link kopiert.');
   };
 
   if (loading) {
@@ -299,6 +346,67 @@ export default function ClientDetail() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Pending Invites */}
+      {pendingInvites.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              Ausstehende Einladungen ({pendingInvites.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Einladungslink</TableHead>
+                  <TableHead>Erstellt</TableHead>
+                  <TableHead>Läuft ab</TableHead>
+                  <TableHead className="text-right">Aktionen</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {pendingInvites.map((inv) => {
+                  const link = `${window.location.origin}/client-register?token=${inv.token}`;
+                  return (
+                    <TableRow key={inv.id}>
+                      <TableCell className="font-mono text-xs max-w-[200px] truncate">
+                        {link}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {new Date(inv.created_at).toLocaleDateString('de-DE')}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {new Date(inv.expires_at).toLocaleDateString('de-DE')}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-1">
+                          <Button variant="ghost" size="sm" onClick={() => handleCopyPendingLink(inv.token)} title="Link kopieren">
+                            <Copy className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedResendToken(inv.token);
+                              setResendEmail(client?.contact_email || '');
+                              setShowResendDialog(true);
+                            }}
+                            title="Einladung erneut per E-Mail senden"
+                          >
+                            <RefreshCw className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
 
       {/* New Project Dialog */}
       <Dialog open={showNewProject} onOpenChange={setShowNewProject}>
@@ -493,6 +601,41 @@ export default function ClientDetail() {
               </DialogFooter>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Resend Invite Dialog */}
+      <Dialog open={showResendDialog} onOpenChange={setShowResendDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Einladung erneut senden</DialogTitle>
+            <DialogDescription>
+              Senden Sie die Einladung erneut per E-Mail an den Mandanten.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>E-Mail-Adresse</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  type="email"
+                  value={resendEmail}
+                  onChange={(e) => setResendEmail(e.target.value)}
+                  className="pl-10"
+                  placeholder="mandant@beispiel.de"
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowResendDialog(false)}>Abbrechen</Button>
+            <Button onClick={handleResendInvite} disabled={!resendEmail.trim() || !!resendingInvite}>
+              {resendingInvite && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              <Send className="h-4 w-4 mr-1" />
+              Erneut senden
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

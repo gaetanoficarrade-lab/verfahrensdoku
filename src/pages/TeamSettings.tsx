@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Users, UserPlus, Loader2, Mail, Copy, Check, Clock, UserX, ShieldCheck } from 'lucide-react';
+import { Users, UserPlus, Loader2, Mail, Copy, Check, Clock, UserX, ShieldCheck, RefreshCw, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -44,6 +44,10 @@ export default function TeamSettings() {
   const [generatedLink, setGeneratedLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [changingRole, setChangingRole] = useState<string | null>(null);
+  const [showResendDialog, setShowResendDialog] = useState(false);
+  const [selectedResendToken, setSelectedResendToken] = useState<string | null>(null);
+  const [resendEmail, setResendEmail] = useState('');
+  const [resendingInvite, setResendingInvite] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     if (!effectiveTenantId) return;
@@ -151,6 +155,28 @@ export default function TeamSettings() {
     } else {
       toast.success('Einladung widerrufen.');
       fetchData();
+    }
+  };
+
+  const handleResendInvite = async () => {
+    if (!selectedResendToken || !resendEmail.trim()) return;
+    setResendingInvite(selectedResendToken);
+    try {
+      const { data, error } = await supabase.functions.invoke('resend-invite', {
+        body: {
+          invite_token: selectedResendToken,
+          email: resendEmail.trim(),
+          type: 'team',
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      toast.success('Einladung erneut versendet.');
+      setShowResendDialog(false);
+    } catch (err: any) {
+      toast.error(err.message || 'Fehler beim erneuten Versenden.');
+    } finally {
+      setResendingInvite(null);
     }
   };
 
@@ -356,14 +382,27 @@ export default function TeamSettings() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
-                          <Button variant="ghost" size="sm" onClick={() => handleCopyLink(link)}>
+                          <Button variant="ghost" size="sm" onClick={() => handleCopyLink(link)} title="Link kopieren">
                             <Copy className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedResendToken(inv.token);
+                              setResendEmail('');
+                              setShowResendDialog(true);
+                            }}
+                            title="Einladung erneut per E-Mail senden"
+                          >
+                            <RefreshCw className="h-3 w-3" />
                           </Button>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleRevokeInvite(inv.id)}
                             className="text-destructive hover:text-destructive"
+                            title="Einladung widerrufen"
                           >
                             <UserX className="h-3 w-3" />
                           </Button>
@@ -451,6 +490,41 @@ export default function TeamSettings() {
               </DialogFooter>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Resend Invite Dialog */}
+      <Dialog open={showResendDialog} onOpenChange={setShowResendDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Einladung erneut senden</DialogTitle>
+            <DialogDescription>
+              Senden Sie die Einladung erneut per E-Mail.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>E-Mail-Adresse</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  type="email"
+                  value={resendEmail}
+                  onChange={(e) => setResendEmail(e.target.value)}
+                  className="pl-10"
+                  placeholder="mitarbeiter@beispiel.de"
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowResendDialog(false)}>Abbrechen</Button>
+            <Button onClick={handleResendInvite} disabled={!resendEmail.trim() || !!resendingInvite}>
+              {resendingInvite && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              <Send className="h-4 w-4 mr-1" />
+              Erneut senden
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
