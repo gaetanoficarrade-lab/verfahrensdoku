@@ -27,7 +27,6 @@ export default function AdminSettingsGeneral() {
   const [saving, setSaving] = useState(false);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [form, setForm] = useState({
-    platform_name: 'GoBD-Suite',
     support_email: '',
     default_plan_id: '',
   });
