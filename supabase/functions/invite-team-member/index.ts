@@ -106,12 +106,12 @@ serve(async (req) => {
           link: inviteLink,
         };
 
-        const customTemplate = await loadEmailTemplate("team_invite");
+        const { template: customTemplate, logoUrl } = await loadEmailTemplate("team_invite", tenant_id);
         const subject = customTemplate
-          ? applyPlaceholders(customTemplate.subject, placeholders)
+          ? applyPlaceholders(customTemplate.subject, placeholders, logoUrl)
           : `Teameinladung – ${brandName}`;
         const html = customTemplate
-          ? applyPlaceholders(customTemplate.html, placeholders)
+          ? applyPlaceholders(customTemplate.html, placeholders, logoUrl)
           : `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
               <h2 style="color: #1a1a1a;">Einladung zum Team</h2>
               <p style="color: #555; font-size: 16px; line-height: 1.6;">

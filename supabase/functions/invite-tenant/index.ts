@@ -118,13 +118,12 @@ serve(async (req) => {
         link: inviteLink,
       };
 
-      // Try loading custom template from DB
-      const customTemplate = await loadEmailTemplate("tenant_invite");
+      const { template: customTemplate, logoUrl } = await loadEmailTemplate("tenant_invite");
       const subject = customTemplate
-        ? applyPlaceholders(customTemplate.subject, placeholders)
+        ? applyPlaceholders(customTemplate.subject, placeholders, logoUrl)
         : defaultSubject;
       const html = customTemplate
-        ? applyPlaceholders(customTemplate.html, placeholders)
+        ? applyPlaceholders(customTemplate.html, placeholders, logoUrl)
         : defaultHtml(greeting, displayName, inviteLink);
 
       const emailRes = await fetch("https://api.resend.com/emails", {
