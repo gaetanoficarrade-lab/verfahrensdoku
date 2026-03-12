@@ -173,6 +173,34 @@ export default function ClientDetail() {
     window.open(`mailto:${inviteEmail}?subject=${subject}&body=${body}`, '_blank');
   };
 
+  const handleResendInvite = async () => {
+    if (!selectedResendToken || !resendEmail.trim()) return;
+    setResendingInvite(selectedResendToken);
+    try {
+      const { data, error } = await supabase.functions.invoke('resend-invite', {
+        body: {
+          invite_token: selectedResendToken,
+          email: resendEmail.trim(),
+          type: 'client',
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      toast.success('Einladung erneut versendet.');
+      setShowResendDialog(false);
+    } catch (err: any) {
+      toast.error(err.message || 'Fehler beim erneuten Versenden.');
+    } finally {
+      setResendingInvite(null);
+    }
+  };
+
+  const handleCopyPendingLink = async (token: string) => {
+    const link = `${window.location.origin}/client-register?token=${token}`;
+    await navigator.clipboard.writeText(link);
+    toast.success('Link kopiert.');
+  };
+
   if (loading) {
     return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   }
