@@ -108,7 +108,7 @@ export default function BrandingSettings() {
             <Building2 className="h-5 w-5" />
             Marke & Logo
           </CardTitle>
-          <CardDescription>Logo und Firmenname für die Anzeige in der Sidebar</CardDescription>
+          <CardDescription>Logo und Firmenname ersetzen „GoBD-Suite" überall: Navigation, Registrierung, E-Mails</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
