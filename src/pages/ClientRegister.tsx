@@ -25,6 +25,7 @@ const ClientRegister = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [tenantBranding, setTenantBranding] = useState<{ brand_name?: string; logo_url?: string } | null>(null);
   const { signUp, signIn } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
