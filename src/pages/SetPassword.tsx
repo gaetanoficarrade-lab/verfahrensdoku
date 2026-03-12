@@ -20,7 +20,8 @@ const SetPassword = () => {
 
   useEffect(() => {
     const hash = window.location.hash;
-    if (hash.includes('type=recovery') || hash.includes('type=invite')) {
+    const params = new URLSearchParams(window.location.search);
+    if (hash.includes('type=recovery') || hash.includes('type=invite') || params.get('type') === 'invite') {
       setIsRecovery(true);
     }
   }, []);
