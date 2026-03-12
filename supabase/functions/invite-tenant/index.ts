@@ -168,29 +168,20 @@ serve(async (req) => {
         link: inviteLink,
       };
 
-      // Fire and forget - don't await
-      loadEmailTemplate("tenant_invite").then(({ template: customTemplate, logoUrl }) => {
-        const subject = customTemplate
-          ? applyPlaceholders(customTemplate.subject, placeholders, logoUrl)
-          : defaultSubject;
-        const html = customTemplate
-          ? applyPlaceholders(customTemplate.html, placeholders, logoUrl)
-          : defaultHtml(greeting, displayName, inviteLink);
-
-        fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${RESEND_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            from: "GoBD-Suite <noreply@vd.gaetanoficarra.de>",
-            to: [email],
-            subject,
-            html,
-          }),
-        }).catch((err) => console.error("Email send failed:", err));
-      }).catch((err) => console.error("Email template load failed:", err));
+      // Fire and forget - don't await, no DB query for template
+      fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "GoBD-Suite <noreply@vd.gaetanoficarra.de>",
+          to: [email],
+          subject: defaultSubject,
+          html: defaultHtml(greeting, displayName, inviteLink),
+        }),
+      }).catch((err) => console.error("Email send failed:", err));
     }
 
     return response;
