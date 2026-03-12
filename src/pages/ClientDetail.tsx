@@ -79,6 +79,18 @@ export default function ClientDetail() {
       setClient(clientRes.data);
       setProjects(projRes.data || []);
 
+      // Fetch pending invites for this client
+      const { data: invites } = await supabase
+        .from('invite_tokens')
+        .select('id, token, created_at, expires_at')
+        .eq('tenant_id', effectiveTenantId)
+        .eq('client_id', id)
+        .eq('is_active', true)
+        .is('used_by', null)
+        .gt('expires_at', new Date().toISOString())
+        .order('created_at', { ascending: false });
+      setPendingInvites(invites || []);
+
       // Check for finalized documents
       if (projRes.data && projRes.data.length > 0) {
         const projectIds = projRes.data.map(p => p.id);
