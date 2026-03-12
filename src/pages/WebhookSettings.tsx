@@ -75,7 +75,7 @@ export default function WebhookSettings() {
     if (!effectiveTenantId) return;
     setLoading(true);
 
-    const [whRes, logRes] = await Promise.all([
+    const [whRes, logRes, keyRes] = await Promise.all([
       supabase
         .from('tenant_webhooks')
         .select('*')
@@ -87,6 +87,11 @@ export default function WebhookSettings() {
         .eq('tenant_id', effectiveTenantId)
         .order('created_at', { ascending: false })
         .limit(20),
+      supabase
+        .from('tenant_api_keys')
+        .select('*')
+        .eq('tenant_id', effectiveTenantId)
+        .order('created_at', { ascending: false }),
     ]);
 
     setWebhooks((whRes.data as Webhook[]) || []);
