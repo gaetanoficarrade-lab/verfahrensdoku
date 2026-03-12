@@ -169,16 +169,7 @@ const AdminTenants = () => {
     if (!resendTenant || !resendEmail.trim()) return;
     setResending(true);
     try {
-      const { data, error } = await supabase.functions.invoke('invite-tenant', {
-        body: {
-          tenant_id: resendTenant.id,
-          email: resendEmail.trim(),
-          tenant_name: resendTenant.name,
-          contact_name: resendTenant.contact_name,
-        },
-      });
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
+      await sendTenantInvite(resendTenant.id, resendEmail.trim(), resendTenant.name, resendTenant.contact_name);
       toast({ title: 'Einladung versendet', description: `An ${resendEmail.trim()}` });
       setShowResendDialog(false);
     } catch (err: any) {
