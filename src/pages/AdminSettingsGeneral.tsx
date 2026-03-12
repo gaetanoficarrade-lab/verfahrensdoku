@@ -55,7 +55,6 @@ export default function AdminSettingsGeneral() {
       if (settingsRes.data?.value) {
         const val = settingsRes.data.value as Record<string, string>;
         setForm({
-          platform_name: val.platform_name || 'GoBD-Suite',
           support_email: val.support_email || '',
           default_plan_id: val.default_plan_id || '',
         });
