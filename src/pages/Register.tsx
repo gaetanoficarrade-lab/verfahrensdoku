@@ -111,9 +111,7 @@ const Register = () => {
             {isTeamInvite ? <Users className="h-7 w-7 text-primary-foreground" /> : <Shield className="h-7 w-7 text-primary-foreground" />}
           </div>
           <h1 className="text-2xl font-bold text-foreground">GoBD-Suite</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {isTeamInvite ? 'Team-Konto erstellen' : 'Mandanten-Konto erstellen'}
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">Konto erstellen</p>
         </div>
 
         <Card>
