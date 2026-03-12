@@ -98,6 +98,16 @@ serve(async (req) => {
     if (existingUser) {
       // User already exists - just use their ID
       userId = existingUser.id;
+
+      // Ensure role exists (ignore conflicts)
+      await supabaseAdmin
+        .from("user_roles")
+        .upsert({ user_id: userId, role: "tenant_admin" }, { onConflict: "user_id,role" });
+
+      // Ensure profile exists and is linked to tenant
+      await supabaseAdmin
+        .from("profiles")
+        .upsert({ user_id: userId, tenant_id }, { onConflict: "user_id" });
     } else {
       // 2. Create auth user with a random password (they'll set their own via invite link)
       const tempPassword = crypto.randomUUID() + crypto.randomUUID();
@@ -117,22 +127,14 @@ serve(async (req) => {
       userId = userData.user.id;
 
       // 3. Assign tenant_admin role
-      const { error: roleError } = await supabaseAdmin
+      await supabaseAdmin
         .from("user_roles")
-        .insert({ user_id: userId, role: "tenant_admin" });
-
-      if (roleError) {
-        console.error("Role insert error:", roleError);
-      }
+        .upsert({ user_id: userId, role: "tenant_admin" }, { onConflict: "user_id,role" });
 
       // 4. Create profile with tenant_id
-      const { error: profileError } = await supabaseAdmin
+      await supabaseAdmin
         .from("profiles")
-        .upsert({ user_id: userId, tenant_id });
-
-      if (profileError) {
-        console.error("Profile upsert error:", profileError);
-      }
+        .upsert({ user_id: userId, tenant_id }, { onConflict: "user_id" });
     }
 
     // 5. Generate an invite link (this creates a magic link for password setup)
