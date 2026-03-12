@@ -27,7 +27,6 @@ export default function AdminSettingsGeneral() {
   const [saving, setSaving] = useState(false);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [form, setForm] = useState({
-    platform_name: 'GoBD-Suite',
     support_email: '',
     default_plan_id: '',
   });
@@ -56,7 +55,6 @@ export default function AdminSettingsGeneral() {
       if (settingsRes.data?.value) {
         const val = settingsRes.data.value as Record<string, string>;
         setForm({
-          platform_name: val.platform_name || 'GoBD-Suite',
           support_email: val.support_email || '',
           default_plan_id: val.default_plan_id || '',
         });
@@ -135,15 +133,6 @@ export default function AdminSettingsGeneral() {
             <CardDescription>Grundlegende Plattformkonfiguration</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label>Plattformname</Label>
-              <Input
-                value={form.platform_name}
-                onChange={(e) => setForm((p) => ({ ...p, platform_name: e.target.value }))}
-                placeholder="GoBD-Suite"
-              />
-            </div>
-
             <div className="space-y-2">
               <Label>Support-E-Mail</Label>
               <Input

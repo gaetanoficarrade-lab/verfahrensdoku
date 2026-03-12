@@ -25,6 +25,7 @@ const ClientRegister = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [tenantBranding, setTenantBranding] = useState<{ brand_name?: string; logo_url?: string } | null>(null);
   const { signUp, signIn } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -45,6 +46,15 @@ const ClientRegister = () => {
 
       setTokenValid(true);
       setTokenData(anyToken);
+      // Load tenant branding
+      if (anyToken.tenant_id) {
+        const { data: settings } = await supabase
+          .from('tenant_settings')
+          .select('brand_name, logo_url')
+          .eq('tenant_id', anyToken.tenant_id)
+          .maybeSingle();
+        if (settings) setTenantBranding(settings);
+      }
     };
     validate();
   }, [token]);
@@ -123,11 +133,15 @@ const ClientRegister = () => {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary">
-            <Shield className="h-7 w-7 text-primary-foreground" />
-          </div>
-          <h1 className="text-2xl font-bold text-foreground">GoBD-Suite</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Mandanten-Konto erstellen</p>
+          {tenantBranding?.logo_url ? (
+            <img src={tenantBranding.logo_url} alt={tenantBranding.brand_name || 'Logo'} className="mx-auto mb-4 h-14 w-14 rounded-xl object-contain" />
+          ) : (
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary">
+              <Shield className="h-7 w-7 text-primary-foreground" />
+            </div>
+          )}
+          <h1 className="text-2xl font-bold text-foreground">{tenantBranding?.brand_name || 'GoBD-Suite'}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Konto erstellen</p>
         </div>
 
         <Card>

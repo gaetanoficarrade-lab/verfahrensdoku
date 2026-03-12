@@ -24,6 +24,7 @@ const Register = () => {
   const [tokenData, setTokenData] = useState<any>(null);
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [tenantBranding, setTenantBranding] = useState<{ brand_name?: string; logo_url?: string } | null>(null);
   const { signUp } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -40,10 +41,24 @@ const Register = () => {
         .eq('is_active', true)
         .gt('expires_at', new Date().toISOString())
         .maybeSingle();
-      if (error || !data) { setTokenValid(false); } else { setTokenValid(true); setTokenData(data); }
+      if (error || !data) { setTokenValid(false); return; }
+      setTokenValid(true);
+      setTokenData(data);
+      // Load tenant branding
+      if (data.tenant_id) {
+        const { data: settings } = await supabase
+          .from('tenant_settings')
+          .select('brand_name, logo_url')
+          .eq('tenant_id', data.tenant_id)
+          .maybeSingle();
+        if (settings) setTenantBranding(settings);
+      }
     };
     validate();
   }, [token]);
+
+  const brandName = tenantBranding?.brand_name || 'GoBD-Suite';
+  const logoUrl = tenantBranding?.logo_url;
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,10 +122,14 @@ const Register = () => {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary">
-            {isTeamInvite ? <Users className="h-7 w-7 text-primary-foreground" /> : <Shield className="h-7 w-7 text-primary-foreground" />}
-          </div>
-          <h1 className="text-2xl font-bold text-foreground">GoBD-Suite</h1>
+          {logoUrl ? (
+            <img src={logoUrl} alt={brandName} className="mx-auto mb-4 h-14 w-14 rounded-xl object-contain" />
+          ) : (
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary">
+              <Shield className="h-7 w-7 text-primary-foreground" />
+            </div>
+          )}
+          <h1 className="text-2xl font-bold text-foreground">{brandName}</h1>
           <p className="mt-1 text-sm text-muted-foreground">Konto erstellen</p>
         </div>
 

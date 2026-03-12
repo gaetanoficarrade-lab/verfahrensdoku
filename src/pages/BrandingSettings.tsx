@@ -97,7 +97,7 @@ export default function BrandingSettings() {
       <div>
         <h1 className="text-2xl font-bold text-foreground">Branding & Einstellungen</h1>
         <p className="text-muted-foreground mt-1">
-          Passen Sie das Erscheinungsbild Ihrer GoBD-Suite an.
+          Passen Sie Name, Logo und Farben an. Diese werden in der Navigation, auf Registrierungsseiten und in E-Mails angezeigt.
         </p>
       </div>
 
@@ -108,7 +108,7 @@ export default function BrandingSettings() {
             <Building2 className="h-5 w-5" />
             Marke & Logo
           </CardTitle>
-          <CardDescription>Logo und Firmenname für die Anzeige in der Sidebar</CardDescription>
+          <CardDescription>Logo und Firmenname ersetzen „GoBD-Suite" überall: Navigation, Registrierung, E-Mails</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
