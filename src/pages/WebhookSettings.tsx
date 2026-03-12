@@ -195,6 +195,61 @@ export default function WebhookSettings() {
     );
   };
 
+  const handleCreateApiKey = async () => {
+    if (!effectiveTenantId) return;
+    setCreatingKey(true);
+    try {
+      const { error } = await supabase.from('tenant_api_keys').insert({
+        tenant_id: effectiveTenantId,
+        name: newKeyName.trim() || 'Standard',
+      });
+      if (error) throw error;
+      toast.success('API-Key erstellt.');
+      logAudit('settings_updated', 'api_key', undefined, { name: newKeyName.trim() || 'Standard' });
+      setNewKeyName('');
+      setShowNewKeyForm(false);
+      fetchData();
+    } catch (err: any) {
+      toast.error(err.message || 'Fehler beim Erstellen.');
+    } finally {
+      setCreatingKey(false);
+    }
+  };
+
+  const handleDeleteApiKey = async (id: string) => {
+    const { error } = await supabase.from('tenant_api_keys').delete().eq('id', id);
+    if (error) {
+      toast.error('Fehler beim Löschen.');
+    } else {
+      toast.success('API-Key gelöscht.');
+      fetchData();
+    }
+  };
+
+  const handleToggleApiKey = async (id: string, active: boolean) => {
+    const { error } = await supabase.from('tenant_api_keys').update({ is_active: active }).eq('id', id);
+    if (error) {
+      toast.error('Fehler beim Aktualisieren.');
+    } else {
+      toast.success(active ? 'API-Key aktiviert.' : 'API-Key deaktiviert.');
+      fetchData();
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success('In die Zwischenablage kopiert.');
+  };
+
+  const toggleKeyVisibility = (id: string) => {
+    setVisibleKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center py-12">
