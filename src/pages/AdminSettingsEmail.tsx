@@ -320,7 +320,7 @@ export default function AdminSettingsEmail() {
 
   const currentPlaceholders = placeholdersByTemplate[activeTemplate] || [];
   const currentTemplate = templates[activeTemplate];
-  const allTemplateInfo = templateCategories.flatMap(c => c.templates);
+  const allTemplateInfo = templateCategories.flatMap(c => c.templates) as Array<{ key: string; label: string; icon: string }>;
   const activeInfo = allTemplateInfo.find(t => t.key === activeTemplate);
 
   if (loading) {
