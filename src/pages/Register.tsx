@@ -77,9 +77,7 @@ const Register = () => {
     } else {
       toast({
         title: 'Registrierung erfolgreich',
-        description: isTeamInvite
-          ? 'Ihr Team-Konto wurde erstellt. Sie können sich jetzt anmelden.'
-          : 'Prüfen Sie Ihr Postfach, um Ihre E-Mail zu bestätigen.',
+        description: 'Ihr Konto wurde erstellt. Sie können sich jetzt anmelden.',
       });
       navigate('/auth');
     }
