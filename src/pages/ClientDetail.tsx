@@ -603,6 +603,41 @@ export default function ClientDetail() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Resend Invite Dialog */}
+      <Dialog open={showResendDialog} onOpenChange={setShowResendDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Einladung erneut senden</DialogTitle>
+            <DialogDescription>
+              Senden Sie die Einladung erneut per E-Mail an den Mandanten.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>E-Mail-Adresse</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  type="email"
+                  value={resendEmail}
+                  onChange={(e) => setResendEmail(e.target.value)}
+                  className="pl-10"
+                  placeholder="mandant@beispiel.de"
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowResendDialog(false)}>Abbrechen</Button>
+            <Button onClick={handleResendInvite} disabled={!resendEmail.trim() || !!resendingInvite}>
+              {resendingInvite && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              <Send className="h-4 w-4 mr-1" />
+              Erneut senden
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
