@@ -108,7 +108,7 @@ serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: `${brandName} <noreply@gaetanoficarra.de>`,
+            from: `${brandName} <noreply@vd.gaetanoficarra.de>`,
             to: [email],
             subject: `Einladung zur Verfahrensdokumentation – ${brandName}`,
             html: `

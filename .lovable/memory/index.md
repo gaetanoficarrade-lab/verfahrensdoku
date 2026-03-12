@@ -9,6 +9,6 @@
 
 ## Email
 - Email provider: Resend (API key stored as RESEND_API_KEY secret)
-- Sender address: noreply@gaetanoficarra.de
+- Sender address: noreply@vd.gaetanoficarra.de
 - Sender name: tenant brand_name or "GoBD-Suite" fallback
 - Used for: Auth-Mails, Mandanten-Einladungen, Team-Einladungen, Benachrichtigungen
