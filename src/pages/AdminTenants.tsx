@@ -259,16 +259,17 @@ const AdminTenants = () => {
                     {tenant.is_active ? 'Aktiv' : 'Inaktiv'}
                   </Badge>
                   <Button
-                    variant="ghost"
-                    size="icon"
+                    variant="outline"
+                    size="sm"
                     onClick={() => {
                       setResendTenant(tenant);
                       setResendEmail(tenant.contact_email || '');
                       setShowResendDialog(true);
                     }}
-                    title="Einladung senden"
+                    className="gap-1 mr-1"
                   >
-                    <Send className="h-4 w-4" />
+                    <Send className="h-3.5 w-3.5" />
+                    Einladung
                   </Button>
                   <Button variant="ghost" size="icon" onClick={() => openEdit(tenant)} title="Bearbeiten">
                     <Pencil className="h-4 w-4" />
