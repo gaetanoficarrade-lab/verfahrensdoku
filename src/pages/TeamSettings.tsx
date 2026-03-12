@@ -44,6 +44,10 @@ export default function TeamSettings() {
   const [generatedLink, setGeneratedLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [changingRole, setChangingRole] = useState<string | null>(null);
+  const [showResendDialog, setShowResendDialog] = useState(false);
+  const [selectedResendToken, setSelectedResendToken] = useState<string | null>(null);
+  const [resendEmail, setResendEmail] = useState('');
+  const [resendingInvite, setResendingInvite] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     if (!effectiveTenantId) return;
