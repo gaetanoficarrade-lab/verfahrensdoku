@@ -1125,3 +1125,30 @@ CREATE POLICY "Users see own login logs" ON public.login_logs
 
 CREATE POLICY "Users insert own login logs" ON public.login_logs
   FOR INSERT TO authenticated WITH CHECK (user_id = auth.uid());
+
+-- Tenant API Keys
+CREATE TABLE public.tenant_api_keys (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE,
+  name TEXT NOT NULL DEFAULT 'Standard',
+  api_key TEXT NOT NULL DEFAULT encode(gen_random_bytes(32), 'hex'),
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  last_used_at TIMESTAMPTZ
+);
+
+ALTER TABLE public.tenant_api_keys ENABLE ROW LEVEL SECURITY;
+
+CREATE INDEX idx_tenant_api_keys_tenant ON public.tenant_api_keys(tenant_id);
+CREATE UNIQUE INDEX idx_tenant_api_keys_key ON public.tenant_api_keys(api_key);
+
+CREATE POLICY "Tenant admins manage own API keys" ON public.tenant_api_keys
+  FOR ALL TO authenticated
+  USING (
+    tenant_id IN (SELECT p.tenant_id FROM public.profiles p WHERE p.user_id = auth.uid())
+    OR public.has_role(auth.uid(), 'super_admin')
+  )
+  WITH CHECK (
+    tenant_id IN (SELECT p.tenant_id FROM public.profiles p WHERE p.user_id = auth.uid())
+    OR public.has_role(auth.uid(), 'super_admin')
+  );
