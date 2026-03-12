@@ -157,11 +157,6 @@ const Index = () => {
               <div className="text-2xl font-bold text-foreground">
                 {dataLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : stats.planName}
               </div>
-              {!dataLoading && stats.maxClients > 0 && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  {stats.maxClients} Mandanten · {stats.maxProjects} Projekte
-                </p>
-              )}
             </CardContent>
           </Card>
         </motion.div>
