@@ -313,7 +313,7 @@ export default function AdminSettingsEmail() {
     let html = current.html;
     const placeholders = placeholdersByTemplate[activeTemplate] || [];
     for (const p of placeholders) {
-      html = html.replaceAll(p.key, p.example);
+      html = html.split(p.key).join(p.example);
     }
     return html;
   }, [templates, activeTemplate]);
