@@ -1,7 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -9,28 +8,6 @@ const corsHeaders = {
 };
 
 const APP_URL = "https://vd.gaetanoficarra.de";
-
-const defaultSubject = "Willkommen bei GoBD-Suite – Ihr Zugang";
-const defaultHtml = (greeting: string, displayName: string, inviteLink: string) => `
-<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <h2 style="color: #1a1a1a;">Willkommen bei GoBD-Suite</h2>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">${greeting}</p>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">
-    Ihr Lizenznehmer-Konto <strong>${displayName}</strong> wurde erstellt. 
-    Bitte klicken Sie auf den folgenden Link, um Ihr Passwort festzulegen:
-  </p>
-  <div style="text-align: center; margin: 30px 0;">
-    <a href="${inviteLink}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">
-      Passwort festlegen
-    </a>
-  </div>
-  <p style="color: #999; font-size: 13px;">
-    Falls der Button nicht funktioniert, kopieren Sie diesen Link in Ihren Browser:<br/>
-    <a href="${inviteLink}" style="color: #999;">${inviteLink}</a>
-  </p>
-  <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
-  <p style="color: #999; font-size: 12px;">Der Link ist 24 Stunden gültig. Diese E-Mail wurde von GoBD-Suite versendet.</p>
-</div>`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -52,23 +29,27 @@ serve(async (req) => {
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    // Auth + role check in parallel
-    const [{ data: { user }, error: userError }, body] = await Promise.all([
-      supabaseAuth.auth.getUser(),
+    // Parse body and verify JWT in parallel (getClaims is faster than getUser)
+    const token = authHeader.replace("Bearer ", "");
+    const [{ data: claimsData, error: claimsError }, body] = await Promise.all([
+      supabaseAuth.auth.getClaims(token),
       req.json(),
     ]);
 
-    if (userError || !user) {
+    if (claimsError || !claimsData?.claims?.sub) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
+    const callerId = claimsData.claims.sub;
+
+    // Role check
     const { data: callerRoles } = await supabaseAuth
       .from("user_roles")
       .select("role")
-      .eq("user_id", user.id)
+      .eq("user_id", callerId)
       .eq("role", "super_admin")
       .limit(1);
 
@@ -79,7 +60,7 @@ serve(async (req) => {
       });
     }
 
-    const { tenant_id, email, tenant_name, contact_name } = body;
+    const { tenant_id, email } = body;
 
     if (!tenant_id || !email) {
       return new Response(
@@ -93,7 +74,7 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Check if user exists by trying to find them via email
+    // Check if user exists
     const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers({
       filter: { email },
     } as any);
@@ -143,40 +124,15 @@ serve(async (req) => {
 
     const inviteLink = linkData.properties?.action_link || "";
 
-    // Return response IMMEDIATELY - email sends in background
-    const response = new Response(
+    // Return immediately — no email sending here
+    return new Response(
       JSON.stringify({
         success: true,
         user_id: userId,
-        email_sent: true,
-        message: "Benutzer erstellt und Einladungs-E-Mail wird versendet.",
+        invite_link: inviteLink,
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
-
-    // Fire-and-forget: send email AFTER response (no await)
-    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-    if (RESEND_API_KEY && inviteLink) {
-      const displayName = tenant_name || "Ihr Unternehmen";
-      const greeting = contact_name ? `Hallo ${contact_name},` : "Sehr geehrte Damen und Herren,";
-
-      // Fire and forget - don't await, no DB query for template
-      fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${RESEND_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "GoBD-Suite <noreply@vd.gaetanoficarra.de>",
-          to: [email],
-          subject: defaultSubject,
-          html: defaultHtml(greeting, displayName, inviteLink),
-        }),
-      }).catch((err) => console.error("Email send failed:", err));
-    }
-
-    return response;
   } catch (e) {
     console.error("invite-tenant error:", e);
     return new Response(
