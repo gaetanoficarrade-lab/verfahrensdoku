@@ -134,15 +134,6 @@ export default function AdminSettingsGeneral() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Plattformname</Label>
-              <Input
-                value={form.platform_name}
-                onChange={(e) => setForm((p) => ({ ...p, platform_name: e.target.value }))}
-                placeholder="GoBD-Suite"
-              />
-            </div>
-
-            <div className="space-y-2">
               <Label>Support-E-Mail</Label>
               <Input
                 value={form.support_email}
