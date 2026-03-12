@@ -46,6 +46,15 @@ const ClientRegister = () => {
 
       setTokenValid(true);
       setTokenData(anyToken);
+      // Load tenant branding
+      if (anyToken.tenant_id) {
+        const { data: settings } = await supabase
+          .from('tenant_settings')
+          .select('brand_name, logo_url')
+          .eq('tenant_id', anyToken.tenant_id)
+          .maybeSingle();
+        if (settings) setTenantBranding(settings);
+      }
     };
     validate();
   }, [token]);
