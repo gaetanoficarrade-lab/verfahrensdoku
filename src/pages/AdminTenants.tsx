@@ -120,19 +120,8 @@ const AdminTenants = () => {
         // Auto-send invite email if contact_email is provided
         if (payload.contact_email && newTenant) {
           try {
-            const { data: invData, error: invError } = await supabase.functions.invoke('invite-tenant', {
-              body: {
-                tenant_id: newTenant.id,
-                email: payload.contact_email,
-                tenant_name: payload.name,
-                contact_name: payload.contact_name,
-              },
-            });
-            if (invError) throw invError;
-            if (invData?.error) throw new Error(invData.error);
-            if (invData?.email_sent) {
-              toast({ title: 'Einladungs-E-Mail versendet', description: `An ${payload.contact_email}` });
-            }
+            await sendTenantInvite(newTenant.id, payload.contact_email, payload.name, payload.contact_name);
+            toast({ title: 'Einladungs-E-Mail versendet', description: `An ${payload.contact_email}` });
           } catch (err: any) {
             console.error('Failed to send tenant invite:', err);
             toast({ variant: 'destructive', title: 'Einladung konnte nicht gesendet werden', description: err.message });
