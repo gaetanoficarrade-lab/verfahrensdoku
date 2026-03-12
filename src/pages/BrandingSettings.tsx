@@ -97,7 +97,7 @@ export default function BrandingSettings() {
       <div>
         <h1 className="text-2xl font-bold text-foreground">Branding & Einstellungen</h1>
         <p className="text-muted-foreground mt-1">
-          Passen Sie das Erscheinungsbild Ihrer GoBD-Suite an.
+          Passen Sie Name, Logo und Farben an. Diese werden in der Navigation, auf Registrierungsseiten und in E-Mails angezeigt.
         </p>
       </div>
 
