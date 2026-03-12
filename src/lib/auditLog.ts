@@ -31,10 +31,10 @@ export async function logAudit(
       .eq('user_id', user.id)
       .maybeSingle();
 
-    if (!profile?.tenant_id) return;
+    const tenantId = profile?.tenant_id || null;
 
     await supabase.from('audit_log').insert({
-      tenant_id: profile.tenant_id,
+      tenant_id: tenantId,
       user_id: user.id,
       action,
       entity_type: entityType,
