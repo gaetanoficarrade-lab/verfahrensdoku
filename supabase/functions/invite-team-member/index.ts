@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { loadEmailTemplate, applyPlaceholders } from "../_shared/email-templates.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -69,13 +70,9 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Create invite token — client_id is NULL for team invites
     const { data: invite, error: inviteError } = await supabaseAdmin
       .from("invite_tokens")
-      .insert({
-        tenant_id,
-        client_id: null,
-      })
+      .insert({ tenant_id, client_id: null })
       .select("id, token")
       .single();
 
@@ -97,13 +94,45 @@ serve(async (req) => {
       brandName = tenantSettings.brand_name;
     }
 
-    // Send invitation email if email provided
     let emailSent = false;
     if (email) {
       const inviteLink = `${APP_URL}/register?token=${invite.token}`;
       const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
       if (RESEND_API_KEY) {
         const roleName = assignRole === "tenant_admin" ? "Administrator" : "Mitarbeiter";
+        const placeholders: Record<string, string> = {
+          role_name: roleName,
+          brand_name: brandName,
+          link: inviteLink,
+        };
+
+        const customTemplate = await loadEmailTemplate("team_invite");
+        const subject = customTemplate
+          ? applyPlaceholders(customTemplate.subject, placeholders)
+          : `Teameinladung – ${brandName}`;
+        const html = customTemplate
+          ? applyPlaceholders(customTemplate.html, placeholders)
+          : `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <h2 style="color: #1a1a1a;">Einladung zum Team</h2>
+              <p style="color: #555; font-size: 16px; line-height: 1.6;">
+                Sie wurden als <strong>${roleName}</strong> in das Team von ${brandName} eingeladen.
+              </p>
+              <p style="color: #555; font-size: 16px; line-height: 1.6;">
+                Klicken Sie auf den folgenden Link, um sich zu registrieren:
+              </p>
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${inviteLink}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">
+                  Registrierung starten
+                </a>
+              </div>
+              <p style="color: #999; font-size: 13px;">
+                Falls der Button nicht funktioniert, kopieren Sie diesen Link in Ihren Browser:<br/>
+                <a href="${inviteLink}" style="color: #999;">${inviteLink}</a>
+              </p>
+              <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
+              <p style="color: #999; font-size: 12px;">Diese E-Mail wurde von ${brandName} versendet.</p>
+            </div>`;
+
         const emailRes = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: {
@@ -113,31 +142,8 @@ serve(async (req) => {
           body: JSON.stringify({
             from: `${brandName} <noreply@vd.gaetanoficarra.de>`,
             to: [email],
-            subject: `Teameinladung – ${brandName}`,
-            html: `
-              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-                <h2 style="color: #1a1a1a;">Einladung zum Team</h2>
-                <p style="color: #555; font-size: 16px; line-height: 1.6;">
-                  Sie wurden als <strong>${roleName}</strong> in das Team von ${brandName} eingeladen.
-                </p>
-                <p style="color: #555; font-size: 16px; line-height: 1.6;">
-                  Klicken Sie auf den folgenden Link, um sich zu registrieren:
-                </p>
-                <div style="text-align: center; margin: 30px 0;">
-                  <a href="${inviteLink}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">
-                    Registrierung starten
-                  </a>
-                </div>
-                <p style="color: #999; font-size: 13px;">
-                  Falls der Button nicht funktioniert, kopieren Sie diesen Link in Ihren Browser:<br/>
-                  <a href="${inviteLink}" style="color: #999;">${inviteLink}</a>
-                </p>
-                <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
-                <p style="color: #999; font-size: 12px;">
-                  Diese E-Mail wurde von ${brandName} versendet.
-                </p>
-              </div>
-            `,
+            subject,
+            html,
           }),
         });
         emailSent = emailRes.ok;
