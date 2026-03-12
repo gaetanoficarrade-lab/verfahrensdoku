@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, FolderOpen, Plus, UserPlus, Mail, Lock, Copy, Check, Send, Trash2, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Loader2, FolderOpen, Plus, UserPlus, Mail, Lock, Copy, Check, Send, Trash2, AlertTriangle, RefreshCw, Clock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
