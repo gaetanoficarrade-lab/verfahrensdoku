@@ -61,6 +61,13 @@ export default function ClientDetail() {
   const [inviteLink, setInviteLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
+  // Pending invites
+  const [pendingInvites, setPendingInvites] = useState<Array<{ id: string; token: string; created_at: string; expires_at: string }>>([]);
+  const [resendingInvite, setResendingInvite] = useState<string | null>(null);
+  const [resendEmail, setResendEmail] = useState('');
+  const [showResendDialog, setShowResendDialog] = useState(false);
+  const [selectedResendToken, setSelectedResendToken] = useState<string | null>(null);
+
   useEffect(() => {
     if (!id || !effectiveTenantId) return;
     const fetch = async () => {
