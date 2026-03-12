@@ -73,7 +73,9 @@ const Register = () => {
     });
 
     if (error) {
-      toast({ variant: 'destructive', title: 'Registrierung fehlgeschlagen', description: error.message });
+      console.error('Registration error:', JSON.stringify(error, null, 2), error);
+      const msg = error.message || error.error_description || error.msg || JSON.stringify(error);
+      toast({ variant: 'destructive', title: 'Registrierung fehlgeschlagen', description: msg });
     } else {
       toast({
         title: 'Registrierung erfolgreich',
