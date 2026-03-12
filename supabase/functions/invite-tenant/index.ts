@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { loadEmailTemplate, applyPlaceholders } from "../_shared/email-templates.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -8,6 +9,28 @@ const corsHeaders = {
 };
 
 const APP_URL = "https://vd.gaetanoficarra.de";
+
+const defaultSubject = "Willkommen bei GoBD-Suite – Ihr Zugang";
+const defaultHtml = (greeting: string, displayName: string, inviteLink: string) => `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <h2 style="color: #1a1a1a;">Willkommen bei GoBD-Suite</h2>
+  <p style="color: #555; font-size: 16px; line-height: 1.6;">${greeting}</p>
+  <p style="color: #555; font-size: 16px; line-height: 1.6;">
+    Ihr Lizenznehmer-Konto <strong>${displayName}</strong> wurde erstellt. 
+    Bitte klicken Sie auf den folgenden Link, um Ihren persönlichen Zugang einzurichten:
+  </p>
+  <div style="text-align: center; margin: 30px 0;">
+    <a href="${inviteLink}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">
+      Zugang einrichten
+    </a>
+  </div>
+  <p style="color: #999; font-size: 13px;">
+    Falls der Button nicht funktioniert, kopieren Sie diesen Link in Ihren Browser:<br/>
+    <a href="${inviteLink}" style="color: #999;">${inviteLink}</a>
+  </p>
+  <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
+  <p style="color: #999; font-size: 12px;">Der Link ist 7 Tage gültig. Diese E-Mail wurde von GoBD-Suite versendet.</p>
+</div>`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -39,7 +62,6 @@ serve(async (req) => {
 
     const callerId = user.id;
 
-    // Only super_admin can invite tenants
     const { data: callerRoles } = await supabaseAuth
       .from("user_roles")
       .select("role")
@@ -67,13 +89,9 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Create invite token for tenant (client_id is NULL)
     const { data: invite, error: inviteError } = await supabaseAdmin
       .from("invite_tokens")
-      .insert({
-        tenant_id,
-        client_id: null,
-      })
+      .insert({ tenant_id, client_id: null })
       .select("id, token")
       .single();
 
@@ -84,7 +102,6 @@ serve(async (req) => {
       });
     }
 
-    // Send invitation email
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     let emailSent = false;
 
@@ -92,6 +109,23 @@ serve(async (req) => {
       const inviteLink = `${APP_URL}/register?token=${invite.token}`;
       const displayName = tenant_name || "Ihr Unternehmen";
       const greeting = contact_name ? `Hallo ${contact_name},` : "Sehr geehrte Damen und Herren,";
+
+      const placeholders: Record<string, string> = {
+        greeting,
+        tenant_name: displayName,
+        plattform: "GoBD-Suite",
+        brand_name: "GoBD-Suite",
+        link: inviteLink,
+      };
+
+      // Try loading custom template from DB
+      const customTemplate = await loadEmailTemplate("tenant_invite");
+      const subject = customTemplate
+        ? applyPlaceholders(customTemplate.subject, placeholders)
+        : defaultSubject;
+      const html = customTemplate
+        ? applyPlaceholders(customTemplate.html, placeholders)
+        : defaultHtml(greeting, displayName, inviteLink);
 
       const emailRes = await fetch("https://api.resend.com/emails", {
         method: "POST",
@@ -102,32 +136,8 @@ serve(async (req) => {
         body: JSON.stringify({
           from: "GoBD-Suite <noreply@vd.gaetanoficarra.de>",
           to: [email],
-          subject: "Willkommen bei GoBD-Suite – Ihr Zugang",
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-              <h2 style="color: #1a1a1a;">Willkommen bei GoBD-Suite</h2>
-              <p style="color: #555; font-size: 16px; line-height: 1.6;">
-                ${greeting}
-              </p>
-              <p style="color: #555; font-size: 16px; line-height: 1.6;">
-                Ihr Lizenznehmer-Konto <strong>${displayName}</strong> wurde erstellt. 
-                Bitte klicken Sie auf den folgenden Link, um Ihren persönlichen Zugang einzurichten:
-              </p>
-              <div style="text-align: center; margin: 30px 0;">
-                <a href="${inviteLink}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">
-                  Zugang einrichten
-                </a>
-              </div>
-              <p style="color: #999; font-size: 13px;">
-                Falls der Button nicht funktioniert, kopieren Sie diesen Link in Ihren Browser:<br/>
-                <a href="${inviteLink}" style="color: #999;">${inviteLink}</a>
-              </p>
-              <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
-              <p style="color: #999; font-size: 12px;">
-                Der Link ist 7 Tage gültig. Diese E-Mail wurde von GoBD-Suite versendet.
-              </p>
-            </div>
-          `,
+          subject,
+          html,
         }),
       });
 
