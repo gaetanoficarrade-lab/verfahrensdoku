@@ -160,14 +160,6 @@ serve(async (req) => {
       const displayName = tenant_name || "Ihr Unternehmen";
       const greeting = contact_name ? `Hallo ${contact_name},` : "Sehr geehrte Damen und Herren,";
 
-      const placeholders: Record<string, string> = {
-        greeting,
-        tenant_name: displayName,
-        plattform: "GoBD-Suite",
-        brand_name: "GoBD-Suite",
-        link: inviteLink,
-      };
-
       // Fire and forget - don't await, no DB query for template
       fetch("https://api.resend.com/emails", {
         method: "POST",
