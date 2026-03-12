@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Building2, Plus, Pencil, Trash2, Power, PowerOff, Eye, Send, Loader2, X,
+  Building2, Plus, Pencil, Trash2, Power, PowerOff, Eye, Send, Loader2, X, RefreshCw, Mail,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -52,6 +52,12 @@ const AdminTenants = () => {
   const { toast } = useToast();
   const { startImpersonation } = useAuthContext();
   const navigate = useNavigate();
+
+  // Resend invite state
+  const [showResendDialog, setShowResendDialog] = useState(false);
+  const [resendTenant, setResendTenant] = useState<Tenant | null>(null);
+  const [resendEmail, setResendEmail] = useState('');
+  const [resending, setResending] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -104,11 +110,34 @@ const AdminTenants = () => {
         toast({ title: 'Lizenznehmer aktualisiert.' });
       }
     } else {
-      const { error } = await supabase.from('tenants').insert(payload);
+      // Create tenant
+      const { data: newTenant, error } = await supabase.from('tenants').insert(payload).select('id').single();
       if (error) {
         toast({ variant: 'destructive', title: 'Fehler', description: error.message });
       } else {
         toast({ title: 'Lizenznehmer erstellt.' });
+
+        // Auto-send invite email if contact_email is provided
+        if (payload.contact_email && newTenant) {
+          try {
+            const { data: invData, error: invError } = await supabase.functions.invoke('invite-tenant', {
+              body: {
+                tenant_id: newTenant.id,
+                email: payload.contact_email,
+                tenant_name: payload.name,
+                contact_name: payload.contact_name,
+              },
+            });
+            if (invError) throw invError;
+            if (invData?.error) throw new Error(invData.error);
+            if (invData?.email_sent) {
+              toast({ title: 'Einladungs-E-Mail versendet', description: `An ${payload.contact_email}` });
+            }
+          } catch (err: any) {
+            console.error('Failed to send tenant invite:', err);
+            toast({ variant: 'destructive', title: 'Einladung konnte nicht gesendet werden', description: err.message });
+          }
+        }
       }
     }
     setSaving(false);
@@ -145,6 +174,29 @@ const AdminTenants = () => {
   const handleImpersonate = (t: Tenant) => {
     startImpersonation(t.id, t.name);
     navigate('/');
+  };
+
+  const handleResendInvite = async () => {
+    if (!resendTenant || !resendEmail.trim()) return;
+    setResending(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('invite-tenant', {
+        body: {
+          tenant_id: resendTenant.id,
+          email: resendEmail.trim(),
+          tenant_name: resendTenant.name,
+          contact_name: resendTenant.contact_name,
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      toast({ title: 'Einladung versendet', description: `An ${resendEmail.trim()}` });
+      setShowResendDialog(false);
+    } catch (err: any) {
+      toast({ variant: 'destructive', title: 'Fehler', description: err.message });
+    } finally {
+      setResending(false);
+    }
   };
 
   const getPlanName = (planId: string | null) => {
@@ -206,6 +258,18 @@ const AdminTenants = () => {
                   <Badge variant={tenant.is_active ? 'default' : 'secondary'} className="mr-2">
                     {tenant.is_active ? 'Aktiv' : 'Inaktiv'}
                   </Badge>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      setResendTenant(tenant);
+                      setResendEmail(tenant.contact_email || '');
+                      setShowResendDialog(true);
+                    }}
+                    title="Einladung senden"
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
                   <Button variant="ghost" size="icon" onClick={() => openEdit(tenant)} title="Bearbeiten">
                     <Pencil className="h-4 w-4" />
                   </Button>
@@ -242,7 +306,7 @@ const AdminTenants = () => {
           <DialogHeader>
             <DialogTitle>{editingTenant ? 'Lizenznehmer bearbeiten' : 'Neuer Lizenznehmer'}</DialogTitle>
             <DialogDescription>
-              {editingTenant ? 'Daten des Lizenznehmers ändern.' : 'Neuen Lizenznehmer anlegen.'}
+              {editingTenant ? 'Daten des Lizenznehmers ändern.' : 'Neuen Lizenznehmer anlegen. Bei Angabe einer E-Mail wird automatisch eine Einladung versendet.'}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
@@ -301,6 +365,42 @@ const AdminTenants = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Resend Invite Dialog */}
+      <Dialog open={showResendDialog} onOpenChange={setShowResendDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Einladung senden</DialogTitle>
+            <DialogDescription>
+              Senden Sie eine Einladungs-E-Mail an <strong>{resendTenant?.name}</strong>.
+              Der Empfänger erhält einen Link zur Registrierung.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>E-Mail-Adresse</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  type="email"
+                  value={resendEmail}
+                  onChange={(e) => setResendEmail(e.target.value)}
+                  className="pl-10"
+                  placeholder="kontakt@kanzlei.de"
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowResendDialog(false)}>Abbrechen</Button>
+            <Button onClick={handleResendInvite} disabled={!resendEmail.trim() || resending}>
+              {resending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              <Send className="h-4 w-4 mr-1" />
+              Einladung senden
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
