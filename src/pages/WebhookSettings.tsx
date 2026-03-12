@@ -41,6 +41,15 @@ interface WebhookLog {
   created_at: string;
 }
 
+interface ApiKey {
+  id: string;
+  name: string;
+  api_key: string;
+  is_active: boolean;
+  created_at: string;
+  last_used_at: string | null;
+}
+
 export default function WebhookSettings() {
   const { effectiveTenantId } = useAuthContext();
   const [webhooks, setWebhooks] = useState<Webhook[]>([]);
