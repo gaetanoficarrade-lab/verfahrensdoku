@@ -24,6 +24,7 @@ const Register = () => {
   const [tokenData, setTokenData] = useState<any>(null);
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [tenantBranding, setTenantBranding] = useState<{ brand_name?: string; logo_url?: string } | null>(null);
   const { signUp } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -40,10 +41,24 @@ const Register = () => {
         .eq('is_active', true)
         .gt('expires_at', new Date().toISOString())
         .maybeSingle();
-      if (error || !data) { setTokenValid(false); } else { setTokenValid(true); setTokenData(data); }
+      if (error || !data) { setTokenValid(false); return; }
+      setTokenValid(true);
+      setTokenData(data);
+      // Load tenant branding
+      if (data.tenant_id) {
+        const { data: settings } = await supabase
+          .from('tenant_settings')
+          .select('brand_name, logo_url')
+          .eq('tenant_id', data.tenant_id)
+          .maybeSingle();
+        if (settings) setTenantBranding(settings);
+      }
     };
     validate();
   }, [token]);
+
+  const brandName = tenantBranding?.brand_name || 'GoBD-Suite';
+  const logoUrl = tenantBranding?.logo_url;
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
