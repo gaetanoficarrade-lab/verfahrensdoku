@@ -1,123 +1,55 @@
 import { EmailTemplateMap } from '@/components/EmailTemplateEditor';
 
-const defaultBaseLayout = (content: string) => `
-<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-  {{logo_url ? '<img src="{{logo_url}}" alt="Logo" style="max-height: 48px; margin-bottom: 20px;" />' : ''}}
-  ${content}
-  <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
-  <p style="color: #999; font-size: 12px;">
-    Diese E-Mail wurde von {{brand_name}} versendet.
-  </p>
-</div>`;
-
 export const defaultTemplates: EmailTemplateMap = {
   tenant_invite: {
     subject: 'Willkommen bei {{plattform}} – Ihr Zugang',
-    html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <h2 style="color: #1a1a1a;">Willkommen bei {{plattform}}</h2>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">{{greeting}}</p>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">
-    Ihr Lizenznehmer-Konto <strong>{{tenant_name}}</strong> wurde erstellt. 
-    Bitte klicken Sie auf den folgenden Link, um Ihren persönlichen Zugang einzurichten:
-  </p>
-  <div style="text-align: center; margin: 30px 0;">
-    <a href="{{link}}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">Zugang einrichten</a>
-  </div>
-  <p style="color: #999; font-size: 13px;">Falls der Button nicht funktioniert:<br/><a href="{{link}}" style="color: #999;">{{link}}</a></p>
-  <p style="color: #999; font-size: 12px;">Der Link ist 7 Tage gültig.</p>
-  <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
-  <p style="color: #999; font-size: 12px;">Diese E-Mail wurde von {{brand_name}} versendet.</p>
-</div>`,
+    heading: 'Willkommen bei {{plattform}}',
+    body: '{{greeting}}\nIhr Lizenznehmer-Konto <strong>{{tenant_name}}</strong> wurde erstellt.\nBitte klicken Sie auf den folgenden Button, um Ihren persönlichen Zugang einzurichten:',
+    buttonText: 'Zugang einrichten',
+    footerNote: 'Der Link ist 7 Tage gültig.',
   },
   client_invite: {
     subject: 'Einladung zur Verfahrensdokumentation – {{brand_name}}',
-    html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <h2 style="color: #1a1a1a;">Einladung zur Verfahrensdokumentation</h2>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">Sie wurden eingeladen, an einer Verfahrensdokumentation nach GoBD mitzuarbeiten.</p>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">Klicken Sie auf den folgenden Link, um sich zu registrieren:</p>
-  <div style="text-align: center; margin: 30px 0;">
-    <a href="{{link}}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">Registrierung starten</a>
-  </div>
-  <p style="color: #999; font-size: 13px;">Falls der Button nicht funktioniert:<br/><a href="{{link}}" style="color: #999;">{{link}}</a></p>
-  <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
-  <p style="color: #999; font-size: 12px;">Diese E-Mail wurde von {{brand_name}} versendet.</p>
-</div>`,
+    heading: 'Einladung zur Verfahrensdokumentation',
+    body: 'Sie wurden eingeladen, an einer Verfahrensdokumentation nach GoBD mitzuarbeiten.\nKlicken Sie auf den folgenden Button, um sich zu registrieren:',
+    buttonText: 'Registrierung starten',
   },
   team_invite: {
     subject: 'Teameinladung – {{brand_name}}',
-    html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <h2 style="color: #1a1a1a;">Einladung zum Team</h2>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">Sie wurden als <strong>{{role_name}}</strong> in das Team von {{brand_name}} eingeladen.</p>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">Klicken Sie auf den folgenden Link, um sich zu registrieren:</p>
-  <div style="text-align: center; margin: 30px 0;">
-    <a href="{{link}}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">Registrierung starten</a>
-  </div>
-  <p style="color: #999; font-size: 13px;">Falls der Button nicht funktioniert:<br/><a href="{{link}}" style="color: #999;">{{link}}</a></p>
-  <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
-  <p style="color: #999; font-size: 12px;">Diese E-Mail wurde von {{brand_name}} versendet.</p>
-</div>`,
+    heading: 'Einladung zum Team',
+    body: 'Sie wurden als <strong>{{role_name}}</strong> in das Team von {{brand_name}} eingeladen.\nKlicken Sie auf den folgenden Button, um sich zu registrieren:',
+    buttonText: 'Registrierung starten',
   },
   password_reset: {
     subject: 'Passwort zurücksetzen – {{plattform}}',
-    html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <h2 style="color: #1a1a1a;">Passwort zurücksetzen</h2>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">Sie haben ein neues Passwort für Ihren {{plattform}}-Zugang angefordert.</p>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">Klicken Sie auf den folgenden Link, um Ihr Passwort zu ändern:</p>
-  <div style="text-align: center; margin: 30px 0;">
-    <a href="{{link}}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">Passwort ändern</a>
-  </div>
-  <p style="color: #555; font-size: 14px;">Wenn Sie diese Anforderung nicht gestellt haben, können Sie diese E-Mail ignorieren.</p>
-  <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
-  <p style="color: #999; font-size: 12px;">Diese E-Mail wurde von {{brand_name}} versendet.</p>
-</div>`,
+    heading: 'Passwort zurücksetzen',
+    body: 'Sie haben ein neues Passwort für Ihren {{plattform}}-Zugang angefordert.\nKlicken Sie auf den folgenden Button, um Ihr Passwort zu ändern:',
+    buttonText: 'Passwort ändern',
+    footerNote: 'Wenn Sie diese Anforderung nicht gestellt haben, können Sie diese E-Mail ignorieren.',
   },
   notification_chapter_submitted: {
     subject: 'Kapitel eingereicht – {{brand_name}}',
-    html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <h2 style="color: #1a1a1a;">Kapitel eingereicht</h2>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">Mandant "<strong>{{client_name}}</strong>" hat Kapitel "<strong>{{chapter_name}}</strong>" eingereicht.</p>
-  <div style="text-align: center; margin: 30px 0;">
-    <a href="{{link}}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">Jetzt ansehen</a>
-  </div>
-  <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
-  <p style="color: #999; font-size: 12px;">Diese E-Mail wurde von {{brand_name}} versendet.</p>
-</div>`,
+    heading: 'Kapitel eingereicht',
+    body: 'Mandant "<strong>{{client_name}}</strong>" hat Kapitel "<strong>{{chapter_name}}</strong>" eingereicht.',
+    buttonText: 'Jetzt ansehen',
   },
   notification_chapter_approved: {
     subject: 'Kapitel freigegeben – {{brand_name}}',
-    html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <h2 style="color: #1a1a1a;">Kapitel freigegeben</h2>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">Ihr Kapitel "<strong>{{chapter_name}}</strong>" wurde freigegeben.</p>
-  <div style="text-align: center; margin: 30px 0;">
-    <a href="{{link}}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">Jetzt ansehen</a>
-  </div>
-  <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
-  <p style="color: #999; font-size: 12px;">Diese E-Mail wurde von {{brand_name}} versendet.</p>
-</div>`,
+    heading: 'Kapitel freigegeben',
+    body: 'Ihr Kapitel "<strong>{{chapter_name}}</strong>" wurde freigegeben.',
+    buttonText: 'Jetzt ansehen',
   },
   notification_document_finalized: {
     subject: 'Verfahrensdokumentation fertiggestellt – {{brand_name}}',
-    html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <h2 style="color: #1a1a1a;">Verfahrensdokumentation fertig</h2>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">Ihre Verfahrensdokumentation "<strong>{{project_name}}</strong>" ist fertiggestellt.</p>
-  <div style="text-align: center; margin: 30px 0;">
-    <a href="{{link}}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">Jetzt ansehen</a>
-  </div>
-  <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
-  <p style="color: #999; font-size: 12px;">Diese E-Mail wurde von {{brand_name}} versendet.</p>
-</div>`,
+    heading: 'Verfahrensdokumentation fertig',
+    body: 'Ihre Verfahrensdokumentation "<strong>{{project_name}}</strong>" ist fertiggestellt.',
+    buttonText: 'Jetzt ansehen',
   },
   notification_new_tenant: {
     subject: 'Neuer Lizenznehmer – {{plattform}}',
-    html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <h2 style="color: #1a1a1a;">Neuer Lizenznehmer</h2>
-  <p style="color: #555; font-size: 16px; line-height: 1.6;">Neuer Lizenznehmer "<strong>{{tenant_name}}</strong>" hat sich registriert.</p>
-  <div style="text-align: center; margin: 30px 0;">
-    <a href="{{link}}" style="background-color: #1a1a1a; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">Jetzt ansehen</a>
-  </div>
-  <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;"/>
-  <p style="color: #999; font-size: 12px;">Diese E-Mail wurde von {{brand_name}} versendet.</p>
-</div>`,
+    heading: 'Neuer Lizenznehmer',
+    body: 'Neuer Lizenznehmer "<strong>{{tenant_name}}</strong>" hat sich registriert.',
+    buttonText: 'Jetzt ansehen',
   },
 };
 
@@ -147,7 +79,6 @@ export const adminCategories = [
   },
 ];
 
-// Tenant-level: only templates relevant to tenant (no tenant_invite, no new_tenant)
 export const tenantCategories = [
   {
     label: 'Einladungen',
