@@ -33,3 +33,6 @@ verify_jwt = false
 
 [functions.resend-invite]
 verify_jwt = false
+
+[functions.invite-tenant]
+verify_jwt = false
