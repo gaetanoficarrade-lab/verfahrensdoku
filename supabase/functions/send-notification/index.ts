@@ -98,9 +98,10 @@ Deno.serve(async (req) => {
       const appUrl = 'https://vd.gaetanoficarra.de';
       const fullLink = link ? `${appUrl}${link}` : appUrl;
 
-      // Try to load custom template
       const templateKey = typeToTemplateKey[type];
-      const customTemplate = templateKey ? await loadEmailTemplate(templateKey) : null;
+      const { template: customTemplate, logoUrl } = templateKey
+        ? await loadEmailTemplate(templateKey, tenant_id)
+        : { template: null, logoUrl: null };
 
       const placeholders: Record<string, string> = {
         brand_name: brandName,
@@ -113,11 +114,11 @@ Deno.serve(async (req) => {
       };
 
       const emailSubject = customTemplate
-        ? applyPlaceholders(customTemplate.subject, placeholders)
+        ? applyPlaceholders(customTemplate.subject, placeholders, logoUrl)
         : `${title} – ${brandName}`;
 
       const emailHtml = customTemplate
-        ? applyPlaceholders(customTemplate.html, placeholders)
+        ? applyPlaceholders(customTemplate.html, placeholders, logoUrl)
         : `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <h2 style="color: #1a1a1a;">${title}</h2>
             <p style="color: #555; font-size: 16px; line-height: 1.6;">${message}</p>

@@ -43,6 +43,7 @@ import ClientSettings from "./pages/ClientSettings";
 import TrialExpired from "./pages/TrialExpired";
 import AdvisorOverview from "./pages/AdvisorOverview";
 import TemplateSettings from "./pages/TemplateSettings";
+import TenantEmailSettings from "./pages/TenantEmailSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -240,6 +241,14 @@ const App = () => (
                 element={
                   <ProtectedRoute requiredRoles={['tenant_admin']}>
                     <AppLayout><TeamSettings /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/email"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin']}>
+                    <AppLayout><TenantEmailSettings /></AppLayout>
                   </ProtectedRoute>
                 }
               />
