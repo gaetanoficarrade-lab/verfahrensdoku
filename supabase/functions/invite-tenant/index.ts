@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { loadEmailTemplate, applyPlaceholders } from "../_shared/email-templates.ts";
+
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -160,37 +160,20 @@ serve(async (req) => {
       const displayName = tenant_name || "Ihr Unternehmen";
       const greeting = contact_name ? `Hallo ${contact_name},` : "Sehr geehrte Damen und Herren,";
 
-      const placeholders: Record<string, string> = {
-        greeting,
-        tenant_name: displayName,
-        plattform: "GoBD-Suite",
-        brand_name: "GoBD-Suite",
-        link: inviteLink,
-      };
-
-      // Fire and forget - don't await
-      loadEmailTemplate("tenant_invite").then(({ template: customTemplate, logoUrl }) => {
-        const subject = customTemplate
-          ? applyPlaceholders(customTemplate.subject, placeholders, logoUrl)
-          : defaultSubject;
-        const html = customTemplate
-          ? applyPlaceholders(customTemplate.html, placeholders, logoUrl)
-          : defaultHtml(greeting, displayName, inviteLink);
-
-        fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${RESEND_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            from: "GoBD-Suite <noreply@vd.gaetanoficarra.de>",
-            to: [email],
-            subject,
-            html,
-          }),
-        }).catch((err) => console.error("Email send failed:", err));
-      }).catch((err) => console.error("Email template load failed:", err));
+      // Fire and forget - don't await, no DB query for template
+      fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "GoBD-Suite <noreply@vd.gaetanoficarra.de>",
+          to: [email],
+          subject: defaultSubject,
+          html: defaultHtml(greeting, displayName, inviteLink),
+        }),
+      }).catch((err) => console.error("Email send failed:", err));
     }
 
     return response;
