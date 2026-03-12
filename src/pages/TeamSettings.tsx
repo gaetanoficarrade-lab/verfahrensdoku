@@ -158,6 +158,28 @@ export default function TeamSettings() {
     }
   };
 
+  const handleResendInvite = async () => {
+    if (!selectedResendToken || !resendEmail.trim()) return;
+    setResendingInvite(selectedResendToken);
+    try {
+      const { data, error } = await supabase.functions.invoke('resend-invite', {
+        body: {
+          invite_token: selectedResendToken,
+          email: resendEmail.trim(),
+          type: 'team',
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      toast.success('Einladung erneut versendet.');
+      setShowResendDialog(false);
+    } catch (err: any) {
+      toast.error(err.message || 'Fehler beim erneuten Versenden.');
+    } finally {
+      setResendingInvite(null);
+    }
+  };
+
   const handleChangeRole = async (memberId: string, currentRoles: string[], newRole: string) => {
     if (memberId === user?.id) {
       toast.error('Sie können Ihre eigene Rolle nicht ändern.');
