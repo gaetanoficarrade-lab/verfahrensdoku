@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Settings, Scale, Mail, CreditCard, Activity, Tag } from 'lucide-react';
+import { Settings, Scale, Mail, CreditCard, Activity, Tag, ScrollText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const settingsNav = [
