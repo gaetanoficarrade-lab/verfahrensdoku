@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = 'https://supabase.gaetanoficarra.de';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNjQxNzY5MjAwLCJleHAiOjE3OTk1MzU2MDB9.ayn7R9jwFZYZCHSFQcpggY8DpS3jIXXm1gFBgeOFdtE';
+const SUPABASE_ANON_KEY = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc3MzQxNDQyMCwiZXhwIjo0OTI5MDg4MDIwLCJyb2xlIjoiYW5vbiJ9.6Vo3MBl7aXFVyFFRlMY_FFFjpZLZaoDbdp9tIdGdhko';
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
