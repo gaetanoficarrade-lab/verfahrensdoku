@@ -258,7 +258,7 @@ export default function AdminAffiliates() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Lizenznehmer</TableHead>
+                <TableHead>Unterkonto</TableHead>
                 <TableHead>Slug</TableHead>
                 <TableHead className="text-right">Klicks</TableHead>
                 <TableHead className="text-right">Conversions</TableHead>

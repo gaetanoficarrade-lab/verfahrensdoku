@@ -379,7 +379,7 @@ const AdminTenants = () => {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Lizenznehmer löschen?</AlertDialogTitle>
+            <AlertDialogTitle>Unterkonto löschen?</AlertDialogTitle>
             <AlertDialogDescription>
               <strong>{deletingTenant?.name}</strong> und alle zugehörigen Daten werden unwiderruflich gelöscht.
             </AlertDialogDescription>

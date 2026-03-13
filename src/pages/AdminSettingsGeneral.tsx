@@ -178,7 +178,7 @@ export default function AdminSettingsGeneral() {
             <div className="flex items-center justify-between">
               <div>
                 <Label>Testphase aktivieren</Label>
-                <p className="text-xs text-muted-foreground">Gilt für alle neu angelegten Lizenznehmer</p>
+                <p className="text-xs text-muted-foreground">Gilt für alle neu angelegten Unterkonten</p>
               </div>
               <Switch
                 checked={platformSettings.trial_enabled === 'true'}

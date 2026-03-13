@@ -62,8 +62,8 @@ Deno.serve(async (req) => {
         link = `/client/projects/${data.project_id}`;
         break;
       case 'new_tenant':
-        title = 'Neuer Lizenznehmer';
-        message = `Neuer Lizenznehmer "${data.tenant_name}" hat sich registriert.`;
+        title = 'Neues Unterkonto';
+        message = `Neues Unterkonto "${data.tenant_name}" hat sich registriert.`;
         link = '/admin/tenants';
         break;
     }
