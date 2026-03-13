@@ -43,7 +43,7 @@ const adminItems = [
   { title: 'Dashboard', url: '/admin', icon: LayoutDashboard },
   { title: 'Unterkonten', url: '/admin/tenants', icon: Building2 },
   { title: 'Affiliates', url: '/admin/affiliates', icon: Link2 },
-  { title: 'Audit-Log', url: '/audit-log', icon: ScrollText },
+  
   { title: 'Einstellungen', url: '/admin/settings/general', icon: Settings },
 ];
 
