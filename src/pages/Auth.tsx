@@ -182,15 +182,23 @@ const Auth = () => {
           </CardContent>
         </Card>
 
-        <div className="mt-6 flex items-center justify-center gap-4 text-xs text-muted-foreground">
-          <a href="https://gaetanoficarra.de/datenschutz" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline-offset-4 hover:underline">
-            Datenschutz
-          </a>
-          <span>·</span>
-          <a href="https://gaetanoficarra.de/impressum" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline-offset-4 hover:underline">
-            Impressum
-          </a>
-        </div>
+        {(legalSettings.privacy_url || legalSettings.privacy_text || legalSettings.imprint_url || legalSettings.imprint_text) && (
+          <div className="mt-6 flex items-center justify-center gap-4 text-xs text-muted-foreground">
+            {(legalSettings.privacy_url || legalSettings.privacy_text) && (
+              <a href={legalSettings.privacy_url || '#'} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline-offset-4 hover:underline">
+                Datenschutz
+              </a>
+            )}
+            {(legalSettings.privacy_url || legalSettings.privacy_text) && (legalSettings.imprint_url || legalSettings.imprint_text) && (
+              <span>·</span>
+            )}
+            {(legalSettings.imprint_url || legalSettings.imprint_text) && (
+              <a href={legalSettings.imprint_url || '#'} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline-offset-4 hover:underline">
+                Impressum
+              </a>
+            )}
+          </div>
+        )}
       </motion.div>
     </div>
   );
