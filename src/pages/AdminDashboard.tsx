@@ -208,7 +208,7 @@ const AdminDashboard = () => {
           <div className="space-y-2">
             {tenants.length === 0 && (
               <p className="text-sm text-muted-foreground py-4 text-center">
-                Noch keine Lizenznehmer vorhanden.
+                Noch keine Unterkonten vorhanden.
               </p>
             )}
             {tenants.map((tenant) => (
