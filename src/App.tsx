@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { TenantBrandingProvider } from "@/components/TenantBrandingProvider";
 import { AppLayout } from "@/components/AppLayout";
+import { AdminSettingsLayout } from "@/components/AdminSettingsLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Auth from "./pages/Auth";
 import Register from "./pages/Register";
