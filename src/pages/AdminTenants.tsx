@@ -64,7 +64,7 @@ const AdminTenants = () => {
   <h2 style="color: #1a1a1a;">Willkommen bei GoBD-Suite</h2>
   <p style="color: #555; font-size: 16px; line-height: 1.6;">${greeting}</p>
   <p style="color: #555; font-size: 16px; line-height: 1.6;">
-    Ihr Lizenznehmer-Konto <strong>${displayName}</strong> wurde erstellt. 
+    Ihr Unterkonto <strong>${displayName}</strong> wurde erstellt. 
     Bitte klicken Sie auf den folgenden Link, um Ihr Passwort festzulegen:
   </p>
   <div style="text-align: center; margin: 30px 0;">
