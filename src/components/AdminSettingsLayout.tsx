@@ -10,6 +10,7 @@ const settingsNav = [
   { title: 'Pläne', url: '/admin/settings/plans', icon: CreditCard },
   { title: 'Rabatt-Codes', url: '/admin/settings/promo-codes', icon: Tag },
   { title: 'System', url: '/admin/settings/system', icon: Activity },
+  { title: 'Audit-Log', url: '/admin/settings/audit-log', icon: ScrollText },
 ];
 
 interface AdminSettingsLayoutProps {

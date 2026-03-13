@@ -97,10 +97,10 @@ const App = () => (
                 }
               />
               <Route
-                path="/audit-log"
+                path="/admin/settings/audit-log"
                 element={
                   <ProtectedRoute requiredRoles={['super_admin']}>
-                    <AppLayout><AuditLog /></AppLayout>
+                    <AppLayout><AdminSettingsLayout><AuditLog /></AdminSettingsLayout></AppLayout>
                   </ProtectedRoute>
                 }
               />
