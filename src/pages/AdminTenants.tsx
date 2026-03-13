@@ -200,7 +200,7 @@ const AdminTenants = () => {
     if (error) {
       toast({ variant: 'destructive', title: 'Fehler', description: error.message });
     } else {
-      toast({ title: 'Lizenznehmer gelöscht.' });
+      toast({ title: 'Unterkonto gelöscht.' });
       fetchData();
     }
     setDeleteDialogOpen(false);
