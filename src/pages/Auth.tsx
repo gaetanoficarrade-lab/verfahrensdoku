@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Shield, Mail, Lock, Loader2, Eye, EyeOff } from 'lucide-react';
@@ -15,9 +16,25 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isResetMode, setIsResetMode] = useState(false);
+  const [legalSettings, setLegalSettings] = useState<{ imprint_url?: string; privacy_url?: string; imprint_text?: string; privacy_text?: string }>({});
   const { signIn, resetPassword, session, loading } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Fetch platform legal settings (no auth needed)
+  useEffect(() => {
+    const fetchLegal = async () => {
+      const { data } = await supabase
+        .from('platform_settings')
+        .select('value')
+        .eq('key', 'legal')
+        .maybeSingle();
+      if (data?.value) {
+        setLegalSettings(data.value as typeof legalSettings);
+      }
+    };
+    fetchLegal();
+  }, []);
 
   // Check for recovery/invite tokens in hash
   useEffect(() => {
@@ -165,15 +182,23 @@ const Auth = () => {
           </CardContent>
         </Card>
 
-        <div className="mt-6 flex items-center justify-center gap-4 text-xs text-muted-foreground">
-          <a href="https://gaetanoficarra.de/datenschutz" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline-offset-4 hover:underline">
-            Datenschutz
-          </a>
-          <span>·</span>
-          <a href="https://gaetanoficarra.de/impressum" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline-offset-4 hover:underline">
-            Impressum
-          </a>
-        </div>
+        {(legalSettings.privacy_url || legalSettings.privacy_text || legalSettings.imprint_url || legalSettings.imprint_text) && (
+          <div className="mt-6 flex items-center justify-center gap-4 text-xs text-muted-foreground">
+            {(legalSettings.privacy_url || legalSettings.privacy_text) && (
+              <a href={legalSettings.privacy_url || '#'} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline-offset-4 hover:underline">
+                Datenschutz
+              </a>
+            )}
+            {(legalSettings.privacy_url || legalSettings.privacy_text) && (legalSettings.imprint_url || legalSettings.imprint_text) && (
+              <span>·</span>
+            )}
+            {(legalSettings.imprint_url || legalSettings.imprint_text) && (
+              <a href={legalSettings.imprint_url || '#'} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline-offset-4 hover:underline">
+                Impressum
+              </a>
+            )}
+          </div>
+        )}
       </motion.div>
     </div>
   );
