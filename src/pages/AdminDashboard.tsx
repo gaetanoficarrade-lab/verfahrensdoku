@@ -202,7 +202,7 @@ const AdminDashboard = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Lizenznehmer</CardTitle>
+          <CardTitle>Unterkonten</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
