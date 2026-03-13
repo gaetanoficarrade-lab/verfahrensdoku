@@ -16,6 +16,7 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isResetMode, setIsResetMode] = useState(false);
+  const [legalSettings, setLegalSettings] = useState<{ imprint_url?: string; privacy_url?: string; imprint_text?: string; privacy_text?: string }>({});
   const { signIn, resetPassword, session, loading } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
