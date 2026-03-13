@@ -144,7 +144,7 @@ export default function AdminSettingsGeneral() {
             </div>
 
             <div className="space-y-2">
-              <Label>Standard-Plan für neue Lizenznehmer</Label>
+              <Label>Standard-Plan für neue Unterkonten</Label>
               <Select
                 value={form.default_plan_id}
                 onValueChange={(v) => setForm((p) => ({ ...p, default_plan_id: v }))}
