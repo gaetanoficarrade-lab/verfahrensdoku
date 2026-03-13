@@ -258,7 +258,7 @@ const AdminTenants = () => {
           <div className="divide-y divide-border">
             {tenants.length === 0 && (
               <p className="text-sm text-muted-foreground py-8 text-center">
-                Noch keine Lizenznehmer vorhanden.
+                Noch keine Unterkonten vorhanden.
               </p>
             )}
             {tenants.map((tenant) => (
