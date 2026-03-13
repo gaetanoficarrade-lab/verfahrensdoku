@@ -172,7 +172,7 @@ export default function AdminSettingsGeneral() {
               Testphase
               <HelpTooltip textKey="trial_period" />
             </CardTitle>
-            <CardDescription>Konfiguration der kostenlosen Testphase für neue Lizenznehmer</CardDescription>
+            <CardDescription>Konfiguration der kostenlosen Testphase für neue Unterkonten</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
