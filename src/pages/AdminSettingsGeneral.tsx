@@ -100,7 +100,7 @@ export default function AdminSettingsGeneral() {
 
   const getDescription = (key: string): string => {
     const map: Record<string, string> = {
-      trial_enabled: 'Testphase für neue Lizenznehmer aktivieren',
+      trial_enabled: 'Testphase für neue Unterkonten aktivieren',
       trial_days: 'Dauer der Testphase in Tagen',
       session_timeout_minutes: 'Inaktivitäts-Timeout in Minuten',
       session_warning_minutes: 'Warnung vor Logout in Minuten',
@@ -144,7 +144,7 @@ export default function AdminSettingsGeneral() {
             </div>
 
             <div className="space-y-2">
-              <Label>Standard-Plan für neue Lizenznehmer</Label>
+              <Label>Standard-Plan für neue Unterkonten</Label>
               <Select
                 value={form.default_plan_id}
                 onValueChange={(v) => setForm((p) => ({ ...p, default_plan_id: v }))}
@@ -172,13 +172,13 @@ export default function AdminSettingsGeneral() {
               Testphase
               <HelpTooltip textKey="trial_period" />
             </CardTitle>
-            <CardDescription>Konfiguration der kostenlosen Testphase für neue Lizenznehmer</CardDescription>
+            <CardDescription>Konfiguration der kostenlosen Testphase für neue Unterkonten</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <Label>Testphase aktivieren</Label>
-                <p className="text-xs text-muted-foreground">Gilt für alle neu angelegten Lizenznehmer</p>
+                <p className="text-xs text-muted-foreground">Gilt für alle neu angelegten Unterkonten</p>
               </div>
               <Switch
                 checked={platformSettings.trial_enabled === 'true'}

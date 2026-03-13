@@ -118,7 +118,7 @@ export default function AdminSettingsPlans() {
               <CreditCard className="h-5 w-5" />
               Plan-Verwaltung
             </h2>
-            <p className="text-sm text-muted-foreground">Pläne für Lizenznehmer verwalten</p>
+            <p className="text-sm text-muted-foreground">Pläne für Unterkonten verwalten</p>
           </div>
           <Button onClick={openNew} className="gap-2">
             <Plus className="h-4 w-4" />

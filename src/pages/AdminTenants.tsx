@@ -64,7 +64,7 @@ const AdminTenants = () => {
   <h2 style="color: #1a1a1a;">Willkommen bei GoBD-Suite</h2>
   <p style="color: #555; font-size: 16px; line-height: 1.6;">${greeting}</p>
   <p style="color: #555; font-size: 16px; line-height: 1.6;">
-    Ihr Lizenznehmer-Konto <strong>${displayName}</strong> wurde erstellt. 
+    Ihr Unterkonto <strong>${displayName}</strong> wurde erstellt. 
     Bitte klicken Sie auf den folgenden Link, um Ihr Passwort festzulegen:
   </p>
   <div style="text-align: center; margin: 30px 0;">
@@ -154,7 +154,7 @@ const AdminTenants = () => {
       if (error) {
         toast({ variant: 'destructive', title: 'Fehler', description: error.message });
       } else {
-        toast({ title: 'Lizenznehmer aktualisiert.' });
+        toast({ title: 'Unterkonto aktualisiert.' });
       }
     } else {
       // Create tenant
@@ -162,7 +162,7 @@ const AdminTenants = () => {
       if (error) {
         toast({ variant: 'destructive', title: 'Fehler', description: error.message });
       } else {
-        toast({ title: 'Lizenznehmer erstellt.' });
+        toast({ title: 'Unterkonto erstellt.' });
 
         // Auto-send invite email if contact_email is provided
         if (payload.contact_email && newTenant) {
@@ -189,7 +189,7 @@ const AdminTenants = () => {
     if (error) {
       toast({ variant: 'destructive', title: 'Fehler', description: error.message });
     } else {
-      toast({ title: t.is_active ? 'Lizenznehmer deaktiviert.' : 'Lizenznehmer aktiviert.' });
+      toast({ title: t.is_active ? 'Unterkonto deaktiviert.' : 'Unterkonto aktiviert.' });
       fetchData();
     }
   };
@@ -200,7 +200,7 @@ const AdminTenants = () => {
     if (error) {
       toast({ variant: 'destructive', title: 'Fehler', description: error.message });
     } else {
-      toast({ title: 'Lizenznehmer gelöscht.' });
+      toast({ title: 'Unterkonto gelöscht.' });
       fetchData();
     }
     setDeleteDialogOpen(false);
@@ -244,7 +244,7 @@ const AdminTenants = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Lizenznehmer</h1>
+          <h1 className="text-2xl font-bold text-foreground">Unterkonten</h1>
           <p className="text-sm text-muted-foreground mt-1">Verwaltung aller Kanzleien und Berater</p>
         </div>
         <Button onClick={openCreate} className="gap-2">
@@ -258,7 +258,7 @@ const AdminTenants = () => {
           <div className="divide-y divide-border">
             {tenants.length === 0 && (
               <p className="text-sm text-muted-foreground py-8 text-center">
-                Noch keine Lizenznehmer vorhanden.
+                Noch keine Unterkonten vorhanden.
               </p>
             )}
             {tenants.map((tenant) => (
@@ -331,9 +331,9 @@ const AdminTenants = () => {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingTenant ? 'Lizenznehmer bearbeiten' : 'Neuer Lizenznehmer'}</DialogTitle>
+            <DialogTitle>{editingTenant ? 'Unterkonto bearbeiten' : 'Neues Unterkonto'}</DialogTitle>
             <DialogDescription>
-              {editingTenant ? 'Daten des Lizenznehmers ändern.' : 'Neuen Lizenznehmer anlegen. Bei Angabe einer E-Mail wird automatisch eine Einladung versendet.'}
+              {editingTenant ? 'Daten des Unterkontos ändern.' : 'Neues Unterkonto anlegen. Bei Angabe einer E-Mail wird automatisch eine Einladung versendet.'}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
@@ -379,7 +379,7 @@ const AdminTenants = () => {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Lizenznehmer löschen?</AlertDialogTitle>
+            <AlertDialogTitle>Unterkonto löschen?</AlertDialogTitle>
             <AlertDialogDescription>
               <strong>{deletingTenant?.name}</strong> und alle zugehörigen Daten werden unwiderruflich gelöscht.
             </AlertDialogDescription>

@@ -243,7 +243,7 @@ export default function AdminAffiliates() {
               <p className="text-3xl font-bold text-foreground">
                 {conversions.filter(c => c.status === 'confirmed' || c.status === 'paid').length}
               </p>
-              <p className="text-xs text-muted-foreground">Aktive Lizenznehmer</p>
+              <p className="text-xs text-muted-foreground">Aktive Unterkonten</p>
             </div>
           </div>
         </CardContent>
@@ -258,7 +258,7 @@ export default function AdminAffiliates() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Lizenznehmer</TableHead>
+                <TableHead>Unterkonto</TableHead>
                 <TableHead>Slug</TableHead>
                 <TableHead className="text-right">Klicks</TableHead>
                 <TableHead className="text-right">Conversions</TableHead>

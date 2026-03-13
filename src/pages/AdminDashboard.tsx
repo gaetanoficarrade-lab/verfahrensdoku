@@ -82,7 +82,7 @@ const AdminDashboard = () => {
         description: (
           <div className="space-y-1 text-xs mt-1">
             <div className="bg-muted/50 rounded p-2 font-mono space-y-0.5">
-              <p>Lizenznehmer: {result.tenantId}</p>
+              <p>Unterkonto: {result.tenantId}</p>
               <p>Mandant: {result.clientId} {v.clientExists ? '✅' : '❌ FEHLT!'}</p>
               <p>Projekt: {result.projectId} {v.projectExists ? '✅' : '❌ FEHLT!'}</p>
               <p>Kapitel: {v.chapterCount} {v.chapterCount > 0 ? '✅' : '❌'}</p>
@@ -115,7 +115,7 @@ const AdminDashboard = () => {
   }
 
   const statCards = [
-    { label: 'Lizenznehmer', value: stats.tenants, icon: Building2 },
+    { label: 'Unterkonten', value: stats.tenants, icon: Building2 },
     { label: 'Mandanten', value: stats.clients, icon: Users },
     { label: 'Projekte', value: stats.projects, icon: FolderOpen },
   ];
@@ -147,7 +147,7 @@ const AdminDashboard = () => {
                 <AlertDialogDescription className="space-y-2">
                   <p>Folgende Daten werden neu angelegt:</p>
                   <ul className="list-disc pl-5 space-y-1 text-sm">
-                    <li><strong>Lizenznehmer:</strong> Musterkanzlei Müller & Partner (Plan: Professional)</li>
+                    <li><strong>Unterkonto:</strong> Musterkanzlei Müller & Partner (Plan: Professional)</li>
                     <li><strong>Mandant:</strong> Beispiel GmbH (IT-Dienstleistungen, 3 Mitarbeiter)</li>
                     <li><strong>Projekt:</strong> Verfahrensdokumentation 2024 mit vollständigem Onboarding</li>
                     <li><strong>Kapitel:</strong> Alle 30 Unterkapitel mit realistischen Texten, vollständig freigegeben und PDF-bereit</li>
@@ -202,13 +202,13 @@ const AdminDashboard = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Lizenznehmer</CardTitle>
+          <CardTitle>Unterkonten</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
             {tenants.length === 0 && (
               <p className="text-sm text-muted-foreground py-4 text-center">
-                Noch keine Lizenznehmer vorhanden.
+                Noch keine Unterkonten vorhanden.
               </p>
             )}
             {tenants.map((tenant) => (
