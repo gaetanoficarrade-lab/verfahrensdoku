@@ -189,7 +189,7 @@ const AdminTenants = () => {
     if (error) {
       toast({ variant: 'destructive', title: 'Fehler', description: error.message });
     } else {
-      toast({ title: t.is_active ? 'Lizenznehmer deaktiviert.' : 'Lizenznehmer aktiviert.' });
+      toast({ title: t.is_active ? 'Unterkonto deaktiviert.' : 'Unterkonto aktiviert.' });
       fetchData();
     }
   };
