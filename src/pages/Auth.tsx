@@ -21,6 +21,21 @@ const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Fetch platform legal settings (no auth needed)
+  useEffect(() => {
+    const fetchLegal = async () => {
+      const { data } = await supabase
+        .from('platform_settings')
+        .select('value')
+        .eq('key', 'legal')
+        .maybeSingle();
+      if (data?.value) {
+        setLegalSettings(data.value as typeof legalSettings);
+      }
+    };
+    fetchLegal();
+  }, []);
+
   // Check for recovery/invite tokens in hash
   useEffect(() => {
     const hash = window.location.hash;
