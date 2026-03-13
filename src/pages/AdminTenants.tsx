@@ -154,7 +154,7 @@ const AdminTenants = () => {
       if (error) {
         toast({ variant: 'destructive', title: 'Fehler', description: error.message });
       } else {
-        toast({ title: 'Lizenznehmer aktualisiert.' });
+        toast({ title: 'Unterkonto aktualisiert.' });
       }
     } else {
       // Create tenant
