@@ -162,7 +162,7 @@ const AdminTenants = () => {
       if (error) {
         toast({ variant: 'destructive', title: 'Fehler', description: error.message });
       } else {
-        toast({ title: 'Lizenznehmer erstellt.' });
+        toast({ title: 'Unterkonto erstellt.' });
 
         // Auto-send invite email if contact_email is provided
         if (payload.contact_email && newTenant) {
