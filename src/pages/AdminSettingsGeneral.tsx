@@ -100,7 +100,7 @@ export default function AdminSettingsGeneral() {
 
   const getDescription = (key: string): string => {
     const map: Record<string, string> = {
-      trial_enabled: 'Testphase für neue Lizenznehmer aktivieren',
+      trial_enabled: 'Testphase für neue Unterkonten aktivieren',
       trial_days: 'Dauer der Testphase in Tagen',
       session_timeout_minutes: 'Inaktivitäts-Timeout in Minuten',
       session_warning_minutes: 'Warnung vor Logout in Minuten',
