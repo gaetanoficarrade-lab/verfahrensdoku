@@ -331,9 +331,9 @@ const AdminTenants = () => {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingTenant ? 'Lizenznehmer bearbeiten' : 'Neuer Lizenznehmer'}</DialogTitle>
+            <DialogTitle>{editingTenant ? 'Unterkonto bearbeiten' : 'Neues Unterkonto'}</DialogTitle>
             <DialogDescription>
-              {editingTenant ? 'Daten des Lizenznehmers ändern.' : 'Neuen Lizenznehmer anlegen. Bei Angabe einer E-Mail wird automatisch eine Einladung versendet.'}
+              {editingTenant ? 'Daten des Unterkontos ändern.' : 'Neues Unterkonto anlegen. Bei Angabe einer E-Mail wird automatisch eine Einladung versendet.'}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
