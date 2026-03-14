@@ -100,7 +100,7 @@ export const GOBD_CHAPTERS: MainChapter[] = [
       {
         key: '3_4', number: '3.4', title: 'Cloud-Software / SaaS',
         isActive: (a) => a.USES_CLOUD === 'yes' || a.USES_CLOUD === 'partial',
-        inactiveText: 'Das Unternehmen setzt keine cloudbasierten Softwarelösungen oder SaaS-Dienste ein. Alle Systeme werden lokal betrieben.',
+        inactiveText: 'Das Unternehmen setzt keine Cloud-Dienste zur Speicherung oder Verarbeitung steuerrelevanter Daten ein. Alle relevanten Daten werden lokal oder in der eingesetzten Buchhaltungssoftware gespeichert.',
       },
       {
         key: '3_5', number: '3.5', title: 'E-Mail-Systeme & Archivierung',
