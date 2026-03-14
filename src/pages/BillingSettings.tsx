@@ -102,7 +102,13 @@ export default function BillingSettings() {
         <Card>
           <CardHeader>
             <CardTitle>Aktueller Plan: {tenantPlan.planName}</CardTitle>
-            <CardDescription>{tenantPlan.priceMonthly ? `${tenantPlan.priceMonthly.toFixed(2)} € / Monat` : 'Einmalzahlung'}</CardDescription>
+            <CardDescription>
+              {tenantPlan.isFree
+                ? 'Kostenlos – keine Abrechnung'
+                : tenantPlan.priceMonthly
+                  ? `${tenantPlan.priceMonthly.toFixed(2)} € / Monat`
+                  : 'Einmalzahlung'}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
