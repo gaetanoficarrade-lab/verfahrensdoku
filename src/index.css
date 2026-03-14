@@ -34,14 +34,14 @@
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 8%;
-    --sidebar-foreground: 0 0% 78%;
-    --sidebar-primary: 43 80% 55%;
-    --sidebar-primary-foreground: 0 0% 8%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 85%;
-    --sidebar-border: 0 0% 18%;
-    --sidebar-ring: 43 80% 55%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 10% 30%;
+    --sidebar-primary: 43 80% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 43 80% 95%;
+    --sidebar-accent-foreground: 220 10% 20%;
+    --sidebar-border: 220 10% 90%;
+    --sidebar-ring: 43 80% 50%;
 
     --sidebar-width: 260px;
     --sidebar-width-collapsed: 72px;
