@@ -225,7 +225,57 @@ export default function ChapterEditor() {
     loadTemplates();
   }, [isAdvisor, chapterKey, effectiveTenantId]);
 
-  const loadVersions = async () => {
+  // Auto-save notes with debounce (1.5s after last keystroke)
+  useEffect(() => {
+    if (!hasLoadedRef.current) return;
+    if (notes === initialNotesRef.current) return;
+    // Don't auto-save if submitted and not amending
+    if (isSubmitted && !isAmending) return;
+    if (isAdvisor) return;
+
+    setAutoSaveStatus('idle');
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+
+    autoSaveTimerRef.current = setTimeout(async () => {
+      setAutoSaveStatus('saving');
+      const cdId = chapterDataId || await ensureChapterDataForAutoSave();
+      if (!cdId) { setAutoSaveStatus('idle'); return; }
+
+      const { error } = await supabase
+        .from('chapter_data')
+        .update({ client_notes: notes, status: status === 'empty' ? 'client_draft' : status })
+        .eq('id', cdId);
+
+      if (!error) {
+        if (status === 'empty') setStatus('client_draft');
+        initialNotesRef.current = notes;
+        setAutoSaveStatus('saved');
+        setTimeout(() => setAutoSaveStatus('idle'), 2000);
+      } else {
+        setAutoSaveStatus('idle');
+        console.error('Auto-save error:', error);
+      }
+    }, 1500);
+
+    return () => {
+      if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    };
+  }, [notes]);
+
+  // Helper for auto-save to create chapter_data without toast errors
+  const ensureChapterDataForAutoSave = async (): Promise<string | null> => {
+    if (chapterDataId) return chapterDataId;
+    const { data, error } = await supabase
+      .from('chapter_data')
+      .insert({ project_id: projectId!, chapter_key: chapterKey!, status: 'client_draft' })
+      .select('id')
+      .single();
+    if (error) return null;
+    setChapterDataId(data.id);
+    setStatus('client_draft');
+    return data.id;
+  };
+
     if (!chapterDataId) return;
     const { data } = await supabase
       .from('chapter_versions')
