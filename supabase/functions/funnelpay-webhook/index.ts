@@ -123,9 +123,11 @@ serve(async (req) => {
         .maybeSingle();
 
       const planId = await findPlanId(planName);
-      const isSolo = planName === "solo";
       const customerName = data.customer_name || data.name || data.customer_details?.name || "";
       const companyName = data.customer_company_name || data.company || data.customer_details?.company || "";
+
+      // ALL plans start as trialing with 7-day trial
+      const trialEndsAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
 
       if (existing) {
         // Update subscription
@@ -133,11 +135,11 @@ serve(async (req) => {
           .from("tenants")
           .update({
             plan_id: planId,
-            subscription_status: isSolo ? "active" : "trialing",
+            subscription_status: "trialing",
             stripe_customer_id: data.customer || data.customer_id || null,
             stripe_subscription_id: data.subscription || data.subscription_id || null,
-            trial_ends_at: isSolo ? null : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-            solo_expires_at: isSolo ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() : null,
+            trial_ends_at: trialEndsAt,
+            trial_active: true,
             source: "funnelpay",
           })
           .eq("id", existing.id);
@@ -153,12 +155,11 @@ serve(async (req) => {
           contact_email: customerEmail,
           plan_id: planId,
           is_active: true,
-          subscription_status: isSolo ? "active" : "trialing",
+          subscription_status: "trialing",
           stripe_customer_id: data.customer || data.customer_id || null,
           stripe_subscription_id: data.subscription || data.subscription_id || null,
-          trial_ends_at: isSolo ? null : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-          solo_expires_at: isSolo ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() : null,
-          trial_active: !isSolo,
+          trial_ends_at: trialEndsAt,
+          trial_active: true,
           source: "funnelpay",
         })
         .select("id")
@@ -171,7 +172,6 @@ serve(async (req) => {
     // Helper: create user + invite token + send welcome email
     const createUserAndInvite = async (tenantId: string, planName: string) => {
       const customerName = data.customer_name || data.name || data.customer_details?.name || "";
-      const isSolo = planName === "solo";
 
       // Create auth user
       const normalizedEmail = customerEmail;
@@ -229,9 +229,7 @@ serve(async (req) => {
       const planLabel = planName === "solo" ? "Solo" : planName === "berater" ? "Berater" : "Agentur";
       const greeting = firstName ? `Hallo ${firstName},` : "Sehr geehrte Damen und Herren,";
 
-      const trialHint = !isSolo
-        ? `<p style="color: #555; font-size: 15px; line-height: 1.6;">Ihr <strong>${planLabel}</strong>-Zugang startet mit einer 7-tägigen Testphase.</p>`
-        : "";
+      const trialHint = `<p style="color: #555; font-size: 15px; line-height: 1.6;">Ihr <strong>${planLabel}</strong>-Zugang startet mit einer 7-tägigen Testphase.</p>`;
 
       await sendEmail(
         normalizedEmail,
@@ -260,8 +258,22 @@ serve(async (req) => {
 
     // ─── Event Handlers ───
 
+    // Helper: activate a trialing tenant (trial → active)
+    const activateTenant = async (tenantId: string, planName: string) => {
+      const isSolo = planName === "solo";
+      await supabaseAdmin
+        .from("tenants")
+        .update({
+          subscription_status: "active",
+          trial_active: false,
+          solo_expires_at: isSolo ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() : null,
+        })
+        .eq("id", tenantId);
+    };
+
     switch (eventType) {
       case "checkout.session.completed": {
+        // Solo: Einmalzahlung bestätigt → Account aktivieren
         const { productId, productName } = getProductInfo();
         const planName = detectPlan(productId, productName);
         if (!planName) {
@@ -273,11 +285,24 @@ serve(async (req) => {
           break;
         }
         const tenantId = await findOrCreateTenant(planName);
+        
+        // If tenant already exists and is trialing, activate
+        const { data: existingTenant } = await supabaseAdmin
+          .from("tenants")
+          .select("subscription_status")
+          .eq("id", tenantId)
+          .single();
+        
+        if (planName === "solo" && existingTenant?.subscription_status === "trialing") {
+          await activateTenant(tenantId, planName);
+        }
+        
         await createUserAndInvite(tenantId, planName);
         break;
       }
 
       case "customer.subscription.created": {
+        // Berater/Agentur: Abo aktiviert → Account aktivieren
         const { productId, productName } = getProductInfo();
         const planName = detectPlan(productId, productName);
         if (!planName) {
@@ -289,6 +314,18 @@ serve(async (req) => {
           break;
         }
         const tenantId = await findOrCreateTenant(planName);
+        
+        // If tenant already exists and is trialing, activate
+        const { data: existingTenant2 } = await supabaseAdmin
+          .from("tenants")
+          .select("subscription_status")
+          .eq("id", tenantId)
+          .single();
+        
+        if ((planName === "berater" || planName === "agentur") && existingTenant2?.subscription_status === "trialing") {
+          await activateTenant(tenantId, planName);
+        }
+        
         await createUserAndInvite(tenantId, planName);
         break;
       }

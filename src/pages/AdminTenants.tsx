@@ -180,7 +180,7 @@ const AdminTenants = () => {
       return;
     }
     setSaving(true);
-    const payload = {
+    const payload: any = {
       name: form.name.trim(),
       contact_name: form.contact_name.trim() || null,
       contact_email: form.contact_email.trim() || null,
@@ -189,6 +189,13 @@ const AdminTenants = () => {
       trial_active: form.trial_active,
       max_team_members: form.max_team_members_unlimited ? null : form.max_team_members,
     };
+
+    // Auto-set trialing for new tenants (all plans)
+    if (!editingTenant && !form.is_free) {
+      payload.subscription_status = 'trialing';
+      payload.trial_ends_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      payload.trial_active = true;
+    }
 
     if (editingTenant) {
       const { error } = await supabase.from('tenants').update(payload).eq('id', editingTenant.id);

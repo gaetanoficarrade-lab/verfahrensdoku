@@ -18,6 +18,7 @@ import OnboardingWizard from '@/components/OnboardingWizard';
 import { GOBD_CHAPTERS, CHAPTER_TITLE_MAP } from '@/lib/chapter-structure';
 import { generateVerfahrensdokumentation } from '@/lib/generatePdf';
 import type { OnboardingAnswers } from '@/lib/onboarding-variables';
+import { useTrialRestrictions } from '@/hooks/useTrialRestrictions';
 
 const statusConfig: Record<string, { label: string; icon: typeof Circle; className: string }> = {
   empty: { label: 'Offen', icon: Circle, className: 'text-muted-foreground bg-muted' },
@@ -87,6 +88,7 @@ export default function ProjectDetail() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuthContext();
+  const { maxEditableChapters, pdfWatermark, isTrialing } = useTrialRestrictions();
   const [project, setProject] = useState<Project | null>(null);
   const [chapters, setChapters] = useState<ChapterData[]>([]);
   const [onboarding, setOnboarding] = useState<Onboarding | null>(null);
@@ -298,6 +300,7 @@ export default function ProjectDetail() {
         answers,
         isFinal: true,
         versions: allVersionEntries,
+        watermarkText: pdfWatermark,
       });
       doc.save(`${companyName || 'Verfahrensdokumentation'}_V${versionLabel}.pdf`);
 
@@ -596,13 +599,31 @@ export default function ProjectDetail() {
                           const chData = chapters.find(c => c.chapter_key === sc.key);
                           const isBatchEligible = chData && chData.status === 'client_submitted';
 
+                          // Count how many active sub-chapters have been listed so far
+                          // to enforce trial chapter limit
+                          const activeSubChapters = mainCh.subChapters.filter(s => s.isActive(answers));
+                          const activeIndex = activeSubChapters.findIndex(s => s.key === sc.key);
+                          
+                          // Calculate global active index for trial limit
+                          let globalActiveIndex = 0;
+                          for (const mCh of GOBD_CHAPTERS) {
+                            for (const s of mCh.subChapters) {
+                              if (s.key === sc.key) break;
+                              if (s.isActive(answers)) globalActiveIndex++;
+                            }
+                            if (mCh.subChapters.some(s => s.key === sc.key)) break;
+                          }
+                          const isTrialLocked = isTrialing && maxEditableChapters !== null && isActive && globalActiveIndex >= maxEditableChapters;
+
                           return (
                             <div
                               key={sc.key}
                               className={`flex items-center gap-3 rounded-md px-3 py-2.5 transition-colors ${
-                                isActive
+                                isActive && !isTrialLocked
                                   ? 'hover:bg-muted/50 cursor-pointer'
-                                  : 'opacity-60'
+                                  : isTrialLocked
+                                    ? 'opacity-50 cursor-not-allowed'
+                                    : 'opacity-60'
                               }`}
                             >
                               {isBatchEligible && (
@@ -615,12 +636,14 @@ export default function ProjectDetail() {
                               <span
                                 className="flex items-center gap-3 flex-1 min-w-0"
                                 onClick={() => {
-                                  if (isActive) navigate(`/projects/${id}/chapters/${sc.key}`);
+                                  if (isActive && !isTrialLocked) navigate(`/projects/${id}/chapters/${sc.key}`);
+                                  else if (isTrialLocked) toast({ title: 'Testmodus', description: `Im Testmodus sind nur ${maxEditableChapters} Kapitel bearbeitbar.`, variant: 'destructive' });
                                 }}
                               >
                                 <span className="text-xs font-mono text-muted-foreground w-8 shrink-0">{sc.number}</span>
-                                <span className={`flex-1 text-sm ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
+                                <span className={`flex-1 text-sm ${isActive && !isTrialLocked ? 'text-foreground' : 'text-muted-foreground'}`}>
                                   {sc.title}
+                                  {isTrialLocked && <span className="ml-2 text-[10px] text-muted-foreground">🔒</span>}
                                 </span>
                               </span>
                               <Badge variant="secondary" className={`gap-1 text-[10px] px-2 py-0.5 ${config.className}`}>

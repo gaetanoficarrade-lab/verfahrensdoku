@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Loader2 } from 'lucide-react';
+import { Plus, Search, Loader2, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
+import { useTrialRestrictions } from '@/hooks/useTrialRestrictions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,6 +23,7 @@ interface Client {
 
 export default function Clients() {
   const { effectiveTenantId, isSuperAdmin, impersonation } = useAuthContext();
+  const { canCreateClients, isTrialing } = useTrialRestrictions();
   const navigate = useNavigate();
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
@@ -73,7 +75,7 @@ export default function Clients() {
           <h1 className="text-2xl font-bold text-foreground">Mandanten</h1>
           <p className="text-sm text-muted-foreground mt-1">Verwalten Sie Ihre Mandanten</p>
         </div>
-        <Button onClick={() => navigate('/clients/new')} className="gap-2">
+        <Button onClick={() => navigate('/clients/new')} className="gap-2" disabled={!canCreateClients}>
           <Plus className="h-4 w-4" />
           Neuer Mandant
         </Button>

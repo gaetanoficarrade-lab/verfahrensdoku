@@ -9,6 +9,7 @@ import { generateVerfahrensdokumentation } from '@/lib/generatePdf';
 import { getNegativvermerk } from '@/lib/chapter-leitfragen';
 import type { OnboardingAnswers } from '@/lib/onboarding-variables';
 import { CHAPTER_TITLE_MAP } from '@/lib/chapter-structure';
+import { useTrialRestrictions } from '@/hooks/useTrialRestrictions';
 
 interface VersionEntry {
   version: string;
@@ -30,6 +31,7 @@ interface ChapterData {
 export default function DocumentPreview() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { pdfWatermark } = useTrialRestrictions();
   const [loading, setLoading] = useState(true);
   const [projectName, setProjectName] = useState('');
   const [companyName, setCompanyName] = useState('');
@@ -109,6 +111,8 @@ export default function DocumentPreview() {
     load();
   }, [id]);
 
+
+
   const handleDownload = () => {
     const doc = generateVerfahrensdokumentation({
       companyName,
@@ -122,6 +126,7 @@ export default function DocumentPreview() {
       answers,
       isFinal,
       versions: versionEntries,
+      watermarkText: pdfWatermark,
     });
     doc.save(`${companyName || 'Verfahrensdokumentation'}.pdf`);
   };

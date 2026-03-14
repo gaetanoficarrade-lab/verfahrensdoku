@@ -30,6 +30,7 @@ interface PdfParams {
   itResponsible?: string;
   processResponsible?: string;
   versions?: VersionEntry[];
+  watermarkText?: string | null;
 }
 
 const MARGIN = 20;
@@ -59,18 +60,18 @@ function addFooter(doc: jsPDF, pageNum: number, totalPages: number) {
   doc.text('Vertraulich', pageWidth - MARGIN, pageHeight - 10, { align: 'right' });
 }
 
-function addWatermark(doc: jsPDF) {
+function addWatermark(doc: jsPDF, text: string = 'ENTWURF') {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   doc.saveGraphicsState();
   doc.setGState(new (doc as any).GState({ opacity: 0.08 }));
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(60);
+  doc.setFontSize(text.length > 10 ? 36 : 60);
   doc.setTextColor(200, 0, 0);
   // Rotate and place diagonally
   const centerX = pageWidth / 2;
   const centerY = pageHeight / 2;
-  doc.text('ENTWURF', centerX, centerY, {
+  doc.text(text, centerX, centerY, {
     align: 'center',
     angle: 45,
   });
@@ -390,6 +391,7 @@ export function generateVerfahrensdokumentation({
   itResponsible,
   processResponsible,
   versions = [],
+  watermarkText,
 }: PdfParams): jsPDF {
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -766,9 +768,10 @@ export function generateVerfahrensdokumentation({
   const totalPages = doc.getNumberOfPages();
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
-    // Add watermark to all pages except cover (page 1) when not final
-    if (!isFinal && i > 1) {
-      addWatermark(doc);
+    // Add watermark to all pages except cover (page 1) when not final or trial watermark
+    const effectiveWatermark = watermarkText || (!isFinal ? 'ENTWURF' : null);
+    if (effectiveWatermark && i > 1) {
+      addWatermark(doc, effectiveWatermark);
     }
     // Add footer to all pages except cover
     if (i >= 2) {
