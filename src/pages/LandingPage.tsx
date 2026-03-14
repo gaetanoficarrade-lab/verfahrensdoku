@@ -60,7 +60,7 @@ const painPoints = [
     icon: Clock,
     stat: '40+ Std.',
     title: 'Manuelle Arbeit pro Doku',
-    desc: 'Steuerberater verbringen Wochen mit einer einzigen Verfahrensdokumentation. Das muss nicht sein.',
+    desc: 'Viele verbringen Wochen mit einer einzigen Verfahrensdokumentation. Das muss nicht sein.',
   },
   {
     icon: FileText,
