@@ -74,7 +74,7 @@ const Index = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-1">Willkommen in der GoBD-Suite</p>
+          <p className="text-sm text-muted-foreground mt-1">Übersicht Ihrer Verfahrensdokumentationen</p>
         </div>
         {stats.planName && (
           <Badge variant="outline" className="text-sm">

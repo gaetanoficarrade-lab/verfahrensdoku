@@ -315,7 +315,7 @@ export default function BrandingSettings() {
       <Tabs defaultValue="brand" className="w-full">
         <TabsList className="w-full justify-start">
           <TabsTrigger value="brand" className="gap-1.5">
-            <Building2 className="h-4 w-4" /> Marke & Logo
+            <Building2 className="h-4 w-4" /> Logo
           </TabsTrigger>
           <TabsTrigger value="colors" className="gap-1.5">
             <Palette className="h-4 w-4" /> Farben
