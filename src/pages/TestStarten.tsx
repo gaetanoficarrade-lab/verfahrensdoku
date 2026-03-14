@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Shield, Mail, Lock, User, Building2, Loader2, Eye, EyeOff, ArrowRight } from 'lucide-react';
@@ -207,7 +208,7 @@ export default function TestStarten() {
                     className="mt-1"
                   />
                   <Label htmlFor="privacy" className="text-sm text-muted-foreground leading-tight cursor-pointer">
-                    Ich habe die <span className="text-foreground underline">Datenschutzerklärung</span> gelesen und stimme zu.
+                    Ich habe die <Link to="/datenschutz" target="_blank" className="text-foreground underline hover:text-primary">Datenschutzerklärung</Link> gelesen und stimme zu.
                   </Label>
                 </div>
                 <div className="flex items-start gap-2">
@@ -218,7 +219,7 @@ export default function TestStarten() {
                     className="mt-1"
                   />
                   <Label htmlFor="terms" className="text-sm text-muted-foreground leading-tight cursor-pointer">
-                    Ich stimme den <span className="text-foreground underline">AGB</span> zu.
+                    Ich stimme den <Link to="/agb" target="_blank" className="text-foreground underline hover:text-primary">AGB</Link> zu.
                   </Label>
                 </div>
               </div>

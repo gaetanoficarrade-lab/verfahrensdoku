@@ -180,13 +180,13 @@ const Register = () => {
                 <div className="flex items-start gap-2">
                   <Checkbox id="privacy" checked={acceptPrivacy} onCheckedChange={(v) => setAcceptPrivacy(v === true)} className="mt-1" />
                   <Label htmlFor="privacy" className="text-sm text-muted-foreground leading-tight cursor-pointer">
-                    Ich habe die <span className="text-foreground underline">Datenschutzerklärung</span> gelesen und stimme zu.
+                    Ich habe die <a href="/datenschutz" target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:text-primary">Datenschutzerklärung</a> gelesen und stimme zu.
                   </Label>
                 </div>
                 <div className="flex items-start gap-2">
                   <Checkbox id="terms" checked={acceptTerms} onCheckedChange={(v) => setAcceptTerms(v === true)} className="mt-1" />
                   <Label htmlFor="terms" className="text-sm text-muted-foreground leading-tight cursor-pointer">
-                    Ich stimme den <span className="text-foreground underline">AGB</span> zu.
+                    Ich stimme den <a href="/agb" target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:text-primary">AGB</a> zu.
                   </Label>
                 </div>
               </div>
