@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { Settings, Scale, Mail, CreditCard, Activity, Tag, ScrollText } from 'lucide-react';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { Settings, Scale, Mail, CreditCard, Activity, Tag, ScrollText, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const settingsNav = [
   { title: 'Allgemein', url: '/admin/settings/general', icon: Settings },
@@ -19,6 +20,9 @@ interface AdminSettingsLayoutProps {
 
 export function AdminSettingsLayout({ children }: AdminSettingsLayoutProps) {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const activeItem = settingsNav.find(item => item.url === location.pathname);
 
   return (
     <div className="space-y-6">
@@ -29,8 +33,30 @@ export function AdminSettingsLayout({ children }: AdminSettingsLayoutProps) {
         </p>
       </div>
 
-      {/* Horizontal sub-navigation */}
-      <div className="rounded-xl bg-card border border-border p-1.5 shadow-sm">
+      {/* Mobile: Dropdown */}
+      <div className="md:hidden">
+        <Select value={location.pathname} onValueChange={(val) => navigate(val)}>
+          <SelectTrigger className="w-full bg-card border-border">
+            <div className="flex items-center gap-2">
+              {activeItem && <activeItem.icon className="h-4 w-4 text-accent" />}
+              <SelectValue placeholder="Bereich wählen" />
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            {settingsNav.map((item) => (
+              <SelectItem key={item.url} value={item.url}>
+                <div className="flex items-center gap-2">
+                  <item.icon className="h-4 w-4" />
+                  {item.title}
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Desktop: Horizontal tabs */}
+      <div className="hidden md:block rounded-xl bg-card border border-border p-1.5 shadow-sm">
         <nav className="flex flex-wrap gap-1" aria-label="Plattform-Einstellungen">
           {settingsNav.map((item) => {
             const isActive = location.pathname === item.url;
