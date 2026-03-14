@@ -81,7 +81,7 @@ export const GOBD_CHAPTERS: MainChapter[] = [
       {
         key: '2_9', number: '2.9', title: 'Personal / Lohn',
         isActive: (a) => !!a.HAS_EMPLOYEES,
-        inactiveText: 'Das Unternehmen beschäftigt keine Mitarbeiter. Eine Lohn- und Gehaltsabrechnung wird nicht durchgeführt.',
+        inactiveText: 'Das Unternehmen beschäftigt keine Mitarbeiter. Sämtliche buchhalterischen und administrativen Tätigkeiten werden ausschließlich durch den Inhaber persönlich ausgeführt. Eine Lohn- und Gehaltsabrechnung wird nicht durchgeführt.',
       },
     ],
   },
