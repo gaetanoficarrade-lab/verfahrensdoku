@@ -18,16 +18,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import landingLogo from '@/assets/landing-logo.png';
+import productHero from '@/assets/product-hero.png';
+import productPdf from '@/assets/product-pdf.png';
+import productAi from '@/assets/product-ai.png';
 
 /* ── Animation presets ── */
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' as const } },
-};
-
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 1 } },
 };
 
 const stagger = {
@@ -151,72 +149,79 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#000000] text-white antialiased overflow-x-hidden selection:bg-[#e8a91a]/30">
+    <div className="min-h-screen bg-white text-[#1d1d1f] antialiased overflow-x-hidden selection:bg-[#e8a91a]/20">
       {/* ─── NAV ─── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl bg-[#000000]/80 border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-6 h-12 flex items-center justify-between">
-          <img src={landingLogo} alt="gobdsuite" className="h-7 object-contain" />
-          <button
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl bg-white/80 border-b border-[#e5e5e5]">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <img src={landingLogo} alt="gobdsuite" className="h-10 sm:h-12 object-contain" />
+          <Button
             onClick={scrollToWaitlist}
-            className="text-sm font-medium text-[#e8a91a] hover:text-white transition-colors"
+            className="bg-[#1d1d1f] hover:bg-[#333] text-white rounded-full px-6 h-10 text-sm font-medium"
           >
-            Warteliste →
-          </button>
+            Auf die Warteliste
+          </Button>
         </div>
       </nav>
 
       {/* ─── HERO ─── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-12">
-        {/* Subtle radial glow */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#e8a91a]/5 rounded-full blur-[120px]" />
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.25, 0.4, 0.25, 1] }}
-          className="relative z-10 text-center max-w-5xl"
-        >
-          <img src={landingLogo} alt="gobdsuite" className="h-12 sm:h-14 object-contain mx-auto mb-10" />
-
-          <h1 className="text-5xl sm:text-7xl lg:text-[5.5rem] font-bold tracking-tight leading-[1.02] mb-8">
+      <section className="pt-40 pb-10 px-6">
+        <div className="max-w-5xl mx-auto text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="text-5xl sm:text-7xl lg:text-[5.5rem] font-bold tracking-tight leading-[1.05] mb-8"
+          >
             Verfahrensdokumentation.
             <br />
-            <span className="bg-gradient-to-r from-[#e8a91a] to-[#f5c842] bg-clip-text text-transparent">
-              In Minuten statt Wochen.
-            </span>
-          </h1>
+            <span className="text-[#e8a91a]">In Minuten statt Wochen.</span>
+          </motion.h1>
 
-          <p className="text-lg sm:text-xl lg:text-2xl text-white/50 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
-            gobdsuite erstellt GoBD-konforme Verfahrensdokumentationen per KI – 
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.15 }}
+            className="text-lg sm:text-xl lg:text-2xl text-[#86868b] max-w-2xl mx-auto mb-12 leading-relaxed"
+          >
+            gobdsuite erstellt GoBD-konforme Verfahrensdokumentationen per KI –
             vollautomatisch, prüfungssicher und mit einem Klick als PDF.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
             <Button
               onClick={scrollToWaitlist}
-              className="bg-[#e8a91a] hover:bg-[#f5c842] text-black font-semibold rounded-full px-8 h-13 text-base shadow-[0_0_30px_rgba(232,169,26,0.3)] hover:shadow-[0_0_40px_rgba(232,169,26,0.4)] transition-all"
+              className="bg-[#e8a91a] hover:bg-[#d49b15] text-white font-semibold rounded-full px-10 h-14 text-base shadow-lg shadow-[#e8a91a]/20"
             >
               Jetzt Platz sichern
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
+      </section>
 
+      {/* ─── HERO PRODUCT IMAGE ─── */}
+      <section className="px-6 pb-24 pt-12">
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-10 z-10"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="max-w-6xl mx-auto"
         >
-          <ChevronDown className="h-6 w-6 text-white/20 animate-bounce" />
+          <img
+            src={productHero}
+            alt="gobdsuite Dashboard – Verfahrensdokumentation erstellen"
+            className="w-full rounded-2xl shadow-2xl shadow-black/10 border border-[#e5e5e5]"
+          />
         </motion.div>
       </section>
 
       {/* ─── STATS RIBBON ─── */}
-      <section className="border-y border-white/5 bg-white/[0.02]">
-        <div className="max-w-6xl mx-auto px-6 py-16">
+      <section className="border-y border-[#e5e5e5] bg-[#fafafa]">
+        <div className="max-w-6xl mx-auto px-6 py-20">
           <AnimatedSection className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
               { value: '30', label: 'GoBD-Kapitel' },
@@ -225,8 +230,8 @@ export default function LandingPage() {
               { value: '0 €', label: 'Bußgeld-Risiko' },
             ].map((s) => (
               <motion.div key={s.label} variants={fadeUp} className="text-center">
-                <div className="text-3xl sm:text-5xl font-bold tracking-tight text-white mb-2">{s.value}</div>
-                <div className="text-sm text-white/40 uppercase tracking-widest">{s.label}</div>
+                <div className="text-3xl sm:text-5xl font-bold tracking-tight text-[#1d1d1f] mb-2">{s.value}</div>
+                <div className="text-sm text-[#86868b] uppercase tracking-widest">{s.label}</div>
               </motion.div>
             ))}
           </AnimatedSection>
@@ -243,47 +248,54 @@ export default function LandingPage() {
             <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
               Verfahrensdokumentation ist Pflicht.
               <br />
-              <span className="text-white/30">Aber niemand hat Zeit dafür.</span>
+              <span className="text-[#86868b]">Aber niemand hat Zeit dafür.</span>
             </motion.h2>
           </AnimatedSection>
 
-          <AnimatedSection className="grid md:grid-cols-3 gap-4">
+          <AnimatedSection className="grid md:grid-cols-3 gap-5">
             {painPoints.map((p) => (
               <motion.div
                 key={p.title}
                 variants={fadeUp}
-                className="rounded-3xl bg-white/[0.03] border border-white/5 p-10 hover:bg-white/[0.05] transition-all duration-500 group"
+                className="rounded-3xl bg-[#fafafa] border border-[#e5e5e5] p-10 hover:shadow-lg hover:shadow-black/5 transition-all duration-500"
               >
-                <div className="text-4xl font-bold text-red-500/80 mb-4">{p.stat}</div>
-                <h3 className="text-xl font-semibold mb-3 text-white/90">{p.title}</h3>
-                <p className="text-white/40 leading-relaxed">{p.desc}</p>
+                <div className="text-4xl font-bold text-red-500 mb-4">{p.stat}</div>
+                <h3 className="text-xl font-semibold mb-3">{p.title}</h3>
+                <p className="text-[#86868b] leading-relaxed">{p.desc}</p>
               </motion.div>
             ))}
           </AnimatedSection>
         </div>
       </section>
 
-      {/* ─── HERO STATEMENT ─── */}
-      <section className="py-32 px-6">
-        <AnimatedSection className="max-w-4xl mx-auto text-center">
-          <motion.h2
-            variants={fadeUp}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1]"
-          >
-            Die Software, die deine{' '}
-            <span className="bg-gradient-to-r from-[#e8a91a] to-[#f5c842] bg-clip-text text-transparent">
-              Verfahrensdokumentation
-            </span>{' '}
-            revolutioniert.
-          </motion.h2>
-          <motion.p variants={fadeUp} className="text-xl text-white/40 mt-8 max-w-2xl mx-auto leading-relaxed">
-            Für Steuerberater, Kanzleien und Unternehmen, die keine Zeit mehr mit manueller Dokumentation verschwenden wollen.
-          </motion.p>
-        </AnimatedSection>
+      {/* ─── HERO STATEMENT + AI IMAGE ─── */}
+      <section className="py-32 px-6 bg-[#fafafa]">
+        <div className="max-w-6xl mx-auto">
+          <AnimatedSection className="grid lg:grid-cols-2 gap-16 items-center">
+            <motion.div variants={fadeUp}>
+              <p className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">KI-gestützt</p>
+              <h2 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] mb-6">
+                Die Software, die deine{' '}
+                <span className="text-[#e8a91a]">Verfahrensdokumentation</span>{' '}
+                revolutioniert.
+              </h2>
+              <p className="text-xl text-[#86868b] leading-relaxed">
+                Für Steuerberater, Kanzleien und Unternehmen, die keine Zeit mehr mit manueller Dokumentation verschwenden wollen.
+              </p>
+            </motion.div>
+            <motion.div variants={fadeUp}>
+              <img
+                src={productAi}
+                alt="KI-Textgenerierung in gobdsuite"
+                className="w-full rounded-2xl shadow-xl shadow-black/5 border border-[#e5e5e5]"
+              />
+            </motion.div>
+          </AnimatedSection>
+        </div>
       </section>
 
       {/* ─── BENEFITS ─── */}
-      <section className="py-32 px-6 bg-white/[0.01]">
+      <section className="py-32 px-6">
         <div className="max-w-6xl mx-auto">
           <AnimatedSection className="text-center mb-20">
             <motion.p variants={fadeUp} className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">
@@ -292,27 +304,27 @@ export default function LandingPage() {
             <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
               Alles was du brauchst.
               <br />
-              <span className="text-white/30">In einer Plattform.</span>
+              <span className="text-[#86868b]">In einer Plattform.</span>
             </motion.h2>
           </AnimatedSection>
 
-          <AnimatedSection className="grid md:grid-cols-2 gap-4">
+          <AnimatedSection className="grid md:grid-cols-2 gap-5">
             {benefits.map((b, i) => (
               <motion.div
                 key={b.title}
                 variants={fadeUp}
-                className={`rounded-3xl border border-white/5 p-10 sm:p-12 transition-all duration-500 hover:border-[#e8a91a]/20 group ${
-                  i === 0 ? 'md:col-span-2 bg-gradient-to-br from-[#e8a91a]/10 to-transparent' : 'bg-white/[0.02]'
+                className={`rounded-3xl border border-[#e5e5e5] p-10 sm:p-12 transition-all duration-500 hover:shadow-lg hover:shadow-black/5 group ${
+                  i === 0 ? 'md:col-span-2 bg-gradient-to-br from-[#e8a91a]/5 to-[#fafafa]' : 'bg-[#fafafa]'
                 }`}
               >
                 <div className="flex items-start gap-5">
-                  <div className="w-12 h-12 rounded-2xl bg-[#e8a91a]/10 flex items-center justify-center shrink-0 group-hover:bg-[#e8a91a]/20 transition-colors">
+                  <div className="w-12 h-12 rounded-2xl bg-[#e8a91a]/10 flex items-center justify-center shrink-0 group-hover:bg-[#e8a91a]/15 transition-colors">
                     <b.icon className="h-6 w-6 text-[#e8a91a]" />
                   </div>
                   <div>
                     <div className="text-xs font-semibold text-[#e8a91a] uppercase tracking-[0.15em] mb-2">{b.metric}</div>
                     <h3 className="text-2xl font-bold mb-3">{b.title}</h3>
-                    <p className="text-white/40 leading-relaxed text-lg">{b.desc}</p>
+                    <p className="text-[#86868b] leading-relaxed text-lg">{b.desc}</p>
                   </div>
                 </div>
               </motion.div>
@@ -321,9 +333,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ─── HOW IT WORKS ─── */}
-      <section className="py-32 px-6">
-        <div className="max-w-4xl mx-auto">
+      {/* ─── HOW IT WORKS + PDF IMAGE ─── */}
+      <section className="py-32 px-6 bg-[#fafafa]">
+        <div className="max-w-6xl mx-auto">
           <AnimatedSection className="text-center mb-20">
             <motion.p variants={fadeUp} className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">
               So funktioniert's
@@ -331,30 +343,42 @@ export default function LandingPage() {
             <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
               Drei Schritte.
               <br />
-              <span className="text-white/30">Das war's.</span>
+              <span className="text-[#86868b]">Das war's.</span>
             </motion.h2>
           </AnimatedSection>
 
-          <AnimatedSection className="space-y-2">
-            {steps.map((s, i) => (
-              <motion.div
-                key={s.num}
-                variants={fadeUp}
-                className="flex gap-8 items-start rounded-3xl bg-white/[0.02] border border-white/5 p-10 hover:bg-white/[0.04] transition-all duration-500"
-              >
-                <div className="text-6xl sm:text-7xl font-black text-[#e8a91a]/15 leading-none shrink-0">{s.num}</div>
-                <div className="pt-2">
-                  <h3 className="text-2xl font-bold mb-2">{s.title}</h3>
-                  <p className="text-white/40 text-lg leading-relaxed">{s.desc}</p>
-                </div>
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <AnimatedSection className="space-y-3">
+              {steps.map((s) => (
+                <motion.div
+                  key={s.num}
+                  variants={fadeUp}
+                  className="flex gap-6 items-start rounded-2xl bg-white border border-[#e5e5e5] p-8 hover:shadow-md transition-all duration-500"
+                >
+                  <div className="text-5xl sm:text-6xl font-black text-[#e8a91a]/20 leading-none shrink-0">{s.num}</div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">{s.title}</h3>
+                    <p className="text-[#86868b] leading-relaxed">{s.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatedSection>
+
+            <AnimatedSection>
+              <motion.div variants={fadeUp}>
+                <img
+                  src={productPdf}
+                  alt="PDF-Export der Verfahrensdokumentation"
+                  className="w-full rounded-2xl shadow-xl shadow-black/5 border border-[#e5e5e5]"
+                />
               </motion.div>
-            ))}
-          </AnimatedSection>
+            </AnimatedSection>
+          </div>
         </div>
       </section>
 
       {/* ─── PLANS TEASER ─── */}
-      <section className="py-32 px-6 bg-white/[0.01]">
+      <section className="py-32 px-6">
         <AnimatedSection className="max-w-3xl mx-auto text-center">
           <motion.p variants={fadeUp} className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">
             Flexible Pläne
@@ -362,17 +386,17 @@ export default function LandingPage() {
           <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-bold tracking-tight mb-6">
             Für jede Kanzleigröße
             <br />
-            <span className="text-white/30">der passende Plan.</span>
+            <span className="text-[#86868b]">der passende Plan.</span>
           </motion.h2>
-          <motion.p variants={fadeUp} className="text-lg text-white/40 leading-relaxed mb-10 max-w-xl mx-auto">
-            Ob Einzelkämpfer oder große Kanzlei – gobdsuite passt sich deinen Anforderungen an. 
+          <motion.p variants={fadeUp} className="text-lg text-[#86868b] leading-relaxed mb-10 max-w-xl mx-auto">
+            Ob Einzelkämpfer oder große Kanzlei – gobdsuite passt sich deinen Anforderungen an.
             Verschiedene Pläne, ein Ziel: maximale Effizienz bei der Verfahrensdokumentation.
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-3">
             {['Solo', 'Berater', 'Agentur'].map((plan) => (
               <span
                 key={plan}
-                className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-6 py-3 text-sm font-medium text-white/70"
+                className="inline-flex items-center rounded-full border border-[#e5e5e5] bg-[#fafafa] px-6 py-3 text-sm font-medium text-[#1d1d1f]"
               >
                 {plan}
               </span>
@@ -386,22 +410,18 @@ export default function LandingPage() {
         <AnimatedSection>
           <motion.div
             variants={fadeUp}
-            className="max-w-4xl mx-auto text-center relative rounded-[2rem] overflow-hidden"
+            className="max-w-4xl mx-auto text-center relative rounded-[2rem] overflow-hidden bg-[#1d1d1f] text-white"
           >
-            {/* Glow background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#e8a91a]/15 via-transparent to-[#e8a91a]/5 pointer-events-none" />
-            <div className="absolute inset-0 border border-[#e8a91a]/10 rounded-[2rem] pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#e8a91a]/10 via-transparent to-[#e8a91a]/5 pointer-events-none" />
 
             <div className="relative z-10 px-8 py-20 sm:px-16 sm:py-24">
               <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-6">
                 Die nächste Betriebsprüfung kommt.
                 <br />
-                <span className="bg-gradient-to-r from-[#e8a91a] to-[#f5c842] bg-clip-text text-transparent">
-                  Bist du vorbereitet?
-                </span>
+                <span className="text-[#e8a91a]">Bist du vorbereitet?</span>
               </h2>
-              <p className="text-white/40 max-w-xl mx-auto mb-10 text-lg leading-relaxed">
-                Ohne ordnungsgemäße Verfahrensdokumentation verlierst du die Beweiskraft deiner gesamten Buchführung. 
+              <p className="text-white/50 max-w-xl mx-auto mb-10 text-lg leading-relaxed">
+                Ohne ordnungsgemäße Verfahrensdokumentation verlierst du die Beweiskraft deiner gesamten Buchführung.
                 Mit gobdsuite bist du auf der sicheren Seite.
               </p>
               <Button
@@ -417,16 +437,14 @@ export default function LandingPage() {
       </section>
 
       {/* ─── WAITLIST CTA ─── */}
-      <section ref={waitlistRef} className="py-32 px-6">
+      <section ref={waitlistRef} className="py-32 px-6 bg-[#fafafa]">
         <AnimatedSection>
           <motion.div variants={fadeUp} className="max-w-xl mx-auto text-center">
-            <img src={landingLogo} alt="gobdsuite" className="h-10 object-contain mx-auto mb-8 opacity-60" />
-
             <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
               Sei unter den Ersten.
             </h2>
-            <p className="text-white/40 mb-10 text-lg leading-relaxed">
-              Trag dich jetzt auf die Warteliste ein und erhalte exklusiven Zugang, 
+            <p className="text-[#86868b] mb-10 text-lg leading-relaxed">
+              Trag dich jetzt auf die Warteliste ein und erhalte exklusiven Zugang,
               sobald gobdsuite startet – inklusive Early-Bird-Vorteil.
             </p>
 
@@ -434,11 +452,11 @@ export default function LandingPage() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="rounded-2xl bg-[#e8a91a]/10 border border-[#e8a91a]/20 p-10"
+                className="rounded-2xl bg-green-50 border border-green-200 p-10"
               >
-                <CheckCircle2 className="h-10 w-10 text-[#e8a91a] mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-2">Du bist auf der Liste!</h3>
-                <p className="text-white/50">Wir benachrichtigen dich, sobald es losgeht.</p>
+                <CheckCircle2 className="h-10 w-10 text-green-500 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-green-900 mb-2">Du bist auf der Liste!</h3>
+                <p className="text-green-700">Wir benachrichtigen dich, sobald es losgeht.</p>
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
@@ -447,20 +465,20 @@ export default function LandingPage() {
                   placeholder="deine@email.de"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-13 rounded-full px-6 border-white/10 bg-white/5 text-base text-white placeholder:text-white/30 flex-1 focus:border-[#e8a91a]/50 focus:ring-[#e8a91a]/20"
+                  className="h-13 rounded-full px-6 border-[#d2d2d7] bg-white text-base flex-1"
                   required
                 />
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="bg-[#e8a91a] hover:bg-[#f5c842] text-black font-semibold rounded-full h-13 px-8 text-base shrink-0 transition-all"
+                  className="bg-[#e8a91a] hover:bg-[#d49b15] text-white font-semibold rounded-full h-13 px-8 text-base shrink-0"
                 >
                   {loading ? 'Wird eingetragen...' : 'Eintragen'}
                 </Button>
               </form>
             )}
 
-            <p className="text-xs text-white/20 mt-6">
+            <p className="text-xs text-[#86868b] mt-6">
               Kein Spam. Keine Weitergabe. Jederzeit abbestellbar.
             </p>
           </motion.div>
@@ -468,9 +486,8 @@ export default function LandingPage() {
       </section>
 
       {/* ─── FOOTER ─── */}
-      <footer className="py-8 px-6 border-t border-white/5">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/20">
-          <img src={landingLogo} alt="gobdsuite" className="h-5 object-contain opacity-40" />
+      <footer className="py-8 px-6 border-t border-[#e5e5e5]">
+        <div className="max-w-7xl mx-auto text-center text-xs text-[#86868b]">
           <p>© {new Date().getFullYear()} gobdsuite. Alle Rechte vorbehalten.</p>
         </div>
       </footer>
