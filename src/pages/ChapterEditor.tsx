@@ -94,6 +94,10 @@ export default function ChapterEditor() {
   const [files, setFiles] = useState<ChapterFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const initialNotesRef = useRef<string>('');
+  const hasLoadedRef = useRef(false);
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [generateLoading, setGenerateLoading] = useState(false);
