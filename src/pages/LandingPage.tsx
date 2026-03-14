@@ -501,6 +501,7 @@ export default function LandingPage() {
           <div className="flex gap-6">
             <Link to="/datenschutz" className="hover:text-[#1d1d1f] transition-colors">Datenschutz</Link>
             <Link to="/impressum" className="hover:text-[#1d1d1f] transition-colors">Impressum</Link>
+            <Link to="/agb" className="hover:text-[#1d1d1f] transition-colors">AGB</Link>
           </div>
         </div>
       </footer>
