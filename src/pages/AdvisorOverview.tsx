@@ -208,7 +208,7 @@ export default function AdvisorOverview() {
                 </div>
                 <div className="text-right shrink-0">
                   <Badge variant="secondary" className={`text-xs ${ampelColors[client.ampel]}`}>
-                    {ampelLabels[client.ampel]}
+                    {getAmpelLabel(client)}
                   </Badge>
                   {client.lastActivity && (
                     <p className="text-[10px] text-muted-foreground mt-1">
