@@ -14,6 +14,7 @@ import {
   HelpCircle,
   Eye,
 } from 'lucide-react';
+import sidebarLogo from '@/assets/sidebar-logo.png';
 import { NavLink } from '@/components/NavLink';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/contexts/AuthContext';
