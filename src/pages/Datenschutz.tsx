@@ -17,48 +17,90 @@ export default function Datenschutz() {
       </nav>
 
       <main className="max-w-3xl mx-auto px-6 py-16">
-        <h1 className="text-3xl font-bold mb-8">Datenschutzerklärung</h1>
+        <h1 className="text-3xl font-bold mb-12">Datenschutzerklärung</h1>
 
-        <div className="prose prose-neutral max-w-none text-[#86868b] space-y-6">
-          <h2 className="text-xl font-semibold text-[#1d1d1f]">1. Datenschutz auf einen Blick</h2>
-          <p>
-            Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit deinen personenbezogenen Daten passiert,
-            wenn du diese Website besuchst. Personenbezogene Daten sind alle Daten, mit denen du persönlich identifiziert werden kannst.
-          </p>
+        <div className="space-y-10 text-[#86868b] leading-relaxed">
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">1. Datenschutz auf einen Blick</h2>
+            <h3 className="text-lg font-semibold text-[#1d1d1f] mb-2">Allgemeine Hinweise</h3>
+            <p>
+              Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit deinen personenbezogenen Daten passiert,
+              wenn du diese Website besuchst.
+            </p>
+          </section>
 
-          <h2 className="text-xl font-semibold text-[#1d1d1f]">2. Verantwortliche Stelle</h2>
-          <p>
-            gobdsuite<br />
-            [Dein vollständiger Name / Firmenname]<br />
-            [Straße und Hausnummer]<br />
-            [PLZ Ort]<br />
-            E-Mail: [deine@email.de]
-          </p>
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">2. Verantwortlicher</h2>
+            <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:</p>
+            <p className="mt-3">
+              Gaetano Ficarra<br />
+              Elverdisser Str. 51<br />
+              33729 Bielefeld
+            </p>
+            <p className="mt-3">
+              WhatsApp: 0152 23856537<br />
+              E-Mail: kontakt@gaetanoficarra.de
+            </p>
+          </section>
 
-          <h2 className="text-xl font-semibold text-[#1d1d1f]">3. Datenerfassung auf dieser Website</h2>
-          <h3 className="text-lg font-semibold text-[#1d1d1f]">Cookies</h3>
-          <p>
-            Unsere Website verwendet Cookies. Das sind kleine Textdateien, die dein Webbrowser auf deinem Endgerät speichert.
-            Cookies helfen uns dabei, unser Angebot nutzerfreundlicher und effektiver zu gestalten.
-          </p>
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">3. Datenerfassung auf dieser Website</h2>
 
-          <h3 className="text-lg font-semibold text-[#1d1d1f]">Wartelisten-Anmeldung</h3>
-          <p>
-            Wenn du dich auf unsere Warteliste einträgst, speichern wir deine E-Mail-Adresse zum Zweck der Kontaktaufnahme
-            bezüglich unseres Produktstarts. Die Daten werden nicht an Dritte weitergegeben und können jederzeit gelöscht werden.
-          </p>
+            <h3 className="text-lg font-semibold text-[#1d1d1f] mb-2">Hosting</h3>
+            <p>
+              Diese Website wird extern gehostet. Die personenbezogenen Daten, die auf dieser Website erfasst werden,
+              werden auf den Servern des Hosters gespeichert.
+            </p>
+            <p className="mt-3">
+              Das Hosting erfolgt auf Basis von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren
+              und effizienten Bereitstellung dieser Website).
+            </p>
 
-          <h2 className="text-xl font-semibold text-[#1d1d1f]">4. Hosting</h2>
-          <p>
-            Diese Website wird bei einem externen Dienstleister gehostet (Hoster). Die personenbezogenen Daten, die auf dieser
-            Website erfasst werden, werden auf den Servern des Hosters gespeichert.
-          </p>
+            <h3 className="text-lg font-semibold text-[#1d1d1f] mt-6 mb-2">Wartelisten-Anmeldung</h3>
+            <p>
+              Wenn du dich auf unsere Warteliste einträgst, speichern wir deine E-Mail-Adresse zum Zweck der
+              Kontaktaufnahme bezüglich unseres Produktstarts. Die Daten werden nicht an Dritte weitergegeben
+              und können jederzeit gelöscht werden.
+            </p>
+          </section>
 
-          <h2 className="text-xl font-semibold text-[#1d1d1f]">5. Deine Rechte</h2>
-          <p>
-            Du hast jederzeit das Recht auf unentgeltliche Auskunft über deine gespeicherten personenbezogenen Daten, deren
-            Herkunft und Empfänger und den Zweck der Datenverarbeitung sowie ein Recht auf Berichtigung oder Löschung dieser Daten.
-          </p>
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">4. Externe Dienste</h2>
+
+            <h3 className="text-lg font-semibold text-[#1d1d1f] mb-2">HighLevel</h3>
+            <p>
+              Wir nutzen HighLevel für die Terminbuchung und Marketing-Automation. HighLevel ist ein US-amerikanischer
+              Dienst. Die Datenübertragung in die USA erfolgt auf Grundlage der Standardvertragsklauseln der EU-Kommission.
+            </p>
+
+            <h3 className="text-lg font-semibold text-[#1d1d1f] mt-6 mb-2">Zahlungsabwicklung</h3>
+            <p>
+              Für die Zahlungsabwicklung nutzen wir Stripe, Digistore24 und/oder CopeCart. Diese Anbieter verarbeiten
+              deine Zahlungsdaten gemäß deren eigenen Datenschutzbestimmungen.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">5. Deine Rechte</h2>
+            <p className="mb-3">Du hast jederzeit das Recht:</p>
+            <ul className="list-disc pl-6 space-y-1.5">
+              <li>Auskunft über deine gespeicherten personenbezogenen Daten zu erhalten</li>
+              <li>Berichtigung unrichtiger Daten zu verlangen</li>
+              <li>Löschung deiner Daten zu verlangen</li>
+              <li>Die Verarbeitung deiner Daten einzuschränken</li>
+              <li>Der Verarbeitung zu widersprechen</li>
+              <li>Datenübertragbarkeit zu verlangen</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">6. Kontakt</h2>
+            <p>Bei Fragen zum Datenschutz kannst du dich jederzeit an uns wenden:</p>
+            <p className="mt-3">
+              E-Mail: kontakt@gaetanoficarra.de<br />
+              WhatsApp: 0152 23856537
+            </p>
+          </section>
         </div>
       </main>
     </div>
