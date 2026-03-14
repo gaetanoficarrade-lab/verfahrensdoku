@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, CheckCircle2, Clock, AlertCircle, Circle, ChevronDown, Ban, Download } from 'lucide-react';
+import { ArrowLeft, Loader2, CheckCircle2, Clock, AlertCircle, Circle, ChevronDown, Ban, Download, Rocket } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,6 +13,7 @@ import { logAudit } from '@/lib/auditLog';
 import { triggerWebhook } from '@/lib/webhookTrigger';
 import { GOBD_CHAPTERS } from '@/lib/chapter-structure';
 import type { OnboardingAnswers } from '@/lib/onboarding-variables';
+import OnboardingWizard from '@/components/OnboardingWizard';
 
 const statusConfig: Record<string, { label: string; icon: typeof Circle; className: string }> = {
   empty: { label: 'Offen', icon: Circle, className: 'text-muted-foreground bg-muted' },
