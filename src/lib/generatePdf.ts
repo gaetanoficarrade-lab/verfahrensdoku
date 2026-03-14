@@ -30,6 +30,7 @@ interface PdfParams {
   itResponsible?: string;
   processResponsible?: string;
   versions?: VersionEntry[];
+  watermarkText?: string | null;
 }
 
 const MARGIN = 20;
