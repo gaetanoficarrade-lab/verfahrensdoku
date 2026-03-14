@@ -111,11 +111,9 @@ serve(async (req) => {
 
     let existingUser = await findUserByEmail();
     let isExistingUser = !!existingUser;
-    let userId: string;
+    let userId: string | null = existingUser?.id || null;
 
-    if (existingUser) {
-      userId = existingUser.id;
-    } else {
+    if (!existingUser) {
       const { data: userData, error: createError } = await supabaseAdmin.auth.admin.createUser({
         email: normalizedEmail,
         password: crypto.randomUUID(),
@@ -132,40 +130,47 @@ serve(async (req) => {
           });
         }
 
-        existingUser = await findUserByEmail();
-        if (!existingUser) {
-          return new Response(JSON.stringify({
-            error: "User exists but could not be resolved by email lookup",
-          }), {
-            status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
-        }
-
+        // Existing user, even if we cannot resolve user_id reliably
         isExistingUser = true;
-        userId = existingUser.id;
+        existingUser = await findUserByEmail();
+        userId = existingUser?.id || null;
       } else {
         userId = userData.user.id;
+        isExistingUser = false;
       }
     }
 
-    // Role + Profile in parallel
-    await Promise.all([
-      supabaseAdmin
-        .from("user_roles")
-        .upsert({ user_id: userId, role: "tenant_admin" }, { onConflict: "user_id,role" }),
-      supabaseAdmin
-        .from("profiles")
-        .upsert({ user_id: userId, tenant_id }, { onConflict: "user_id" }),
-    ]);
+    // Role + Profile best-effort (only when userId is known)
+    if (userId) {
+      await Promise.all([
+        supabaseAdmin
+          .from("user_roles")
+          .upsert({ user_id: userId, role: "tenant_admin" }, { onConflict: "user_id,role" }),
+        supabaseAdmin
+          .from("profiles")
+          .upsert({ user_id: userId, tenant_id }, { onConflict: "user_id" }),
+      ]);
+    }
 
-    // Generate link: use "recovery" for existing users, "invite" for new ones
-    const linkType = isExistingUser ? "recovery" : "invite";
-    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
+    // Generate link: existing users -> recovery, new users -> invite
+    let linkType: "invite" | "recovery" = isExistingUser ? "recovery" : "invite";
+    let { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
       type: linkType,
-      email,
+      email: normalizedEmail,
       options: { redirectTo: `${APP_URL}/set-password` },
     });
+
+    // Safety fallback: if invite fails with duplicate user, switch to recovery
+    if (linkError && linkType === "invite" && linkError.message?.toLowerCase().includes("already been registered")) {
+      linkType = "recovery";
+      const retry = await supabaseAdmin.auth.admin.generateLink({
+        type: "recovery",
+        email: normalizedEmail,
+        options: { redirectTo: `${APP_URL}/set-password` },
+      });
+      linkData = retry.data;
+      linkError = retry.error;
+    }
 
     if (linkError) {
       return new Response(JSON.stringify({ error: linkError.message }), {
