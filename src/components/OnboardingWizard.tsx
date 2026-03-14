@@ -245,9 +245,13 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
         <div className="space-y-4">
           <div className="space-y-2">
             <Label>Welche Programme / Software werden genutzt?</Label>
+            <p className="text-xs text-muted-foreground">Gemeint ist steuerrelevante Software: Buchhaltung, Rechnungsstellung, Kassensystem etc.</p>
             <Textarea value={answers.SOFTWARE_LIST || ''} onChange={(e) => set('SOFTWARE_LIST', e.target.value)} placeholder="z.B. DATEV, lexoffice, sevDesk, Microsoft 365..." />
           </div>
-          <TriSelect label="Wird Cloud-Software eingesetzt?" value={answers.USES_CLOUD as TriState} onChange={(v) => set('USES_CLOUD', v)} />
+          <div className="space-y-2">
+            <TriSelect label="Wird Cloud-Software eingesetzt?" value={answers.USES_CLOUD as TriState} onChange={(v) => set('USES_CLOUD', v)} />
+            <p className="text-xs text-muted-foreground">z.B. OneDrive, Google Drive für Belege – oder cloudbasierte Buchhaltungssoftware wie sevDesk, Lexware Online</p>
+          </div>
         </div>
       );
       case 5: return (
