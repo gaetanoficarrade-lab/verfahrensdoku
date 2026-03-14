@@ -586,7 +586,22 @@ export default function ChapterEditor() {
         body: { project_id: projectId, chapter_key: chapterKey, client_notes: notes },
       });
       if (error) throw error;
-      setEditorText(data.generated_text || '');
+      const generatedText = data.generated_text || '';
+      setEditorText(generatedText);
+
+      // Create version entry for AI generation
+      if (generatedText.trim()) {
+        const nextVersion = await getNextVersionNumber();
+        await supabase.from('chapter_versions').insert({
+          chapter_data_id: chapterDataId,
+          editor_text: generatedText,
+          changed_by: user?.id,
+          version_number: nextVersion,
+          change_type: 'ai_generated',
+          change_reason: 'KI-Textgenerierung',
+        });
+      }
+
       logAudit('text_generated', 'chapter', chapterDataId!, { chapter_key: chapterKey, project_id: projectId });
       toast({ title: 'Text generiert', description: `Qualitätsscore: ${data.quality_score || 0}/100` });
     } catch (err: any) {
