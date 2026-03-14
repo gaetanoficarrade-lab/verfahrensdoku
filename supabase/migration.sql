@@ -1180,3 +1180,53 @@ CREATE POLICY "Tenant admins manage own API keys" ON public.tenant_api_keys
     tenant_id IN (SELECT p.tenant_id FROM public.profiles p WHERE p.user_id = auth.uid())
     OR public.has_role(auth.uid(), 'super_admin')
   );
+
+-- =====================================================
+-- Plans Restructure: Solo, Berater, Agentur
+-- =====================================================
+
+-- Add new columns to plans table
+ALTER TABLE public.plans ADD COLUMN IF NOT EXISTS price_type TEXT NOT NULL DEFAULT 'monthly';
+ALTER TABLE public.plans ADD COLUMN IF NOT EXISTS setup_fee NUMERIC(10,2) DEFAULT 0;
+ALTER TABLE public.plans ADD COLUMN IF NOT EXISTS setup_fee_enabled BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE public.plans ADD COLUMN IF NOT EXISTS renewal_price NUMERIC(10,2) DEFAULT 0;
+ALTER TABLE public.plans ADD COLUMN IF NOT EXISTS duration_months INTEGER;
+ALTER TABLE public.plans ADD COLUMN IF NOT EXISTS trial_days INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE public.plans ADD COLUMN IF NOT EXISTS max_clients_unlimited BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE public.plans ADD COLUMN IF NOT EXISTS has_whitelabel BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE public.plans ADD COLUMN IF NOT EXISTS has_advisor_portal BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE public.plans ADD COLUMN IF NOT EXISTS has_ai_features BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE public.plans ADD COLUMN IF NOT EXISTS has_pdf_export BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE public.plans ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE public.plans ADD COLUMN IF NOT EXISTS sort_order INTEGER NOT NULL DEFAULT 0;
+
+-- Upgrade rules table
+CREATE TABLE IF NOT EXISTS public.plan_upgrade_rules (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  from_plan_id UUID NOT NULL REFERENCES public.plans(id) ON DELETE CASCADE,
+  to_plan_id UUID NOT NULL REFERENCES public.plans(id) ON DELETE CASCADE,
+  requires_setup_fee BOOLEAN NOT NULL DEFAULT false,
+  UNIQUE(from_plan_id, to_plan_id)
+);
+
+ALTER TABLE public.plan_upgrade_rules ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Super admins manage upgrade rules" ON public.plan_upgrade_rules
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'super_admin'))
+  WITH CHECK (public.has_role(auth.uid(), 'super_admin'));
+
+-- Delete existing plans and insert new ones
+DELETE FROM public.plans;
+
+INSERT INTO public.plans (name, max_clients, max_projects, price_monthly, price_type, setup_fee, setup_fee_enabled, renewal_price, duration_months, trial_days, max_clients_unlimited, has_whitelabel, has_advisor_portal, has_ai_features, has_pdf_export, is_active, sort_order)
+VALUES 
+  ('Solo', 1, 999, 980, 'one_time', 0, false, 199, 12, 0, false, false, false, true, true, true, 1),
+  ('Berater', 5, 999, 399, 'monthly', 590, true, 0, NULL, 7, false, false, true, true, true, true, 2),
+  ('Agentur', 999, 999, 799, 'monthly', 590, true, 0, NULL, 7, true, true, true, true, true, true, 3);
+
+-- Upgrade rule: Berater -> Agentur (no setup fee)
+INSERT INTO public.plan_upgrade_rules (from_plan_id, to_plan_id, requires_setup_fee)
+SELECT b.id, a.id, false
+FROM public.plans b, public.plans a
+WHERE b.name = 'Berater' AND a.name = 'Agentur';
