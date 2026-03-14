@@ -111,7 +111,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border">
-        <div className="flex items-center px-4 py-4">
+        <div className="flex items-center justify-center px-4 py-4">
           {collapsed ? (
             <img
               src={logoUrl || sidebarLogo}
