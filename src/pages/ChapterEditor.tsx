@@ -661,7 +661,7 @@ export default function ChapterEditor() {
                   onClick={handlePrecheck}
                 >
                   {precheckLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Search className="h-3.5 w-3.5" />}
-                  {precheckLoading ? 'KI prüft…' : 'Prüfen'}
+                  {precheckLoading ? 'Prüfung läuft…' : 'Prüfen'}
                 </Button>
                 <Button
                   disabled={submitting || !notes.trim() || !precheckDone}
