@@ -8,6 +8,15 @@ import { GOBD_CHAPTERS } from '@/lib/chapter-structure';
 import { generateVerfahrensdokumentation } from '@/lib/generatePdf';
 import { getNegativvermerk } from '@/lib/chapter-leitfragen';
 import type { OnboardingAnswers } from '@/lib/onboarding-variables';
+import { CHAPTER_TITLE_MAP } from '@/lib/chapter-structure';
+
+interface VersionEntry {
+  version: string;
+  date: string;
+  changedBy: string;
+  description: string;
+  chapter?: string;
+}
 
 interface ChapterData {
   chapter_key: string;
