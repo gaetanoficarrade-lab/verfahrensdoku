@@ -52,6 +52,7 @@ import LandingPage from "./pages/LandingPage";
 import Impressum from "./pages/Impressum";
 import Datenschutz from "./pages/Datenschutz";
 import AGB from "./pages/AGB";
+import AVV from "./pages/AVV";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
