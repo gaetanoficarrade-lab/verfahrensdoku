@@ -164,9 +164,9 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border p-2">
+      <SidebarFooter className="p-2">
         <SidebarMenu>
-          {/* Einstellungen link for tenant_admin / client */}
+          {/* Einstellungen above the divider */}
           {!showAdmin && (
             <SidebarMenuItem>
               <SidebarMenuButton
@@ -185,6 +185,11 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
           )}
+        </SidebarMenu>
+
+        <div className="border-t border-sidebar-border my-1" />
+
+        <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={handleSignOut}
