@@ -395,12 +395,12 @@ export function generateVerfahrensdokumentation({
   const contentWidth = getContentWidth(doc);
   const today = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
   const statusLabel = isFinal ? 'FINAL' : 'ENTWURF';
+  const currentVersion = versions.length > 0 ? versions[0].version : '1.0';
 
-  // === COVER PAGE ===
-  doc.setFillColor(24, 24, 27);
-  doc.rect(0, 0, pageWidth, doc.internal.pageSize.getHeight(), 'F');
+  // === COVER PAGE (white background, black text) ===
+  // No fill — white page by default
 
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(24, 24, 27);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(28);
   doc.text('Verfahrensdokumentation', pageWidth / 2, 85, { align: 'center' });
@@ -409,7 +409,7 @@ export function generateVerfahrensdokumentation({
   doc.setFont('helvetica', 'normal');
   doc.text('nach GoBD', pageWidth / 2, 97, { align: 'center' });
 
-  doc.setDrawColor(100, 100, 100);
+  doc.setDrawColor(180, 180, 180);
   doc.line(pageWidth / 2 - 30, 110, pageWidth / 2 + 30, 110);
 
   doc.setFontSize(16);
@@ -423,9 +423,11 @@ export function generateVerfahrensdokumentation({
 
   doc.setFontSize(12);
   doc.setFont('helvetica', 'normal');
+  doc.setTextColor(80, 80, 80);
   doc.text(projectName, pageWidth / 2, coverY + 2, { align: 'center' });
   doc.setFontSize(10);
   doc.text(`Erstellt am: ${today}`, pageWidth / 2, coverY + 17, { align: 'center' });
+  doc.text(`Version ${currentVersion}`, pageWidth / 2, coverY + 25, { align: 'center' });
 
   // Status Badge
   const badgeY = coverY + 32;
