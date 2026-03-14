@@ -49,6 +49,8 @@ import TenantEmailSettings from "./pages/TenantEmailSettings";
 import AdminWebhookLogs from "./pages/AdminWebhookLogs";
 import TestStarten from "./pages/TestStarten";
 import LandingPage from "./pages/LandingPage";
+import Impressum from "./pages/Impressum";
+import Datenschutz from "./pages/Datenschutz";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
