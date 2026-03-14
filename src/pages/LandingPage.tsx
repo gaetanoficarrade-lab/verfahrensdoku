@@ -9,7 +9,6 @@ import {
   ArrowRight,
   Clock,
   AlertTriangle,
-  Bot,
   Lock,
   ChevronDown,
   Building2,
@@ -60,7 +59,7 @@ const painPoints = [
     icon: Clock,
     stat: '40+ Std.',
     title: 'Manuelle Arbeit pro Doku',
-    desc: 'Steuerberater verbringen Wochen mit einer einzigen Verfahrensdokumentation. Das muss nicht sein.',
+    desc: 'Viele verbringen Wochen mit einer einzigen Verfahrensdokumentation. Das muss nicht sein.',
   },
   {
     icon: FileText,
@@ -72,25 +71,25 @@ const painPoints = [
 
 const benefits = [
   {
-    icon: Bot,
-    title: 'KI schreibt deine Doku',
-    desc: 'Professionelle Verfahrensdokumentationen in Minuten. Die KI kennt alle GoBD-Anforderungen und formuliert prüfungssichere Texte.',
+    icon: Zap,
+    title: 'Fertige Doku in Minuten',
+    desc: 'Beantworte wenige Fragen und erhalte eine vollständige, prüfungssichere Verfahrensdokumentation – mit KI-Unterstützung bei der Texterstellung.',
     metric: '90% weniger Zeitaufwand',
   },
   {
     icon: Shield,
     title: 'Immer GoBD-konform',
-    desc: '30 Pflichtkapitel, KI-Precheck, automatische Vollständigkeitsprüfung. Du lieferst ab – die KI sichert ab.',
+    desc: '30 Pflichtkapitel, automatische Vollständigkeitsprüfung und Precheck. Du lieferst ab – gobdsuite sichert ab.',
     metric: '100% Abdeckung',
   },
   {
     icon: Users,
-    title: 'Mandanten arbeiten mit',
-    desc: 'Deine Mandanten beantworten Fragen direkt im Portal. Keine E-Mail-Schleifen, kein Nachfragen.',
+    title: 'Zusammenarbeit leicht gemacht',
+    desc: 'Kunden und Teammitglieder beantworten Fragen direkt im Portal. Keine E-Mail-Schleifen, kein Nachfragen.',
     metric: 'Zero Reibungsverlust',
   },
   {
-    icon: Zap,
+    icon: FileText,
     title: 'Ein Klick. Fertige PDF.',
     desc: 'GoBD-konforme Verfahrensdokumentation als professionelle PDF – auf Knopfdruck, mit deinem Branding.',
     metric: 'Sofort einsatzbereit',
@@ -103,8 +102,8 @@ const benefits = [
   },
   {
     icon: Building2,
-    title: 'White-Label für Kanzleien',
-    desc: 'Eigenes Logo, eigene Farben – deine Mandanten sehen nur deine Marke. Komplett anpassbar.',
+    title: 'White-Label für Dienstleister',
+    desc: 'Eigenes Logo, eigene Farben – deine Kunden sehen nur deine Marke. Komplett anpassbar.',
     metric: 'Dein Tool, deine Marke',
   },
 ];
@@ -113,12 +112,12 @@ const steps = [
   {
     num: '01',
     title: 'Onboarding ausfüllen',
-    desc: 'Beantworte wenige Fragen zu deinem Mandanten – die KI erkennt automatisch, welche Kapitel relevant sind.',
+    desc: 'Beantworte wenige Fragen zu deinem Unternehmen oder Kunden – das System erkennt automatisch, welche Kapitel relevant sind.',
   },
   {
     num: '02',
-    title: 'KI generiert die Texte',
-    desc: 'Auf Basis der Antworten erstellt die KI professionelle, GoBD-konforme Kapitelinhalte. Jedes Kapitel kannst du individuell anpassen.',
+    title: 'Inhalte erstellen lassen',
+    desc: 'Auf Basis deiner Antworten werden professionelle, GoBD-konforme Kapitelinhalte generiert. Jedes Kapitel kannst du individuell anpassen.',
   },
   {
     num: '03',
@@ -180,11 +179,21 @@ export default function LandingPage() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="text-sm sm:text-base font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4"
+          >
+            Das erste vollumfängliche VD-Tool im DACH-Raum
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.15 }}
             className="text-lg sm:text-xl lg:text-2xl text-[#86868b] max-w-2xl mx-auto mb-12 leading-relaxed"
           >
-            gobdsuite erstellt GoBD-konforme Verfahrensdokumentationen per KI –
-            vollautomatisch, prüfungssicher und mit einem Klick als PDF.
+            gobdsuite erstellt GoBD-konforme Verfahrensdokumentationen –
+            prüfungssicher, effizient und mit einem Klick als PDF.
+            Für Steuerberater, Freelancer und alle, die ein Business führen.
           </motion.p>
 
           <motion.div
@@ -273,14 +282,14 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           <AnimatedSection className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div variants={fadeUp}>
-              <p className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">KI-gestützt</p>
+              <p className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">Einzigartig im DACH-Raum</p>
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] mb-6">
                 Die Software, die deine{' '}
                 <span className="text-[#e8a91a]">Verfahrensdokumentation</span>{' '}
                 revolutioniert.
               </h2>
               <p className="text-xl text-[#86868b] leading-relaxed">
-                Für Steuerberater, Kanzleien und Unternehmen, die keine Zeit mehr mit manueller Dokumentation verschwenden wollen.
+                Für Steuerberater, Freelancer und alle Unternehmer, die keine Zeit mehr mit manueller Dokumentation verschwenden wollen.
               </p>
             </motion.div>
             <motion.div variants={fadeUp}>
@@ -309,13 +318,11 @@ export default function LandingPage() {
           </AnimatedSection>
 
           <AnimatedSection className="grid md:grid-cols-2 gap-5">
-            {benefits.map((b, i) => (
+            {benefits.map((b) => (
               <motion.div
                 key={b.title}
                 variants={fadeUp}
-                className={`rounded-3xl border border-[#e5e5e5] p-10 sm:p-12 transition-all duration-500 hover:shadow-lg hover:shadow-black/5 group ${
-                  i === 0 ? 'md:col-span-2 bg-gradient-to-br from-[#e8a91a]/5 to-[#fafafa]' : 'bg-[#fafafa]'
-                }`}
+                className="rounded-3xl border border-[#e5e5e5] p-10 sm:p-12 transition-all duration-500 hover:shadow-lg hover:shadow-black/5 group bg-[#fafafa]"
               >
                 <div className="flex items-start gap-5">
                   <div className="w-12 h-12 rounded-2xl bg-[#e8a91a]/10 flex items-center justify-center shrink-0 group-hover:bg-[#e8a91a]/15 transition-colors">
@@ -384,12 +391,12 @@ export default function LandingPage() {
             Flexible Pläne
           </motion.p>
           <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-bold tracking-tight mb-6">
-            Für jede Kanzleigröße
+            Für jede Unternehmensgröße
             <br />
             <span className="text-[#86868b]">der passende Plan.</span>
           </motion.h2>
           <motion.p variants={fadeUp} className="text-lg text-[#86868b] leading-relaxed mb-10 max-w-xl mx-auto">
-            Ob Einzelkämpfer oder große Kanzlei – gobdsuite passt sich deinen Anforderungen an.
+            Ob Freelancer, Steuerberater oder wachsendes Unternehmen – gobdsuite passt sich deinen Anforderungen an.
             Verschiedene Pläne, ein Ziel: maximale Effizienz bei der Verfahrensdokumentation.
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-3">
