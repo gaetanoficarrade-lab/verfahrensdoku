@@ -62,6 +62,12 @@ export function TenantBrandingProvider({ children }: { children: React.ReactNode
     if (settings?.brand_text_color) {
       setHSL('--brand-foreground', settings.brand_text_color);
     }
+    if ((settings as any)?.menu_active_color) {
+      setHSL('--sidebar-accent', (settings as any).menu_active_color);
+    }
+    if ((settings as any)?.menu_active_text_color) {
+      setHSL('--sidebar-accent-foreground', (settings as any).menu_active_text_color);
+    }
     if (settings?.font_family) {
       setVar('--font-family-custom', settings.font_family);
       root.style.fontFamily = `${settings.font_family}, var(--font-sans, sans-serif)`;

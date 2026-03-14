@@ -20,6 +20,8 @@ const DEFAULTS = {
   menu_text_color: '',
   brand_text_color: '',
   sidebar_bg_color: '',
+  menu_active_color: '',
+  menu_active_text_color: '',
   font_family: '',
   custom_css: '',
   address: '',
@@ -36,7 +38,8 @@ type FormState = typeof DEFAULTS;
 
 const BRANDING_FIELDS: (keyof FormState)[] = [
   'primary_color', 'button_text_color', 'menu_text_color',
-  'brand_text_color', 'sidebar_bg_color', 'font_family', 'custom_css',
+  'brand_text_color', 'sidebar_bg_color', 'menu_active_color',
+  'menu_active_text_color', 'font_family', 'custom_css',
 ];
 
 const PRESET_STORAGE_KEY = 'branding-presets';
@@ -87,6 +90,12 @@ function applyLivePreview(form: FormState) {
   }
   if (form.sidebar_bg_color) {
     setHSL('--sidebar-background', form.sidebar_bg_color);
+  }
+  if (form.menu_active_color) {
+    setHSL('--sidebar-accent', form.menu_active_color);
+  }
+  if (form.menu_active_text_color) {
+    setHSL('--sidebar-accent-foreground', form.menu_active_text_color);
   }
   if (form.font_family) {
     root.style.fontFamily = `${form.font_family}, var(--font-sans, sans-serif)`;
@@ -149,6 +158,8 @@ export default function BrandingSettings() {
         menu_text_color: (settings as any).menu_text_color || '',
         brand_text_color: (settings as any).brand_text_color || '',
         sidebar_bg_color: (settings as any).sidebar_bg_color || '',
+        menu_active_color: (settings as any).menu_active_color || '',
+        menu_active_text_color: (settings as any).menu_active_text_color || '',
         font_family: (settings as any).font_family || '',
         custom_css: (settings as any).custom_css || '',
         address: settings.address || '',
@@ -354,6 +365,8 @@ export default function BrandingSettings() {
               <ColorField label="Seitenleiste – Hintergrundfarbe" field="sidebar_bg_color" value={form.sidebar_bg_color} placeholder="#141414 (Standard)" defaultVal="#141414" onChange={handleChange} />
               <ColorField label="Seitenleiste – Schriftfarbe" field="menu_text_color" value={form.menu_text_color} placeholder="#c7c7c7 (Standard)" defaultVal="#c7c7c7" onChange={handleChange} />
               <ColorField label="Toolname-Schriftfarbe" field="brand_text_color" value={form.brand_text_color} placeholder="#ffffff (Standard)" defaultVal="#ffffff" onChange={handleChange} />
+              <ColorField label="Aktiver Menüpunkt – Hintergrundfarbe" field="menu_active_color" value={form.menu_active_color} placeholder="#262626 (Standard)" defaultVal="#262626" onChange={handleChange} />
+              <ColorField label="Aktiver Menüpunkt – Schriftfarbe" field="menu_active_text_color" value={form.menu_active_text_color} placeholder="#d9d9d9 (Standard)" defaultVal="#d9d9d9" onChange={handleChange} />
               <Separator />
               <div>
                 <Label className="mb-2 block">Button-Vorschau</Label>
