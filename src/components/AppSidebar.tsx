@@ -49,7 +49,6 @@ const adminItems = [
 
 const tenantItems = [
   { title: 'Dashboard', url: '/', icon: LayoutDashboard },
-  { title: 'Übersicht', url: '/overview', icon: Eye },
   { title: 'Mandanten', url: '/clients', icon: Users },
 ];
 
