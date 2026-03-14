@@ -598,7 +598,7 @@ export default function ChapterEditor() {
           <div className="relative">
             <Textarea
               value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              onChange={(e) => { setNotes(e.target.value); if (precheckDone) setPrecheckDone(false); }}
               placeholder="Beschreiben Sie hier die relevanten Informationen für dieses Kapitel. Orientieren Sie sich an den Leitfragen oben…"
               rows={12}
               disabled={isAdvisor || (isSubmitted && !isAmending)}
