@@ -615,6 +615,7 @@ CREATE TABLE public.tenant_settings (
   button_text_color TEXT,
   menu_text_color TEXT,
   brand_text_color TEXT,
+  sidebar_bg_color TEXT,
   font_family TEXT,
   custom_css TEXT,
   updated_at TIMESTAMPTZ DEFAULT now()
