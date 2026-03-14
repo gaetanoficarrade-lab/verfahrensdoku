@@ -69,17 +69,14 @@ export function AppSidebar() {
   const { data: tenantSettings } = useTenantSettings();
   const tenantPlan = useTenantPlan();
 
-  // Filter settings items based on plan
-  const tenantSettingsItems = allTenantSettingsItems.filter(item => {
-    if (!item.requiresFn) return true;
-    return tenantPlan[item.requiresFn];
-  });
   const currentPath = location.pathname;
   const isActive = (path: string) => {
     if (path === '/admin' && currentPath === '/admin') return true;
     if (path === '/' && currentPath === '/') return true;
     if (path === '/client' && currentPath === '/client') return true;
-    if (path !== '/' && path !== '/admin' && path !== '/client' && currentPath.startsWith(path)) return true;
+    // Settings: highlight if any /settings/* is active
+    if (path.startsWith('/settings/') && currentPath.startsWith('/settings/')) return true;
+    if (path !== '/' && path !== '/admin' && path !== '/client' && !path.startsWith('/settings/') && currentPath.startsWith(path)) return true;
     return false;
   };
 
