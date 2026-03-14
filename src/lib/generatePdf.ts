@@ -59,18 +59,18 @@ function addFooter(doc: jsPDF, pageNum: number, totalPages: number) {
   doc.text('Vertraulich', pageWidth - MARGIN, pageHeight - 10, { align: 'right' });
 }
 
-function addWatermark(doc: jsPDF) {
+function addWatermark(doc: jsPDF, text: string = 'ENTWURF') {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   doc.saveGraphicsState();
   doc.setGState(new (doc as any).GState({ opacity: 0.08 }));
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(60);
+  doc.setFontSize(text.length > 10 ? 36 : 60);
   doc.setTextColor(200, 0, 0);
   // Rotate and place diagonally
   const centerX = pageWidth / 2;
   const centerY = pageHeight / 2;
-  doc.text('ENTWURF', centerX, centerY, {
+  doc.text(text, centerX, centerY, {
     align: 'center',
     angle: 45,
   });
