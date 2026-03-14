@@ -351,7 +351,7 @@ export default function ChapterEditor() {
       }
 
       console.error('Precheck error details:', JSON.stringify(err, null, 2), detail, err?.status);
-      toast({ title: 'Fehler bei der Prüfung', description: `Die KI-Prüfung konnte nicht durchgeführt werden: ${detail}`, variant: 'destructive' });
+      toast({ title: 'Fehler bei der Prüfung', description: `Die Prüfung konnte nicht durchgeführt werden: ${detail}`, variant: 'destructive' });
     } finally {
       setPrecheckLoading(false);
     }
@@ -675,7 +675,7 @@ export default function ChapterEditor() {
               </div>
               {!precheckDone && notes.trim() && (
                 <p className="text-xs text-muted-foreground">
-                  Bitte führen Sie zuerst die KI-Prüfung durch, bevor Sie das Kapitel einreichen.
+                  Bitte führen Sie zuerst die Prüfung durch, bevor Sie das Kapitel einreichen.
                 </p>
               )}
 
