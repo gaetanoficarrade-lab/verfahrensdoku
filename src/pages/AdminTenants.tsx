@@ -396,6 +396,22 @@ const AdminTenants = () => {
                 </SelectContent>
               </Select>
             </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="is_free">Kostenlos (kein Zahlungspflichtig)</Label>
+              <Switch
+                id="is_free"
+                checked={form.is_free}
+                onCheckedChange={(v) => setForm({ ...form, is_free: v })}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="trial_active">Testphase aktiv</Label>
+              <Switch
+                id="trial_active"
+                checked={form.trial_active}
+                onCheckedChange={(v) => setForm({ ...form, trial_active: v })}
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Abbrechen</Button>
