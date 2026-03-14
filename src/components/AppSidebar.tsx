@@ -60,7 +60,7 @@ export function AppSidebar() {
   const navigate = useNavigate();
   const { signOut, isSuperAdmin, impersonation, roles } = useAuthContext();
   const { data: tenantSettings } = useTenantSettings();
-  const tenantPlan = useTenantPlan();
+  
 
   const currentPath = location.pathname;
   const isActive = (path: string) => {
