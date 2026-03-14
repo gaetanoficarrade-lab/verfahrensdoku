@@ -430,7 +430,7 @@ export function generateVerfahrensdokumentation({
   doc.text(`Version ${currentVersion}`, pageWidth / 2, coverY + 25, { align: 'center' });
 
   // Status Badge
-  const badgeY = coverY + 32;
+  const badgeY = coverY + 40;
   const badgeWidth = 50;
   const badgeHeight = 10;
   if (isFinal) {
