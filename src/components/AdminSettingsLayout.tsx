@@ -30,26 +30,28 @@ export function AdminSettingsLayout({ children }: AdminSettingsLayoutProps) {
       </div>
 
       {/* Horizontal sub-navigation */}
-      <nav className="flex flex-wrap gap-1 border-b border-border pb-0">
-        {settingsNav.map((item) => {
-          const isActive = location.pathname === item.url;
-          return (
-            <NavLink
-              key={item.url}
-              to={item.url}
-              className={cn(
-                'flex items-center gap-2 px-4 py-2 text-sm transition-colors border-b-2 -mb-px',
-                isActive
-                  ? 'border-primary text-primary font-medium'
-                  : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30'
-              )}
-            >
-              <item.icon className="h-4 w-4" />
-              {item.title}
-            </NavLink>
-          );
-        })}
-      </nav>
+      <div className="rounded-xl bg-card border border-border p-1.5 shadow-sm">
+        <nav className="flex flex-wrap gap-1" aria-label="Plattform-Einstellungen">
+          {settingsNav.map((item) => {
+            const isActive = location.pathname === item.url;
+            return (
+              <NavLink
+                key={item.url}
+                to={item.url}
+                className={cn(
+                  'flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200',
+                  isActive
+                    ? 'bg-accent text-accent-foreground shadow-md'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                )}
+              >
+                <item.icon className={cn('h-4 w-4', isActive && 'text-accent-foreground')} />
+                {item.title}
+              </NavLink>
+            );
+          })}
+        </nav>
+      </div>
 
       {/* Content */}
       <div>{children}</div>
