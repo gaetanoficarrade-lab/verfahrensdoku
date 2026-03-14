@@ -254,231 +254,247 @@ export default function BrandingSettings() {
   );
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Branding & Einstellungen</h1>
-        <p className="text-muted-foreground mt-1">
-          Änderungen an Farben werden sofort als Vorschau angezeigt. Klicken Sie „Speichern" um sie dauerhaft zu übernehmen.
-        </p>
-      </div>
-
-      {/* Logo & Brand Name */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Building2 className="h-5 w-5" />
-            Marke & Logo
-          </CardTitle>
-          <CardDescription>Logo und Firmenname ersetzen „GoBD-Suite" überall</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Firmenname</Label>
-            <Input value={form.brand_name} onChange={(e) => handleChange('brand_name', e.target.value)} placeholder="z.B. Musterkanzlei GmbH" />
-            <p className="text-xs text-muted-foreground">Wird anstelle von "GoBD-Suite" in der Navigation angezeigt.</p>
-          </div>
-          <div className="space-y-2">
-            <Label>Logo</Label>
-            <div className="flex items-center gap-4">
-              {form.logo_url ? (
-                <img src={form.logo_url} alt="Logo" className="h-12 w-12 rounded-lg object-contain border border-border bg-background" />
-              ) : (
-                <div className="h-12 w-12 rounded-lg border-2 border-dashed border-border flex items-center justify-center">
-                  <Upload className="h-5 w-5 text-muted-foreground" />
-                </div>
-              )}
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploadMutation.isPending}>
-                    {uploadMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
-                    {form.logo_url ? 'Logo ersetzen' : 'Logo hochladen'}
-                  </Button>
-                  {form.logo_url && (
-                    <Button variant="destructive" size="sm" onClick={handleLogoRemove}>Entfernen</Button>
-                  )}
-                </div>
-                <p className="text-xs text-muted-foreground">PNG, JPG, SVG – max. 2 MB</p>
-              </div>
-              <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Farben */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Palette className="h-5 w-5" />
-            Farben
-          </CardTitle>
-          <CardDescription>Änderungen werden sofort als Live-Vorschau angezeigt</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-5">
-          <ColorField label="Buttonfarbe (Akzentfarbe)" field="primary_color" placeholder="#1e3a5f" defaultVal="#1e3a5f" />
-          <ColorField label="Button-Schriftfarbe" field="button_text_color" placeholder="#ffffff (Standard)" defaultVal="#ffffff" />
-          <ColorField label="Seitenleiste – Hintergrundfarbe" field="sidebar_bg_color" placeholder="#141414 (Standard)" defaultVal="#141414" />
-          <ColorField label="Seitenleiste – Schriftfarbe" field="menu_text_color" placeholder="#c7c7c7 (Standard)" defaultVal="#c7c7c7" />
-          <ColorField label="Toolname-Schriftfarbe (Navigation)" field="brand_text_color" placeholder="#ffffff (Standard)" defaultVal="#ffffff" />
-
-          {/* Live button preview */}
-          <div className="pt-2">
-            <Label className="mb-2 block">Button-Vorschau</Label>
-            <Button size="sm" style={{ backgroundColor: form.primary_color, color: form.button_text_color || '#fff' }}>
-              Beispiel-Button
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Schriftart */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Type className="h-5 w-5" /> Schriftart</CardTitle>
-          <CardDescription>Wählen Sie eine Schriftart für Ihr Interface</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="space-y-2">
-            <Label>Schriftart (Google Fonts Name)</Label>
-            <Input value={form.font_family} onChange={(e) => handleChange('font_family', e.target.value)} placeholder="z.B. Inter, Roboto, Open Sans, Lato" />
-            <p className="text-xs text-muted-foreground">
-              Binden Sie die Schrift via Custom CSS mit @import ein, dann geben Sie hier den Namen ein.
-            </p>
-          </div>
-          {form.font_family && (
-            <div className="p-3 rounded-md border border-border" style={{ fontFamily: form.font_family }}>
-              <p className="text-sm">Vorschau: Das ist ein Beispieltext in „{form.font_family}".</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Presets */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Download className="h-5 w-5" /> Design-Presets</CardTitle>
-          <CardDescription>Speichern Sie Ihr aktuelles Farbschema als Preset, laden Sie es jederzeit wieder oder setzen Sie alles zurück.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Save new preset */}
-          <div className="flex gap-2">
-            <Input value={presetName} onChange={(e) => setPresetName(e.target.value)} placeholder="Preset-Name eingeben..." className="flex-1" />
-            <Button variant="outline" size="sm" onClick={handleSavePreset} disabled={!presetName.trim()}>
-              <Save className="h-4 w-4 mr-2" /> Speichern
-            </Button>
-          </div>
-
-          {/* Existing presets */}
-          {Object.keys(presets).length > 0 && (
-            <div className="space-y-2">
-              <Label>Gespeicherte Presets</Label>
-              {Object.keys(presets).map(name => (
-                <div key={name} className="flex items-center gap-2 p-2 rounded-md border border-border">
-                  <span className="flex-1 text-sm font-medium">{name}</span>
-                  <Button variant="outline" size="sm" onClick={() => handleLoadPreset(name)}>
-                    <FolderOpen className="h-3.5 w-3.5 mr-1" /> Laden
-                  </Button>
-                  <Button variant="ghost" size="sm" className="text-destructive" onClick={() => handleDeletePreset(name)}>
-                    Löschen
-                  </Button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <Separator />
-
-          {/* Reset to defaults */}
-          <Button variant="outline" onClick={handleReset}>
-            <RotateCcw className="h-4 w-4 mr-2" /> Auf Standard zurücksetzen
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Custom CSS */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Code className="h-5 w-5" /> Eigenes CSS</CardTitle>
-          <CardDescription>Eigener CSS-Code für erweiterte Anpassungen. Wird nach dem Speichern aktiv.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            value={form.custom_css}
-            onChange={(e) => handleChange('custom_css', e.target.value)}
-            placeholder={`/* Beispiel: Google Font einbinden */\n@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');\n\n/* Beispiel: Sidebar-Hintergrund ändern */\n[data-sidebar] {\n  background-color: #1a1a2e !important;\n}`}
-            rows={10}
-            className="font-mono text-xs"
-          />
-        </CardContent>
-      </Card>
-
-      {/* Contact Details */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Building2 className="h-5 w-5" /> Kontaktdaten</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Adresse</Label>
-            <Input value={form.address} onChange={(e) => handleChange('address', e.target.value)} placeholder="Musterstraße 1, 12345 Berlin" />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Telefon</Label>
-              <Input value={form.phone} onChange={(e) => handleChange('phone', e.target.value)} placeholder="+49 123 456789" />
-            </div>
-            <div className="space-y-2">
-              <Label>Website</Label>
-              <Input value={form.website} onChange={(e) => handleChange('website', e.target.value)} placeholder="https://www.example.de" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Impressum */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5" /> Impressum</CardTitle>
-          <CardDescription>Impressumstext und/oder Link. Beides optional.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Impressum-Text</Label>
-            <Textarea value={form.imprint} onChange={(e) => handleChange('imprint', e.target.value)} placeholder="Impressum-Text eingeben..." rows={6} />
-          </div>
-          <div className="space-y-2">
-            <Label>Impressum-URL</Label>
-            <Input value={form.imprint_url} onChange={(e) => handleChange('imprint_url', e.target.value)} placeholder="https://www.example.de/impressum" type="url" />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Datenschutz */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Shield className="h-5 w-5" /> Datenschutz</CardTitle>
-          <CardDescription>Datenschutztext und/oder Link. Beides optional.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Datenschutz-Text</Label>
-            <Textarea value={form.privacy_text} onChange={(e) => handleChange('privacy_text', e.target.value)} placeholder="Datenschutzerklärung eingeben..." rows={6} />
-          </div>
-          <div className="space-y-2">
-            <Label>Datenschutz-URL</Label>
-            <Input value={form.privacy_url} onChange={(e) => handleChange('privacy_url', e.target.value)} placeholder="https://www.example.de/datenschutz" type="url" />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Separator />
-
-      <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={saveMutation.isPending} size="lg">
+    <div className="max-w-4xl mx-auto space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Branding & Einstellungen</h1>
+          <p className="text-muted-foreground mt-1">
+            Änderungen an Farben werden sofort als Vorschau angezeigt.
+          </p>
+        </div>
+        <Button onClick={handleSave} disabled={saveMutation.isPending}>
           {saveMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
-          Einstellungen speichern
+          Speichern
         </Button>
       </div>
+
+      <Tabs defaultValue="brand" className="w-full">
+        <TabsList className="w-full justify-start">
+          <TabsTrigger value="brand" className="gap-1.5">
+            <Building2 className="h-4 w-4" /> Marke & Logo
+          </TabsTrigger>
+          <TabsTrigger value="colors" className="gap-1.5">
+            <Palette className="h-4 w-4" /> Farben
+          </TabsTrigger>
+          <TabsTrigger value="typography" className="gap-1.5">
+            <Type className="h-4 w-4" /> Schrift & CSS
+          </TabsTrigger>
+          <TabsTrigger value="contact" className="gap-1.5">
+            <Building2 className="h-4 w-4" /> Kontakt
+          </TabsTrigger>
+          <TabsTrigger value="legal" className="gap-1.5">
+            <Shield className="h-4 w-4" /> Rechtliches
+          </TabsTrigger>
+          <TabsTrigger value="presets" className="gap-1.5">
+            <Download className="h-4 w-4" /> Presets
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Tab: Marke & Logo */}
+        <TabsContent value="brand" className="space-y-4 mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Firmenname & Logo</CardTitle>
+              <CardDescription>Ersetzen „GoBD-Suite" überall: Navigation, Registrierung, E-Mails</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Firmenname</Label>
+                <Input value={form.brand_name} onChange={(e) => handleChange('brand_name', e.target.value)} placeholder="z.B. Musterkanzlei GmbH" />
+                <p className="text-xs text-muted-foreground">Wird anstelle von "GoBD-Suite" in der Navigation angezeigt.</p>
+              </div>
+              <div className="space-y-2">
+                <Label>Logo</Label>
+                <div className="flex items-center gap-4">
+                  {form.logo_url ? (
+                    <img src={form.logo_url} alt="Logo" className="h-12 w-12 rounded-lg object-contain border border-border bg-background" />
+                  ) : (
+                    <div className="h-12 w-12 rounded-lg border-2 border-dashed border-border flex items-center justify-center">
+                      <Upload className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                  )}
+                  <div className="flex flex-col gap-2">
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploadMutation.isPending}>
+                        {uploadMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
+                        {form.logo_url ? 'Logo ersetzen' : 'Logo hochladen'}
+                      </Button>
+                      {form.logo_url && (
+                        <Button variant="destructive" size="sm" onClick={handleLogoRemove}>Entfernen</Button>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">PNG, JPG, SVG – max. 2 MB</p>
+                  </div>
+                  <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Tab: Farben */}
+        <TabsContent value="colors" className="space-y-4 mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Farbeinstellungen</CardTitle>
+              <CardDescription>Änderungen werden sofort als Live-Vorschau angezeigt</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              <ColorField label="Buttonfarbe (Akzentfarbe)" field="primary_color" placeholder="#1e3a5f" defaultVal="#1e3a5f" />
+              <ColorField label="Button-Schriftfarbe" field="button_text_color" placeholder="#ffffff (Standard)" defaultVal="#ffffff" />
+              <Separator />
+              <ColorField label="Seitenleiste – Hintergrundfarbe" field="sidebar_bg_color" placeholder="#141414 (Standard)" defaultVal="#141414" />
+              <ColorField label="Seitenleiste – Schriftfarbe" field="menu_text_color" placeholder="#c7c7c7 (Standard)" defaultVal="#c7c7c7" />
+              <ColorField label="Toolname-Schriftfarbe" field="brand_text_color" placeholder="#ffffff (Standard)" defaultVal="#ffffff" />
+              <Separator />
+              <div>
+                <Label className="mb-2 block">Button-Vorschau</Label>
+                <Button size="sm" style={{ backgroundColor: form.primary_color, color: form.button_text_color || '#fff' }}>
+                  Beispiel-Button
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Tab: Schrift & CSS */}
+        <TabsContent value="typography" className="space-y-4 mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Schriftart</CardTitle>
+              <CardDescription>Binden Sie die Schrift via Custom CSS mit @import ein</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="space-y-2">
+                <Label>Schriftart (Google Fonts Name)</Label>
+                <Input value={form.font_family} onChange={(e) => handleChange('font_family', e.target.value)} placeholder="z.B. Inter, Roboto, Open Sans, Lato" />
+              </div>
+              {form.font_family && (
+                <div className="p-3 rounded-md border border-border" style={{ fontFamily: form.font_family }}>
+                  <p className="text-sm">Vorschau: Das ist ein Beispieltext in „{form.font_family}".</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Eigenes CSS</CardTitle>
+              <CardDescription>CSS-Code für erweiterte Anpassungen. Wird nach dem Speichern aktiv.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                value={form.custom_css}
+                onChange={(e) => handleChange('custom_css', e.target.value)}
+                placeholder={`/* Google Font einbinden */\n@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');\n\n/* Sidebar-Hintergrund */\n[data-sidebar] {\n  background-color: #1a1a2e !important;\n}`}
+                rows={10}
+                className="font-mono text-xs"
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Tab: Kontakt */}
+        <TabsContent value="contact" className="space-y-4 mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Kontaktdaten</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Adresse</Label>
+                <Input value={form.address} onChange={(e) => handleChange('address', e.target.value)} placeholder="Musterstraße 1, 12345 Berlin" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Telefon</Label>
+                  <Input value={form.phone} onChange={(e) => handleChange('phone', e.target.value)} placeholder="+49 123 456789" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Website</Label>
+                  <Input value={form.website} onChange={(e) => handleChange('website', e.target.value)} placeholder="https://www.example.de" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Tab: Rechtliches */}
+        <TabsContent value="legal" className="space-y-4 mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Impressum</CardTitle>
+              <CardDescription>Impressumstext und/oder Link. Beides optional.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Impressum-Text</Label>
+                <Textarea value={form.imprint} onChange={(e) => handleChange('imprint', e.target.value)} placeholder="Impressum-Text eingeben..." rows={6} />
+              </div>
+              <div className="space-y-2">
+                <Label>Impressum-URL</Label>
+                <Input value={form.imprint_url} onChange={(e) => handleChange('imprint_url', e.target.value)} placeholder="https://www.example.de/impressum" type="url" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Datenschutz</CardTitle>
+              <CardDescription>Datenschutztext und/oder Link. Beides optional.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Datenschutz-Text</Label>
+                <Textarea value={form.privacy_text} onChange={(e) => handleChange('privacy_text', e.target.value)} placeholder="Datenschutzerklärung eingeben..." rows={6} />
+              </div>
+              <div className="space-y-2">
+                <Label>Datenschutz-URL</Label>
+                <Input value={form.privacy_url} onChange={(e) => handleChange('privacy_url', e.target.value)} placeholder="https://www.example.de/datenschutz" type="url" />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Tab: Presets */}
+        <TabsContent value="presets" className="space-y-4 mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Design-Presets</CardTitle>
+              <CardDescription>Speichern Sie Ihr Farbschema, laden Sie es jederzeit wieder oder setzen Sie alles zurück.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex gap-2">
+                <Input value={presetName} onChange={(e) => setPresetName(e.target.value)} placeholder="Preset-Name eingeben..." className="flex-1" />
+                <Button variant="outline" size="sm" onClick={handleSavePreset} disabled={!presetName.trim()}>
+                  <Save className="h-4 w-4 mr-2" /> Speichern
+                </Button>
+              </div>
+
+              {Object.keys(presets).length > 0 && (
+                <div className="space-y-2">
+                  <Label>Gespeicherte Presets</Label>
+                  {Object.keys(presets).map(name => (
+                    <div key={name} className="flex items-center gap-2 p-2 rounded-md border border-border">
+                      <span className="flex-1 text-sm font-medium">{name}</span>
+                      <Button variant="outline" size="sm" onClick={() => handleLoadPreset(name)}>
+                        <FolderOpen className="h-3.5 w-3.5 mr-1" /> Laden
+                      </Button>
+                      <Button variant="ghost" size="sm" className="text-destructive" onClick={() => handleDeletePreset(name)}>
+                        Löschen
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <Separator />
+
+              <Button variant="outline" onClick={handleReset}>
+                <RotateCcw className="h-4 w-4 mr-2" /> Auf Standard zurücksetzen
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
