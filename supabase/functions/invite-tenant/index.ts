@@ -152,13 +152,26 @@ serve(async (req) => {
 
     // Role + Profile best-effort (only when userId is known)
     if (userId) {
+      const nameParts = (contact_name || '').trim().split(/\s+/);
+      const firstName = nameParts[0] || null;
+      const lastName = nameParts.slice(1).join(' ') || null;
+
       await Promise.all([
         supabaseAdmin
           .from("user_roles")
           .upsert({ user_id: userId, role: "tenant_admin" }, { onConflict: "user_id,role" }),
         supabaseAdmin
           .from("profiles")
-          .upsert({ user_id: userId, tenant_id }, { onConflict: "user_id" }),
+          .upsert(
+            {
+              user_id: userId,
+              tenant_id,
+              first_name: firstName,
+              last_name: lastName,
+              email: normalizedEmail,
+            },
+            { onConflict: "user_id" }
+          ),
       ]);
     }
 
