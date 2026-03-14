@@ -10,15 +10,9 @@ import {
   ChevronRight,
   Settings,
   Globe,
-  Palette,
   Link2,
   HelpCircle,
-  CreditCard,
-  KeyRound,
   Eye,
-  FileText,
-  Tag,
-  Mail,
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useLocation, useNavigate } from 'react-router-dom';
