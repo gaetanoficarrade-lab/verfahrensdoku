@@ -168,7 +168,10 @@ export default function ChapterEditor() {
 
       if (chData) {
         setChapterDataId(chData.id);
-        setNotes(chData.client_notes || '');
+        const loadedNotes = chData.client_notes || '';
+        setNotes(loadedNotes);
+        initialNotesRef.current = loadedNotes;
+        hasLoadedRef.current = true;
         setEditorText(chData.editor_text || chData.generated_text || '');
         setStatus(chData.status || 'empty');
         setSavedPrecheckHints(
