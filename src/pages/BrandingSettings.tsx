@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useTenantSettings, useSaveTenantSettings, useUploadTenantLogo } from '@/hooks/useTenantSettings';
@@ -8,9 +8,91 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Upload, Save, Palette, Building2, FileText, Shield, Loader2, Type, Code } from 'lucide-react';
+import { Upload, Save, Palette, Building2, FileText, Shield, Loader2, Type, Code, RotateCcw, Download, FolderOpen } from 'lucide-react';
 import { toast } from 'sonner';
 import { logAudit } from '@/lib/auditLog';
+
+const DEFAULTS = {
+  brand_name: '',
+  primary_color: '#1e3a5f',
+  button_text_color: '',
+  menu_text_color: '',
+  brand_text_color: '',
+  sidebar_bg_color: '',
+  font_family: '',
+  custom_css: '',
+  address: '',
+  phone: '',
+  website: '',
+  imprint: '',
+  imprint_url: '',
+  privacy_text: '',
+  privacy_url: '',
+  logo_url: '',
+};
+
+type FormState = typeof DEFAULTS;
+
+const BRANDING_FIELDS: (keyof FormState)[] = [
+  'primary_color', 'button_text_color', 'menu_text_color',
+  'brand_text_color', 'sidebar_bg_color', 'font_family', 'custom_css',
+];
+
+const PRESET_STORAGE_KEY = 'branding-presets';
+
+function hexToHSL(hex: string): string | null {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) return null;
+  let r = parseInt(result[1], 16) / 255;
+  let g = parseInt(result[2], 16) / 255;
+  let b = parseInt(result[3], 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0;
+  const l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+    }
+  }
+  return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+}
+
+function applyLivePreview(form: FormState) {
+  const root = document.documentElement;
+
+  const setHSL = (varName: string, hex: string) => {
+    const hsl = hexToHSL(hex);
+    if (hsl) root.style.setProperty(varName, hsl);
+  };
+
+  if (form.primary_color) {
+    setHSL('--primary', form.primary_color);
+    setHSL('--ring', form.primary_color);
+    setHSL('--sidebar-primary', form.primary_color);
+  }
+  if (form.button_text_color) {
+    setHSL('--primary-foreground', form.button_text_color);
+    setHSL('--sidebar-primary-foreground', form.button_text_color);
+  }
+  if (form.menu_text_color) {
+    setHSL('--sidebar-foreground', form.menu_text_color);
+  }
+  if (form.brand_text_color) {
+    setHSL('--brand-foreground', form.brand_text_color);
+  }
+  if (form.sidebar_bg_color) {
+    setHSL('--sidebar-background', form.sidebar_bg_color);
+  }
+  if (form.font_family) {
+    root.style.fontFamily = `${form.font_family}, var(--font-sans, sans-serif)`;
+  } else {
+    root.style.fontFamily = '';
+  }
+}
 
 export default function BrandingSettings() {
   const { effectiveTenantId } = useAuthContext();
@@ -19,34 +101,29 @@ export default function BrandingSettings() {
   const uploadMutation = useUploadTenantLogo();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [form, setForm] = useState({
-    brand_name: '',
-    primary_color: '#1e3a5f',
-    button_text_color: '',
-    menu_text_color: '',
-    brand_text_color: '',
-    font_family: '',
-    custom_css: '',
-    address: '',
-    phone: '',
-    website: '',
-    imprint: '',
-    imprint_url: '',
-    privacy_text: '',
-    privacy_url: '',
-    logo_url: '',
-  });
+  const [form, setForm] = useState<FormState>({ ...DEFAULTS });
+  const [presets, setPresets] = useState<Record<string, Partial<FormState>>>({});
+  const [presetName, setPresetName] = useState('');
+
+  // Load presets from localStorage
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(PRESET_STORAGE_KEY);
+      if (stored) setPresets(JSON.parse(stored));
+    } catch {}
+  }, []);
 
   useEffect(() => {
     if (settings) {
       setForm({
         brand_name: settings.brand_name || '',
         primary_color: settings.primary_color || '#1e3a5f',
-        button_text_color: settings.button_text_color || '',
-        menu_text_color: settings.menu_text_color || '',
-        brand_text_color: settings.brand_text_color || '',
-        font_family: settings.font_family || '',
-        custom_css: settings.custom_css || '',
+        button_text_color: (settings as any).button_text_color || '',
+        menu_text_color: (settings as any).menu_text_color || '',
+        brand_text_color: (settings as any).brand_text_color || '',
+        sidebar_bg_color: (settings as any).sidebar_bg_color || '',
+        font_family: (settings as any).font_family || '',
+        custom_css: (settings as any).custom_css || '',
         address: settings.address || '',
         phone: settings.phone || '',
         website: settings.website || '',
@@ -59,53 +136,44 @@ export default function BrandingSettings() {
     }
   }, [settings]);
 
-  const handleChange = (field: string, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-  };
+  // Live preview on every form change
+  const handleChange = useCallback((field: string, value: string) => {
+    setForm((prev) => {
+      const next = { ...prev, [field]: value };
+      // Apply live preview for visual fields
+      if (BRANDING_FIELDS.includes(field as keyof FormState)) {
+        applyLivePreview(next);
+      }
+      return next;
+    });
+  }, []);
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !effectiveTenantId) return;
-
-    if (!file.type.startsWith('image/')) {
-      toast.error('Bitte wählen Sie eine Bilddatei aus.');
-      return;
-    }
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error('Die Datei darf maximal 2 MB groß sein.');
-      return;
-    }
-
+    if (!file.type.startsWith('image/')) { toast.error('Bitte wählen Sie eine Bilddatei aus.'); return; }
+    if (file.size > 2 * 1024 * 1024) { toast.error('Die Datei darf maximal 2 MB groß sein.'); return; }
     try {
       const url = await uploadMutation.mutateAsync({ file, tenantId: effectiveTenantId });
-      // Add cache buster to force browser to load the new image
       setForm((prev) => ({ ...prev, logo_url: url + '?t=' + Date.now() }));
       toast.success('Logo hochgeladen');
     } catch (err: any) {
       toast.error('Fehler beim Hochladen: ' + err.message);
     }
-    // Reset file input so the same file or a new file can be selected again
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleLogoRemove = async () => {
     if (!effectiveTenantId) return;
     try {
-      // Try to remove old files from storage
-      const { data: files } = await supabase.storage
-        .from('tenant-assets')
-        .list(effectiveTenantId);
+      const { data: files } = await supabase.storage.from('tenant-assets').list(effectiveTenantId);
       if (files && files.length > 0) {
         const logoFiles = files.filter(f => f.name.startsWith('logo.'));
         if (logoFiles.length > 0) {
-          await supabase.storage
-            .from('tenant-assets')
-            .remove(logoFiles.map(f => `${effectiveTenantId}/${f.name}`));
+          await supabase.storage.from('tenant-assets').remove(logoFiles.map(f => `${effectiveTenantId}/${f.name}`));
         }
       }
-    } catch {
-      // ignore storage errors
-    }
+    } catch {}
     setForm((prev) => ({ ...prev, logo_url: '' }));
     toast.success('Logo entfernt – bitte speichern Sie die Einstellungen.');
   };
@@ -120,6 +188,42 @@ export default function BrandingSettings() {
     }
   };
 
+  const handleReset = () => {
+    const resetForm = { ...form };
+    BRANDING_FIELDS.forEach(f => { resetForm[f] = DEFAULTS[f]; });
+    setForm(resetForm);
+    applyLivePreview(resetForm);
+    toast.info('Farben & Schrift auf Standard zurückgesetzt. Bitte speichern.');
+  };
+
+  const handleSavePreset = () => {
+    if (!presetName.trim()) { toast.error('Bitte geben Sie einen Namen ein.'); return; }
+    const preset: Partial<FormState> = {};
+    BRANDING_FIELDS.forEach(f => { preset[f] = form[f]; });
+    const updated = { ...presets, [presetName.trim()]: preset };
+    setPresets(updated);
+    localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(updated));
+    setPresetName('');
+    toast.success(`Preset „${presetName.trim()}" gespeichert`);
+  };
+
+  const handleLoadPreset = (name: string) => {
+    const preset = presets[name];
+    if (!preset) return;
+    const newForm = { ...form, ...preset };
+    setForm(newForm);
+    applyLivePreview(newForm);
+    toast.success(`Preset „${name}" geladen. Bitte speichern.`);
+  };
+
+  const handleDeletePreset = (name: string) => {
+    const updated = { ...presets };
+    delete updated[name];
+    setPresets(updated);
+    localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(updated));
+    toast.success(`Preset „${name}" gelöscht`);
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -128,12 +232,32 @@ export default function BrandingSettings() {
     );
   }
 
+  const ColorField = ({ label, field, placeholder, defaultVal }: { label: string; field: keyof FormState; placeholder: string; defaultVal: string }) => (
+    <div className="space-y-2">
+      <Label>{label}</Label>
+      <div className="flex items-center gap-4">
+        <input
+          type="color"
+          value={(form[field] as string) || defaultVal}
+          onChange={(e) => handleChange(field, e.target.value)}
+          className="h-10 w-14 rounded-md border border-input cursor-pointer"
+        />
+        <Input
+          value={form[field] as string}
+          onChange={(e) => handleChange(field, e.target.value)}
+          placeholder={placeholder}
+          className="w-48 font-mono"
+        />
+      </div>
+    </div>
+  );
+
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Branding & Einstellungen</h1>
         <p className="text-muted-foreground mt-1">
-          Passen Sie Name, Logo und Farben an. Diese werden in der Navigation, auf Registrierungsseiten und in E-Mails angezeigt.
+          Änderungen an Farben werden sofort als Vorschau angezeigt. Klicken Sie „Speichern" um sie dauerhaft zu übernehmen.
         </p>
       </div>
 
@@ -144,30 +268,19 @@ export default function BrandingSettings() {
             <Building2 className="h-5 w-5" />
             Marke & Logo
           </CardTitle>
-          <CardDescription>Logo und Firmenname ersetzen „GoBD-Suite" überall: Navigation, Registrierung, E-Mails</CardDescription>
+          <CardDescription>Logo und Firmenname ersetzen „GoBD-Suite" überall</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label>Firmenname</Label>
-            <Input
-              value={form.brand_name}
-              onChange={(e) => handleChange('brand_name', e.target.value)}
-              placeholder="z.B. Musterkanzlei GmbH"
-            />
-            <p className="text-xs text-muted-foreground">
-              Wird anstelle von "GoBD-Suite" in der Navigation angezeigt.
-            </p>
+            <Input value={form.brand_name} onChange={(e) => handleChange('brand_name', e.target.value)} placeholder="z.B. Musterkanzlei GmbH" />
+            <p className="text-xs text-muted-foreground">Wird anstelle von "GoBD-Suite" in der Navigation angezeigt.</p>
           </div>
-
           <div className="space-y-2">
             <Label>Logo</Label>
             <div className="flex items-center gap-4">
               {form.logo_url ? (
-                <img
-                  src={form.logo_url}
-                  alt="Logo"
-                  className="h-12 w-12 rounded-lg object-contain border border-border bg-background"
-                />
+                <img src={form.logo_url} alt="Logo" className="h-12 w-12 rounded-lg object-contain border border-border bg-background" />
               ) : (
                 <div className="h-12 w-12 rounded-lg border-2 border-dashed border-border flex items-center justify-center">
                   <Upload className="h-5 w-5 text-muted-foreground" />
@@ -175,38 +288,17 @@ export default function BrandingSettings() {
               )}
               <div className="flex flex-col gap-2">
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={uploadMutation.isPending}
-                  >
-                    {uploadMutation.isPending ? (
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    ) : (
-                      <Upload className="h-4 w-4 mr-2" />
-                    )}
+                  <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploadMutation.isPending}>
+                    {uploadMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
                     {form.logo_url ? 'Logo ersetzen' : 'Logo hochladen'}
                   </Button>
                   {form.logo_url && (
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={handleLogoRemove}
-                    >
-                      Entfernen
-                    </Button>
+                    <Button variant="destructive" size="sm" onClick={handleLogoRemove}>Entfernen</Button>
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground">PNG, JPG, SVG – max. 2 MB</p>
               </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleLogoUpload}
-              />
+              <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
             </div>
           </div>
         </CardContent>
@@ -219,90 +311,21 @@ export default function BrandingSettings() {
             <Palette className="h-5 w-5" />
             Farben
           </CardTitle>
-          <CardDescription>Passen Sie die Farben Ihres Interfaces an</CardDescription>
+          <CardDescription>Änderungen werden sofort als Live-Vorschau angezeigt</CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
-          {/* Primary Color */}
-          <div className="space-y-2">
-            <Label>Primärfarbe (Buttons, Akzente)</Label>
-            <div className="flex items-center gap-4">
-              <input
-                type="color"
-                value={form.primary_color}
-                onChange={(e) => handleChange('primary_color', e.target.value)}
-                className="h-10 w-14 rounded-md border border-input cursor-pointer"
-              />
-              <Input
-                value={form.primary_color}
-                onChange={(e) => handleChange('primary_color', e.target.value)}
-                placeholder="#1e3a5f"
-                className="w-32 font-mono"
-              />
-              <div
-                className="h-10 flex-1 rounded-md border border-border"
-                style={{ backgroundColor: form.primary_color }}
-              />
-            </div>
-          </div>
+          <ColorField label="Buttonfarbe (Akzentfarbe)" field="primary_color" placeholder="#1e3a5f" defaultVal="#1e3a5f" />
+          <ColorField label="Button-Schriftfarbe" field="button_text_color" placeholder="#ffffff (Standard)" defaultVal="#ffffff" />
+          <ColorField label="Seitenleiste – Hintergrundfarbe" field="sidebar_bg_color" placeholder="#141414 (Standard)" defaultVal="#141414" />
+          <ColorField label="Seitenleiste – Schriftfarbe" field="menu_text_color" placeholder="#c7c7c7 (Standard)" defaultVal="#c7c7c7" />
+          <ColorField label="Toolname-Schriftfarbe (Navigation)" field="brand_text_color" placeholder="#ffffff (Standard)" defaultVal="#ffffff" />
 
-          {/* Button Text Color */}
-          <div className="space-y-2">
-            <Label>Button-Schriftfarbe</Label>
-            <div className="flex items-center gap-4">
-              <input
-                type="color"
-                value={form.button_text_color || '#ffffff'}
-                onChange={(e) => handleChange('button_text_color', e.target.value)}
-                className="h-10 w-14 rounded-md border border-input cursor-pointer"
-              />
-              <Input
-                value={form.button_text_color}
-                onChange={(e) => handleChange('button_text_color', e.target.value)}
-                placeholder="#ffffff (Standard)"
-                className="w-48 font-mono"
-              />
-              <Button size="sm" style={{ backgroundColor: form.primary_color, color: form.button_text_color || '#fff' }}>
-                Vorschau
-              </Button>
-            </div>
-          </div>
-
-          {/* Menu Text Color */}
-          <div className="space-y-2">
-            <Label>Menü-Schriftfarbe (Seitenleiste)</Label>
-            <div className="flex items-center gap-4">
-              <input
-                type="color"
-                value={form.menu_text_color || '#c7c7c7'}
-                onChange={(e) => handleChange('menu_text_color', e.target.value)}
-                className="h-10 w-14 rounded-md border border-input cursor-pointer"
-              />
-              <Input
-                value={form.menu_text_color}
-                onChange={(e) => handleChange('menu_text_color', e.target.value)}
-                placeholder="#c7c7c7 (Standard)"
-                className="w-48 font-mono"
-              />
-            </div>
-          </div>
-
-          {/* Brand / Tool Name Color */}
-          <div className="space-y-2">
-            <Label>Toolname-Schriftfarbe (Header/Navigation)</Label>
-            <div className="flex items-center gap-4">
-              <input
-                type="color"
-                value={form.brand_text_color || '#ffffff'}
-                onChange={(e) => handleChange('brand_text_color', e.target.value)}
-                className="h-10 w-14 rounded-md border border-input cursor-pointer"
-              />
-              <Input
-                value={form.brand_text_color}
-                onChange={(e) => handleChange('brand_text_color', e.target.value)}
-                placeholder="#ffffff (Standard)"
-                className="w-48 font-mono"
-              />
-            </div>
+          {/* Live button preview */}
+          <div className="pt-2">
+            <Label className="mb-2 block">Button-Vorschau</Label>
+            <Button size="sm" style={{ backgroundColor: form.primary_color, color: form.button_text_color || '#fff' }}>
+              Beispiel-Button
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -310,43 +333,72 @@ export default function BrandingSettings() {
       {/* Schriftart */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Type className="h-5 w-5" />
-            Schriftart
-          </CardTitle>
+          <CardTitle className="flex items-center gap-2"><Type className="h-5 w-5" /> Schriftart</CardTitle>
           <CardDescription>Wählen Sie eine Schriftart für Ihr Interface</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="space-y-2">
             <Label>Schriftart (Google Fonts Name)</Label>
-            <Input
-              value={form.font_family}
-              onChange={(e) => handleChange('font_family', e.target.value)}
-              placeholder="z.B. Inter, Roboto, Open Sans, Lato"
-            />
+            <Input value={form.font_family} onChange={(e) => handleChange('font_family', e.target.value)} placeholder="z.B. Inter, Roboto, Open Sans, Lato" />
             <p className="text-xs text-muted-foreground">
-              Geben Sie den Namen einer Google Font ein. Die Schrift muss auf dem System installiert sein oder als Web-Font eingebunden werden (via Custom CSS).
+              Binden Sie die Schrift via Custom CSS mit @import ein, dann geben Sie hier den Namen ein.
             </p>
           </div>
           {form.font_family && (
             <div className="p-3 rounded-md border border-border" style={{ fontFamily: form.font_family }}>
-              <p className="text-sm">Vorschau: Das ist ein Beispieltext in der Schriftart „{form.font_family}".</p>
+              <p className="text-sm">Vorschau: Das ist ein Beispieltext in „{form.font_family}".</p>
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      {/* Presets */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2"><Download className="h-5 w-5" /> Design-Presets</CardTitle>
+          <CardDescription>Speichern Sie Ihr aktuelles Farbschema als Preset, laden Sie es jederzeit wieder oder setzen Sie alles zurück.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Save new preset */}
+          <div className="flex gap-2">
+            <Input value={presetName} onChange={(e) => setPresetName(e.target.value)} placeholder="Preset-Name eingeben..." className="flex-1" />
+            <Button variant="outline" size="sm" onClick={handleSavePreset} disabled={!presetName.trim()}>
+              <Save className="h-4 w-4 mr-2" /> Speichern
+            </Button>
+          </div>
+
+          {/* Existing presets */}
+          {Object.keys(presets).length > 0 && (
+            <div className="space-y-2">
+              <Label>Gespeicherte Presets</Label>
+              {Object.keys(presets).map(name => (
+                <div key={name} className="flex items-center gap-2 p-2 rounded-md border border-border">
+                  <span className="flex-1 text-sm font-medium">{name}</span>
+                  <Button variant="outline" size="sm" onClick={() => handleLoadPreset(name)}>
+                    <FolderOpen className="h-3.5 w-3.5 mr-1" /> Laden
+                  </Button>
+                  <Button variant="ghost" size="sm" className="text-destructive" onClick={() => handleDeletePreset(name)}>
+                    Löschen
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <Separator />
+
+          {/* Reset to defaults */}
+          <Button variant="outline" onClick={handleReset}>
+            <RotateCcw className="h-4 w-4 mr-2" /> Auf Standard zurücksetzen
+          </Button>
         </CardContent>
       </Card>
 
       {/* Custom CSS */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Code className="h-5 w-5" />
-            Eigenes CSS
-          </CardTitle>
-          <CardDescription>
-            Fügen Sie eigenen CSS-Code ein, um das Erscheinungsbild weiter anzupassen.
-            Änderungen werden nach dem Speichern sofort sichtbar.
-          </CardDescription>
+          <CardTitle className="flex items-center gap-2"><Code className="h-5 w-5" /> Eigenes CSS</CardTitle>
+          <CardDescription>Eigener CSS-Code für erweiterte Anpassungen. Wird nach dem Speichern aktiv.</CardDescription>
         </CardHeader>
         <CardContent>
           <Textarea
@@ -362,36 +414,21 @@ export default function BrandingSettings() {
       {/* Contact Details */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Building2 className="h-5 w-5" />
-            Kontaktdaten
-          </CardTitle>
+          <CardTitle className="flex items-center gap-2"><Building2 className="h-5 w-5" /> Kontaktdaten</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label>Adresse</Label>
-            <Input
-              value={form.address}
-              onChange={(e) => handleChange('address', e.target.value)}
-              placeholder="Musterstraße 1, 12345 Berlin"
-            />
+            <Input value={form.address} onChange={(e) => handleChange('address', e.target.value)} placeholder="Musterstraße 1, 12345 Berlin" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Telefon</Label>
-              <Input
-                value={form.phone}
-                onChange={(e) => handleChange('phone', e.target.value)}
-                placeholder="+49 123 456789"
-              />
+              <Input value={form.phone} onChange={(e) => handleChange('phone', e.target.value)} placeholder="+49 123 456789" />
             </div>
             <div className="space-y-2">
               <Label>Website</Label>
-              <Input
-                value={form.website}
-                onChange={(e) => handleChange('website', e.target.value)}
-                placeholder="https://www.example.de"
-              />
+              <Input value={form.website} onChange={(e) => handleChange('website', e.target.value)} placeholder="https://www.example.de" />
             </div>
           </div>
         </CardContent>
@@ -400,36 +437,17 @@ export default function BrandingSettings() {
       {/* Impressum */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Impressum
-          </CardTitle>
-          <CardDescription>
-            Hinterlegen Sie einen Impressumstext und/oder einen Link zu Ihrem Impressum.
-            Beides ist optional.
-          </CardDescription>
+          <CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5" /> Impressum</CardTitle>
+          <CardDescription>Impressumstext und/oder Link. Beides optional.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label>Impressum-Text</Label>
-            <Textarea
-              value={form.imprint}
-              onChange={(e) => handleChange('imprint', e.target.value)}
-              placeholder="Impressum-Text eingeben..."
-              rows={6}
-            />
+            <Textarea value={form.imprint} onChange={(e) => handleChange('imprint', e.target.value)} placeholder="Impressum-Text eingeben..." rows={6} />
           </div>
           <div className="space-y-2">
             <Label>Impressum-URL</Label>
-            <Input
-              value={form.imprint_url}
-              onChange={(e) => handleChange('imprint_url', e.target.value)}
-              placeholder="https://www.example.de/impressum"
-              type="url"
-            />
-            <p className="text-xs text-muted-foreground">
-              Wenn eine URL angegeben ist, wird im Footer ein Link angezeigt. Ansonsten wird der Text in einem Modal dargestellt.
-            </p>
+            <Input value={form.imprint_url} onChange={(e) => handleChange('imprint_url', e.target.value)} placeholder="https://www.example.de/impressum" type="url" />
           </div>
         </CardContent>
       </Card>
@@ -437,36 +455,17 @@ export default function BrandingSettings() {
       {/* Datenschutz */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
-            Datenschutz
-          </CardTitle>
-          <CardDescription>
-            Hinterlegen Sie einen Datenschutztext und/oder einen Link zu Ihrer Datenschutzerklärung.
-            Beides ist optional.
-          </CardDescription>
+          <CardTitle className="flex items-center gap-2"><Shield className="h-5 w-5" /> Datenschutz</CardTitle>
+          <CardDescription>Datenschutztext und/oder Link. Beides optional.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label>Datenschutz-Text</Label>
-            <Textarea
-              value={form.privacy_text}
-              onChange={(e) => handleChange('privacy_text', e.target.value)}
-              placeholder="Datenschutzerklärung eingeben..."
-              rows={6}
-            />
+            <Textarea value={form.privacy_text} onChange={(e) => handleChange('privacy_text', e.target.value)} placeholder="Datenschutzerklärung eingeben..." rows={6} />
           </div>
           <div className="space-y-2">
             <Label>Datenschutz-URL</Label>
-            <Input
-              value={form.privacy_url}
-              onChange={(e) => handleChange('privacy_url', e.target.value)}
-              placeholder="https://www.example.de/datenschutz"
-              type="url"
-            />
-            <p className="text-xs text-muted-foreground">
-              Wenn eine URL angegeben ist, wird im Footer ein Link angezeigt. Ansonsten wird der Text in einem Modal dargestellt.
-            </p>
+            <Input value={form.privacy_url} onChange={(e) => handleChange('privacy_url', e.target.value)} placeholder="https://www.example.de/datenschutz" type="url" />
           </div>
         </CardContent>
       </Card>
@@ -475,11 +474,7 @@ export default function BrandingSettings() {
 
       <div className="flex justify-end">
         <Button onClick={handleSave} disabled={saveMutation.isPending} size="lg">
-          {saveMutation.isPending ? (
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-          ) : (
-            <Save className="h-4 w-4 mr-2" />
-          )}
+          {saveMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
           Einstellungen speichern
         </Button>
       </div>

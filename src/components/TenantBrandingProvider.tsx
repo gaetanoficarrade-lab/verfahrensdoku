@@ -39,42 +39,29 @@ export function TenantBrandingProvider({ children }: { children: React.ReactNode
       propsSet.push(name);
     };
 
-    // Primary / accent color
+    const setHSL = (varName: string, hex: string) => {
+      const hsl = hexToHSL(hex);
+      if (hsl) setVar(varName, hsl);
+    };
+
     if (settings?.primary_color) {
-      const hsl = hexToHSL(settings.primary_color);
-      if (hsl) {
-        setVar('--primary', hsl);
-        setVar('--ring', hsl);
-        setVar('--sidebar-primary', hsl);
-      }
+      setHSL('--primary', settings.primary_color);
+      setHSL('--ring', settings.primary_color);
+      setHSL('--sidebar-primary', settings.primary_color);
     }
-
-    // Button text color
     if (settings?.button_text_color) {
-      const hsl = hexToHSL(settings.button_text_color);
-      if (hsl) {
-        setVar('--primary-foreground', hsl);
-        setVar('--sidebar-primary-foreground', hsl);
-      }
+      setHSL('--primary-foreground', settings.button_text_color);
+      setHSL('--sidebar-primary-foreground', settings.button_text_color);
     }
-
-    // Menu / sidebar text color
+    if (settings?.sidebar_bg_color) {
+      setHSL('--sidebar-background', settings.sidebar_bg_color);
+    }
     if (settings?.menu_text_color) {
-      const hsl = hexToHSL(settings.menu_text_color);
-      if (hsl) {
-        setVar('--sidebar-foreground', hsl);
-      }
+      setHSL('--sidebar-foreground', settings.menu_text_color);
     }
-
-    // Brand / tool name color
     if (settings?.brand_text_color) {
-      const hsl = hexToHSL(settings.brand_text_color);
-      if (hsl) {
-        setVar('--brand-foreground', hsl);
-      }
+      setHSL('--brand-foreground', settings.brand_text_color);
     }
-
-    // Font family
     if (settings?.font_family) {
       setVar('--font-family-custom', settings.font_family);
       root.style.fontFamily = `${settings.font_family}, var(--font-sans, sans-serif)`;
@@ -94,12 +81,8 @@ export function TenantBrandingProvider({ children }: { children: React.ReactNode
 
     return () => {
       propsSet.forEach(p => root.style.removeProperty(p));
-      if (settings?.font_family) {
-        root.style.fontFamily = '';
-      }
-      if (styleRef.current) {
-        styleRef.current.textContent = '';
-      }
+      if (settings?.font_family) root.style.fontFamily = '';
+      if (styleRef.current) styleRef.current.textContent = '';
     };
   }, [settings]);
 
