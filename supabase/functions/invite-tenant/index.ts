@@ -29,20 +29,32 @@ serve(async (req) => {
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    // Parse body and verify user in parallel
-    const [{ data: userData, error: userError }, body] = await Promise.all([
+    // Parse body and validate caller via both auth paths for self-hosted compatibility
+    const token = authHeader.replace("Bearer ", "");
+    const [
+      { data: userData, error: userError },
+      { data: claimsData, error: claimsError },
+      body,
+    ] = await Promise.all([
       supabaseAuth.auth.getUser(),
+      supabaseAuth.auth.getClaims(token),
       req.json(),
     ]);
 
-    if (userError || !userData?.user?.id) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+    const callerId = userData?.user?.id || claimsData?.claims?.sub || null;
+
+    if (!callerId) {
+      return new Response(JSON.stringify({
+        error: "Unauthorized",
+        details: {
+          get_user: userError?.message || null,
+          get_claims: claimsError?.message || null,
+        },
+      }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
-    const callerId = userData.user.id;
 
     // Role check
     const { data: callerRoles } = await supabaseAuth
