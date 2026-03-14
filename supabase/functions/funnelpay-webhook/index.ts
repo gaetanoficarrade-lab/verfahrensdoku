@@ -123,30 +123,28 @@ serve(async (req) => {
         .maybeSingle();
 
       const planId = await findPlanId(planName);
+      const isSolo = planName === "solo";
       const customerName = data.customer_name || data.name || data.customer_details?.name || "";
       const companyName = data.customer_company_name || data.company || data.customer_details?.company || "";
 
-      // ALL plans start as trialing with 7-day trial
-      const trialEndsAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-
       if (existing) {
-        // Update subscription
+        // Existing tenant: activate (upgrade from trial or update plan)
         await supabaseAdmin
           .from("tenants")
           .update({
             plan_id: planId,
-            subscription_status: "trialing",
+            subscription_status: "active",
+            trial_active: false,
             stripe_customer_id: data.customer || data.customer_id || null,
             stripe_subscription_id: data.subscription || data.subscription_id || null,
-            trial_ends_at: trialEndsAt,
-            trial_active: true,
+            solo_expires_at: isSolo ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() : null,
             source: "funnelpay",
           })
           .eq("id", existing.id);
         return existing.id;
       }
 
-      // Create new tenant
+      // New tenant via direct purchase → immediately active, no trial
       const { data: newTenant, error: tErr } = await supabaseAdmin
         .from("tenants")
         .insert({
@@ -155,11 +153,11 @@ serve(async (req) => {
           contact_email: customerEmail,
           plan_id: planId,
           is_active: true,
-          subscription_status: "trialing",
+          subscription_status: "active",
+          trial_active: false,
           stripe_customer_id: data.customer || data.customer_id || null,
           stripe_subscription_id: data.subscription || data.subscription_id || null,
-          trial_ends_at: trialEndsAt,
-          trial_active: true,
+          solo_expires_at: isSolo ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() : null,
           source: "funnelpay",
         })
         .select("id")
