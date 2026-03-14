@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useTenantSettings, useSaveTenantSettings, useUploadTenantLogo } from '@/hooks/useTenantSettings';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -67,11 +68,36 @@ export default function BrandingSettings() {
 
     try {
       const url = await uploadMutation.mutateAsync({ file, tenantId: effectiveTenantId });
-      setForm((prev) => ({ ...prev, logo_url: url }));
+      // Add cache buster to force browser to load the new image
+      setForm((prev) => ({ ...prev, logo_url: url + '?t=' + Date.now() }));
       toast.success('Logo hochgeladen');
     } catch (err: any) {
       toast.error('Fehler beim Hochladen: ' + err.message);
     }
+    // Reset file input so the same file or a new file can be selected again
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleLogoRemove = async () => {
+    if (!effectiveTenantId) return;
+    try {
+      // Try to remove old files from storage
+      const { data: files } = await supabase.storage
+        .from('tenant-assets')
+        .list(effectiveTenantId);
+      if (files && files.length > 0) {
+        const logoFiles = files.filter(f => f.name.startsWith('logo.'));
+        if (logoFiles.length > 0) {
+          await supabase.storage
+            .from('tenant-assets')
+            .remove(logoFiles.map(f => `${effectiveTenantId}/${f.name}`));
+        }
+      }
+    } catch {
+      // ignore storage errors
+    }
+    setForm((prev) => ({ ...prev, logo_url: '' }));
+    toast.success('Logo entfernt – bitte speichern Sie die Einstellungen.');
   };
 
   const handleSave = async () => {
@@ -137,21 +163,32 @@ export default function BrandingSettings() {
                   <Upload className="h-5 w-5 text-muted-foreground" />
                 </div>
               )}
-              <div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploadMutation.isPending}
-                >
-                  {uploadMutation.isPending ? (
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  ) : (
-                    <Upload className="h-4 w-4 mr-2" />
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadMutation.isPending}
+                  >
+                    {uploadMutation.isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    ) : (
+                      <Upload className="h-4 w-4 mr-2" />
+                    )}
+                    {form.logo_url ? 'Logo ersetzen' : 'Logo hochladen'}
+                  </Button>
+                  {form.logo_url && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={handleLogoRemove}
+                    >
+                      Entfernen
+                    </Button>
                   )}
-                  Logo hochladen
-                </Button>
-                <p className="text-xs text-muted-foreground mt-1">PNG, JPG, SVG – max. 2 MB</p>
+                </div>
+                <p className="text-xs text-muted-foreground">PNG, JPG, SVG – max. 2 MB</p>
               </div>
               <input
                 ref={fileInputRef}
