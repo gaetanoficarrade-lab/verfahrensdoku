@@ -57,7 +57,7 @@ export const GOBD_CHAPTERS: MainChapter[] = [
       {
         key: '2_4', number: '2.4', title: 'Zahlungsanbieter',
         isActive: (a) => !!a.USES_PAYMENT_PROVIDER,
-        inactiveText: 'Das Unternehmen nutzt keine externen Zahlungsanbieter (z. B. PayPal, Stripe). Sämtliche Zahlungen werden über die regulären Bankkonten abgewickelt.',
+        inactiveText: 'Im Rahmen der Geschäftstätigkeit werden keine externen Zahlungsdienstleister eingesetzt. Die Abwicklung aller Zahlungen erfolgt ausschließlich über das Geschäftskonto per Überweisung oder Lastschrift.',
       },
       {
         key: '2_5', number: '2.5', title: 'Marktplatz-/Plattformverkäufe',
