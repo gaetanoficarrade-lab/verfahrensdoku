@@ -645,11 +645,6 @@ export default function ProjectDetail() {
                                   {isTrialLocked && <span className="ml-2 text-[10px] text-muted-foreground">🔒</span>}
                                 </span>
                               </span>
-                                <span className="text-xs font-mono text-muted-foreground w-8 shrink-0">{sc.number}</span>
-                                <span className={`flex-1 text-sm ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
-                                  {sc.title}
-                                </span>
-                              </span>
                               <Badge variant="secondary" className={`gap-1 text-[10px] px-2 py-0.5 ${config.className}`}>
                                 <StatusIcon className="h-3 w-3" />
                                 {config.label}
