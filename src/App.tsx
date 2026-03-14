@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { TenantBrandingProvider } from "@/components/TenantBrandingProvider";
 import { AppLayout } from "@/components/AppLayout";
 import { AdminSettingsLayout } from "@/components/AdminSettingsLayout";
+import { TenantSettingsLayout } from "@/components/TenantSettingsLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Auth from "./pages/Auth";
 import Register from "./pages/Register";
@@ -233,10 +234,18 @@ const App = () => (
               />
 
               <Route
+                path="/settings/billing"
+                element={
+                  <ProtectedRoute requiredRoles={['tenant_admin']}>
+                    <AppLayout><TenantSettingsLayout><BillingSettings /></TenantSettingsLayout></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/settings/branding"
                 element={
                   <ProtectedRoute requiredRoles={['tenant_admin']}>
-                    <AppLayout><BrandingSettings /></AppLayout>
+                    <AppLayout><TenantSettingsLayout><BrandingSettings /></TenantSettingsLayout></AppLayout>
                   </ProtectedRoute>
                 }
               />
@@ -244,7 +253,7 @@ const App = () => (
                 path="/settings/activity-log"
                 element={
                   <ProtectedRoute requiredRoles={['tenant_admin']}>
-                    <AppLayout><ActivityLog /></AppLayout>
+                    <AppLayout><TenantSettingsLayout><ActivityLog /></TenantSettingsLayout></AppLayout>
                   </ProtectedRoute>
                 }
               />
@@ -252,7 +261,7 @@ const App = () => (
                 path="/settings/team"
                 element={
                   <ProtectedRoute requiredRoles={['tenant_admin']}>
-                    <AppLayout><TeamSettings /></AppLayout>
+                    <AppLayout><TenantSettingsLayout><TeamSettings /></TenantSettingsLayout></AppLayout>
                   </ProtectedRoute>
                 }
               />
@@ -260,7 +269,7 @@ const App = () => (
                 path="/settings/email"
                 element={
                   <ProtectedRoute requiredRoles={['tenant_admin']}>
-                    <AppLayout><TenantEmailSettings /></AppLayout>
+                    <AppLayout><TenantSettingsLayout><TenantEmailSettings /></TenantSettingsLayout></AppLayout>
                   </ProtectedRoute>
                 }
               />
@@ -268,7 +277,7 @@ const App = () => (
                 path="/settings/webhook"
                 element={
                   <ProtectedRoute requiredRoles={['tenant_admin']}>
-                    <AppLayout><WebhookSettings /></AppLayout>
+                    <AppLayout><TenantSettingsLayout><WebhookSettings /></TenantSettingsLayout></AppLayout>
                   </ProtectedRoute>
                 }
               />
@@ -276,7 +285,7 @@ const App = () => (
                 path="/settings/affiliate"
                 element={
                   <ProtectedRoute requiredRoles={['tenant_admin']}>
-                    <AppLayout><AffiliateSettings /></AppLayout>
+                    <AppLayout><TenantSettingsLayout><AffiliateSettings /></TenantSettingsLayout></AppLayout>
                   </ProtectedRoute>
                 }
               />
@@ -284,15 +293,7 @@ const App = () => (
                 path="/settings/security"
                 element={
                   <ProtectedRoute>
-                    <AppLayout><SecuritySettings /></AppLayout>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/settings/billing"
-                element={
-                  <ProtectedRoute requiredRoles={['tenant_admin']}>
-                    <AppLayout><BillingSettings /></AppLayout>
+                    <AppLayout><TenantSettingsLayout><SecuritySettings /></TenantSettingsLayout></AppLayout>
                   </ProtectedRoute>
                 }
               />
@@ -300,7 +301,7 @@ const App = () => (
                 path="/settings/templates"
                 element={
                   <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
-                    <AppLayout><TemplateSettings /></AppLayout>
+                    <AppLayout><TenantSettingsLayout><TemplateSettings /></TenantSettingsLayout></AppLayout>
                   </ProtectedRoute>
                 }
               />

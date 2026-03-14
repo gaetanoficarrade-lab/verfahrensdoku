@@ -10,21 +10,14 @@ import {
   ChevronRight,
   Settings,
   Globe,
-  Palette,
   Link2,
   HelpCircle,
-  CreditCard,
-  KeyRound,
   Eye,
-  FileText,
-  Tag,
-  Mail,
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useTenantSettings } from '@/hooks/useTenantSettings';
-import { useTenantPlan } from '@/hooks/useTenantPlan';
 import { Button } from '@/components/ui/button';
 import {
   Sidebar,
@@ -52,19 +45,7 @@ const adminItems = [
 const tenantItems = [
   { title: 'Dashboard', url: '/', icon: LayoutDashboard },
   { title: 'Mandanten', url: '/clients', icon: Users },
-];
-
-// Settings items will be filtered dynamically based on plan
-const allTenantSettingsItems = [
-  { title: 'Branding', url: '/settings/branding', icon: Palette, requiresFn: 'canBrand' as const },
-  { title: 'E-Mail-Vorlagen', url: '/settings/email', icon: Mail, requiresFn: 'canUseEmailTemplates' as const },
-  { title: 'Team', url: '/settings/team', icon: Users, requiresFn: 'canManageTeam' as const },
-  { title: 'Vorlagen', url: '/settings/templates', icon: FileText, requiresFn: 'canUseTemplates' as const },
-  { title: 'Webhooks', url: '/settings/webhook', icon: Globe, requiresFn: 'canUseWebhooks' as const },
-  { title: 'Aktivitäts-Log', url: '/settings/activity-log', icon: ScrollText, requiresFn: 'canUseActivityLog' as const },
-  { title: 'Affiliate', url: '/settings/affiliate', icon: Link2, requiresFn: 'canUseAffiliate' as const },
-  { title: 'Abrechnung', url: '/settings/billing', icon: CreditCard, requiresFn: null },
-  { title: 'Sicherheit', url: '/settings/security', icon: KeyRound, requiresFn: null },
+  { title: 'Einstellungen', url: '/settings/billing', icon: Settings },
 ];
 
 const clientItems = [
@@ -79,19 +60,16 @@ export function AppSidebar() {
   const navigate = useNavigate();
   const { signOut, isSuperAdmin, impersonation, roles } = useAuthContext();
   const { data: tenantSettings } = useTenantSettings();
-  const tenantPlan = useTenantPlan();
+  
 
-  // Filter settings items based on plan
-  const tenantSettingsItems = allTenantSettingsItems.filter(item => {
-    if (!item.requiresFn) return true;
-    return tenantPlan[item.requiresFn];
-  });
   const currentPath = location.pathname;
   const isActive = (path: string) => {
     if (path === '/admin' && currentPath === '/admin') return true;
     if (path === '/' && currentPath === '/') return true;
     if (path === '/client' && currentPath === '/client') return true;
-    if (path !== '/' && path !== '/admin' && path !== '/client' && currentPath.startsWith(path)) return true;
+    // Settings: highlight if any /settings/* is active
+    if (path.startsWith('/settings/') && currentPath.startsWith('/settings/')) return true;
+    if (path !== '/' && path !== '/admin' && path !== '/client' && !path.startsWith('/settings/') && currentPath.startsWith(path)) return true;
     return false;
   };
 
@@ -170,17 +148,6 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Settings section for tenant_admin */}
-        {(isTenantAdmin || (isSuperAdmin && impersonation.isImpersonating)) && (
-          <SidebarGroup>
-            <SidebarGroupLabel className="text-sidebar-foreground/50">
-              {!collapsed && 'Einstellungen'}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              {renderMenuItems(tenantSettingsItems)}
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
 
         {/* Help link for all */}
         <SidebarGroup>

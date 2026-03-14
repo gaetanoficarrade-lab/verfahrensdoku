@@ -58,13 +58,13 @@ export default function BillingSettings() {
   const showUpgrade = isTrialing || trialExpired || tenantPlan?.subscriptionStatus === 'trialing';
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-          <CreditCard className="h-6 w-6" />
+        <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+          <CreditCard className="h-5 w-5" />
           Abrechnung & Plan
           <HelpTooltip textKey="billing" />
-        </h1>
+        </h2>
         <p className="text-sm text-muted-foreground mt-1">Ihr aktueller Plan und Nutzung</p>
       </div>
 
