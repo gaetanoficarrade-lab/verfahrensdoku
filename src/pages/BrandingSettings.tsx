@@ -375,33 +375,56 @@ export default function BrandingSettings() {
         {/* Tab: Farben */}
         <TabsContent value="colors" className="space-y-4 mt-4">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>Farbeinstellungen</CardTitle>
-                <CardDescription>Änderungen werden sofort als Live-Vorschau angezeigt</CardDescription>
-              </div>
-              <div className="flex items-center gap-3">
-                <Button size="sm" style={{ backgroundColor: form.primary_color, color: form.button_text_color || '#fff' }}>
-                  Beispiel-Button
-                </Button>
-                <div className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs" style={{
-                  backgroundColor: form.menu_active_color || '#262626',
-                  color: form.menu_active_text_color || '#d9d9d9',
-                }}>
-                  ● Aktiver Menüpunkt
+            <CardHeader>
+              <CardTitle>Farbeinstellungen</CardTitle>
+              <CardDescription>Änderungen werden sofort als Live-Vorschau angezeigt</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-8">
+                {/* Linke Seite: Farbfelder */}
+                <div className="flex-1 space-y-5">
+                  <ColorField label="Buttonfarbe (Akzentfarbe)" field="primary_color" value={form.primary_color} placeholder="#1e3a5f" defaultVal="#1e3a5f" onChange={handleChange} />
+                  <ColorField label="Button-Schriftfarbe" field="button_text_color" value={form.button_text_color} placeholder="#ffffff (Standard)" defaultVal="#ffffff" onChange={handleChange} />
+                  <Separator />
+                  <ColorField label="Seitenleiste – Hintergrundfarbe" field="sidebar_bg_color" value={form.sidebar_bg_color} placeholder="#141414 (Standard)" defaultVal="#141414" onChange={handleChange} />
+                  <ColorField label="Seitenleiste – Schriftfarbe" field="menu_text_color" value={form.menu_text_color} placeholder="#c7c7c7 (Standard)" defaultVal="#c7c7c7" onChange={handleChange} />
+                  <ColorField label="Toolname-Schriftfarbe" field="brand_text_color" value={form.brand_text_color} placeholder="#ffffff (Standard)" defaultVal="#ffffff" onChange={handleChange} />
+                  <Separator />
+                  <ColorField label="Aktiver Menüpunkt – Hintergrundfarbe" field="menu_active_color" value={form.menu_active_color} placeholder="#262626 (Standard)" defaultVal="#262626" onChange={handleChange} />
+                  <ColorField label="Aktiver Menüpunkt – Schriftfarbe" field="menu_active_text_color" value={form.menu_active_text_color} placeholder="#d9d9d9 (Standard)" defaultVal="#d9d9d9" onChange={handleChange} />
+                </div>
+
+                {/* Rechte Seite: Live-Vorschau */}
+                <div className="w-56 shrink-0 sticky top-4 self-start space-y-4">
+                  <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Vorschau</div>
+                  <Button size="sm" className="w-full" style={{ backgroundColor: form.primary_color, color: form.button_text_color || '#fff' }}>
+                    Beispiel-Button
+                  </Button>
+                  <div className="rounded-lg overflow-hidden border border-border">
+                    <div className="p-3 space-y-1.5" style={{ backgroundColor: form.sidebar_bg_color || '#141414' }}>
+                      <div className="text-xs font-bold truncate" style={{ color: form.brand_text_color || '#ffffff' }}>
+                        {form.brand_name || 'GoBD-Suite'}
+                      </div>
+                      <div className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs" style={{
+                        color: form.menu_text_color || '#c7c7c7',
+                      }}>
+                        ○ Menüpunkt
+                      </div>
+                      <div className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs" style={{
+                        backgroundColor: form.menu_active_color || '#262626',
+                        color: form.menu_active_text_color || '#d9d9d9',
+                      }}>
+                        ● Aktiver Menüpunkt
+                      </div>
+                      <div className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs" style={{
+                        color: form.menu_text_color || '#c7c7c7',
+                      }}>
+                        ○ Menüpunkt
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              <ColorField label="Buttonfarbe (Akzentfarbe)" field="primary_color" value={form.primary_color} placeholder="#1e3a5f" defaultVal="#1e3a5f" onChange={handleChange} />
-              <ColorField label="Button-Schriftfarbe" field="button_text_color" value={form.button_text_color} placeholder="#ffffff (Standard)" defaultVal="#ffffff" onChange={handleChange} />
-              <Separator />
-              <ColorField label="Seitenleiste – Hintergrundfarbe" field="sidebar_bg_color" value={form.sidebar_bg_color} placeholder="#141414 (Standard)" defaultVal="#141414" onChange={handleChange} />
-              <ColorField label="Seitenleiste – Schriftfarbe" field="menu_text_color" value={form.menu_text_color} placeholder="#c7c7c7 (Standard)" defaultVal="#c7c7c7" onChange={handleChange} />
-              <ColorField label="Toolname-Schriftfarbe" field="brand_text_color" value={form.brand_text_color} placeholder="#ffffff (Standard)" defaultVal="#ffffff" onChange={handleChange} />
-              <Separator />
-              <ColorField label="Aktiver Menüpunkt – Hintergrundfarbe" field="menu_active_color" value={form.menu_active_color} placeholder="#262626 (Standard)" defaultVal="#262626" onChange={handleChange} />
-              <ColorField label="Aktiver Menüpunkt – Schriftfarbe" field="menu_active_text_color" value={form.menu_active_text_color} placeholder="#d9d9d9 (Standard)" defaultVal="#d9d9d9" onChange={handleChange} />
             </CardContent>
           </Card>
         </TabsContent>
