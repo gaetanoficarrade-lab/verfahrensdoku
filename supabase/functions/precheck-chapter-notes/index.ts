@@ -82,9 +82,9 @@ serve(async (req) => {
 
     const chapterContext = CHAPTER_CONTEXT[chapter_key] || chapter_key;
 
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-    if (!GEMINI_API_KEY) {
-      return new Response(JSON.stringify({ error: "GEMINI_API_KEY not configured" }), {
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
+      return new Response(JSON.stringify({ error: "LOVABLE_API_KEY not configured" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -121,35 +121,58 @@ ${onboarding_answers ? `Onboarding-Antworten:\n${JSON.stringify(onboarding_answe
 
 Analysiere die Notizen und gib strukturierte Hinweise zurück.`;
 
-    const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            { role: "user", parts: [{ text: systemPrompt + "\n\n" + userPrompt }] },
-          ],
-          generationConfig: {
-            responseMimeType: "application/json",
-            temperature: 0.3,
-          },
-        }),
-      }
-    );
+    const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        temperature: 0.2,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+      }),
+    });
 
-    if (!geminiResponse.ok) {
-      const errText = await geminiResponse.text();
-      console.error("Gemini API error:", geminiResponse.status, errText);
-      return new Response(JSON.stringify({ error: "AI analysis failed" }), {
-        status: 502,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    if (!aiResponse.ok) {
+      const errText = await aiResponse.text();
+      console.error("Lovable AI gateway error:", aiResponse.status, errText);
+
+      const status = aiResponse.status === 402 || aiResponse.status === 429 ? aiResponse.status : 502;
+      const errorMessage =
+        aiResponse.status === 402
+          ? "AI-Kontingent aufgebraucht. Bitte Guthaben in Lovable prüfen."
+          : aiResponse.status === 429
+            ? "Zu viele KI-Anfragen. Bitte kurz warten und erneut versuchen."
+            : "KI-Analyse fehlgeschlagen";
+
+      return new Response(
+        JSON.stringify({
+          error: errorMessage,
+          details: errText.slice(0, 1000),
+        }),
+        {
+          status,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     }
 
-    const geminiData = await geminiResponse.json();
-    const rawText =
-      geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+    const aiData = await aiResponse.json();
+    const rawContent = aiData?.choices?.[0]?.message?.content;
+
+    let rawText = typeof rawContent === "string" ? rawContent : JSON.stringify(rawContent ?? "{}");
+    rawText = rawText.trim();
+
+    if (rawText.startsWith("```")) {
+      rawText = rawText
+        .replace(/^```(?:json)?\s*/i, "")
+        .replace(/\s*```$/, "")
+        .trim();
+    }
 
     let result: { hints: string[]; missing_fields: string[]; confidence: number };
     try {
