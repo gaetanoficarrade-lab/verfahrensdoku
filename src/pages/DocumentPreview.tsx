@@ -111,7 +111,7 @@ export default function DocumentPreview() {
     load();
   }, [id]);
 
-  const { pdfWatermark } = useTrialRestrictions();
+
 
   const handleDownload = () => {
     const doc = generateVerfahrensdokumentation({
