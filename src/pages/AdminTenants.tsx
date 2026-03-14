@@ -80,12 +80,33 @@ const AdminTenants = () => {
   <p style="color: #999; font-size: 12px;">Der Link ist 24 Stunden gültig. Diese E-Mail wurde von GoBD-Suite versendet.</p>
 </div>`;
 
+  const formatFunctionError = async (err: any) => {
+    try {
+      const response = err?.context;
+      if (response && typeof response.status === 'number') {
+        const raw = await response.text();
+        let parsed: any = null;
+        try {
+          parsed = raw ? JSON.parse(raw) : null;
+        } catch {
+          parsed = null;
+        }
+        const serverMessage = parsed?.error || parsed?.message || raw;
+        return `HTTP ${response.status}${serverMessage ? `: ${serverMessage}` : ''}`;
+      }
+    } catch {
+      // ignore parse errors and fallback below
+    }
+
+    return err?.message || 'Unbekannter Fehler';
+  };
+
   const sendTenantInvite = async (tenantId: string, email: string, tenantName?: string | null, contactName?: string | null) => {
     // Step 1: Create user + generate invite link via Edge Function
     const { data, error } = await supabase.functions.invoke('invite-tenant', {
       body: { tenant_id: tenantId, email },
     });
-    if (error) throw error;
+    if (error) throw new Error(await formatFunctionError(error));
     if (data?.error) throw new Error(data.error);
 
     const inviteLink = data?.invite_link;
