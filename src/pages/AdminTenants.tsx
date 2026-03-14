@@ -134,7 +134,11 @@ const AdminTenants = () => {
       supabase.from('plans').select('*').order('price_monthly'),
     ]);
     setTenants(tenantsRes.data || []);
-    setPlans(plansRes.data || []);
+    // Deduplicate plans by id (in case of DB duplicates)
+    const uniquePlans = (plansRes.data || []).filter(
+      (plan: Plan, index: number, self: Plan[]) => self.findIndex((p) => p.id === plan.id) === index
+    );
+    setPlans(uniquePlans);
     setLoading(false);
   };
 
