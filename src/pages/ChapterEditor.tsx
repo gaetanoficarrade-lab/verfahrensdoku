@@ -1055,10 +1055,26 @@ export default function ChapterEditor() {
                 <Card key={v.id}>
                   <CardContent className="py-3 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(v.created_at).toLocaleString('de-DE')}
-                        {v.profiles && ` • ${(v.profiles as any)?.first_name || ''} ${(v.profiles as any)?.last_name || ''}`}
-                      </span>
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className="text-xs">
+                            V{v.version_number || '?'}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(v.created_at).toLocaleString('de-DE')}
+                          </span>
+                          {v.profiles && (
+                            <span className="text-xs text-muted-foreground">
+                              • {(v.profiles as any)?.first_name || ''} {(v.profiles as any)?.last_name || ''}
+                            </span>
+                          )}
+                        </div>
+                        {v.change_reason && (
+                          <p className="text-xs text-muted-foreground italic pl-1">
+                            Grund: {v.change_reason}
+                          </p>
+                        )}
+                      </div>
                       <Button variant="outline" size="sm" onClick={() => restoreVersion(v.editor_text)}>
                         Wiederherstellen
                       </Button>
@@ -1070,6 +1086,41 @@ export default function ChapterEditor() {
                 </Card>
               ))
             )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Change Reason Dialog */}
+      <Dialog open={showChangeReasonDialog} onOpenChange={(open) => {
+        if (!open) { setShowChangeReasonDialog(false); setPendingSaveAction(null); setChangeReason(''); }
+      }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Änderung speichern</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <p className="text-sm text-muted-foreground">
+              Optional: Beschreiben Sie den Grund der Änderung. Dieser erscheint in der Änderungshistorie des PDFs.
+            </p>
+            <Input
+              value={changeReason}
+              onChange={e => setChangeReason(e.target.value)}
+              placeholder="z.B. Softwarewechsel, Prozessanpassung, Korrektur"
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  handleSaveEditorText(changeReason || undefined);
+                }
+              }}
+            />
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => handleSaveEditorText()}>
+                Ohne Grund speichern
+              </Button>
+              <Button onClick={() => handleSaveEditorText(changeReason || undefined)} disabled={editorTextSaving}>
+                {editorTextSaving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                Speichern
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
