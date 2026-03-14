@@ -95,6 +95,32 @@ function applyLivePreview(form: FormState) {
   }
 }
 
+// ColorField extracted outside to prevent remount on every render
+function ColorField({ label, field, value, defaultVal, placeholder, onChange }: {
+  label: string; field: string; value: string; defaultVal: string; placeholder: string;
+  onChange: (field: string, value: string) => void;
+}) {
+  return (
+    <div className="space-y-2">
+      <Label>{label}</Label>
+      <div className="flex items-center gap-4">
+        <input
+          type="color"
+          value={value || defaultVal}
+          onChange={(e) => onChange(field, e.target.value)}
+          className="h-10 w-14 rounded-md border border-input cursor-pointer"
+        />
+        <Input
+          value={value}
+          onChange={(e) => onChange(field, e.target.value)}
+          placeholder={placeholder}
+          className="w-48 font-mono"
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function BrandingSettings() {
   const { effectiveTenantId } = useAuthContext();
   const { data: settings, isLoading } = useTenantSettings();
