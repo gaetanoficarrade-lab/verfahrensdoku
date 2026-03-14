@@ -44,6 +44,7 @@ interface Tenant {
   solo_expires_at: string | null;
   trial_ends_at: string | null;
   source: string | null;
+  max_team_members: number | null;
   created_at: string;
 }
 
@@ -56,7 +57,7 @@ const AdminTenants = () => {
   const [editingTenant, setEditingTenant] = useState<Tenant | null>(null);
   const [deletingTenant, setDeletingTenant] = useState<Tenant | null>(null);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ name: '', contact_name: '', contact_email: '', plan_id: '', is_free: false, trial_active: false });
+  const [form, setForm] = useState({ name: '', contact_name: '', contact_email: '', plan_id: '', is_free: false, trial_active: false, max_team_members_unlimited: true, max_team_members: 5 });
   const { toast } = useToast();
   const { startImpersonation } = useAuthContext();
   const navigate = useNavigate();
@@ -154,7 +155,7 @@ const AdminTenants = () => {
 
   const openCreate = () => {
     setEditingTenant(null);
-    setForm({ name: '', contact_name: '', contact_email: '', plan_id: '', is_free: false, trial_active: false });
+    setForm({ name: '', contact_name: '', contact_email: '', plan_id: '', is_free: false, trial_active: false, max_team_members_unlimited: true, max_team_members: 5 });
     setDialogOpen(true);
   };
 
@@ -167,6 +168,8 @@ const AdminTenants = () => {
       plan_id: t.plan_id || '',
       is_free: t.is_free ?? false,
       trial_active: t.trial_active ?? false,
+      max_team_members_unlimited: t.max_team_members === null,
+      max_team_members: t.max_team_members ?? 5,
     });
     setDialogOpen(true);
   };
@@ -184,6 +187,7 @@ const AdminTenants = () => {
       plan_id: form.plan_id || null,
       is_free: form.is_free,
       trial_active: form.trial_active,
+      max_team_members: form.max_team_members_unlimited ? null : form.max_team_members,
     };
 
     if (editingTenant) {
@@ -447,6 +451,27 @@ const AdminTenants = () => {
                 checked={form.trial_active}
                 onCheckedChange={(v) => setForm({ ...form, trial_active: v })}
               />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="max_team_unlimited">Teammitglieder unbegrenzt</Label>
+                <Switch
+                  id="max_team_unlimited"
+                  checked={form.max_team_members_unlimited}
+                  onCheckedChange={(v) => setForm({ ...form, max_team_members_unlimited: v })}
+                />
+              </div>
+              {!form.max_team_members_unlimited && (
+                <div className="space-y-1">
+                  <Label>Max. Teammitglieder</Label>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={form.max_team_members}
+                    onChange={(e) => setForm({ ...form, max_team_members: parseInt(e.target.value) || 1 })}
+                  />
+                </div>
+              )}
             </div>
           </div>
           <DialogFooter>

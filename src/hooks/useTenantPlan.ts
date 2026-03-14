@@ -69,6 +69,7 @@ export function useTenantPlan(): TenantPlanInfo & { loading: boolean } {
   const isAgentur = planName === 'agentur';
   const isFree = data?.is_free ?? false;
   const trialActive = data?.trial_active ?? false;
+  const hasPlan = !!plan;
 
   return {
     plan,
@@ -78,16 +79,17 @@ export function useTenantPlan(): TenantPlanInfo & { loading: boolean } {
     isFree,
     trialActive,
     loading: isLoading,
+    // If no plan is assigned, default to most restrictive (Solo-like)
     // Solo: only VD creation, no settings at all
     // Berater: no branding/whitelabel
     // Agentur: everything
-    canBrand: isAgentur,
-    canWhitelabel: isAgentur,
-    canManageTeam: !isSolo,
-    canUseWebhooks: !isSolo,
-    canUseTemplates: !isSolo,
-    canUseEmailTemplates: !isSolo,
-    canUseAffiliate: !isSolo,
-    canUseActivityLog: !isSolo,
+    canBrand: hasPlan && isAgentur,
+    canWhitelabel: hasPlan && isAgentur,
+    canManageTeam: hasPlan && !isSolo,
+    canUseWebhooks: hasPlan && !isSolo,
+    canUseTemplates: hasPlan && !isSolo,
+    canUseEmailTemplates: hasPlan && !isSolo,
+    canUseAffiliate: hasPlan && !isSolo,
+    canUseActivityLog: hasPlan && !isSolo,
   };
 }
