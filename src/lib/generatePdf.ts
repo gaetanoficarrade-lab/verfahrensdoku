@@ -767,9 +767,10 @@ export function generateVerfahrensdokumentation({
   const totalPages = doc.getNumberOfPages();
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
-    // Add watermark to all pages except cover (page 1) when not final
-    if (!isFinal && i > 1) {
-      addWatermark(doc);
+    // Add watermark to all pages except cover (page 1) when not final or trial watermark
+    const effectiveWatermark = watermarkText || (!isFinal ? 'ENTWURF' : null);
+    if (effectiveWatermark && i > 1) {
+      addWatermark(doc, effectiveWatermark);
     }
     // Add footer to all pages except cover
     if (i >= 2) {
