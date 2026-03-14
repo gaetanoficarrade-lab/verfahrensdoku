@@ -656,7 +656,10 @@ export default function ChapterEditor() {
                   {precheckLoading ? 'KI prüft…' : 'Prüfen'}
                 </Button>
                 <Button
-                  disabled={submitting || !notes.trim()}
+                  disabled={submitting || !notes.trim() || !precheckDone}
+                  className="gap-2"
+                  onClick={handleSubmit}
+                  title={!precheckDone ? 'Bitte führen Sie zuerst die Prüfung durch' : undefined}
                   className="gap-2"
                   onClick={handleSubmit}
                 >
