@@ -7,39 +7,38 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const CHAPTER_CONTEXT: Record<string, string> = {
-  "1_1": "Unternehmensbeschreibung: Kerntätigkeit, Branche, Rechtsform, Geschäftsmodell",
-  "1_2": "Organisatorischer Aufbau: Abteilungen, Standorte, Organigramm",
-  "1_3": "Zuständigkeiten & Verantwortlichkeiten: Buchhaltung, IT, Vertretung",
-  "1_4": "Buchführungsgrundsätze: Kontenrahmen, Buchungssystematik, Vollständigkeit",
-  "1_5": "Pflege der Verfahrensdokumentation: Aktualisierung, Verantwortung, Versionierung",
-  "2_1": "Rechnungsausgang / Debitoren: Rechnungserstellung, Nummerierung, Versand, Archivierung",
-  "2_2": "Rechnungseingang / Kreditoren: Empfang, Prüfung, Freigabe, Verbuchung, Archivierung",
-  "2_3": "Kassenprozesse: Kassiervorgang, Tagesabschluss, Kassenbuch, Aufbewahrung",
-  "2_4": "Zahlungsanbieter: PayPal, Stripe, Klarna – Erfassung, Abgleich, Archivierung",
-  "2_5": "Marktplatz-/Plattformverkäufe: Amazon, eBay – Umsatzerfassung, Abrechnungen",
-  "2_6": "Digitalisierung / Scanprozess: Scanverfahren, Bildqualität, Originalverbleib",
-  "2_7": "Buchhaltungsverarbeitung: Belegfluss, Verbuchung, Kontierung, Periodenabschluss",
-  "2_8": "Zahlungsverkehr / Bank: Geschäftskonten, Kontoauszüge, Abgleich, Archivierung",
-  "2_9": "Personal / Lohn: Lohnabrechnung, Software, Übertragung in FiBu, Aufbewahrung",
-  "3_1": "Buchhaltungssoftware: Produkt, Version, Berechtigungen, Updates",
-  "3_2": "Schnittstellen: Anbindungen, Datenformate, Fehlerbehandlung",
-  "3_3": "E-Rechnungsprozesse: ZUGFeRD, XRechnung, Validierung, Archivierung",
-  "3_4": "Cloud-Software / SaaS: Anbieter, Serverstandort, Zugriff, Datensicherheit",
-  "3_5": "E-Mail-Systeme & Archivierung: E-Mail-Provider, steuerrelevante E-Mails, Aufbewahrung",
-  "3_6": "Zahlungsplattformen: Technische Anbindung, Transaktionslogs, Datenintegrität",
-  "4_1": "Datensicherung: Häufigkeit, Umfang, Speicherort, Verantwortlichkeit",
-  "4_2": "Wiederherstellung: Ablauf, Testzyklen, Wiederherstellungszeit",
-  "4_3": "Systemänderungen & Updates: Planung, Freigabe, Dokumentation, Datenintegrität",
-  "4_4": "Archivierung & Aufbewahrung: Fristen, Formate, Lesbarkeit, Speicherorte",
-  "4_5": "Datenzugriff der Finanzverwaltung: Z1/Z2/Z3, Ansprechpartner, Bereitstellungszeit",
-  "4_6": "Änderungs- und Versionsmanagement: Versionierung, Changelog, Genehmigung",
-  "4_7": "Digitalisierung von Papierbelegen: Verfahren, Qualitätssicherung, Originalverbleib",
-  "5_1": "Berechtigungen: Konzept, Vergabe, Entzug, Überprüfung",
-  "5_2": "Freigaben: Prozesse, Kompetenzen, Wertgrenzen, Dokumentation",
-  "5_3": "Plausibilitätskontrollen: Automatische Prüfungen, Abweichungen, Protokollierung",
-  "5_4": "Verantwortlichkeiten: IKS-Gesamtverantwortung, Verteilung, Überwachung",
-  "5_5": "Umgang mit Fehlern: Korrekturprozess, Dokumentation, Eskalation, Prävention",
+const CHAPTER_CHECKPOINTS: Record<string, string> = {
+  unternehmen: "Wie Geschäftsvorgänge entstehen · Wie Aufträge zustande kommen und Belege entstehen",
+  organisation: "Aufgabenverteilung im Tagesablauf · Weitergabe von Aufgaben/Belegen",
+  zustaendigkeiten: "Aufgabenverteilung im buchhalterischen Ablauf",
+  buchfuehrung: "Ablauf der Buchführung · Umgang mit Korrekturen · Protokollierung",
+  pflege_vfd: "Wann/wie die Verfahrensdoku aktualisiert wird",
+  rechnungsausgang: "Auftrag → Rechnung · Übermittlung · Ablage",
+  rechnungseingang: "Empfang/Erfassung · Prüfung/Freigabe · Ablage",
+  kassenprozess: "Bargeschäft-Ablauf · Tagesabschluss · Belege → Buchhaltung",
+  buchhaltung: "Beleg → Buchhaltung · Buchung/Zuordnung · Dauerhafte Ablage",
+  bankverkehr: "Zahlung/Autorisierung · Zuordnung Beleg/Buchung · Abstimmung",
+  scanprozess: "Digitalisierung · Qualitätssicherung · Umgang mit Originalen",
+  zahlungsanbieter: "Umsätze → Buchhaltung · Belegzuordnung · Gebührenerfassung",
+  marktplatz: "Bestellungen → Buchung · Sammelzahlungen/Gebühren",
+  email: "Erkennung steuerrelevanter Mails · Archivierung",
+  e_rechnung: "Empfang ZUGFeRD/XRechnung · XML-Erhalt · Aufbewahrung",
+  buchhaltungssoftware: "Softwarename · Zugriffsregelung · Updates",
+  schnittstellen: "Datenfluss zwischen Systemen · Fehlererkennung",
+  cloud: "Eingesetzte Systeme · Datenzugriffssicherheit · AV-Verträge",
+  datensicherung: "Sicherungsablauf · Verantwortlichkeit · Verlustfall",
+  wiederherstellung: "Ablauf einer Backup-Wiederherstellung",
+  archivierung: "Aufbewahrungsort · Wiederfindbarkeit · Fristen · Löschung",
+  datenzugriff: "Bereitstellung für Prüfer · Exportformat",
+  scanprozess_betrieb: "Schritt-für-Schritt-Digitalisierung · Qualitätskontrolle · Originalverbleib",
+  updates: "Update-Durchführung · Systemwechsel",
+  aenderungsmanagement: "Nachvollziehbare Änderungsdokumentation",
+  berechtigungen: "Zugriff/Rechte · Funktionstrennung",
+  freigaben: "Nachweisbare Freigaben · Freigabe-Erteilung",
+  plausibilitaet: "Regelmäßige Prüfungen · Nachweisbarkeit",
+  verantwortlichkeiten: "Kontrollverantwortung · Durchführungssicherstellung",
+  fehlerbehandlung: "Fehlererkennung/-korrektur · Korrekturdokumentation",
+  personal: "Lohnabrechnungs-Auslöser · Ablauf · Aufbewahrung",
 };
 
 const normalizeHints = (value: unknown): string[] => {
@@ -51,12 +50,13 @@ const normalizeHints = (value: unknown): string[] => {
   return [];
 };
 
-const buildStoredPrecheck = (result: { hints: string[]; missing_fields: string[]; confidence: number }) =>
+const buildStoredPrecheck = (hints: string[], sufficient: boolean) =>
   JSON.stringify({
     checked: true,
-    hints: result.hints,
-    missing_fields: result.missing_fields,
-    confidence: result.confidence,
+    hints,
+    missing_fields: [],
+    confidence: sufficient ? 100 : 40,
+    sufficient,
     checked_at: new Date().toISOString(),
   });
 
@@ -66,7 +66,6 @@ serve(async (req) => {
   }
 
   try {
-    // Auth check
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -98,7 +97,13 @@ serve(async (req) => {
       );
     }
 
-    const chapterContext = CHAPTER_CONTEXT[chapter_key] || chapter_key;
+    // Resolve chapter checkpoints – try direct key, then mapped from chapter_key like "1_1"
+    const resolveCheckpoints = (key: string): string => {
+      if (CHAPTER_CHECKPOINTS[key]) return CHAPTER_CHECKPOINTS[key];
+      return "Auslöser · Durchführung · Nachweis · Aufbewahrung";
+    };
+
+    const checkpoints = resolveCheckpoints(chapter_key);
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {
@@ -108,43 +113,90 @@ serve(async (req) => {
       });
     }
 
-    const systemPrompt = `Du bist ein freundlicher Assistent der Mandanten beim Ausfüllen ihrer Verfahrensdokumentation (GoBD) unterstützt.
+    const hasEmployees = onboarding_answers?.has_employees !== false;
 
-Deine Aufgabe: Prüfe die Angaben für das Kapitel "${chapterContext}" und gib NUR Hinweise auf echte Lücken.
+    const systemPrompt = `Du bist ein freundlicher Interview-Assistent, der einem Unternehmer hilft, seinen Arbeitsalltag zu beschreiben.
+Du führst ein Gespräch, KEINE Steuerprüfung.
+Ziel: Der Mandant soll sofort wissen, was er konkret noch erzählen muss.
 
-WICHTIGE REGELN:
+WICHTIGSTE GRUNDREGEL – KAPITELBEZOGENE PRÜFUNG:
+Du darfst NUR prüfen, was zum aktuellen Kapitel gehört.
+Du darfst KEINE Inhalte aus anderen Kapiteln verlangen oder bemängeln.
 
-1. UMGANGSSPRACHE ZÄHLT: Wenn der Nutzer etwas in eigenen Worten beschrieben hat, gilt die Information als vorhanden. Du darfst NICHT bemängeln dass etwas "nicht formal genug" oder "nicht detailliert genug" formuliert ist. Die formale Aufbereitung ist Aufgabe des generierten Textes, nicht des Nutzers.
+${!hasEmployees ? `[SONDERREGEL EINZELUNTERNEHMER – HAS_EMPLOYEES=false]:
+Wenn der Mandant sinngemäß schreibt dass alle Aufgaben vom Inhaber persönlich durchgeführt werden, ist das Kapitel für Zuständigkeiten VOLLSTÄNDIG.
+Gib dann hints=[] und sufficient=true zurück.
+` : ""}
+INTERVIEWMODUS:
+Wenn Informationen fehlen, stellst du gezielte Ergänzungsfragen – wie in einem freundlichen Gespräch.
 
-2. NUR ECHTE LÜCKEN: Ein Hinweis ist nur berechtigt wenn eine Information wirklich NIRGENDS erwähnt wurde – weder direkt noch sinngemäß noch umgangssprachlich. Wenn der Nutzer z.B. schreibt "ich mach die Buchhaltung mit Lexoffice" dann ist die Software benannt, auch ohne Versionsnummer.
+VALIDIERUNGSREGEL:
+Du darfst NUR prüfen, ob die kapitelbezogenen Prüfpunkte erkennbar abgedeckt sind.
+Du darfst KEINE zusätzlichen fachlichen Anforderungen erfinden.
+Hinweise dürfen NUR erscheinen, wenn ein Prüfpunkt KOMPLETT fehlt.
+Nach Beantwortung aller Leitfragen gilt der Abschnitt grundsätzlich als vollständig.
 
-3. SOFTWARE-NAMEN REICHEN AUS: Die GoBD verlangt die Identifizierbarkeit der eingesetzten Software, NICHT die exakte Versionsnummer. Wenn der Nutzer einen Softwarenamen nennt (z.B. "Lexoffice", "Funnelpay", "Stripe", "sevDesk"), ist die Anforderung erfüllt. Gib NIEMALS einen Hinweis auf fehlende Versionsnummern. Nur wenn der Nutzer GAR KEINE Software erwähnt hat obwohl der Prozess offensichtlich softwaregestützt ist, darfst du nachfragen welche Software genutzt wird.
+SONDERREGEL VERSIONSNUMMERN:
+Du darfst NIEMALS nach Versionsnummern von Software fragen.
+Der Name der Software reicht vollständig aus (z.B. "Lexoffice", "Funnelpay", "Stripe").
+Software wird ständig aktualisiert – Versionsnummern sind für den Mandanten nicht zumutbar zu pflegen.
 
-4. KEINE NACHVOLLZIEHBARKEITS-FORDERUNG: "Ein sachkundiger Dritter muss nachvollziehen können" ist das Ziel des fertigen Dokuments, nicht Aufgabe des Mandanten bei der Eingabe. Gib KEINEN Hinweis dazu.
+SONDERREGEL UNVERÄNDERBARKEIT:
+Wenn der Mandant beschreibt dass er Rechnungen nicht löschen kann sondern stornieren muss, oder dass seine Software keine nachträglichen Änderungen erlaubt, gilt Unveränderbarkeit als vollständig beschrieben.
+Auch umgangssprachliche Beschreibungen akzeptieren.
 
-5. MAXIMAL 3 HINWEISE: Gib höchstens 3 wirklich relevante Hinweise. Lieber weniger als zu viele. Keine ellenlangen Listen.
+STRENGE REGELN FÜR HINWEISE:
+- MAXIMAL 2 Hinweise gleichzeitig. Niemals mehr.
+- Jeder Hinweis ist eine kurze, konkrete Frage in Alltagssprache.
+- KEINE Fachbegriffe (verboten: Unveränderbarkeit, GoBD-Konformität, Dokumentationspflicht, Aufbewahrungspflicht, Belegfunktion etc.)
+- KEINE langen Aufzählungen mit vielen Anforderungen.
+- KEINE Erklärungen, was die GoBD verlangen.
+- Du darfst NIEMALS erklären, warum etwas wichtig ist. Stelle einfach die Frage.
 
-6. TON: Unterstützend und freundlich, nicht prüfend oder belehrend. Formuliere als Vorschlag: "Sie könnten noch ergänzen..." oder "Vielleicht möchten Sie noch erwähnen..."
+BEISPIELE FÜR GUTE FRAGEN:
+- "Wo werden Ihre Rechnungen nach der Erstellung gespeichert?"
+- "Wie kommt eine Eingangsrechnung zu Ihnen – per E-Mail, Download oder Post?"
+- "Woran erkennt man später, dass der Kunde Sie wirklich beauftragt hat?"
+- "Was machen Sie konkret, wenn eine Rechnung falsch ist?"
 
-7. LEERE HINWEISE BEI VOLLSTÄNDIGKEIT: Wenn die Angaben ausreichend sind, gib eine leere hints-Liste zurück. Es ist völlig OK keine Hinweise zu haben.
+VERBOTEN sind Hinweise wie:
+- "nicht ausreichend beschrieben"
+- "nicht nachvollziehbar"
+- "bitte genauer erläutern"
+- Jegliche Fachsprache oder abstrakte Formulierungen
 
-Was wirklich fehlen kann (nur prüfen wenn ÜBERHAUPT NICHT erwähnt):
-- Welche Software/Tools werden genutzt (nur ob überhaupt genannt, nicht Versionsnummern)
-- Wer ist zuständig (Person oder Rolle – "ich mache das selbst" reicht völlig)
-- Wie werden Daten aufbewahrt (irgendeine Erwähnung reicht, z.B. "in der Cloud", "auf dem Rechner")
-- Gibt es einen Prozess für den beschriebenen Bereich (irgendeine Beschreibung reicht)
+SPEZIALREGEL – MÜNDLICHE EINIGUNG:
+Wenn der Mandant eine mündliche Vereinbarung beschreibt, darfst du NICHT verlangen einen Vertrag zu beschreiben.
+Frage stattdessen nach der Nachweiskette – welche Aufzeichnungen danach entstehen.
 
-Antworte NUR als JSON: { "hints": ["..."], "missing_fields": ["..."], "confidence": 0-100 }
-Bei confidence: 80+ = gut ausgefüllt, 50-79 = ein paar Lücken, unter 50 = wesentliche Infos fehlen.`;
+STOPPREGEL:
+Sobald die Angaben logisch nachvollziehbar sind, darfst du NICHT weiter nach Details fragen.
+Wenn alle Prüfpunkte erkennbar abgedeckt sind → hints=[] und sufficient=true.
 
-    const userPrompt = `Kapitel: ${chapterContext}
+WEITERE REGELN:
+- Du prüfst NUR die Vollständigkeit, NICHT die Richtigkeit.
+- Du bist KEIN Steuerberater und KEIN Prüfer.
+- Du gibst KEINE Bewertungen, KEINE Fachbegriffe, KEINE Paragraphen.
+- Du gibst KEINE Verbesserungsvorschläge.
+- Einfache Alltagssprache, freundlich und respektvoll (Sie-Form)
+
+KAPITELBEZOGENE PRÜFPUNKTE für dieses Kapitel:
+${checkpoints}
+
+AUSGABEFORMAT (JSON):
+{ "hints": ["Frage 1", "Frage 2"], "sufficient": true/false }
+Maximal 2 Einträge in hints.
+Wenn alles abgedeckt ist: hints=[] und sufficient=true.
+Antworte NUR mit dem JSON-Objekt, ohne Markdown-Codeblöcke.`;
+
+    const userPrompt = `Kapitel-Prüfpunkte: ${checkpoints}
 
 Mandanten-Notizen:
 ${client_notes}
 
 ${onboarding_answers ? `Onboarding-Antworten:\n${JSON.stringify(onboarding_answers, null, 2)}` : ""}
 
-Analysiere die Notizen und gib strukturierte Hinweise zurück.`;
+Analysiere die Notizen und gib das JSON zurück.`;
 
     const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -179,21 +231,24 @@ Analysiere die Notizen und gib strukturierte Hinweise zurück.`;
     const openaiData = await openaiResponse.json();
     const rawText = openaiData?.choices?.[0]?.message?.content || "{}";
 
-    let result: { hints: string[]; missing_fields: string[]; confidence: number };
+    let parsed: { hints?: unknown; sufficient?: boolean };
     try {
-      result = JSON.parse(rawText);
+      parsed = JSON.parse(rawText);
     } catch {
-      result = { hints: ["Analyse konnte nicht verarbeitet werden."], missing_fields: [], confidence: 0 };
+      parsed = { hints: ["Analyse konnte nicht verarbeitet werden."], sufficient: false };
     }
 
+    const hints = normalizeHints(parsed.hints).slice(0, 2);
+    const sufficient = parsed.sufficient === true;
+
+    // Map to legacy format expected by ChapterEditor
     const normalizedResult = {
-      hints: normalizeHints(result.hints),
-      missing_fields: normalizeHints(result.missing_fields),
-      confidence: typeof result.confidence === "number" ? result.confidence : 0,
+      hints,
+      missing_fields: [] as string[],
+      confidence: sufficient ? 100 : 40,
     };
 
-    const allHints = [...normalizedResult.missing_fields, ...normalizedResult.hints];
-    const storedPrecheck = buildStoredPrecheck(normalizedResult);
+    const storedPrecheck = buildStoredPrecheck(hints, sufficient);
 
     // Save to chapter_data
     const { data: existing } = await supabase
@@ -202,6 +257,8 @@ Analysiere die Notizen und gib strukturierte Hinweise zurück.`;
       .eq("project_id", project_id)
       .eq("chapter_key", chapter_key)
       .maybeSingle();
+
+    const allHints = hints;
 
     if (existing) {
       const { error: updateError } = await supabase
