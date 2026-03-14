@@ -142,33 +142,6 @@ export default function BillingSettings() {
         </CardContent>
       </Card>
 
-      <div>
-        <h2 className="text-lg font-semibold text-foreground mb-3">Verfügbare Pläne</h2>
-        <div className="grid gap-4 md:grid-cols-3">
-          {allPlans.map(plan => (
-            <Card key={plan.id} className={plan.name === tenantPlan?.planName ? 'border-primary' : ''}>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">{plan.name}</CardTitle>
-                <CardDescription>{plan.price_monthly.toFixed(2)} € / Monat</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="text-sm text-muted-foreground space-y-1">
-                  <p>• {plan.max_clients} Mandanten</p>
-                  <p>• {plan.max_projects} Projekte</p>
-                </div>
-                {plan.name === tenantPlan?.planName ? (
-                  <Badge>Aktueller Plan</Badge>
-                ) : (
-                  <Button variant="outline" size="sm" className="w-full" disabled={requesting} onClick={() => handleUpgradeRequest(plan.name)}>
-                    <ArrowUpCircle className="h-4 w-4 mr-1" />
-                    Upgrade anfragen
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
 
       <Card>
         <CardHeader>
