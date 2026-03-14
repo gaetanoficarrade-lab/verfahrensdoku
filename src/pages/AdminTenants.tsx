@@ -177,6 +177,8 @@ const AdminTenants = () => {
       contact_name: form.contact_name.trim() || null,
       contact_email: form.contact_email.trim() || null,
       plan_id: form.plan_id || null,
+      is_free: form.is_free,
+      trial_active: form.trial_active,
     };
 
     if (editingTenant) {
