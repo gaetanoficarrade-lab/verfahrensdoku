@@ -31,6 +31,7 @@ interface ChapterData {
 export default function DocumentPreview() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { pdfWatermark } = useTrialRestrictions();
   const [loading, setLoading] = useState(true);
   const [projectName, setProjectName] = useState('');
   const [companyName, setCompanyName] = useState('');
