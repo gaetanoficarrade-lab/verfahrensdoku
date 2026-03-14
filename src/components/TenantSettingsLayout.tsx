@@ -21,6 +21,7 @@ const allTabs: TabItem[] = [
   { label: 'Aktivitäts-Log', url: '/settings/activity-log', icon: ScrollText, requiresFn: 'canUseActivityLog' },
   { label: 'Affiliate', url: '/settings/affiliate', icon: Link2, requiresFn: 'canUseAffiliate' },
   { label: 'Sicherheit', url: '/settings/security', icon: KeyRound },
+  { label: 'Hilfe', url: '/help', icon: HelpCircle },
 ];
 
 interface TenantSettingsLayoutProps {
