@@ -58,18 +58,6 @@ export default function BillingSettings() {
     ? Math.max(0, Math.ceil((new Date(tenantPlan.trialEndsAt).getTime() - Date.now()) / 86400000))
     : null;
 
-  const handleUpgradeRequest = async (planName: string) => {
-    setRequesting(true);
-    // Create notification for super_admin
-    await supabase.from('notifications').insert({
-      user_id: user?.id,
-      title: 'Upgrade angefragt',
-      message: `Lizenznehmer hat ein Upgrade auf "${planName}" angefragt.`,
-      link: '/admin/tenants',
-    });
-    toast({ title: 'Upgrade angefragt', description: 'Der Administrator wurde benachrichtigt und wird sich bei Ihnen melden.' });
-    setRequesting(false);
-  };
 
   if (loading) {
     return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
