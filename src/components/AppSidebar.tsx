@@ -140,7 +140,9 @@ export function AppSidebar() {
           )}
           {!collapsed && (
             <div className="flex flex-col">
-              <span className="text-sm font-bold text-amber-400">{brandName}</span>
+              <span className="text-sm font-bold" style={tenantSettings?.brand_text_color ? { color: tenantSettings.brand_text_color } : undefined}>
+                {brandName}
+              </span>
               <span className="text-xs text-sidebar-foreground/60">
                 {showAdmin ? 'Super-Admin' : isClient ? 'Mandant' : 'Berater'}
               </span>
