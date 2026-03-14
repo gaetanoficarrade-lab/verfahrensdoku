@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Shield, Mail, Lock, User, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/PasswordInput';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -175,18 +176,12 @@ const ClientRegister = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="password">Passwort</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input id="password" type="password" placeholder="Min. 8 Zeichen" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-10" required />
-                </div>
+                <PasswordInput id="password" placeholder="Min. 8 Zeichen" value={password} onChange={(e) => setPassword(e.target.value)} required />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="passwordConfirm">Passwort bestätigen</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input id="passwordConfirm" type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} className="pl-10" required />
-                </div>
+                <PasswordInput id="passwordConfirm" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} required />
               </div>
 
               {/* GDPR Consent */}
