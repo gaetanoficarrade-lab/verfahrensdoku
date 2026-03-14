@@ -75,7 +75,7 @@ export default function Clients() {
           <h1 className="text-2xl font-bold text-foreground">Mandanten</h1>
           <p className="text-sm text-muted-foreground mt-1">Verwalten Sie Ihre Mandanten</p>
         </div>
-        <Button onClick={() => navigate('/clients/new')} className="gap-2">
+        <Button onClick={() => navigate('/clients/new')} className="gap-2" disabled={!canCreateClients}>
           <Plus className="h-4 w-4" />
           Neuer Mandant
         </Button>
