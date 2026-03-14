@@ -225,6 +225,27 @@ export default function BrandingSettings() {
     toast.info('Farben & Schrift auf Standard zurückgesetzt. Bitte speichern.');
   };
 
+  const handleResetName = () => {
+    setForm((prev) => ({ ...prev, brand_name: '' }));
+    toast.info('Firmenname zurückgesetzt. Bitte speichern.');
+  };
+
+  const handleResetLogo = async () => {
+    if (effectiveTenantId) {
+      try {
+        const { data: files } = await supabase.storage.from('tenant-assets').list(effectiveTenantId);
+        if (files && files.length > 0) {
+          const logoFiles = files.filter(f => f.name.startsWith('logo.'));
+          if (logoFiles.length > 0) {
+            await supabase.storage.from('tenant-assets').remove(logoFiles.map(f => `${effectiveTenantId}/${f.name}`));
+          }
+        }
+      } catch {}
+    }
+    setForm((prev) => ({ ...prev, logo_url: '' }));
+    toast.info('Logo zurückgesetzt. Bitte speichern.');
+  };
+
   const handleSavePreset = () => {
     if (!presetName.trim()) { toast.error('Bitte geben Sie einen Namen ein.'); return; }
     const preset: Partial<FormState> = {};
@@ -310,7 +331,14 @@ export default function BrandingSettings() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Firmenname</Label>
-                <Input value={form.brand_name} onChange={(e) => handleChange('brand_name', e.target.value)} placeholder="z.B. Musterkanzlei GmbH" />
+                <div className="flex items-center gap-2">
+                  <Input value={form.brand_name} onChange={(e) => handleChange('brand_name', e.target.value)} placeholder="z.B. Musterkanzlei GmbH" className="flex-1" />
+                  {form.brand_name && (
+                    <Button variant="ghost" size="sm" onClick={handleResetName} title="Firmenname zurücksetzen">
+                      <RotateCcw className="h-3.5 w-3.5" />
+                    </Button>
+                  )}
+                </div>
                 <p className="text-xs text-muted-foreground">Wird anstelle von "GoBD-Suite" in der Navigation angezeigt.</p>
               </div>
               <div className="space-y-2">
@@ -330,7 +358,9 @@ export default function BrandingSettings() {
                         {form.logo_url ? 'Logo ersetzen' : 'Logo hochladen'}
                       </Button>
                       {form.logo_url && (
-                        <Button variant="destructive" size="sm" onClick={handleLogoRemove}>Entfernen</Button>
+                        <Button variant="ghost" size="sm" onClick={handleResetLogo} title="Logo zurücksetzen">
+                          <RotateCcw className="h-3.5 w-3.5 mr-1" /> Zurücksetzen
+                        </Button>
                       )}
                     </div>
                     <p className="text-xs text-muted-foreground">PNG, JPG, SVG – max. 2 MB</p>
