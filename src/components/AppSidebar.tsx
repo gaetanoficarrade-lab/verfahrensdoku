@@ -78,7 +78,13 @@ export function AppSidebar() {
   const navigate = useNavigate();
   const { signOut, isSuperAdmin, impersonation, roles } = useAuthContext();
   const { data: tenantSettings } = useTenantSettings();
+  const tenantPlan = useTenantPlan();
 
+  // Filter settings items based on plan
+  const tenantSettingsItems = allTenantSettingsItems.filter(item => {
+    if (!item.requiresFn) return true;
+    return tenantPlan[item.requiresFn];
+  });
   const currentPath = location.pathname;
   const isActive = (path: string) => {
     if (path === '/admin' && currentPath === '/admin') return true;
