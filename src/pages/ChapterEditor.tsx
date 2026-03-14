@@ -254,7 +254,7 @@ export default function ChapterEditor() {
     ? getFilteredLeitfragen(chapterKey, onboardingAnswers as OnboardingAnswers)
     : null;
   const negativvermerk = chapterKey && onboardingAnswers
-    ? getNegativvermerk(chapterKey, onboardingAnswers as OnboardingAnswers)
+    ? getNegativvermerk(chapterKey, onboardingAnswers as OnboardingAnswers, (onboardingAnswers as any)?.company_name)
     : null;
   const displayBlocks = filteredLeitfragen ? filteredLeitfragen.visibleBlocks : leitfragenBlocks;
 
