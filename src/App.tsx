@@ -48,6 +48,7 @@ import TemplateSettings from "./pages/TemplateSettings";
 import TenantEmailSettings from "./pages/TenantEmailSettings";
 import AdminWebhookLogs from "./pages/AdminWebhookLogs";
 import TestStarten from "./pages/TestStarten";
+import LandingPage from "./pages/LandingPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -63,6 +64,7 @@ const App = () => (
             <Routes>
               {/* Public routes */}
               <Route path="/auth" element={<Auth />} />
+              <Route path="/landing" element={<LandingPage />} />
               <Route path="/register" element={<Register />} />
               <Route path="/set-password" element={<SetPassword />} />
               <Route path="/client-register" element={<ClientRegister />} />
