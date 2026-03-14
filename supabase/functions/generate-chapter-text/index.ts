@@ -35,6 +35,55 @@ const CHAPTER_CONTEXT: Record<string, { title: string; description: string }> = 
   },
 };
 
+const normalizeHints = (value: unknown): string[] => {
+  if (Array.isArray(value)) return value.map((item) => String(item).trim()).filter(Boolean);
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed) return [];
+    if (trimmed.includes("\n")) {
+      return trimmed
+        .split("\n")
+        .map((line) => line.replace(/^[-•]\s*/, "").trim())
+        .filter(Boolean);
+    }
+    if (trimmed.includes(",")) {
+      return trimmed.split(",").map((item) => item.trim()).filter(Boolean);
+    }
+    return [trimmed];
+  }
+  return [];
+};
+
+const extractPrecheckHints = (raw: unknown): string[] => {
+  if (raw === null || raw === undefined) return [];
+  if (Array.isArray(raw)) return normalizeHints(raw);
+
+  if (typeof raw === "string") {
+    const trimmed = raw.trim();
+    if (!trimmed) return [];
+
+    try {
+      const parsed = JSON.parse(trimmed) as unknown;
+      if (Array.isArray(parsed)) return normalizeHints(parsed);
+      if (parsed && typeof parsed === "object") {
+        const payload = parsed as { hints?: unknown; missing_fields?: unknown };
+        return [...normalizeHints(payload.missing_fields), ...normalizeHints(payload.hints)];
+      }
+    } catch {
+      return normalizeHints(trimmed);
+    }
+
+    return [];
+  }
+
+  if (typeof raw === "object") {
+    const payload = raw as { hints?: unknown; missing_fields?: unknown };
+    return [...normalizeHints(payload.missing_fields), ...normalizeHints(payload.hints)];
+  }
+
+  return [];
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });

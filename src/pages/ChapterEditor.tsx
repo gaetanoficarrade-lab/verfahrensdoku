@@ -277,13 +277,10 @@ export default function ChapterEditor() {
         hasLoadedRef.current = true;
         setEditorText(chData.editor_text || chData.generated_text || '');
         setStatus(chData.status || 'empty');
-        const hints = Array.isArray(chData.client_precheck_hints) ? chData.client_precheck_hints : [];
-        setSavedPrecheckHints(hints);
-        // Restore precheck result from DB so it survives tab switches
-        if (hints.length > 0) {
-          setPrecheckDone(true);
-          setPrecheckResult({ hints, missing_fields: [], confidence: 1 });
-        }
+        const decodedPrecheck = decodeStoredPrecheck(chData.client_precheck_hints);
+        setSavedPrecheckHints(decodedPrecheck.allHints);
+        setPrecheckDone(decodedPrecheck.wasChecked);
+        setPrecheckResult(decodedPrecheck.result);
 
         const { data: filesData } = await supabase
           .from('chapter_files')

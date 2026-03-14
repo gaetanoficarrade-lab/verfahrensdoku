@@ -42,6 +42,24 @@ const CHAPTER_CONTEXT: Record<string, string> = {
   "5_5": "Umgang mit Fehlern: Korrekturprozess, Dokumentation, Eskalation, Prävention",
 };
 
+const normalizeHints = (value: unknown): string[] => {
+  if (Array.isArray(value)) return value.map((item) => String(item).trim()).filter(Boolean);
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    return trimmed ? [trimmed] : [];
+  }
+  return [];
+};
+
+const buildStoredPrecheck = (result: { hints: string[]; missing_fields: string[]; confidence: number }) =>
+  JSON.stringify({
+    checked: true,
+    hints: result.hints,
+    missing_fields: result.missing_fields,
+    confidence: result.confidence,
+    checked_at: new Date().toISOString(),
+  });
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
