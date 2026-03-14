@@ -172,7 +172,6 @@ serve(async (req) => {
     // Helper: create user + invite token + send welcome email
     const createUserAndInvite = async (tenantId: string, planName: string) => {
       const customerName = data.customer_name || data.name || data.customer_details?.name || "";
-      const isSolo = planName === "solo";
 
       // Create auth user
       const normalizedEmail = customerEmail;
