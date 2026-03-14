@@ -114,13 +114,13 @@ export function AppSidebar() {
         <div className="flex items-center px-4 py-4">
           {collapsed ? (
             <img
-              src={logoUrl || '/images/logo.png'}
+              src={logoUrl || sidebarLogo}
               alt="Logo"
               className="h-8 w-8 object-contain shrink-0"
             />
           ) : (
             <img
-              src={logoUrl || '/images/logo.png'}
+              src={logoUrl || sidebarLogo}
               alt="Logo"
               className="object-contain"
               style={{ width: '220px', height: 'auto', display: 'block', maxWidth: 'none' }}
