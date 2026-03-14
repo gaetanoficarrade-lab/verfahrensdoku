@@ -160,7 +160,7 @@ serve(async (req) => {
     ]);
 
     // Generate link: use "recovery" for existing users, "invite" for new ones
-    const linkType = existingUser ? "recovery" : "invite";
+    const linkType = isExistingUser ? "recovery" : "invite";
     const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
       type: linkType,
       email,
