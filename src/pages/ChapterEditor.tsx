@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, AlertTriangle, CheckCircle2, Mic, PenLine, Search, History, MessageSquare, FileText } from 'lucide-react';
+import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, AlertTriangle, CheckCircle2, Mic, PenLine, Search, History, MessageSquare, FileText, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { logAudit } from '@/lib/auditLog';
 import { triggerWebhook } from '@/lib/webhookTrigger';
@@ -94,6 +94,10 @@ export default function ChapterEditor() {
   const [files, setFiles] = useState<ChapterFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const initialNotesRef = useRef<string>('');
+  const hasLoadedRef = useRef(false);
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [generateLoading, setGenerateLoading] = useState(false);
@@ -164,7 +168,10 @@ export default function ChapterEditor() {
 
       if (chData) {
         setChapterDataId(chData.id);
-        setNotes(chData.client_notes || '');
+        const loadedNotes = chData.client_notes || '';
+        setNotes(loadedNotes);
+        initialNotesRef.current = loadedNotes;
+        hasLoadedRef.current = true;
         setEditorText(chData.editor_text || chData.generated_text || '');
         setStatus(chData.status || 'empty');
         setSavedPrecheckHints(
@@ -184,6 +191,10 @@ export default function ChapterEditor() {
           .eq('chapter_data_id', chData.id)
           .order('created_at', { ascending: true });
         setComments((commentsData || []) as unknown as ChapterComment[]);
+      }
+      if (!chData) {
+        hasLoadedRef.current = true;
+        initialNotesRef.current = '';
       }
       setLoading(false);
     };
@@ -213,6 +224,57 @@ export default function ChapterEditor() {
     };
     loadTemplates();
   }, [isAdvisor, chapterKey, effectiveTenantId]);
+
+  // Auto-save notes with debounce (1.5s after last keystroke)
+  useEffect(() => {
+    if (!hasLoadedRef.current) return;
+    if (notes === initialNotesRef.current) return;
+    // Don't auto-save if submitted and not amending
+    if (isSubmitted && !isAmending) return;
+    if (isAdvisor) return;
+
+    setAutoSaveStatus('idle');
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+
+    autoSaveTimerRef.current = setTimeout(async () => {
+      setAutoSaveStatus('saving');
+      const cdId = chapterDataId || await ensureChapterDataForAutoSave();
+      if (!cdId) { setAutoSaveStatus('idle'); return; }
+
+      const { error } = await supabase
+        .from('chapter_data')
+        .update({ client_notes: notes, status: status === 'empty' ? 'client_draft' : status })
+        .eq('id', cdId);
+
+      if (!error) {
+        if (status === 'empty') setStatus('client_draft');
+        initialNotesRef.current = notes;
+        setAutoSaveStatus('saved');
+        setTimeout(() => setAutoSaveStatus('idle'), 2000);
+      } else {
+        setAutoSaveStatus('idle');
+        console.error('Auto-save error:', error);
+      }
+    }, 1500);
+
+    return () => {
+      if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    };
+  }, [notes]);
+
+  // Helper for auto-save to create chapter_data without toast errors
+  const ensureChapterDataForAutoSave = async (): Promise<string | null> => {
+    if (chapterDataId) return chapterDataId;
+    const { data, error } = await supabase
+      .from('chapter_data')
+      .insert({ project_id: projectId!, chapter_key: chapterKey!, status: 'client_draft' })
+      .select('id')
+      .single();
+    if (error) return null;
+    setChapterDataId(data.id);
+    setStatus('client_draft');
+    return data.id;
+  };
 
   const loadVersions = async () => {
     if (!chapterDataId) return;
@@ -567,10 +629,19 @@ export default function ChapterEditor() {
           {!isAdvisor && canEdit && (
             <div className="space-y-4">
               <div className="flex gap-3 items-center">
-                <Button variant="outline" onClick={handleSave} disabled={saving || precheckLoading}>
-                  {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                  Speichern
-                </Button>
+                {/* Auto-save status indicator */}
+                {autoSaveStatus === 'saving' && (
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    Wird gespeichert…
+                  </span>
+                )}
+                {autoSaveStatus === 'saved' && (
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Check className="h-3 w-3" />
+                    Gespeichert
+                  </span>
+                )}
                 <Button
                   variant="secondary"
                   size="sm"
