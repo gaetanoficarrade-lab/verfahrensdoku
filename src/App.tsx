@@ -64,6 +64,7 @@ const App = () => (
             <Routes>
               {/* Public routes */}
               <Route path="/auth" element={<Auth />} />
+              <Route path="/landing" element={<LandingPage />} />
               <Route path="/register" element={<Register />} />
               <Route path="/set-password" element={<SetPassword />} />
               <Route path="/client-register" element={<ClientRegister />} />
