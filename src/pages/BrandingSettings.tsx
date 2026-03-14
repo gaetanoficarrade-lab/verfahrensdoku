@@ -348,12 +348,12 @@ export default function BrandingSettings() {
               <CardDescription>Änderungen werden sofort als Live-Vorschau angezeigt</CardDescription>
             </CardHeader>
             <CardContent className="space-y-5">
-              <ColorField label="Buttonfarbe (Akzentfarbe)" field="primary_color" placeholder="#1e3a5f" defaultVal="#1e3a5f" />
-              <ColorField label="Button-Schriftfarbe" field="button_text_color" placeholder="#ffffff (Standard)" defaultVal="#ffffff" />
+              <ColorField label="Buttonfarbe (Akzentfarbe)" field="primary_color" value={form.primary_color} placeholder="#1e3a5f" defaultVal="#1e3a5f" onChange={handleChange} />
+              <ColorField label="Button-Schriftfarbe" field="button_text_color" value={form.button_text_color} placeholder="#ffffff (Standard)" defaultVal="#ffffff" onChange={handleChange} />
               <Separator />
-              <ColorField label="Seitenleiste – Hintergrundfarbe" field="sidebar_bg_color" placeholder="#141414 (Standard)" defaultVal="#141414" />
-              <ColorField label="Seitenleiste – Schriftfarbe" field="menu_text_color" placeholder="#c7c7c7 (Standard)" defaultVal="#c7c7c7" />
-              <ColorField label="Toolname-Schriftfarbe" field="brand_text_color" placeholder="#ffffff (Standard)" defaultVal="#ffffff" />
+              <ColorField label="Seitenleiste – Hintergrundfarbe" field="sidebar_bg_color" value={form.sidebar_bg_color} placeholder="#141414 (Standard)" defaultVal="#141414" onChange={handleChange} />
+              <ColorField label="Seitenleiste – Schriftfarbe" field="menu_text_color" value={form.menu_text_color} placeholder="#c7c7c7 (Standard)" defaultVal="#c7c7c7" onChange={handleChange} />
+              <ColorField label="Toolname-Schriftfarbe" field="brand_text_color" value={form.brand_text_color} placeholder="#ffffff (Standard)" defaultVal="#ffffff" onChange={handleChange} />
               <Separator />
               <div>
                 <Label className="mb-2 block">Button-Vorschau</Label>
