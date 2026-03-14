@@ -25,17 +25,15 @@ declare global {
 export function useSpeechRecognition(onResult: (text: string) => void) {
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+  const shouldBeListeningRef = useRef(false);
+  const onResultRef = useRef(onResult);
+  onResultRef.current = onResult;
 
   const isSupported = typeof window !== 'undefined' &&
     !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 
-  const toggle = useCallback(() => {
+  const startRecognition = useCallback(() => {
     if (!isSupported) return;
-
-    if (isListening && recognitionRef.current) {
-      recognitionRef.current.stop();
-      return;
-    }
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
@@ -46,26 +44,57 @@ export function useSpeechRecognition(onResult: (text: string) => void) {
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       const last = event.results.length - 1;
       const transcript = event.results[last][0].transcript;
-      onResult(transcript);
+      onResultRef.current(transcript);
     };
 
-    recognition.onerror = () => {
-      setIsListening(false);
-      recognitionRef.current = null;
+    recognition.onerror = (event: Event) => {
+      const errorEvent = event as Event & { error?: string };
+      // Don't restart on explicit abort or not-allowed
+      if (errorEvent.error === 'aborted' || errorEvent.error === 'not-allowed') {
+        shouldBeListeningRef.current = false;
+        setIsListening(false);
+        recognitionRef.current = null;
+        return;
+      }
+      // For other errors (network, no-speech, etc.), onend will fire and auto-restart
     };
 
     recognition.onend = () => {
-      setIsListening(false);
       recognitionRef.current = null;
+      // Auto-restart if user hasn't explicitly stopped
+      if (shouldBeListeningRef.current) {
+        try {
+          startRecognition();
+        } catch {
+          shouldBeListeningRef.current = false;
+          setIsListening(false);
+        }
+        return;
+      }
+      setIsListening(false);
     };
 
     recognitionRef.current = recognition;
     recognition.start();
     setIsListening(true);
-  }, [isSupported, isListening, onResult]);
+  }, [isSupported]);
+
+  const toggle = useCallback(() => {
+    if (!isSupported) return;
+
+    if (shouldBeListeningRef.current && recognitionRef.current) {
+      shouldBeListeningRef.current = false;
+      recognitionRef.current.stop();
+      return;
+    }
+
+    shouldBeListeningRef.current = true;
+    startRecognition();
+  }, [isSupported, startRecognition]);
 
   useEffect(() => {
     return () => {
+      shouldBeListeningRef.current = false;
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
