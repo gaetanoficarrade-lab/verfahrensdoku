@@ -52,19 +52,7 @@ const adminItems = [
 const tenantItems = [
   { title: 'Dashboard', url: '/', icon: LayoutDashboard },
   { title: 'Mandanten', url: '/clients', icon: Users },
-];
-
-// Settings items will be filtered dynamically based on plan
-const allTenantSettingsItems = [
-  { title: 'Branding', url: '/settings/branding', icon: Palette, requiresFn: 'canBrand' as const },
-  { title: 'E-Mail-Vorlagen', url: '/settings/email', icon: Mail, requiresFn: 'canUseEmailTemplates' as const },
-  { title: 'Team', url: '/settings/team', icon: Users, requiresFn: 'canManageTeam' as const },
-  { title: 'Vorlagen', url: '/settings/templates', icon: FileText, requiresFn: 'canUseTemplates' as const },
-  { title: 'Webhooks', url: '/settings/webhook', icon: Globe, requiresFn: 'canUseWebhooks' as const },
-  { title: 'Aktivitäts-Log', url: '/settings/activity-log', icon: ScrollText, requiresFn: 'canUseActivityLog' as const },
-  { title: 'Affiliate', url: '/settings/affiliate', icon: Link2, requiresFn: 'canUseAffiliate' as const },
-  { title: 'Abrechnung', url: '/settings/billing', icon: CreditCard, requiresFn: null },
-  { title: 'Sicherheit', url: '/settings/security', icon: KeyRound, requiresFn: null },
+  { title: 'Einstellungen', url: '/settings/billing', icon: Settings },
 ];
 
 const clientItems = [
