@@ -57,7 +57,7 @@ export default function BillingSettings() {
     return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   }
 
-  const showUpgrade = isTrialing || trialExpired || tenantPlan?.subscriptionStatus === 'trialing';
+  const showUpgrade = !tenantPlan?.isFree && (isTrialing || trialExpired || tenantPlan?.subscriptionStatus === 'trialing');
 
   return (
     <div className="space-y-6 max-w-4xl">
