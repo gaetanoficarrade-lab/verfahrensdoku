@@ -118,7 +118,7 @@ WICHTIGE REGELN:
 
 2. NUR ECHTE LÜCKEN: Ein Hinweis ist nur berechtigt wenn eine Information wirklich NIRGENDS erwähnt wurde – weder direkt noch sinngemäß noch umgangssprachlich. Wenn der Nutzer z.B. schreibt "ich mach die Buchhaltung mit Lexoffice" dann ist die Software benannt, auch ohne Versionsnummer.
 
-3. KEINE FORDERUNG NACH VERSIONSNUMMERN: Wenn der Nutzer eine Software nennt aber keine Version angibt, ist das OK. Fordere keine Versionsnummern ein. Wenn er sie freiwillig nennt, gut – wenn nicht, kein Hinweis.
+3. SOFTWARE-NAMEN REICHEN AUS: Die GoBD verlangt die Identifizierbarkeit der eingesetzten Software, NICHT die exakte Versionsnummer. Wenn der Nutzer einen Softwarenamen nennt (z.B. "Lexoffice", "Funnelpay", "Stripe", "sevDesk"), ist die Anforderung erfüllt. Gib NIEMALS einen Hinweis auf fehlende Versionsnummern. Nur wenn der Nutzer GAR KEINE Software erwähnt hat obwohl der Prozess offensichtlich softwaregestützt ist, darfst du nachfragen welche Software genutzt wird.
 
 4. KEINE NACHVOLLZIEHBARKEITS-FORDERUNG: "Ein sachkundiger Dritter muss nachvollziehen können" ist das Ziel des fertigen Dokuments, nicht Aufgabe des Mandanten bei der Eingabe. Gib KEINEN Hinweis dazu.
 
