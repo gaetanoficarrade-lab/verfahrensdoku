@@ -192,6 +192,10 @@ export default function ChapterEditor() {
           .order('created_at', { ascending: true });
         setComments((commentsData || []) as unknown as ChapterComment[]);
       }
+      if (!chData) {
+        hasLoadedRef.current = true;
+        initialNotesRef.current = '';
+      }
       setLoading(false);
     };
     fetchData();
