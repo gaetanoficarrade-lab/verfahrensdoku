@@ -163,6 +163,43 @@ export default function ClientProjectDetail() {
         </Button>
       </div>
 
+      {/* Onboarding Wizard */}
+      {showOnboarding && id && (
+        <OnboardingWizard
+          projectId={id}
+          onboardingId={onboardingId || ''}
+          initialAnswers={answers}
+          onComplete={() => {
+            setShowOnboarding(false);
+            setOnboardingComplete(true);
+            fetchData();
+          }}
+        />
+      )}
+
+      {/* Onboarding Banner */}
+      {!onboardingComplete && !showOnboarding && (
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+          <Card className="border-primary/30 bg-primary/5">
+            <CardContent className="flex items-center gap-4 py-5">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
+                <Rocket className="h-6 w-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-foreground">Onboarding starten</h3>
+                <p className="text-sm text-muted-foreground">
+                  Bitte füllen Sie zunächst das Onboarding aus, damit Ihre Verfahrensdokumentation korrekt erstellt werden kann.
+                </p>
+              </div>
+              <Button onClick={() => setShowOnboarding(true)}>
+                <Rocket className="h-4 w-4 mr-2" />
+                Hier starten
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
       <div className="space-y-3">
         {GOBD_CHAPTERS.map((mainCh, i) => {
           const subKeys = mainCh.subChapters.map((sc) => sc.key);
