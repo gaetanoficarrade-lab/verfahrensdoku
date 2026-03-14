@@ -14,17 +14,47 @@ const SetPassword = () => {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRecovery, setIsRecovery] = useState(false);
+  const [sessionReady, setSessionReady] = useState(false);
   const { updatePassword, session, loading } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Wait for Supabase to process the token from the URL and establish a session
   useEffect(() => {
     const hash = window.location.hash;
     const params = new URLSearchParams(window.location.search);
     if (hash.includes('type=recovery') || hash.includes('type=invite') || params.get('type') === 'invite') {
       setIsRecovery(true);
     }
-  }, []);
+
+    // If there's a hash with access_token, Supabase needs time to process it
+    if (hash.includes('access_token')) {
+      // onAuthStateChange in AuthContext will set the session
+      // We just need to wait for it
+      const checkSession = setInterval(() => {
+        if (session) {
+          setSessionReady(true);
+          clearInterval(checkSession);
+        }
+      }, 200);
+      // Timeout after 10s
+      const timeout = setTimeout(() => {
+        clearInterval(checkSession);
+        setSessionReady(true); // Allow form to show even if session failed
+      }, 10000);
+      return () => {
+        clearInterval(checkSession);
+        clearTimeout(timeout);
+      };
+    } else if (session) {
+      setSessionReady(true);
+    }
+  }, [session]);
+
+  // Also set ready when session arrives later
+  useEffect(() => {
+    if (session) setSessionReady(true);
+  }, [session]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
