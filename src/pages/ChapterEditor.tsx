@@ -332,6 +332,7 @@ export default function ChapterEditor() {
       if (error) throw error;
       const result = data as PrecheckResult;
       setPrecheckResult(result);
+      setPrecheckDone(true);
 
       // Save hints to DB
       const allHints = [...(result.missing_fields || []), ...(result.hints || [])];
