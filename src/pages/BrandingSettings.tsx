@@ -68,35 +68,26 @@ function hexToHSL(hex: string): string | null {
 function applyLivePreview(form: FormState) {
   const root = document.documentElement;
 
-  const setHSL = (varName: string, hex: string) => {
-    const hsl = hexToHSL(hex);
-    if (hsl) root.style.setProperty(varName, hsl);
+  const applyOrRemove = (varName: string, hex: string) => {
+    if (hex) {
+      const hsl = hexToHSL(hex);
+      if (hsl) root.style.setProperty(varName, hsl);
+    } else {
+      root.style.removeProperty(varName);
+    }
   };
 
-  if (form.primary_color) {
-    setHSL('--primary', form.primary_color);
-    setHSL('--ring', form.primary_color);
-    setHSL('--sidebar-primary', form.primary_color);
-  }
-  if (form.button_text_color) {
-    setHSL('--primary-foreground', form.button_text_color);
-    setHSL('--sidebar-primary-foreground', form.button_text_color);
-  }
-  if (form.menu_text_color) {
-    setHSL('--sidebar-foreground', form.menu_text_color);
-  }
-  if (form.brand_text_color) {
-    setHSL('--brand-foreground', form.brand_text_color);
-  }
-  if (form.sidebar_bg_color) {
-    setHSL('--sidebar-background', form.sidebar_bg_color);
-  }
-  if (form.menu_active_color) {
-    setHSL('--sidebar-accent', form.menu_active_color);
-  }
-  if (form.menu_active_text_color) {
-    setHSL('--sidebar-accent-foreground', form.menu_active_text_color);
-  }
+  applyOrRemove('--primary', form.primary_color);
+  applyOrRemove('--ring', form.primary_color);
+  applyOrRemove('--sidebar-primary', form.primary_color);
+  applyOrRemove('--primary-foreground', form.button_text_color);
+  applyOrRemove('--sidebar-primary-foreground', form.button_text_color);
+  applyOrRemove('--sidebar-foreground', form.menu_text_color);
+  applyOrRemove('--brand-foreground', form.brand_text_color);
+  applyOrRemove('--sidebar-background', form.sidebar_bg_color);
+  applyOrRemove('--sidebar-accent', form.menu_active_color);
+  applyOrRemove('--sidebar-accent-foreground', form.menu_active_text_color);
+
   if (form.font_family) {
     root.style.fontFamily = `${form.font_family}, var(--font-sans, sans-serif)`;
   } else {
