@@ -138,7 +138,7 @@ serve(async (req) => {
       .eq("chapter_key", chapter_key)
       .maybeSingle();
 
-    const precheckHints = chapterData?.client_precheck_hints || [];
+    const precheckHints = extractPrecheckHints(chapterData?.client_precheck_hints);
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {

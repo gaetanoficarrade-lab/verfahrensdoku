@@ -434,15 +434,41 @@ export default function ChapterEditor() {
 
       if (error) throw error;
       const result = data as PrecheckResult;
-      setPrecheckResult(result);
+      const normalizedResult: PrecheckResult = {
+        hints: Array.isArray(result?.hints) ? result.hints : [],
+        missing_fields: Array.isArray(result?.missing_fields) ? result.missing_fields : [],
+        confidence: typeof result?.confidence === 'number' ? result.confidence : 0,
+      };
+
+      setPrecheckResult(normalizedResult);
       setPrecheckDone(true);
 
-      // Save hints to DB
-      const allHints = [...(result.missing_fields || []), ...(result.hints || [])];
-      await supabase
+      // Save precheck in robust format so it survives tab switches/reloads across old/new schemas
+      const allHints = [...normalizedResult.missing_fields, ...normalizedResult.hints];
+      setSavedPrecheckHints(allHints);
+      const serializedPrecheck = JSON.stringify({
+        checked: true,
+        hints: normalizedResult.hints,
+        missing_fields: normalizedResult.missing_fields,
+        confidence: normalizedResult.confidence,
+        checked_at: new Date().toISOString(),
+      });
+
+      const { error: persistError } = await supabase
         .from('chapter_data')
-        .update({ client_precheck_hints: allHints })
+        .update({ client_precheck_hints: serializedPrecheck, precheck_hints_count: allHints.length })
         .eq('id', cdId);
+
+      if (persistError) {
+        const { error: fallbackError } = await supabase
+          .from('chapter_data')
+          .update({ client_precheck_hints: allHints, precheck_hints_count: allHints.length })
+          .eq('id', cdId);
+
+        if (fallbackError) {
+          console.error('Precheck persistence failed:', persistError, fallbackError);
+        }
+      }
     } catch (err: any) {
       let detail = err?.message || err?.msg || 'Unbekannter Fehler';
 
