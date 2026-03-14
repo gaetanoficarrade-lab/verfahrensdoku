@@ -25,8 +25,8 @@ export default function BillingSettings() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [tenantPlan, setTenantPlan] = useState<TenantPlan | null>(null);
-  const [allPlans, setAllPlans] = useState<Plan[]>([]);
-  const [requesting, setRequesting] = useState(false);
+
+
 
   useEffect(() => {
     if (!effectiveTenantId) return;
