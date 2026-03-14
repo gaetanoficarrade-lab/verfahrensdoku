@@ -39,6 +39,11 @@ interface Tenant {
   plan_id: string | null;
   is_free: boolean;
   trial_active: boolean;
+  subscription_status: string | null;
+  stripe_customer_id: string | null;
+  solo_expires_at: string | null;
+  trial_ends_at: string | null;
+  source: string | null;
   created_at: string;
 }
 
