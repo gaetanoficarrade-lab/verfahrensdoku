@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Upload, Save, Palette, Building2, FileText, Shield, Loader2 } from 'lucide-react';
+import { Upload, Save, Palette, Building2, FileText, Shield, Loader2, Type, Code } from 'lucide-react';
 import { toast } from 'sonner';
 import { logAudit } from '@/lib/auditLog';
 
