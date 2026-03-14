@@ -137,10 +137,11 @@ export default function AdvisorOverview() {
     red: 'text-red-500',
   };
 
-  const ampelLabels = {
-    green: 'Alle freigegeben',
-    yellow: 'Wartet auf Review',
-    red: 'Inaktiv',
+  const getAmpelLabel = (client: ClientOverview) => {
+    if (client.ampel === 'green') return 'Alle freigegeben';
+    if (client.ampel === 'yellow') return client.submittedCount > 0 ? 'Wartet auf Review' : 'In Bearbeitung';
+    if (!client.projectId) return 'Kein Projekt';
+    return 'Keine Aktivität';
   };
 
   const filtered = filter === 'all' ? clients : clients.filter(c => c.ampel === filter);
