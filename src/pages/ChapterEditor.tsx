@@ -55,6 +55,108 @@ interface PrecheckResult {
   confidence: number;
 }
 
+interface StoredPrecheckPayload {
+  checked?: boolean;
+  hints?: unknown;
+  missing_fields?: unknown;
+  confidence?: unknown;
+}
+
+const normalizeHints = (value: unknown): string[] => {
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item).trim()).filter(Boolean);
+  }
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed) return [];
+
+    if (trimmed.includes('\n')) {
+      return trimmed
+        .split('\n')
+        .map((line) => line.replace(/^[-•]\s*/, '').trim())
+        .filter(Boolean);
+    }
+
+    if (trimmed.includes(',')) {
+      return trimmed.split(',').map((item) => item.trim()).filter(Boolean);
+    }
+
+    return [trimmed];
+  }
+
+  return [];
+};
+
+const decodeStoredPrecheck = (raw: unknown): { wasChecked: boolean; result: PrecheckResult | null; allHints: string[] } => {
+  if (raw === null || raw === undefined) {
+    return { wasChecked: false, result: null, allHints: [] };
+  }
+
+  const fromPayload = (payload: StoredPrecheckPayload) => {
+    const hints = normalizeHints(payload.hints);
+    const missingFields = normalizeHints(payload.missing_fields);
+    const confidence = typeof payload.confidence === 'number' ? payload.confidence : (hints.length === 0 && missingFields.length === 0 ? 100 : 1);
+    const wasChecked = payload.checked === true || 'hints' in payload || 'missing_fields' in payload;
+
+    return {
+      wasChecked,
+      result: wasChecked ? { hints, missing_fields: missingFields, confidence } : null,
+      allHints: [...missingFields, ...hints],
+    };
+  };
+
+  if (typeof raw === 'string') {
+    const trimmed = raw.trim();
+
+    if (!trimmed) {
+      return {
+        wasChecked: true,
+        result: { hints: [], missing_fields: [], confidence: 100 },
+        allHints: [],
+      };
+    }
+
+    try {
+      const parsed = JSON.parse(trimmed) as unknown;
+      if (Array.isArray(parsed)) {
+        const hints = normalizeHints(parsed);
+        return {
+          wasChecked: true,
+          result: { hints, missing_fields: [], confidence: hints.length === 0 ? 100 : 1 },
+          allHints: hints,
+        };
+      }
+
+      if (parsed && typeof parsed === 'object') {
+        return fromPayload(parsed as StoredPrecheckPayload);
+      }
+    } catch {
+      const hints = normalizeHints(trimmed);
+      return {
+        wasChecked: true,
+        result: { hints, missing_fields: [], confidence: hints.length === 0 ? 100 : 1 },
+        allHints: hints,
+      };
+    }
+  }
+
+  if (Array.isArray(raw)) {
+    const hints = normalizeHints(raw);
+    return {
+      wasChecked: true,
+      result: { hints, missing_fields: [], confidence: hints.length === 0 ? 100 : 1 },
+      allHints: hints,
+    };
+  }
+
+  if (typeof raw === 'object') {
+    return fromPayload(raw as StoredPrecheckPayload);
+  }
+
+  return { wasChecked: false, result: null, allHints: [] };
+};
+
 interface ChapterVersion {
   id: string;
   editor_text: string;
