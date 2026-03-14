@@ -1,0 +1,1 @@
+Brand name text removed everywhere, replaced with logo image. Default logo: /images/logo.png (GoBD-Suite logo). Tenants upload their own logo via Branding settings for white-labeling. No more text-based brand_name display in UI (field still exists in DB for email templates).
