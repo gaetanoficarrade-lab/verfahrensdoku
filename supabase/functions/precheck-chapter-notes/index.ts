@@ -83,8 +83,9 @@ serve(async (req) => {
     const chapterContext = CHAPTER_CONTEXT[chapter_key] || chapter_key;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      return new Response(JSON.stringify({ error: "LOVABLE_API_KEY ist nicht konfiguriert." }), {
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    if (!LOVABLE_API_KEY && !GEMINI_API_KEY) {
+      return new Response(JSON.stringify({ error: "Weder LOVABLE_API_KEY noch GEMINI_API_KEY sind konfiguriert." }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -121,43 +122,76 @@ ${onboarding_answers ? `Onboarding-Antworten:\n${JSON.stringify(onboarding_answe
 
 Analysiere die Notizen und gib strukturierte Hinweise zurück.`;
 
-    const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        temperature: 0.2,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-      }),
-    });
+    let rawText = "{}";
 
-    if (!aiResponse.ok) {
-      const errText = await aiResponse.text();
-      console.error("Lovable AI error:", aiResponse.status, errText);
-      const errorMessage =
-        aiResponse.status === 402
-          ? "AI-Kontingent aufgebraucht. Bitte Guthaben in Lovable prüfen."
-          : aiResponse.status === 429
-            ? "Zu viele KI-Anfragen. Bitte kurz warten und erneut versuchen."
-            : `KI-Analyse fehlgeschlagen (${aiResponse.status})`;
-      return new Response(
-        JSON.stringify({ error: errorMessage }),
-        { status: aiResponse.status === 402 || aiResponse.status === 429 ? aiResponse.status : 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    if (LOVABLE_API_KEY) {
+      const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-3-flash-preview",
+          temperature: 0.2,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+        }),
+      });
+
+      if (!aiResponse.ok) {
+        const errText = await aiResponse.text();
+        console.error("Lovable AI error:", aiResponse.status, errText);
+        const errorMessage =
+          aiResponse.status === 402
+            ? "AI-Kontingent aufgebraucht. Bitte Guthaben in Lovable prüfen."
+            : aiResponse.status === 429
+              ? "Zu viele KI-Anfragen. Bitte kurz warten und erneut versuchen."
+              : `KI-Analyse fehlgeschlagen (${aiResponse.status})`;
+        return new Response(
+          JSON.stringify({ error: errorMessage }),
+          { status: aiResponse.status === 402 || aiResponse.status === 429 ? aiResponse.status : 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const aiData = await aiResponse.json();
+      const rawContent = aiData?.choices?.[0]?.message?.content;
+      rawText = typeof rawContent === "string" ? rawContent : JSON.stringify(rawContent ?? "{}");
+      rawText = rawText.trim();
+      if (rawText.startsWith("```")) {
+        rawText = rawText.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+      }
+    } else {
+      const geminiResponse = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              { role: "user", parts: [{ text: systemPrompt + "\n\n" + userPrompt }] },
+            ],
+            generationConfig: {
+              responseMimeType: "application/json",
+              temperature: 0.3,
+            },
+          }),
+        }
       );
-    }
 
-    const aiData = await aiResponse.json();
-    const rawContent = aiData?.choices?.[0]?.message?.content;
-    let rawText = typeof rawContent === "string" ? rawContent : JSON.stringify(rawContent ?? "{}");
-    rawText = rawText.trim();
-    if (rawText.startsWith("```")) {
-      rawText = rawText.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+      if (!geminiResponse.ok) {
+        const errText = await geminiResponse.text();
+        console.error("Gemini API error:", geminiResponse.status, errText);
+        return new Response(
+          JSON.stringify({ error: `Gemini API Fehler (${geminiResponse.status}): ${errText.slice(0, 500)}` }),
+          { status: geminiResponse.status === 429 ? 429 : 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const geminiData = await geminiResponse.json();
+      rawText = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
     }
 
     let result: { hints: string[]; missing_fields: string[]; confidence: number };
