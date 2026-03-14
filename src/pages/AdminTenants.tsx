@@ -104,7 +104,7 @@ const AdminTenants = () => {
   const sendTenantInvite = async (tenantId: string, email: string, tenantName?: string | null, contactName?: string | null) => {
     // Step 1: Create user + generate invite link via Edge Function
     const { data, error } = await supabase.functions.invoke('invite-tenant', {
-      body: { tenant_id: tenantId, email },
+      body: { tenant_id: tenantId, email, contact_name: contactName || null },
     });
     if (error) throw new Error(await formatFunctionError(error));
     if (data?.error) throw new Error(data.error);

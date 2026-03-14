@@ -71,7 +71,7 @@ serve(async (req) => {
       });
     }
 
-    const { tenant_id, email } = body;
+    const { tenant_id, email, contact_name } = body;
 
     if (!tenant_id || !email) {
       return new Response(
@@ -114,10 +114,20 @@ serve(async (req) => {
     let userId: string | null = existingUser?.id || null;
 
     if (!existingUser) {
+      // Parse contact_name into first/last
+      const nameParts = (contact_name || '').trim().split(/\s+/);
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
       const { data: userData, error: createError } = await supabaseAdmin.auth.admin.createUser({
         email: normalizedEmail,
         password: crypto.randomUUID(),
         email_confirm: true,
+        user_metadata: {
+          first_name: firstName,
+          last_name: lastName,
+          tenant_id: tenant_id,
+        },
       });
 
       if (createError) {
@@ -142,13 +152,26 @@ serve(async (req) => {
 
     // Role + Profile best-effort (only when userId is known)
     if (userId) {
+      const nameParts = (contact_name || '').trim().split(/\s+/);
+      const firstName = nameParts[0] || null;
+      const lastName = nameParts.slice(1).join(' ') || null;
+
       await Promise.all([
         supabaseAdmin
           .from("user_roles")
           .upsert({ user_id: userId, role: "tenant_admin" }, { onConflict: "user_id,role" }),
         supabaseAdmin
           .from("profiles")
-          .upsert({ user_id: userId, tenant_id }, { onConflict: "user_id" }),
+          .upsert(
+            {
+              user_id: userId,
+              tenant_id,
+              first_name: firstName,
+              last_name: lastName,
+              email: normalizedEmail,
+            },
+            { onConflict: "user_id" }
+          ),
       ]);
     }
 
