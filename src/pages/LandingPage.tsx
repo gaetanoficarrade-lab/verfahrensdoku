@@ -392,12 +392,12 @@ export default function LandingPage() {
             Flexible Pläne
           </motion.p>
           <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-bold tracking-tight mb-6">
-            Für jede Kanzleigröße
+            Für jede Unternehmensgröße
             <br />
             <span className="text-[#86868b]">der passende Plan.</span>
           </motion.h2>
           <motion.p variants={fadeUp} className="text-lg text-[#86868b] leading-relaxed mb-10 max-w-xl mx-auto">
-            Ob Einzelkämpfer oder große Kanzlei – gobdsuite passt sich deinen Anforderungen an.
+            Ob Freelancer, Steuerberater oder wachsendes Unternehmen – gobdsuite passt sich deinen Anforderungen an.
             Verschiedene Pläne, ein Ziel: maximale Effizienz bei der Verfahrensdokumentation.
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-3">
