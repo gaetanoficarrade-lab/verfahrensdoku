@@ -629,10 +629,19 @@ export default function ChapterEditor() {
           {!isAdvisor && canEdit && (
             <div className="space-y-4">
               <div className="flex gap-3 items-center">
-                <Button variant="outline" onClick={handleSave} disabled={saving || precheckLoading}>
-                  {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                  Speichern
-                </Button>
+                {/* Auto-save status indicator */}
+                {autoSaveStatus === 'saving' && (
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    Wird gespeichert…
+                  </span>
+                )}
+                {autoSaveStatus === 'saved' && (
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Check className="h-3 w-3" />
+                    Gespeichert
+                  </span>
+                )}
                 <Button
                   variant="secondary"
                   size="sm"
