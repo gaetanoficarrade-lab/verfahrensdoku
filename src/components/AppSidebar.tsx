@@ -155,17 +155,6 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Settings section for tenant_admin */}
-        {(isTenantAdmin || (isSuperAdmin && impersonation.isImpersonating)) && (
-          <SidebarGroup>
-            <SidebarGroupLabel className="text-sidebar-foreground/50">
-              {!collapsed && 'Einstellungen'}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              {renderMenuItems(tenantSettingsItems)}
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
 
         {/* Help link for all */}
         <SidebarGroup>
