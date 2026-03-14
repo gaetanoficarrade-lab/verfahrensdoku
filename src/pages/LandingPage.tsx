@@ -9,7 +9,6 @@ import {
   ArrowRight,
   Clock,
   AlertTriangle,
-  Bot,
   Lock,
   ChevronDown,
   Building2,
