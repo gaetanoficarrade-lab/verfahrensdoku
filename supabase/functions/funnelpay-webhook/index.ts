@@ -227,8 +227,6 @@ serve(async (req) => {
       const planLabel = planName === "solo" ? "Solo" : planName === "berater" ? "Berater" : "Agentur";
       const greeting = firstName ? `Hallo ${firstName},` : "Sehr geehrte Damen und Herren,";
 
-      const trialHint = `<p style="color: #555; font-size: 15px; line-height: 1.6;">Ihr <strong>${planLabel}</strong>-Zugang startet mit einer 7-tägigen Testphase.</p>`;
-
       await sendEmail(
         normalizedEmail,
         "Willkommen bei GoBD-Suite – Ihr Zugang ist bereit",
