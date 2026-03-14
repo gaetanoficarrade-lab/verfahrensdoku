@@ -52,12 +52,12 @@ export const GOBD_CHAPTERS: MainChapter[] = [
       {
         key: '2_3', number: '2.3', title: 'Kassenprozesse',
         isActive: (a) => !!a.HAS_CASH,
-        inactiveText: 'Im Unternehmen finden keine Bargeschäfte statt. Eine Kassenbuchführung ist daher nicht erforderlich und wird nicht durchgeführt.',
+        inactiveText: 'Im Rahmen der Geschäftstätigkeit werden keine Bargeschäfte getätigt. Ein Kassensystem oder eine Registrierkasse wird nicht eingesetzt. Sämtliche Geschäftsvorfälle werden ausschließlich über den unbaren Zahlungsverkehr abgewickelt. Ein Kassenbuch wird daher nicht geführt. Die Dokumentationspflichten gemäß § 146 Abs. 1 AO für Kasseneinnahmen und -ausgaben entfallen entsprechend.',
       },
       {
         key: '2_4', number: '2.4', title: 'Zahlungsanbieter',
         isActive: (a) => !!a.USES_PAYMENT_PROVIDER,
-        inactiveText: 'Das Unternehmen nutzt keine externen Zahlungsanbieter (z. B. PayPal, Stripe). Sämtliche Zahlungen werden über die regulären Bankkonten abgewickelt.',
+        inactiveText: 'Im Rahmen der Geschäftstätigkeit werden keine externen Zahlungsdienstleister eingesetzt. Die Abwicklung aller Zahlungen erfolgt ausschließlich über das Geschäftskonto per Überweisung oder Lastschrift.',
       },
       {
         key: '2_5', number: '2.5', title: 'Marktplatz-/Plattformverkäufe',
@@ -67,7 +67,7 @@ export const GOBD_CHAPTERS: MainChapter[] = [
       {
         key: '2_6', number: '2.6', title: 'Digitalisierung / Scanprozess',
         isActive: (a) => !!a.HAS_SCAN_PROCESS,
-        inactiveText: 'Im Unternehmen werden keine Papierbelege digitalisiert. Alle Belege liegen bereits in digitaler Form vor oder werden ausschließlich in Papierform archiviert.',
+        inactiveText: 'Im Unternehmen fallen keine Papierbelege an, die digitalisiert werden müssen. Alle eingehenden Belege liegen bereits in digitaler Form vor.',
       },
       {
         key: '2_7', number: '2.7', title: 'Buchhaltungsverarbeitung',
@@ -76,12 +76,12 @@ export const GOBD_CHAPTERS: MainChapter[] = [
       {
         key: '2_8', number: '2.8', title: 'Zahlungsverkehr / Bank',
         isActive: (a) => !!a.HAS_BUSINESS_ACCOUNT || !!a.USES_ONLINE_BANKING,
-        inactiveText: 'Das Unternehmen verfügt über kein gesondertes Geschäftskonto und nutzt kein Online-Banking. Der Zahlungsverkehr wird anderweitig abgewickelt.',
+        inactiveText: 'Das Unternehmen verfügt über kein gesondertes Geschäftskonto und nutzt kein Online-Banking. Der Zahlungsverkehr wird anderweitig abgewickelt. Eine Abstimmung von Bankkonten entfällt entsprechend.',
       },
       {
         key: '2_9', number: '2.9', title: 'Personal / Lohn',
         isActive: (a) => !!a.HAS_EMPLOYEES,
-        inactiveText: 'Das Unternehmen beschäftigt keine Mitarbeiter. Eine Lohn- und Gehaltsabrechnung wird nicht durchgeführt.',
+        inactiveText: 'Das Unternehmen beschäftigt keine Mitarbeiter. Sämtliche buchhalterischen und administrativen Tätigkeiten werden ausschließlich durch den Inhaber persönlich ausgeführt. Eine Lohn- und Gehaltsabrechnung wird nicht durchgeführt.',
       },
     ],
   },
@@ -95,12 +95,12 @@ export const GOBD_CHAPTERS: MainChapter[] = [
       {
         key: '3_3', number: '3.3', title: 'E-Rechnungsprozesse',
         isActive: (a) => a.HAS_E_INVOICING === 'yes',
-        inactiveText: 'Das Unternehmen nutzt derzeit keine E-Rechnungsverfahren (z. B. ZUGFeRD, XRechnung). Rechnungen werden in herkömmlicher Form verarbeitet.',
+        inactiveText: 'Das Unternehmen empfängt und versendet derzeit keine elektronischen Rechnungen im Format ZUGFeRD oder XRechnung. Die Rechnungsstellung erfolgt ausschließlich im PDF-Format.',
       },
       {
         key: '3_4', number: '3.4', title: 'Cloud-Software / SaaS',
         isActive: (a) => a.USES_CLOUD === 'yes' || a.USES_CLOUD === 'partial',
-        inactiveText: 'Das Unternehmen setzt keine cloudbasierten Softwarelösungen oder SaaS-Dienste ein. Alle Systeme werden lokal betrieben.',
+        inactiveText: 'Das Unternehmen setzt keine Cloud-Dienste zur Speicherung oder Verarbeitung steuerrelevanter Daten ein. Alle relevanten Daten werden lokal oder in der eingesetzten Buchhaltungssoftware gespeichert.',
       },
       {
         key: '3_5', number: '3.5', title: 'E-Mail-Systeme & Archivierung',
@@ -109,7 +109,7 @@ export const GOBD_CHAPTERS: MainChapter[] = [
       {
         key: '3_6', number: '3.6', title: 'Zahlungsplattformen',
         isActive: (a) => !!a.USES_PAYMENT_PROVIDER || !!a.USES_MARKETPLACE,
-        inactiveText: 'Das Unternehmen nutzt keine Zahlungsplattformen oder Marktplätze. Dieses Unterkapitel entfällt.',
+        inactiveText: 'Es sind keine externen Zahlungsplattformen oder Marktplatz-Schnittstellen technisch eingebunden. Der gesamte Zahlungsverkehr wird über die regulären Bankverbindungen abgewickelt.',
       },
     ],
   },

@@ -377,17 +377,51 @@ export function getFilteredLeitfragen(
 /**
  * Get negative note for fully hidden chapters (used by AI text generation).
  */
-export function getNegativvermerk(chapterKey: string, answers: OnboardingAnswers): string | null {
+export function getNegativvermerk(chapterKey: string, answers: OnboardingAnswers, companyName?: string): string | null {
+  const firma = companyName || 'des Unternehmens';
+  const firmaGen = companyName ? `der ${companyName}` : 'des Unternehmens';
+
   const negativeNotes: Record<string, (a: OnboardingAnswers) => string | null> = {
-    "2_3": (a) => a.HAS_CASH === false ? "Es wird kein Kassensystem eingesetzt. Bargeschäfte finden nicht statt." : null,
-    "2_4": (a) => a.USES_PAYMENT_PROVIDER === false ? "Es werden keine externen Zahlungsdienstleister (z. B. PayPal, Stripe) eingesetzt." : null,
-    "2_5": (a) => a.USES_MARKETPLACE === false ? "Es werden keine Marktplätze oder Verkaufsplattformen (z. B. Amazon, eBay) genutzt." : null,
-    "2_6": (a) => a.HAS_SCAN_PROCESS === false ? "Es findet kein Scanprozess statt. Alle Belege werden bereits digital empfangen." : null,
-    "2_9": (a) => a.HAS_EMPLOYEES === false ? "Das Unternehmen hat keine Angestellten. Lohn- und Gehaltsabrechnungen entfallen." : null,
-    "3_2": (a) => a.INVOICE_CREATION_TYPE === 'manual' ? "Es werden keine Software-Schnittstellen eingesetzt. Alle Buchungen erfolgen manuell." : null,
-    "3_3": (a) => a.HAS_E_INVOICING === 'no' ? "Es werden keine strukturierten E-Rechnungen (XRechnung, ZUGFeRD) versendet oder empfangen." : null,
-    "3_4": (a) => a.USES_CLOUD === 'no' ? "Es werden keine Cloud-Dienste für steuerrelevante Daten eingesetzt." : null,
-    "3_6": (a) => a.USES_PAYMENT_PROVIDER === false ? "Es sind keine Zahlungsplattformen technisch eingebunden." : null,
+    // Kassenprozesse
+    "2_3": (a) => a.HAS_CASH === false
+      ? `Im Rahmen der Geschäftstätigkeit ${firmaGen} werden keine Bargeschäfte getätigt. Ein Kassensystem oder eine Registrierkasse wird nicht eingesetzt. Sämtliche Geschäftsvorfälle werden ausschließlich über den unbaren Zahlungsverkehr abgewickelt. Ein Kassenbuch wird daher nicht geführt. Die Dokumentationspflichten gemäß § 146 Abs. 1 AO für Kasseneinnahmen und -ausgaben entfallen entsprechend.`
+      : null,
+    // Zahlungsanbieter
+    "2_4": (a) => a.USES_PAYMENT_PROVIDER === false
+      ? `Im Rahmen der Geschäftstätigkeit werden keine externen Zahlungsdienstleister eingesetzt. Die Abwicklung aller Zahlungen erfolgt ausschließlich über das Geschäftskonto per Überweisung oder Lastschrift.`
+      : null,
+    // Marktplatz
+    "2_5": (a) => a.USES_MARKETPLACE === false
+      ? `Das Unternehmen vertreibt keine Waren oder Dienstleistungen über Online-Marktplätze oder Plattformen. Sämtliche Geschäftsvorfälle werden über direkte Kundenbeziehungen abgewickelt.`
+      : null,
+    // Scanprozess
+    "2_6": (a) => a.HAS_SCAN_PROCESS === false
+      ? `Im Unternehmen fallen keine Papierbelege an, die digitalisiert werden müssen. Alle eingehenden Belege liegen bereits in digitaler Form vor.`
+      : null,
+    // Personal / Lohn
+    "2_9": (a) => a.HAS_EMPLOYEES === false
+      ? `Das Unternehmen beschäftigt keine Mitarbeiter. Sämtliche buchhalterischen und administrativen Tätigkeiten werden ausschließlich durch den Inhaber persönlich ausgeführt. Ein Berechtigungskonzept für mehrere Nutzer ist daher nicht erforderlich. Die Zugangsdaten zu allen eingesetzten Systemen liegen ausschließlich beim Inhaber.`
+      : null,
+    // Schnittstellen
+    "3_2": (a) => a.INVOICE_CREATION_TYPE === 'manual'
+      ? `Es werden keine automatisierten Software-Schnittstellen zwischen den eingesetzten Systemen genutzt. Sämtliche Buchungen und Datenübertragungen erfolgen manuell.`
+      : null,
+    // E-Rechnungen
+    "3_3": (a) => a.HAS_E_INVOICING === 'no'
+      ? `Das Unternehmen empfängt und versendet derzeit keine elektronischen Rechnungen im Format ZUGFeRD oder XRechnung. Die Rechnungsstellung erfolgt ausschließlich im PDF-Format.`
+      : null,
+    // Cloud
+    "3_4": (a) => a.USES_CLOUD === 'no'
+      ? `Das Unternehmen setzt keine Cloud-Dienste zur Speicherung oder Verarbeitung steuerrelevanter Daten ein. Alle relevanten Daten werden lokal oder in der eingesetzten Buchhaltungssoftware gespeichert.`
+      : null,
+    // Zahlungsplattformen (technisch)
+    "3_6": (a) => a.USES_PAYMENT_PROVIDER === false && a.USES_MARKETPLACE === false
+      ? `Es sind keine externen Zahlungsplattformen oder Marktplatz-Schnittstellen technisch eingebunden. Der gesamte Zahlungsverkehr wird über die regulären Bankverbindungen abgewickelt.`
+      : null,
+    // Berechtigungen (IKS)
+    "5_1": (a) => a.HAS_EMPLOYEES === false
+      ? `Das Unternehmen beschäftigt keine Mitarbeiter. Sämtliche Systemzugriffe erfolgen ausschließlich durch den Inhaber. Ein differenziertes Berechtigungskonzept ist daher nicht erforderlich.`
+      : null,
   };
 
   const fn = negativeNotes[chapterKey];

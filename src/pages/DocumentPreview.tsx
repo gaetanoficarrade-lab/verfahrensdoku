@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Download, Loader2, FileText, Printer } from 'lucide-react';
+import { ArrowLeft, Download, Loader2, FileText, Printer, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { GOBD_CHAPTERS } from '@/lib/chapter-structure';
 import { generateVerfahrensdokumentation } from '@/lib/generatePdf';
+import { getNegativvermerk } from '@/lib/chapter-leitfragen';
 import type { OnboardingAnswers } from '@/lib/onboarding-variables';
 
 interface ChapterData {
   chapter_key: string;
   editor_text: string | null;
   generated_text: string | null;
+  generated_hints: string[] | null;
   status: string | null;
   client_notes: string | null;
 }
@@ -23,19 +26,21 @@ export default function DocumentPreview() {
   const [companyName, setCompanyName] = useState('');
   const [chapters, setChapters] = useState<ChapterData[]>([]);
   const [answers, setAnswers] = useState<OnboardingAnswers>({});
+  const [isFinal, setIsFinal] = useState(false);
 
   useEffect(() => {
     if (!id) return;
     const load = async () => {
       setLoading(true);
       const [projRes, chapRes, onbRes] = await Promise.all([
-        supabase.from('projects').select('name, client_id, clients(company)').eq('id', id).single(),
-        supabase.from('chapter_data').select('chapter_key, editor_text, generated_text, status, client_notes').eq('project_id', id),
+        supabase.from('projects').select('name, status, client_id, clients(company)').eq('id', id).single(),
+        supabase.from('chapter_data').select('chapter_key, editor_text, generated_text, generated_hints, status, client_notes').eq('project_id', id),
         supabase.from('project_onboarding').select('answers').eq('project_id', id).maybeSingle(),
       ]);
       if (projRes.data) {
         setProjectName(projRes.data.name);
         setCompanyName((projRes.data as any).clients?.company || '');
+        setIsFinal((projRes.data as any).status === 'completed');
       }
       setChapters(chapRes.data || []);
       setAnswers((onbRes.data?.answers as OnboardingAnswers) || {});
@@ -52,7 +57,10 @@ export default function DocumentPreview() {
         chapter_key: c.chapter_key,
         editor_text: c.editor_text,
         generated_text: c.generated_text,
+        generated_hints: c.generated_hints,
       })),
+      answers,
+      isFinal,
     });
     doc.save(`${companyName || 'Verfahrensdokumentation'}.pdf`);
   };
@@ -61,12 +69,24 @@ export default function DocumentPreview() {
     window.print();
   };
 
-  const getChapterContent = (ch: ChapterData) => {
-    if (ch.editor_text) return ch.editor_text;
-    if (ch.generated_text) return ch.generated_text;
-    if (ch.status === 'empty' || !ch.status) return null;
-    return null;
+  const getChapterContent = (chKey: string, chData: ChapterData | undefined, isActive: boolean): { text: string | null; isNegativ: boolean } => {
+    if (chData?.editor_text) return { text: chData.editor_text, isNegativ: false };
+    if (chData?.generated_text) return { text: chData.generated_text, isNegativ: false };
+    if (!isActive) {
+      const nv = getNegativvermerk(chKey, answers, companyName);
+      if (nv) return { text: nv, isNegativ: true };
+      const sc = GOBD_CHAPTERS.flatMap(c => c.subChapters).find(s => s.key === chKey);
+      if (sc?.inactiveText) return { text: sc.inactiveText, isNegativ: true };
+      return { text: 'Dieses Kapitel ist für das Unternehmen nicht relevant.', isNegativ: true };
+    }
+    return { text: null, isNegativ: false };
   };
+
+  // Count chapters with open hints
+  const chaptersWithHints = chapters.filter(c => {
+    const hints = c.generated_hints;
+    return hints && Array.isArray(hints) && hints.length > 0;
+  });
 
   if (loading) {
     return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
@@ -76,7 +96,7 @@ export default function DocumentPreview() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-20">
-      {/* Header bar - hidden in print */}
+      {/* Header bar */}
       <div className="flex items-center justify-between sticky top-0 z-10 bg-background/95 backdrop-blur py-4 border-b border-border -mx-4 px-4 print:hidden">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => navigate(-1 as any)}>
@@ -87,7 +107,10 @@ export default function DocumentPreview() {
             <p className="text-xs text-muted-foreground">{projectName}</p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
+          <Badge variant={isFinal ? 'default' : 'secondary'}>
+            {isFinal ? 'FINAL' : 'ENTWURF'}
+          </Badge>
           <Button variant="outline" onClick={handlePrint}>
             <Printer className="h-4 w-4 mr-2" />
             Drucken
@@ -99,8 +122,28 @@ export default function DocumentPreview() {
         </div>
       </div>
 
+      {/* Quality warning */}
+      {chaptersWithHints.length > 0 && (
+        <div className="rounded-lg border border-yellow-500/40 bg-yellow-50 dark:bg-yellow-950/20 p-4 flex items-start gap-3 print:hidden">
+          <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-medium text-yellow-800 dark:text-yellow-300">
+              ⚠ Rückfragen wahrscheinlich
+            </p>
+            <p className="text-xs text-yellow-700 dark:text-yellow-400 mt-1">
+              {chaptersWithHints.length} Kapitel haben offene KI-Prüfhinweise. Diese Kapitel sollten vor der Finalisierung überprüft werden.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Cover page simulation */}
-      <div className="bg-zinc-900 text-white rounded-lg p-12 text-center space-y-4 print:bg-white print:text-black print:border print:border-border print:rounded-none">
+      <div className="bg-zinc-900 text-white rounded-lg p-12 text-center space-y-4 relative overflow-hidden print:bg-white print:text-black print:border print:border-border print:rounded-none">
+        {!isFinal && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10 print:opacity-5">
+            <span className="text-7xl font-bold rotate-[-30deg] text-red-500">ENTWURF</span>
+          </div>
+        )}
         <FileText className="h-12 w-12 mx-auto opacity-50" />
         <h1 className="text-3xl font-bold">Verfahrensdokumentation</h1>
         <p className="text-lg opacity-80">nach GoBD</p>
@@ -108,6 +151,9 @@ export default function DocumentPreview() {
         <p className="text-xl font-semibold">{companyName}</p>
         <p className="opacity-70">{projectName}</p>
         <p className="text-sm opacity-50">Erstellt am: {today}</p>
+        <Badge className={`mt-4 ${isFinal ? 'bg-green-600' : 'bg-orange-600'}`}>
+          {isFinal ? 'FINAL' : 'ENTWURF'}
+        </Badge>
       </div>
 
       {/* Table of contents */}
@@ -118,18 +164,22 @@ export default function DocumentPreview() {
             <div key={mainCh.key}>
               <p className="font-semibold text-foreground">{mainCh.number}. {mainCh.title}</p>
               <div className="ml-6 space-y-1 mt-1">
-                {mainCh.subChapters.map((sc) => {
-                  const isActive = sc.isActive(answers);
-                  return (
-                    <p key={sc.key} className={`text-sm ${isActive ? 'text-muted-foreground' : 'text-muted-foreground/50 italic'}`}>
-                      {sc.number} {sc.title}
-                      {!isActive && ' (nicht relevant)'}
-                    </p>
-                  );
-                })}
+                {mainCh.subChapters.map((sc) => (
+                  <p key={sc.key} className="text-sm text-muted-foreground">
+                    {sc.number} {sc.title}
+                  </p>
+                ))}
               </div>
             </div>
           ))}
+          <div>
+            <p className="font-semibold text-foreground">6. Anlagenverzeichnis</p>
+            <div className="ml-6 space-y-1 mt-1">
+              <p className="text-sm text-muted-foreground">6.1 Systeminventar</p>
+              <p className="text-sm text-muted-foreground">6.2 Schnittstellenübersicht</p>
+              <p className="text-sm text-muted-foreground">6.3 Backup- und Sicherungskonzept</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -143,21 +193,28 @@ export default function DocumentPreview() {
           {mainCh.subChapters.map((sc) => {
             const isActive = sc.isActive(answers);
             const chData = chapters.find(c => c.chapter_key === sc.key);
-            const content = chData ? getChapterContent(chData) : null;
+            const { text, isNegativ } = getChapterContent(sc.key, chData, isActive);
 
             return (
               <div key={sc.key} className="rounded-lg border border-border p-6 space-y-3 print:border-gray-300 print:rounded-none">
-                <h3 className="text-lg font-semibold text-foreground">
-                  {sc.number} {sc.title}
-                </h3>
-                {content ? (
-                  <div className="prose prose-sm dark:prose-invert max-w-none text-foreground/90 whitespace-pre-wrap leading-relaxed print:text-black">
-                    {content.split('\n').map((line, i) => {
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {sc.number} {sc.title}
+                  </h3>
+                  {chData?.generated_hints && Array.isArray(chData.generated_hints) && chData.generated_hints.length > 0 && (
+                    <Badge variant="outline" className="text-yellow-600 border-yellow-500/40 print:hidden">
+                      ⚠ Rückfragen
+                    </Badge>
+                  )}
+                </div>
+                {text ? (
+                  <div className={`prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap leading-relaxed print:text-black ${isNegativ ? 'text-foreground/80' : 'text-foreground/90'}`}>
+                    {text.split('\n').map((line, i) => {
                       if (line.startsWith('### ')) return <h4 key={i} className="text-base font-semibold text-foreground mt-4 mb-2">{line.replace('### ', '')}</h4>;
                       if (line.startsWith('## ')) return null;
                       if (line.startsWith('| ')) return <p key={i} className="font-mono text-xs text-muted-foreground">{line}</p>;
                       if (line.startsWith('- **') || line.startsWith('- ')) return <p key={i} className="ml-4 text-sm">{line}</p>;
-                      if (line.startsWith('1. ') || line.startsWith('2. ') || line.startsWith('3. ') || line.startsWith('4. ') || line.startsWith('5. ') || line.startsWith('6. ')) return <p key={i} className="ml-4 text-sm">{line}</p>;
+                      if (/^\d+\.\s/.test(line)) return <p key={i} className="ml-4 text-sm">{line}</p>;
                       if (line.startsWith('---')) return <hr key={i} className="my-4 border-border" />;
                       if (line.startsWith('*[DEMO')) return <p key={i} className="text-xs italic text-muted-foreground/60 mt-4">{line.replace(/\*/g, '')}</p>;
                       if (line.trim() === '') return <br key={i} />;
@@ -167,7 +224,7 @@ export default function DocumentPreview() {
                 ) : (
                   <div className="rounded-md bg-muted/50 p-4 text-center print:bg-gray-100">
                     <p className="text-sm text-muted-foreground italic">
-                      {!isActive ? 'Dieses Kapitel ist für das Unternehmen nicht relevant.' : '[Noch nicht fertiggestellt]'}
+                      [Noch nicht fertiggestellt]
                     </p>
                   </div>
                 )}

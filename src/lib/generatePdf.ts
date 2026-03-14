@@ -1,12 +1,21 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { GOBD_CHAPTERS } from './chapter-structure';
+import { getNegativvermerk } from './chapter-leitfragen';
 import type { OnboardingAnswers } from './onboarding-variables';
 
 interface ChapterContent {
   chapter_key: string;
   editor_text: string | null;
   generated_text: string | null;
+  generated_hints?: string[] | null;
+}
+
+interface VersionEntry {
+  version: string;
+  date: string;
+  changedBy: string;
+  description: string;
 }
 
 interface PdfParams {
@@ -14,10 +23,16 @@ interface PdfParams {
   projectName: string;
   chapters: ChapterContent[];
   answers?: OnboardingAnswers;
+  isFinal?: boolean;
+  taxNumber?: string;
+  responsiblePerson?: string;
+  itResponsible?: string;
+  processResponsible?: string;
+  versions?: VersionEntry[];
 }
 
 const MARGIN = 20;
-const PAGE_BOTTOM = 272; // leave room for footer
+const PAGE_BOTTOM = 272;
 const LINE_HEIGHT = 5;
 const PARAGRAPH_GAP = 7;
 
@@ -41,6 +56,24 @@ function addFooter(doc: jsPDF, pageNum: number, totalPages: number) {
   doc.setTextColor(130, 130, 130);
   doc.text(`Seite ${pageNum} von ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
   doc.text('Vertraulich', pageWidth - MARGIN, pageHeight - 10, { align: 'right' });
+}
+
+function addWatermark(doc: jsPDF) {
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  doc.saveGraphicsState();
+  doc.setGState(new (doc as any).GState({ opacity: 0.08 }));
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(60);
+  doc.setTextColor(200, 0, 0);
+  // Rotate and place diagonally
+  const centerX = pageWidth / 2;
+  const centerY = pageHeight / 2;
+  doc.text('ENTWURF', centerX, centerY, {
+    align: 'center',
+    angle: 45,
+  });
+  doc.restoreGraphicsState();
 }
 
 /** Strip markdown bold markers, return segments with bold info */
@@ -77,7 +110,6 @@ function stripMarkdown(text: string): string {
 
 /** Render a line with inline bold using splitTextToSize for wrapping */
 function renderFormattedLine(doc: jsPDF, line: string, x: number, y: number, maxWidth: number, fontSize: number = 9): number {
-  // Simple approach: strip bold for wrapping calculation, render with bold segments
   const plainText = stripMarkdown(line);
   doc.setFontSize(fontSize);
   doc.setFont('helvetica', 'normal');
@@ -85,7 +117,6 @@ function renderFormattedLine(doc: jsPDF, line: string, x: number, y: number, max
 
   for (const wl of wrappedLines) {
     y = checkPageBreak(doc, y);
-    // Check if this wrapped line contains any bold segments
     const segments = parseInlineFormatting(reconstructMarkdown(line, wl));
     let cx = x;
     for (const seg of segments) {
@@ -100,20 +131,17 @@ function renderFormattedLine(doc: jsPDF, line: string, x: number, y: number, max
 
 /** Try to find the markdown version of a plain-text wrapped line */
 function reconstructMarkdown(originalMarkdown: string, plainLine: string): string {
-  // Find where plainLine appears in the stripped original
   const stripped = stripMarkdown(originalMarkdown);
   const idx = stripped.indexOf(plainLine.trim());
   if (idx === -1) return plainLine;
 
-  // Walk through original markdown to find corresponding range
   let strippedPos = 0;
   let mdStart = -1;
   let mdEnd = -1;
 
   for (let i = 0; i < originalMarkdown.length && mdEnd === -1; i++) {
-    // Check if we're at a markdown marker
     if (originalMarkdown.substring(i, i + 2) === '**') {
-      i++; // skip the second *
+      i++;
       continue;
     }
     if (originalMarkdown[i] === '*' || originalMarkdown[i] === '`') {
@@ -129,9 +157,7 @@ function reconstructMarkdown(originalMarkdown: string, plainLine: string): strin
   }
 
   if (mdStart !== -1 && mdEnd !== -1) {
-    // Extend to include surrounding ** markers
     let result = originalMarkdown.substring(mdStart, mdEnd);
-    // Check if we're inside a bold block
     const before = originalMarkdown.substring(0, mdStart);
     const openBolds = (before.match(/\*\*/g) || []).length;
     if (openBolds % 2 === 1) {
@@ -154,7 +180,6 @@ function parseTable(lines: string[], startIdx: number): { headers: string[]; row
     .map(s => s.trim())
     .filter(s => s.length > 0);
 
-  // Skip separator line (|---|---|)
   let i = startIdx + 1;
   if (i < lines.length && /^\|[\s\-:|]+\|/.test(lines[i])) {
     i++;
@@ -201,12 +226,8 @@ function renderTable(doc: jsPDF, headers: string[], rows: string[][], x: number,
     alternateRowStyles: {
       fillColor: [250, 250, 252],
     },
-    didDrawPage: () => {
-      // Pages added by autoTable will get footers later
-    },
   });
 
-  // Get final Y position after table
   return (doc as any).lastAutoTable?.finalY + PARAGRAPH_GAP || y + 20;
 }
 
@@ -218,13 +239,8 @@ function renderMarkdownText(doc: jsPDF, text: string, x: number, startY: number,
   while (i < lines.length) {
     const line = lines[i];
 
-    // Skip main chapter headers (## X.X ...)
-    if (line.startsWith('## ')) {
-      i++;
-      continue;
-    }
+    if (line.startsWith('## ')) { i++; continue; }
 
-    // Sub-headers (### ...)
     if (line.startsWith('### ')) {
       y += 3;
       y = checkPageBreak(doc, y);
@@ -243,7 +259,6 @@ function renderMarkdownText(doc: jsPDF, text: string, x: number, startY: number,
       continue;
     }
 
-    // Table detection: line starts with | and has multiple |
     if (line.trim().startsWith('|') && line.indexOf('|', 1) > 0) {
       const { headers, rows, endIdx } = parseTable(lines, i);
       if (headers.length > 0 && rows.length > 0) {
@@ -251,12 +266,10 @@ function renderMarkdownText(doc: jsPDF, text: string, x: number, startY: number,
         i = endIdx;
         continue;
       }
-      // Fallback: skip malformed table line
       i++;
       continue;
     }
 
-    // Horizontal rule
     if (line.trim().startsWith('---')) {
       y += 3;
       y = checkPageBreak(doc, y);
@@ -267,7 +280,6 @@ function renderMarkdownText(doc: jsPDF, text: string, x: number, startY: number,
       continue;
     }
 
-    // Demo watermark line
     if (line.startsWith('*[DEMO')) {
       y += 2;
       y = checkPageBreak(doc, y);
@@ -285,32 +297,25 @@ function renderMarkdownText(doc: jsPDF, text: string, x: number, startY: number,
       continue;
     }
 
-    // List items (- or 1.)
     if (line.match(/^\s*[-•]\s/) || /^\s*\d+\.\s/.test(line)) {
       y = checkPageBreak(doc, y);
       doc.setFontSize(9);
       doc.setTextColor(60, 60, 60);
       const bulletIndent = 5;
       const bulletText = line.replace(/^\s*[-•]\s+/, '').replace(/^\s*\d+\.\s+/, '');
-
-      // Draw bullet point
       doc.setFont('helvetica', 'normal');
       doc.text('•', x + 1, y);
-
-      // Render list item text with inline formatting
       y = renderFormattedLine(doc, bulletText, x + bulletIndent, y, maxWidth - bulletIndent, 9);
       i++;
       continue;
     }
 
-    // Empty line
     if (line.trim() === '') {
       y += PARAGRAPH_GAP;
       i++;
       continue;
     }
 
-    // Regular text with inline formatting
     doc.setTextColor(60, 60, 60);
     y = renderFormattedLine(doc, line, x, y, maxWidth, 9);
     i++;
@@ -319,11 +324,77 @@ function renderMarkdownText(doc: jsPDF, text: string, x: number, startY: number,
   return y;
 }
 
-export function generateVerfahrensdokumentation({ companyName, projectName, chapters, answers }: PdfParams): jsPDF {
+/** Auto-text blocks that are always appended to specific chapters */
+const AUTO_TEXT: Record<string, string> = {
+  '1_5': 'Die Verfahrensdokumentation wird bei wesentlichen Änderungen der betrieblichen Abläufe, der eingesetzten Software oder der organisatorischen Zuständigkeiten aktualisiert. Jede Änderung wird mit Datum und Versionsnummer dokumentiert. Die Änderungshistorie ist Bestandteil dieses Dokuments.',
+};
+
+/**
+ * Resolve the final text for a chapter following the assembly logic:
+ * 1. editor_text (advisor edited) OR generated_text (AI draft)
+ * 2. + auto-text if defined
+ * 3. If nothing → negativvermerk if chapter is inactive
+ * 4. If still nothing → placeholder
+ */
+function resolveChapterContent(
+  chapterKey: string,
+  chData: ChapterContent | undefined,
+  isActive: boolean,
+  answers: OnboardingAnswers | undefined,
+  companyName: string,
+): { text: string; isNegativvermerk: boolean } {
+  let text = chData?.editor_text || chData?.generated_text || '';
+
+  // Append auto-text if applicable
+  const autoText = AUTO_TEXT[chapterKey];
+  if (text && autoText) {
+    text = text.trimEnd() + '\n\n' + autoText;
+  }
+
+  if (text) {
+    return { text, isNegativvermerk: false };
+  }
+
+  // No content → try negativvermerk
+  if (!isActive && answers) {
+    const nv = getNegativvermerk(chapterKey, answers, companyName);
+    if (nv) return { text: nv, isNegativvermerk: true };
+  }
+
+  // Fallback to inactiveText from chapter-structure
+  if (!isActive) {
+    const chapter = GOBD_CHAPTERS.flatMap(c => c.subChapters).find(sc => sc.key === chapterKey);
+    if (chapter?.inactiveText) {
+      return { text: chapter.inactiveText, isNegativvermerk: true };
+    }
+    return { text: 'Dieses Kapitel ist für das Unternehmen nicht relevant.', isNegativvermerk: true };
+  }
+
+  // Active but no text
+  if (autoText) {
+    return { text: autoText, isNegativvermerk: false };
+  }
+
+  return { text: '[Noch nicht fertiggestellt]', isNegativvermerk: false };
+}
+
+export function generateVerfahrensdokumentation({
+  companyName,
+  projectName,
+  chapters,
+  answers,
+  isFinal = false,
+  taxNumber,
+  responsiblePerson,
+  itResponsible,
+  processResponsible,
+  versions = [],
+}: PdfParams): jsPDF {
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
   const pageWidth = doc.internal.pageSize.getWidth();
   const contentWidth = getContentWidth(doc);
   const today = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const statusLabel = isFinal ? 'FINAL' : 'ENTWURF';
 
   // === COVER PAGE ===
   doc.setFillColor(24, 24, 27);
@@ -332,19 +403,19 @@ export function generateVerfahrensdokumentation({ companyName, projectName, chap
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(28);
-  doc.text('Verfahrensdokumentation', pageWidth / 2, 90, { align: 'center' });
+  doc.text('Verfahrensdokumentation', pageWidth / 2, 85, { align: 'center' });
 
   doc.setFontSize(14);
   doc.setFont('helvetica', 'normal');
-  doc.text('nach GoBD', pageWidth / 2, 102, { align: 'center' });
+  doc.text('nach GoBD', pageWidth / 2, 97, { align: 'center' });
 
   doc.setDrawColor(100, 100, 100);
-  doc.line(pageWidth / 2 - 30, 115, pageWidth / 2 + 30, 115);
+  doc.line(pageWidth / 2 - 30, 110, pageWidth / 2 + 30, 110);
 
   doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
   const companyLines = doc.splitTextToSize(companyName, contentWidth);
-  let coverY = 130;
+  let coverY = 125;
   for (const cl of companyLines) {
     doc.text(cl, pageWidth / 2, coverY, { align: 'center' });
     coverY += 8;
@@ -353,9 +424,112 @@ export function generateVerfahrensdokumentation({ companyName, projectName, chap
   doc.setFontSize(12);
   doc.setFont('helvetica', 'normal');
   doc.text(projectName, pageWidth / 2, coverY + 2, { align: 'center' });
-
   doc.setFontSize(10);
   doc.text(`Erstellt am: ${today}`, pageWidth / 2, coverY + 17, { align: 'center' });
+
+  // Status Badge
+  const badgeY = coverY + 32;
+  const badgeWidth = 50;
+  const badgeHeight = 10;
+  if (isFinal) {
+    doc.setFillColor(34, 139, 34);
+  } else {
+    doc.setFillColor(200, 120, 0);
+  }
+  doc.roundedRect(pageWidth / 2 - badgeWidth / 2, badgeY - 7, badgeWidth, badgeHeight, 2, 2, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.text(statusLabel, pageWidth / 2, badgeY, { align: 'center' });
+
+  // === DOKUMENTINFORMATIONEN ===
+  doc.addPage();
+  doc.setTextColor(24, 24, 27);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(20);
+  doc.text('Dokumentinformationen', MARGIN, 30);
+
+  let infoY = 45;
+  const infoRows: string[][] = [
+    ['Erstellt für', companyName],
+    ['Steuernummer', taxNumber || '–'],
+    ['Rechtsform', answers?.legal_form || '–'],
+    ['Branche', answers?.industry || '–'],
+  ];
+
+  autoTable(doc, {
+    startY: infoY,
+    head: [['Feld', 'Wert']],
+    body: infoRows,
+    margin: { left: MARGIN, right: MARGIN },
+    tableWidth: contentWidth,
+    styles: { font: 'helvetica', fontSize: 9, cellPadding: 3, textColor: [60, 60, 60], lineColor: [200, 200, 200], lineWidth: 0.2 },
+    headStyles: { fillColor: [240, 240, 245], textColor: [24, 24, 27], fontStyle: 'bold' },
+  });
+
+  infoY = (doc as any).lastAutoTable?.finalY + 10 || infoY + 40;
+
+  // Geltungsbereich
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.text('Geltungsbereich', MARGIN, infoY);
+  infoY += 7;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(60, 60, 60);
+  const scopeItems = [
+    'Organisation und betriebliche Abläufe',
+    'Eingesetzte DV-Systeme und Software',
+    'Steuerrelevante Geschäftsprozesse',
+  ];
+  for (const item of scopeItems) {
+    doc.text(`• ${item}`, MARGIN + 3, infoY);
+    infoY += 5;
+  }
+
+  infoY += 5;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.setTextColor(24, 24, 27);
+  doc.text('Verantwortlichkeiten', MARGIN, infoY);
+  infoY += 7;
+
+  const respRows: string[][] = [
+    ['Dokumentverantwortlicher', responsiblePerson || answers?.ACCOUNTING_CONTACT || '–'],
+    ['Prozessverantwortlicher', processResponsible || '–'],
+    ['IT-Verantwortlicher', itResponsible || '–'],
+  ];
+
+  autoTable(doc, {
+    startY: infoY,
+    head: [['Rolle', 'Person / Funktion']],
+    body: respRows,
+    margin: { left: MARGIN, right: MARGIN },
+    tableWidth: contentWidth,
+    styles: { font: 'helvetica', fontSize: 9, cellPadding: 3, textColor: [60, 60, 60], lineColor: [200, 200, 200], lineWidth: 0.2 },
+    headStyles: { fillColor: [240, 240, 245], textColor: [24, 24, 27], fontStyle: 'bold' },
+  });
+
+  // === ÄNDERUNGSHISTORIE ===
+  doc.addPage();
+  doc.setTextColor(24, 24, 27);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(20);
+  doc.text('Änderungshistorie', MARGIN, 30);
+
+  const versionRows = versions.length > 0
+    ? versions.map(v => [v.version, v.date, v.changedBy, v.description])
+    : [['1.0', today, responsiblePerson || '–', 'Erstversion']];
+
+  autoTable(doc, {
+    startY: 42,
+    head: [['Version', 'Datum', 'Geändert von', 'Beschreibung']],
+    body: versionRows,
+    margin: { left: MARGIN, right: MARGIN },
+    tableWidth: contentWidth,
+    styles: { font: 'helvetica', fontSize: 9, cellPadding: 3, textColor: [60, 60, 60], lineColor: [200, 200, 200], lineWidth: 0.2 },
+    headStyles: { fillColor: [240, 240, 245], textColor: [24, 24, 27], fontStyle: 'bold' },
+  });
 
   // === TABLE OF CONTENTS ===
   doc.addPage();
@@ -383,7 +557,7 @@ export function generateVerfahrensdokumentation({ companyName, projectName, chap
     for (const sc of mainCh.subChapters) {
       const isActive = answers ? sc.isActive(answers) : true;
       doc.setTextColor(isActive ? 80 : 160, isActive ? 80 : 160, isActive ? 80 : 160);
-      const scLine = `${sc.number} ${sc.title}${!isActive ? ' (nicht relevant)' : ''}`;
+      const scLine = `${sc.number} ${sc.title}`;
       const scWrapped = doc.splitTextToSize(scLine, contentWidth - 8);
       for (const sl of scWrapped) {
         if (tocY > PAGE_BOTTOM) { doc.addPage(); tocY = 25; }
@@ -392,6 +566,22 @@ export function generateVerfahrensdokumentation({ companyName, projectName, chap
       }
     }
     tocY += 3;
+  }
+
+  // Add Anlagenverzeichnis to TOC
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(24, 24, 27);
+  if (tocY > PAGE_BOTTOM) { doc.addPage(); tocY = 25; }
+  doc.text('6. Anlagenverzeichnis', MARGIN, tocY);
+  tocY += 6;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(80, 80, 80);
+  for (const sub of ['6.1 Systeminventar', '6.2 Schnittstellenübersicht', '6.3 Backup- und Sicherungskonzept']) {
+    if (tocY > PAGE_BOTTOM) { doc.addPage(); tocY = 25; }
+    doc.text(sub, MARGIN + 8, tocY);
+    tocY += 5;
   }
 
   // === CHAPTER PAGES ===
@@ -414,8 +604,10 @@ export function generateVerfahrensdokumentation({ companyName, projectName, chap
 
     for (const sc of mainCh.subChapters) {
       const chData = chapters.find(c => c.chapter_key === sc.key);
-      const text = chData?.editor_text || chData?.generated_text || null;
       const isActive = answers ? sc.isActive(answers) : true;
+      const { text, isNegativvermerk } = resolveChapterContent(
+        sc.key, chData, isActive, answers, companyName
+      );
 
       y = checkPageBreak(doc, y, 20);
 
@@ -434,36 +626,144 @@ export function generateVerfahrensdokumentation({ companyName, projectName, chap
       doc.line(MARGIN, y - 3, pageWidth - MARGIN, y - 3);
       y += 3;
 
-      if (text) {
-        y = renderMarkdownText(doc, text, MARGIN, y, contentWidth);
-      } else if (!isActive) {
-        doc.setFont('helvetica', 'italic');
-        doc.setFontSize(9);
-        doc.setTextColor(140, 140, 140);
-        const inactiveText = sc.inactiveText || 'Dieses Kapitel ist für das Unternehmen nicht relevant und entfällt.';
-        const inactiveWrapped = doc.splitTextToSize(inactiveText, contentWidth);
-        for (const il of inactiveWrapped) {
-          y = checkPageBreak(doc, y);
-          doc.text(il, MARGIN, y);
-          y += LINE_HEIGHT;
-        }
-      } else {
+      if (text === '[Noch nicht fertiggestellt]') {
+        // Placeholder for incomplete chapters
         doc.setFont('helvetica', 'italic');
         doc.setFontSize(9);
         doc.setTextColor(140, 140, 140);
         doc.text('[Noch nicht fertiggestellt]', MARGIN, y);
         y += LINE_HEIGHT;
+      } else if (isNegativvermerk) {
+        // Professional negativvermerk – rendered as normal body text (not italic/gray)
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(60, 60, 60);
+        const nvWrapped = doc.splitTextToSize(text, contentWidth);
+        for (const nl of nvWrapped) {
+          y = checkPageBreak(doc, y);
+          doc.text(nl, MARGIN, y);
+          y += LINE_HEIGHT;
+        }
+      } else {
+        y = renderMarkdownText(doc, text, MARGIN, y, contentWidth);
       }
 
       y += 10;
     }
   }
 
-  // === ADD FOOTERS ===
+  // === ANLAGENVERZEICHNIS ===
+  doc.addPage();
+  doc.setTextColor(24, 24, 27);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(22);
+  doc.text('6. Anlagenverzeichnis', MARGIN, 35);
+  doc.setDrawColor(30, 58, 95);
+  doc.setLineWidth(0.5);
+  doc.line(MARGIN, 40, pageWidth - MARGIN, 40);
+
+  let aY = 50;
+
+  // 6.1 Systeminventar
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.text('6.1 Systeminventar', MARGIN, aY);
+  aY += 8;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(60, 60, 60);
+
+  const softwareList = answers?.SOFTWARE_LIST;
+  if (softwareList) {
+    const softwareItems = typeof softwareList === 'string'
+      ? softwareList.split(',').map(s => s.trim()).filter(Boolean)
+      : Array.isArray(softwareList) ? softwareList : [];
+    if (softwareItems.length > 0) {
+      const sysRows = softwareItems.map((sw, i) => [String(i + 1), sw, '–', '–']);
+      autoTable(doc, {
+        startY: aY,
+        head: [['Nr.', 'Software / System', 'Version', 'Einsatzbereich']],
+        body: sysRows,
+        margin: { left: MARGIN, right: MARGIN },
+        tableWidth: contentWidth,
+        styles: { font: 'helvetica', fontSize: 8, cellPadding: 2, textColor: [60, 60, 60], lineColor: [200, 200, 200], lineWidth: 0.2 },
+        headStyles: { fillColor: [240, 240, 245], textColor: [24, 24, 27], fontStyle: 'bold' },
+      });
+      aY = (doc as any).lastAutoTable?.finalY + 10 || aY + 30;
+    } else {
+      doc.text('Keine Softwaresysteme im Onboarding angegeben.', MARGIN, aY);
+      aY += 10;
+    }
+  } else {
+    doc.text('Keine Softwaresysteme im Onboarding angegeben.', MARGIN, aY);
+    aY += 10;
+  }
+
+  // 6.2 Schnittstellenübersicht
+  aY = checkPageBreak(doc, aY, 20);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.setTextColor(24, 24, 27);
+  doc.text('6.2 Schnittstellenübersicht', MARGIN, aY);
+  aY += 8;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(60, 60, 60);
+
+  const interfaceItems: string[][] = [];
+  if (answers?.USES_ONLINE_BANKING) interfaceItems.push(['Bankschnittstelle', 'Online-Banking', 'Kontoauszüge / Zahlungen']);
+  if (answers?.USES_PAYMENT_PROVIDER) interfaceItems.push(['Zahlungsdienstleister', 'Extern', 'Transaktionsdaten']);
+  if (answers?.USES_MARKETPLACE) interfaceItems.push(['Marktplatz', 'Extern', 'Bestelldaten / Abrechnungen']);
+  if (answers?.HAS_E_INVOICING === 'yes') interfaceItems.push(['E-Rechnung', 'ZUGFeRD / XRechnung', 'Rechnungsdaten']);
+
+  if (interfaceItems.length > 0) {
+    autoTable(doc, {
+      startY: aY,
+      head: [['Schnittstelle', 'Typ', 'Übertragene Daten']],
+      body: interfaceItems,
+      margin: { left: MARGIN, right: MARGIN },
+      tableWidth: contentWidth,
+      styles: { font: 'helvetica', fontSize: 8, cellPadding: 2, textColor: [60, 60, 60], lineColor: [200, 200, 200], lineWidth: 0.2 },
+      headStyles: { fillColor: [240, 240, 245], textColor: [24, 24, 27], fontStyle: 'bold' },
+    });
+    aY = (doc as any).lastAutoTable?.finalY + 10 || aY + 30;
+  } else {
+    doc.text('Es werden keine automatisierten Schnittstellen eingesetzt.', MARGIN, aY);
+    aY += 10;
+  }
+
+  // 6.3 Backup- und Sicherungskonzept
+  aY = checkPageBreak(doc, aY, 20);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.setTextColor(24, 24, 27);
+  doc.text('6.3 Backup- und Sicherungskonzept', MARGIN, aY);
+  aY += 8;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(60, 60, 60);
+  const backupText = answers?.USES_CLOUD === 'yes' || answers?.USES_CLOUD === 'partial'
+    ? 'Die Datensicherung der cloudbasierten Systeme erfolgt durch den jeweiligen Anbieter. Details zur lokalen Datensicherung sind in Kapitel 4.1 beschrieben.'
+    : 'Die Datensicherung erfolgt lokal. Details zum Sicherungskonzept sind in Kapitel 4.1 beschrieben.';
+  const backupWrapped = doc.splitTextToSize(backupText, contentWidth);
+  for (const bl of backupWrapped) {
+    aY = checkPageBreak(doc, aY);
+    doc.text(bl, MARGIN, aY);
+    aY += LINE_HEIGHT;
+  }
+
+  // === ADD WATERMARK (ENTWURF) AND FOOTERS ===
   const totalPages = doc.getNumberOfPages();
-  for (let i = 2; i <= totalPages; i++) {
+  for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
-    addFooter(doc, i - 1, totalPages - 1);
+    // Add watermark to all pages except cover (page 1) when not final
+    if (!isFinal && i > 1) {
+      addWatermark(doc);
+    }
+    // Add footer to all pages except cover
+    if (i >= 2) {
+      addFooter(doc, i - 1, totalPages - 1);
+    }
   }
 
   return doc;
