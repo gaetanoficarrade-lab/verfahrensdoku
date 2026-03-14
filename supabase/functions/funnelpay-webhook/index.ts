@@ -123,30 +123,28 @@ serve(async (req) => {
         .maybeSingle();
 
       const planId = await findPlanId(planName);
+      const isSolo = planName === "solo";
       const customerName = data.customer_name || data.name || data.customer_details?.name || "";
       const companyName = data.customer_company_name || data.company || data.customer_details?.company || "";
 
-      // ALL plans start as trialing with 7-day trial
-      const trialEndsAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-
       if (existing) {
-        // Update subscription
+        // Existing tenant: activate (upgrade from trial or update plan)
         await supabaseAdmin
           .from("tenants")
           .update({
             plan_id: planId,
-            subscription_status: "trialing",
+            subscription_status: "active",
+            trial_active: false,
             stripe_customer_id: data.customer || data.customer_id || null,
             stripe_subscription_id: data.subscription || data.subscription_id || null,
-            trial_ends_at: trialEndsAt,
-            trial_active: true,
+            solo_expires_at: isSolo ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() : null,
             source: "funnelpay",
           })
           .eq("id", existing.id);
         return existing.id;
       }
 
-      // Create new tenant
+      // New tenant via direct purchase → immediately active, no trial
       const { data: newTenant, error: tErr } = await supabaseAdmin
         .from("tenants")
         .insert({
@@ -155,11 +153,11 @@ serve(async (req) => {
           contact_email: customerEmail,
           plan_id: planId,
           is_active: true,
-          subscription_status: "trialing",
+          subscription_status: "active",
+          trial_active: false,
           stripe_customer_id: data.customer || data.customer_id || null,
           stripe_subscription_id: data.subscription || data.subscription_id || null,
-          trial_ends_at: trialEndsAt,
-          trial_active: true,
+          solo_expires_at: isSolo ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() : null,
           source: "funnelpay",
         })
         .select("id")
@@ -229,8 +227,6 @@ serve(async (req) => {
       const planLabel = planName === "solo" ? "Solo" : planName === "berater" ? "Berater" : "Agentur";
       const greeting = firstName ? `Hallo ${firstName},` : "Sehr geehrte Damen und Herren,";
 
-      const trialHint = `<p style="color: #555; font-size: 15px; line-height: 1.6;">Ihr <strong>${planLabel}</strong>-Zugang startet mit einer 7-tägigen Testphase.</p>`;
-
       await sendEmail(
         normalizedEmail,
         "Willkommen bei GoBD-Suite – Ihr Zugang ist bereit",
@@ -238,9 +234,8 @@ serve(async (req) => {
           <h2 style="color: #1a1a1a;">Willkommen bei GoBD-Suite</h2>
           <p style="color: #555; font-size: 16px; line-height: 1.6;">${greeting}</p>
           <p style="color: #555; font-size: 16px; line-height: 1.6;">
-            Vielen Dank für Ihren Kauf des <strong>${planLabel}</strong>-Plans. Ihr Zugang ist bereit!
+            Vielen Dank für Ihren Kauf des <strong>${planLabel}</strong>-Plans. Ihr Zugang ist sofort verfügbar!
           </p>
-          ${trialHint}
           <div style="text-align: center; margin: 30px 0;">
             <a href="${inviteLink}" style="background-color: #1a1a1a; color: #ffffff; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">
               Zugang einrichten
@@ -258,22 +253,9 @@ serve(async (req) => {
 
     // ─── Event Handlers ───
 
-    // Helper: activate a trialing tenant (trial → active)
-    const activateTenant = async (tenantId: string, planName: string) => {
-      const isSolo = planName === "solo";
-      await supabaseAdmin
-        .from("tenants")
-        .update({
-          subscription_status: "active",
-          trial_active: false,
-          solo_expires_at: isSolo ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() : null,
-        })
-        .eq("id", tenantId);
-    };
-
     switch (eventType) {
       case "checkout.session.completed": {
-        // Solo: Einmalzahlung bestätigt → Account aktivieren
+        // Direct purchase (Solo or any plan) → immediately active
         const { productId, productName } = getProductInfo();
         const planName = detectPlan(productId, productName);
         if (!planName) {
@@ -285,24 +267,12 @@ serve(async (req) => {
           break;
         }
         const tenantId = await findOrCreateTenant(planName);
-        
-        // If tenant already exists and is trialing, activate
-        const { data: existingTenant } = await supabaseAdmin
-          .from("tenants")
-          .select("subscription_status")
-          .eq("id", tenantId)
-          .single();
-        
-        if (planName === "solo" && existingTenant?.subscription_status === "trialing") {
-          await activateTenant(tenantId, planName);
-        }
-        
         await createUserAndInvite(tenantId, planName);
         break;
       }
 
       case "customer.subscription.created": {
-        // Berater/Agentur: Abo aktiviert → Account aktivieren
+        // Subscription started (Berater/Agentur) → immediately active
         const { productId, productName } = getProductInfo();
         const planName = detectPlan(productId, productName);
         if (!planName) {
@@ -314,18 +284,6 @@ serve(async (req) => {
           break;
         }
         const tenantId = await findOrCreateTenant(planName);
-        
-        // If tenant already exists and is trialing, activate
-        const { data: existingTenant2 } = await supabaseAdmin
-          .from("tenants")
-          .select("subscription_status")
-          .eq("id", tenantId)
-          .single();
-        
-        if ((planName === "berater" || planName === "agentur") && existingTenant2?.subscription_status === "trialing") {
-          await activateTenant(tenantId, planName);
-        }
-        
         await createUserAndInvite(tenantId, planName);
         break;
       }

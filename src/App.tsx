@@ -46,6 +46,7 @@ import AdvisorOverview from "./pages/AdvisorOverview";
 import TemplateSettings from "./pages/TemplateSettings";
 import TenantEmailSettings from "./pages/TenantEmailSettings";
 import AdminWebhookLogs from "./pages/AdminWebhookLogs";
+import TestStarten from "./pages/TestStarten";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -64,6 +65,7 @@ const App = () => (
               <Route path="/register" element={<Register />} />
               <Route path="/set-password" element={<SetPassword />} />
               <Route path="/client-register" element={<ClientRegister />} />
+              <Route path="/test-starten" element={<TestStarten />} />
 
               {/* Protected routes with layout */}
               <Route
