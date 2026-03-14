@@ -76,7 +76,7 @@ export const GOBD_CHAPTERS: MainChapter[] = [
       {
         key: '2_8', number: '2.8', title: 'Zahlungsverkehr / Bank',
         isActive: (a) => !!a.HAS_BUSINESS_ACCOUNT || !!a.USES_ONLINE_BANKING,
-        inactiveText: 'Das Unternehmen verfügt über kein gesondertes Geschäftskonto und nutzt kein Online-Banking. Der Zahlungsverkehr wird anderweitig abgewickelt.',
+        inactiveText: 'Das Unternehmen verfügt über kein gesondertes Geschäftskonto und nutzt kein Online-Banking. Der Zahlungsverkehr wird anderweitig abgewickelt. Eine Abstimmung von Bankkonten entfällt entsprechend.',
       },
       {
         key: '2_9', number: '2.9', title: 'Personal / Lohn',
