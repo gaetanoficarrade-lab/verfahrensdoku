@@ -276,6 +276,7 @@ export default function ChapterEditor() {
     return data.id;
   };
 
+  const loadVersions = async () => {
     if (!chapterDataId) return;
     const { data } = await supabase
       .from('chapter_versions')
