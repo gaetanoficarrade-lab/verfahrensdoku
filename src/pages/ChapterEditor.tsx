@@ -210,6 +210,9 @@ export default function ChapterEditor() {
   const [onboardingAnswers, setOnboardingAnswers] = useState<Record<string, any> | null>(null);
   const [editorTextSaving, setEditorTextSaving] = useState(false);
   const [savedPrecheckHints, setSavedPrecheckHints] = useState<string[]>([]);
+  const [changeReason, setChangeReason] = useState('');
+  const [showChangeReasonDialog, setShowChangeReasonDialog] = useState(false);
+  const [pendingSaveAction, setPendingSaveAction] = useState<'save' | 'approve' | null>(null);
 
   // Real-time precheck state
   const [precheckLoading, setPrecheckLoading] = useState(false);
