@@ -109,6 +109,7 @@ export default function ChapterEditor() {
   // Real-time precheck state
   const [precheckLoading, setPrecheckLoading] = useState(false);
   const [precheckResult, setPrecheckResult] = useState<PrecheckResult | null>(null);
+  const [precheckDone, setPrecheckDone] = useState(false);
 
   // Amendment mode
   const [isAmending, setIsAmending] = useState(false);
@@ -174,9 +175,10 @@ export default function ChapterEditor() {
         hasLoadedRef.current = true;
         setEditorText(chData.editor_text || chData.generated_text || '');
         setStatus(chData.status || 'empty');
-        setSavedPrecheckHints(
-          Array.isArray(chData.client_precheck_hints) ? chData.client_precheck_hints : []
-        );
+        const hints = Array.isArray(chData.client_precheck_hints) ? chData.client_precheck_hints : [];
+        setSavedPrecheckHints(hints);
+        // If precheck was already done (hints exist), allow submission
+        if (hints.length > 0) setPrecheckDone(true);
 
         const { data: filesData } = await supabase
           .from('chapter_files')
@@ -331,6 +333,7 @@ export default function ChapterEditor() {
       if (error) throw error;
       const result = data as PrecheckResult;
       setPrecheckResult(result);
+      setPrecheckDone(true);
 
       // Save hints to DB
       const allHints = [...(result.missing_fields || []), ...(result.hints || [])];
@@ -595,7 +598,7 @@ export default function ChapterEditor() {
           <div className="relative">
             <Textarea
               value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              onChange={(e) => { setNotes(e.target.value); if (precheckDone) setPrecheckDone(false); }}
               placeholder="Beschreiben Sie hier die relevanten Informationen für dieses Kapitel. Orientieren Sie sich an den Leitfragen oben…"
               rows={12}
               disabled={isAdvisor || (isSubmitted && !isAmending)}
@@ -654,14 +657,20 @@ export default function ChapterEditor() {
                   {precheckLoading ? 'KI prüft…' : 'Prüfen'}
                 </Button>
                 <Button
-                  disabled={submitting || !notes.trim()}
+                  disabled={submitting || !notes.trim() || !precheckDone}
                   className="gap-2"
                   onClick={handleSubmit}
+                  title={!precheckDone ? 'Bitte führen Sie zuerst die Prüfung durch' : undefined}
                 >
                   {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                   Einreichen
                 </Button>
               </div>
+              {!precheckDone && notes.trim() && (
+                <p className="text-xs text-muted-foreground">
+                  Bitte führen Sie zuerst die KI-Prüfung durch, bevor Sie das Kapitel einreichen.
+                </p>
+              )}
 
               {/* Precheck result */}
               {precheckIsClean && (
