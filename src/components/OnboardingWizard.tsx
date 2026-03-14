@@ -58,6 +58,34 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
   const [initialized, setInitialized] = useState(!!onboardingId);
 
   const totalSteps = ONBOARDING_SECTIONS.length;
+  const storageKey = `onboarding-step-${projectId}`;
+
+  // Restore step from sessionStorage
+  useEffect(() => {
+    const saved = sessionStorage.getItem(storageKey);
+    if (saved) {
+      const parsed = parseInt(saved, 10);
+      if (!isNaN(parsed) && parsed >= 0 && parsed < totalSteps) {
+        setStep(parsed);
+      }
+    }
+  }, [storageKey, totalSteps]);
+
+  // Persist step to sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem(storageKey, String(step));
+  }, [step, storageKey]);
+
+  // Auto-save when user switches away from tab
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        saveAnswers();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [answers, projectId]);
 
   // Ensure a project_onboarding row exists on mount
   useEffect(() => {
