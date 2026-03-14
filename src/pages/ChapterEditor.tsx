@@ -55,6 +55,108 @@ interface PrecheckResult {
   confidence: number;
 }
 
+interface StoredPrecheckPayload {
+  checked?: boolean;
+  hints?: unknown;
+  missing_fields?: unknown;
+  confidence?: unknown;
+}
+
+const normalizeHints = (value: unknown): string[] => {
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item).trim()).filter(Boolean);
+  }
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed) return [];
+
+    if (trimmed.includes('\n')) {
+      return trimmed
+        .split('\n')
+        .map((line) => line.replace(/^[-•]\s*/, '').trim())
+        .filter(Boolean);
+    }
+
+    if (trimmed.includes(',')) {
+      return trimmed.split(',').map((item) => item.trim()).filter(Boolean);
+    }
+
+    return [trimmed];
+  }
+
+  return [];
+};
+
+const decodeStoredPrecheck = (raw: unknown): { wasChecked: boolean; result: PrecheckResult | null; allHints: string[] } => {
+  if (raw === null || raw === undefined) {
+    return { wasChecked: false, result: null, allHints: [] };
+  }
+
+  const fromPayload = (payload: StoredPrecheckPayload) => {
+    const hints = normalizeHints(payload.hints);
+    const missingFields = normalizeHints(payload.missing_fields);
+    const confidence = typeof payload.confidence === 'number' ? payload.confidence : (hints.length === 0 && missingFields.length === 0 ? 100 : 1);
+    const wasChecked = payload.checked === true || 'hints' in payload || 'missing_fields' in payload;
+
+    return {
+      wasChecked,
+      result: wasChecked ? { hints, missing_fields: missingFields, confidence } : null,
+      allHints: [...missingFields, ...hints],
+    };
+  };
+
+  if (typeof raw === 'string') {
+    const trimmed = raw.trim();
+
+    if (!trimmed) {
+      return {
+        wasChecked: true,
+        result: { hints: [], missing_fields: [], confidence: 100 },
+        allHints: [],
+      };
+    }
+
+    try {
+      const parsed = JSON.parse(trimmed) as unknown;
+      if (Array.isArray(parsed)) {
+        const hints = normalizeHints(parsed);
+        return {
+          wasChecked: true,
+          result: { hints, missing_fields: [], confidence: hints.length === 0 ? 100 : 1 },
+          allHints: hints,
+        };
+      }
+
+      if (parsed && typeof parsed === 'object') {
+        return fromPayload(parsed as StoredPrecheckPayload);
+      }
+    } catch {
+      const hints = normalizeHints(trimmed);
+      return {
+        wasChecked: true,
+        result: { hints, missing_fields: [], confidence: hints.length === 0 ? 100 : 1 },
+        allHints: hints,
+      };
+    }
+  }
+
+  if (Array.isArray(raw)) {
+    const hints = normalizeHints(raw);
+    return {
+      wasChecked: true,
+      result: { hints, missing_fields: [], confidence: hints.length === 0 ? 100 : 1 },
+      allHints: hints,
+    };
+  }
+
+  if (typeof raw === 'object') {
+    return fromPayload(raw as StoredPrecheckPayload);
+  }
+
+  return { wasChecked: false, result: null, allHints: [] };
+};
+
 interface ChapterVersion {
   id: string;
   editor_text: string;
@@ -175,13 +277,10 @@ export default function ChapterEditor() {
         hasLoadedRef.current = true;
         setEditorText(chData.editor_text || chData.generated_text || '');
         setStatus(chData.status || 'empty');
-        const hints = Array.isArray(chData.client_precheck_hints) ? chData.client_precheck_hints : [];
-        setSavedPrecheckHints(hints);
-        // Restore precheck result from DB so it survives tab switches
-        if (hints.length > 0) {
-          setPrecheckDone(true);
-          setPrecheckResult({ hints, missing_fields: [], confidence: 1 });
-        }
+        const decodedPrecheck = decodeStoredPrecheck(chData.client_precheck_hints);
+        setSavedPrecheckHints(decodedPrecheck.allHints);
+        setPrecheckDone(decodedPrecheck.wasChecked);
+        setPrecheckResult(decodedPrecheck.result);
 
         const { data: filesData } = await supabase
           .from('chapter_files')
@@ -335,15 +434,41 @@ export default function ChapterEditor() {
 
       if (error) throw error;
       const result = data as PrecheckResult;
-      setPrecheckResult(result);
+      const normalizedResult: PrecheckResult = {
+        hints: Array.isArray(result?.hints) ? result.hints : [],
+        missing_fields: Array.isArray(result?.missing_fields) ? result.missing_fields : [],
+        confidence: typeof result?.confidence === 'number' ? result.confidence : 0,
+      };
+
+      setPrecheckResult(normalizedResult);
       setPrecheckDone(true);
 
-      // Save hints to DB
-      const allHints = [...(result.missing_fields || []), ...(result.hints || [])];
-      await supabase
+      // Save precheck in robust format so it survives tab switches/reloads across old/new schemas
+      const allHints = [...normalizedResult.missing_fields, ...normalizedResult.hints];
+      setSavedPrecheckHints(allHints);
+      const serializedPrecheck = JSON.stringify({
+        checked: true,
+        hints: normalizedResult.hints,
+        missing_fields: normalizedResult.missing_fields,
+        confidence: normalizedResult.confidence,
+        checked_at: new Date().toISOString(),
+      });
+
+      const { error: persistError } = await supabase
         .from('chapter_data')
-        .update({ client_precheck_hints: allHints })
+        .update({ client_precheck_hints: serializedPrecheck, precheck_hints_count: allHints.length })
         .eq('id', cdId);
+
+      if (persistError) {
+        const { error: fallbackError } = await supabase
+          .from('chapter_data')
+          .update({ client_precheck_hints: allHints, precheck_hints_count: allHints.length })
+          .eq('id', cdId);
+
+        if (fallbackError) {
+          console.error('Precheck persistence failed:', persistError, fallbackError);
+        }
+      }
     } catch (err: any) {
       let detail = err?.message || err?.msg || 'Unbekannter Fehler';
 

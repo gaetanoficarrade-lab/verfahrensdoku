@@ -42,6 +42,24 @@ const CHAPTER_CONTEXT: Record<string, string> = {
   "5_5": "Umgang mit Fehlern: Korrekturprozess, Dokumentation, Eskalation, Prävention",
 };
 
+const normalizeHints = (value: unknown): string[] => {
+  if (Array.isArray(value)) return value.map((item) => String(item).trim()).filter(Boolean);
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    return trimmed ? [trimmed] : [];
+  }
+  return [];
+};
+
+const buildStoredPrecheck = (result: { hints: string[]; missing_fields: string[]; confidence: number }) =>
+  JSON.stringify({
+    checked: true,
+    hints: result.hints,
+    missing_fields: result.missing_fields,
+    confidence: result.confidence,
+    checked_at: new Date().toISOString(),
+  });
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -161,6 +179,15 @@ Analysiere die Notizen und gib strukturierte Hinweise zurück.`;
       result = { hints: ["Analyse konnte nicht verarbeitet werden."], missing_fields: [], confidence: 0 };
     }
 
+    const normalizedResult = {
+      hints: normalizeHints(result.hints),
+      missing_fields: normalizeHints(result.missing_fields),
+      confidence: typeof result.confidence === "number" ? result.confidence : 0,
+    };
+
+    const allHints = [...normalizedResult.missing_fields, ...normalizedResult.hints];
+    const storedPrecheck = buildStoredPrecheck(normalizedResult);
+
     // Save to chapter_data
     const { data: existing } = await supabase
       .from("chapter_data")
@@ -170,24 +197,44 @@ Analysiere die Notizen und gib strukturierte Hinweise zurück.`;
       .maybeSingle();
 
     if (existing) {
-      await supabase
+      const { error: updateError } = await supabase
         .from("chapter_data")
         .update({
-          client_precheck_hints: result.hints,
-          precheck_hints_count: result.hints.length,
+          client_precheck_hints: storedPrecheck,
+          precheck_hints_count: allHints.length,
         })
         .eq("id", existing.id);
+
+      if (updateError) {
+        await supabase
+          .from("chapter_data")
+          .update({
+            client_precheck_hints: allHints,
+            precheck_hints_count: allHints.length,
+          })
+          .eq("id", existing.id);
+      }
     } else {
-      await supabase.from("chapter_data").insert({
+      const { error: insertError } = await supabase.from("chapter_data").insert({
         project_id,
         chapter_key,
-        client_precheck_hints: result.hints,
-        precheck_hints_count: result.hints.length,
+        client_precheck_hints: storedPrecheck,
+        precheck_hints_count: allHints.length,
         status: "client_draft",
       });
+
+      if (insertError) {
+        await supabase.from("chapter_data").insert({
+          project_id,
+          chapter_key,
+          client_precheck_hints: allHints,
+          precheck_hints_count: allHints.length,
+          status: "client_draft",
+        });
+      }
     }
 
-    return new Response(JSON.stringify(result), {
+    return new Response(JSON.stringify(normalizedResult), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
