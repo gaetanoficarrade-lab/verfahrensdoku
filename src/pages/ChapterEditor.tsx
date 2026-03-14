@@ -390,11 +390,22 @@ export default function ChapterEditor() {
     if (!chapterDataId) return;
     const { data } = await supabase
       .from('chapter_versions')
-      .select('id, editor_text, changed_by, created_at, profiles:changed_by(first_name, last_name)')
+      .select('id, editor_text, changed_by, created_at, change_reason, version_number, change_type, profiles:changed_by(first_name, last_name)')
       .eq('chapter_data_id', chapterDataId)
       .order('created_at', { ascending: false });
     setVersions((data || []) as unknown as ChapterVersion[]);
     setVersionsOpen(true);
+  };
+
+  const getNextVersionNumber = async (): Promise<number> => {
+    if (!chapterDataId) return 1;
+    const { data } = await supabase
+      .from('chapter_versions')
+      .select('version_number')
+      .eq('chapter_data_id', chapterDataId)
+      .order('version_number', { ascending: false })
+      .limit(1);
+    return (data?.[0]?.version_number || 0) + 1;
   };
 
   const restoreVersion = (text: string) => {
