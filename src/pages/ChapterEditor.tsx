@@ -596,25 +596,45 @@ export default function ChapterEditor() {
     }
   };
 
-  const handleSaveEditorText = async () => {
+  const handleSaveEditorText = async (reason?: string) => {
     if (!chapterDataId) return;
     setEditorTextSaving(true);
 
     // Save version before updating
     if (editorText.trim()) {
+      const nextVersion = await getNextVersionNumber();
+      const isInitial = nextVersion === 1;
       await supabase.from('chapter_versions').insert({
         chapter_data_id: chapterDataId,
         editor_text: editorText,
         changed_by: user?.id,
+        version_number: nextVersion,
+        change_type: isInitial ? 'initial' : 'edit',
+        change_reason: reason || null,
       });
     }
 
     const { error } = await supabase.from('chapter_data').update({ editor_text: editorText }).eq('id', chapterDataId);
     setEditorTextSaving(false);
+    setChangeReason('');
+    setShowChangeReasonDialog(false);
+    setPendingSaveAction(null);
     if (error) {
       toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
     } else {
       toast({ title: 'Gespeichert', description: 'Editor-Text wurde gespeichert.' });
+    }
+  };
+
+  const handleSaveClick = async () => {
+    // Check if this is a subsequent version (not initial)
+    if (!chapterDataId) return;
+    const nextVersion = await getNextVersionNumber();
+    if (nextVersion > 1) {
+      setPendingSaveAction('save');
+      setShowChangeReasonDialog(true);
+    } else {
+      handleSaveEditorText();
     }
   };
 
