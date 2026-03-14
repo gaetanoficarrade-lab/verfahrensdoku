@@ -452,6 +452,27 @@ const AdminTenants = () => {
                 onCheckedChange={(v) => setForm({ ...form, trial_active: v })}
               />
             </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="max_team_unlimited">Teammitglieder unbegrenzt</Label>
+                <Switch
+                  id="max_team_unlimited"
+                  checked={form.max_team_members_unlimited}
+                  onCheckedChange={(v) => setForm({ ...form, max_team_members_unlimited: v })}
+                />
+              </div>
+              {!form.max_team_members_unlimited && (
+                <div className="space-y-1">
+                  <Label>Max. Teammitglieder</Label>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={form.max_team_members}
+                    onChange={(e) => setForm({ ...form, max_team_members: parseInt(e.target.value) || 1 })}
+                  />
+                </div>
+              )}
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Abbrechen</Button>
