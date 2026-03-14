@@ -1241,3 +1241,59 @@ ALTER TABLE public.document_versions
   ADD COLUMN IF NOT EXISTS version_label TEXT,
   ADD COLUMN IF NOT EXISTS chapters_snapshot JSONB,
   ADD COLUMN IF NOT EXISTS change_log JSONB DEFAULT '[]'::jsonb;
+
+
+-- 26. SUPPORT TICKETS
+-- =====================================================
+
+CREATE TYPE public.ticket_status AS ENUM ('open', 'in_progress', 'resolved', 'closed');
+CREATE TYPE public.ticket_priority AS ENUM ('low', 'medium', 'high');
+CREATE TYPE public.ticket_category AS ENUM ('bug', 'feature_request', 'question', 'other');
+
+CREATE TABLE public.support_tickets (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID REFERENCES public.tenants(id) ON DELETE CASCADE NOT NULL,
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  category public.ticket_category NOT NULL DEFAULT 'question',
+  priority public.ticket_priority NOT NULL DEFAULT 'medium',
+  status public.ticket_status NOT NULL DEFAULT 'open',
+  admin_notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.support_tickets ENABLE ROW LEVEL SECURITY;
+
+-- Tenants can see their own tickets
+CREATE POLICY "Tenants can view own tickets"
+  ON public.support_tickets FOR SELECT
+  TO authenticated
+  USING (tenant_id IN (
+    SELECT p.tenant_id FROM public.profiles p WHERE p.user_id = auth.uid()
+  ));
+
+-- Tenants can create tickets
+CREATE POLICY "Tenants can create tickets"
+  ON public.support_tickets FOR INSERT
+  TO authenticated
+  WITH CHECK (tenant_id IN (
+    SELECT p.tenant_id FROM public.profiles p WHERE p.user_id = auth.uid()
+  ));
+
+-- Super admins can see all tickets
+CREATE POLICY "Super admins can view all tickets"
+  ON public.support_tickets FOR SELECT
+  TO authenticated
+  USING (
+    EXISTS (SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'super_admin')
+  );
+
+-- Super admins can update tickets
+CREATE POLICY "Super admins can update tickets"
+  ON public.support_tickets FOR UPDATE
+  TO authenticated
+  USING (
+    EXISTS (SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'super_admin')
+  );
