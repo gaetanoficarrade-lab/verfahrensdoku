@@ -9,14 +9,19 @@ import { TrialBanner } from '@/components/TrialBanner';
 import { FirstStepsGuide } from '@/components/FirstStepsGuide';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useSessionTimeout } from '@/hooks/useSessionTimeout';
+import { Badge } from '@/components/ui/badge';
 
 interface AppLayoutProps {
   children: ReactNode;
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
-  const { impersonation } = useAuthContext();
+  const { impersonation, isSuperAdmin, roles } = useAuthContext();
   const { showWarning, remainingSeconds, dismissWarning } = useSessionTimeout();
+
+  const isClient = roles.includes('client');
+  const showAdmin = isSuperAdmin && !impersonation.isImpersonating;
+  const roleLabel = showAdmin ? 'Super-Admin' : isClient ? 'Mandant' : 'Berater';
 
   return (
     <SidebarProvider>
@@ -31,7 +36,12 @@ export function AppLayout({ children }: AppLayoutProps) {
             }`}
           >
             <SidebarTrigger className="mr-4" />
-            <NotificationBell />
+            <div className="flex items-center gap-3 ml-auto">
+              <Badge variant="outline" className="text-xs font-medium text-muted-foreground">
+                {roleLabel}
+              </Badge>
+              <NotificationBell />
+            </div>
           </header>
           <main className="flex-1 p-6">{children}</main>
           <AppFooter />

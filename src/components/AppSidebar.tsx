@@ -109,18 +109,13 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="border-b border-sidebar-border p-4">
-        <div className="flex items-center gap-3">
+      <SidebarHeader className="border-b border-sidebar-border p-3">
+        <div className="flex items-center justify-center">
           <img
             src={logoUrl || '/images/logo.png'}
             alt="Logo"
-            className={`shrink-0 object-contain ${collapsed ? 'h-8 w-8' : 'h-8 max-w-[140px]'}`}
+            className={`shrink-0 object-contain ${collapsed ? 'h-8' : 'h-10 max-w-full'}`}
           />
-          {!collapsed && (
-            <span className="text-xs text-sidebar-foreground/60 ml-auto">
-              {showAdmin ? 'Super-Admin' : isClient ? 'Mandant' : 'Berater'}
-            </span>
-          )}
         </div>
       </SidebarHeader>
 
