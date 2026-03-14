@@ -20,6 +20,8 @@ const DEFAULTS = {
   menu_text_color: '',
   brand_text_color: '',
   sidebar_bg_color: '',
+  menu_active_color: '',
+  menu_active_text_color: '',
   font_family: '',
   custom_css: '',
   address: '',
@@ -36,7 +38,8 @@ type FormState = typeof DEFAULTS;
 
 const BRANDING_FIELDS: (keyof FormState)[] = [
   'primary_color', 'button_text_color', 'menu_text_color',
-  'brand_text_color', 'sidebar_bg_color', 'font_family', 'custom_css',
+  'brand_text_color', 'sidebar_bg_color', 'menu_active_color',
+  'menu_active_text_color', 'font_family', 'custom_css',
 ];
 
 const PRESET_STORAGE_KEY = 'branding-presets';
