@@ -23,6 +23,7 @@ interface Client {
 
 export default function Clients() {
   const { effectiveTenantId, isSuperAdmin, impersonation } = useAuthContext();
+  const { canCreateClients, isTrialing } = useTrialRestrictions();
   const navigate = useNavigate();
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
