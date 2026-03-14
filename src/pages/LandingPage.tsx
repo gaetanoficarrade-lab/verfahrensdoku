@@ -17,6 +17,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { CookieBanner } from '@/components/CookieBanner';
 import landingLogo from '@/assets/landing-logo.png';
 import productHero from '@/assets/product-hero.png';
 import productPdf from '@/assets/product-pdf.png';
