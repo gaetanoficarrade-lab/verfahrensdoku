@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTenantSettings } from '@/hooks/useTenantSettings';
 
 function hexToHSL(hex: string): string | null {
@@ -28,24 +28,80 @@ function hexToHSL(hex: string): string | null {
 
 export function TenantBrandingProvider({ children }: { children: React.ReactNode }) {
   const { data: settings } = useTenantSettings();
+  const styleRef = useRef<HTMLStyleElement | null>(null);
 
   useEffect(() => {
-    if (!settings?.primary_color) return;
+    const root = document.documentElement;
+    const propsSet: string[] = [];
 
-    const hsl = hexToHSL(settings.primary_color);
-    if (hsl) {
-      // Set primary color across all relevant CSS variables
-      document.documentElement.style.setProperty('--primary', hsl);
-      document.documentElement.style.setProperty('--ring', hsl);
-      document.documentElement.style.setProperty('--sidebar-primary', hsl);
+    const setVar = (name: string, value: string) => {
+      root.style.setProperty(name, value);
+      propsSet.push(name);
+    };
+
+    // Primary / accent color
+    if (settings?.primary_color) {
+      const hsl = hexToHSL(settings.primary_color);
+      if (hsl) {
+        setVar('--primary', hsl);
+        setVar('--ring', hsl);
+        setVar('--sidebar-primary', hsl);
+      }
+    }
+
+    // Button text color
+    if (settings?.button_text_color) {
+      const hsl = hexToHSL(settings.button_text_color);
+      if (hsl) {
+        setVar('--primary-foreground', hsl);
+        setVar('--sidebar-primary-foreground', hsl);
+      }
+    }
+
+    // Menu / sidebar text color
+    if (settings?.menu_text_color) {
+      const hsl = hexToHSL(settings.menu_text_color);
+      if (hsl) {
+        setVar('--sidebar-foreground', hsl);
+      }
+    }
+
+    // Brand / tool name color
+    if (settings?.brand_text_color) {
+      const hsl = hexToHSL(settings.brand_text_color);
+      if (hsl) {
+        setVar('--brand-foreground', hsl);
+      }
+    }
+
+    // Font family
+    if (settings?.font_family) {
+      setVar('--font-family-custom', settings.font_family);
+      root.style.fontFamily = `${settings.font_family}, var(--font-sans, sans-serif)`;
+    }
+
+    // Custom CSS
+    if (settings?.custom_css) {
+      if (!styleRef.current) {
+        styleRef.current = document.createElement('style');
+        styleRef.current.setAttribute('data-tenant-css', 'true');
+        document.head.appendChild(styleRef.current);
+      }
+      styleRef.current.textContent = settings.custom_css;
+    } else if (styleRef.current) {
+      styleRef.current.textContent = '';
     }
 
     return () => {
-      document.documentElement.style.removeProperty('--primary');
-      document.documentElement.style.removeProperty('--ring');
-      document.documentElement.style.removeProperty('--sidebar-primary');
+      propsSet.forEach(p => root.style.removeProperty(p));
+      if (settings?.font_family) {
+        root.style.fontFamily = '';
+      }
+      if (styleRef.current) {
+        styleRef.current.textContent = '';
+      }
     };
-  }, [settings?.primary_color]);
+  }, [settings]);
 
   return <>{children}</>;
 }

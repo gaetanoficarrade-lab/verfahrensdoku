@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Upload, Save, Palette, Building2, FileText, Shield, Loader2 } from 'lucide-react';
+import { Upload, Save, Palette, Building2, FileText, Shield, Loader2, Type, Code } from 'lucide-react';
 import { toast } from 'sonner';
 import { logAudit } from '@/lib/auditLog';
 
@@ -22,6 +22,11 @@ export default function BrandingSettings() {
   const [form, setForm] = useState({
     brand_name: '',
     primary_color: '#1e3a5f',
+    button_text_color: '',
+    menu_text_color: '',
+    brand_text_color: '',
+    font_family: '',
+    custom_css: '',
     address: '',
     phone: '',
     website: '',
@@ -37,6 +42,11 @@ export default function BrandingSettings() {
       setForm({
         brand_name: settings.brand_name || '',
         primary_color: settings.primary_color || '#1e3a5f',
+        button_text_color: settings.button_text_color || '',
+        menu_text_color: settings.menu_text_color || '',
+        brand_text_color: settings.brand_text_color || '',
+        font_family: settings.font_family || '',
+        custom_css: settings.custom_css || '',
         address: settings.address || '',
         phone: settings.phone || '',
         website: settings.website || '',
@@ -202,34 +212,150 @@ export default function BrandingSettings() {
         </CardContent>
       </Card>
 
-      {/* Primary Color */}
+      {/* Farben */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Palette className="h-5 w-5" />
-            Primärfarbe
+            Farben
           </CardTitle>
-          <CardDescription>Wird als Akzentfarbe im Interface verwendet</CardDescription>
+          <CardDescription>Passen Sie die Farben Ihres Interfaces an</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          {/* Primary Color */}
+          <div className="space-y-2">
+            <Label>Primärfarbe (Buttons, Akzente)</Label>
+            <div className="flex items-center gap-4">
+              <input
+                type="color"
+                value={form.primary_color}
+                onChange={(e) => handleChange('primary_color', e.target.value)}
+                className="h-10 w-14 rounded-md border border-input cursor-pointer"
+              />
+              <Input
+                value={form.primary_color}
+                onChange={(e) => handleChange('primary_color', e.target.value)}
+                placeholder="#1e3a5f"
+                className="w-32 font-mono"
+              />
+              <div
+                className="h-10 flex-1 rounded-md border border-border"
+                style={{ backgroundColor: form.primary_color }}
+              />
+            </div>
+          </div>
+
+          {/* Button Text Color */}
+          <div className="space-y-2">
+            <Label>Button-Schriftfarbe</Label>
+            <div className="flex items-center gap-4">
+              <input
+                type="color"
+                value={form.button_text_color || '#ffffff'}
+                onChange={(e) => handleChange('button_text_color', e.target.value)}
+                className="h-10 w-14 rounded-md border border-input cursor-pointer"
+              />
+              <Input
+                value={form.button_text_color}
+                onChange={(e) => handleChange('button_text_color', e.target.value)}
+                placeholder="#ffffff (Standard)"
+                className="w-48 font-mono"
+              />
+              <Button size="sm" style={{ backgroundColor: form.primary_color, color: form.button_text_color || '#fff' }}>
+                Vorschau
+              </Button>
+            </div>
+          </div>
+
+          {/* Menu Text Color */}
+          <div className="space-y-2">
+            <Label>Menü-Schriftfarbe (Seitenleiste)</Label>
+            <div className="flex items-center gap-4">
+              <input
+                type="color"
+                value={form.menu_text_color || '#c7c7c7'}
+                onChange={(e) => handleChange('menu_text_color', e.target.value)}
+                className="h-10 w-14 rounded-md border border-input cursor-pointer"
+              />
+              <Input
+                value={form.menu_text_color}
+                onChange={(e) => handleChange('menu_text_color', e.target.value)}
+                placeholder="#c7c7c7 (Standard)"
+                className="w-48 font-mono"
+              />
+            </div>
+          </div>
+
+          {/* Brand / Tool Name Color */}
+          <div className="space-y-2">
+            <Label>Toolname-Schriftfarbe (Header/Navigation)</Label>
+            <div className="flex items-center gap-4">
+              <input
+                type="color"
+                value={form.brand_text_color || '#ffffff'}
+                onChange={(e) => handleChange('brand_text_color', e.target.value)}
+                className="h-10 w-14 rounded-md border border-input cursor-pointer"
+              />
+              <Input
+                value={form.brand_text_color}
+                onChange={(e) => handleChange('brand_text_color', e.target.value)}
+                placeholder="#ffffff (Standard)"
+                className="w-48 font-mono"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Schriftart */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Type className="h-5 w-5" />
+            Schriftart
+          </CardTitle>
+          <CardDescription>Wählen Sie eine Schriftart für Ihr Interface</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="space-y-2">
+            <Label>Schriftart (Google Fonts Name)</Label>
+            <Input
+              value={form.font_family}
+              onChange={(e) => handleChange('font_family', e.target.value)}
+              placeholder="z.B. Inter, Roboto, Open Sans, Lato"
+            />
+            <p className="text-xs text-muted-foreground">
+              Geben Sie den Namen einer Google Font ein. Die Schrift muss auf dem System installiert sein oder als Web-Font eingebunden werden (via Custom CSS).
+            </p>
+          </div>
+          {form.font_family && (
+            <div className="p-3 rounded-md border border-border" style={{ fontFamily: form.font_family }}>
+              <p className="text-sm">Vorschau: Das ist ein Beispieltext in der Schriftart „{form.font_family}".</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Custom CSS */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Code className="h-5 w-5" />
+            Eigenes CSS
+          </CardTitle>
+          <CardDescription>
+            Fügen Sie eigenen CSS-Code ein, um das Erscheinungsbild weiter anzupassen.
+            Änderungen werden nach dem Speichern sofort sichtbar.
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-4">
-            <input
-              type="color"
-              value={form.primary_color}
-              onChange={(e) => handleChange('primary_color', e.target.value)}
-              className="h-10 w-14 rounded-md border border-input cursor-pointer"
-            />
-            <Input
-              value={form.primary_color}
-              onChange={(e) => handleChange('primary_color', e.target.value)}
-              placeholder="#1e3a5f"
-              className="w-32 font-mono"
-            />
-            <div
-              className="h-10 flex-1 rounded-md border border-border"
-              style={{ backgroundColor: form.primary_color }}
-            />
-          </div>
+          <Textarea
+            value={form.custom_css}
+            onChange={(e) => handleChange('custom_css', e.target.value)}
+            placeholder={`/* Beispiel: Google Font einbinden */\n@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');\n\n/* Beispiel: Sidebar-Hintergrund ändern */\n[data-sidebar] {\n  background-color: #1a1a2e !important;\n}`}
+            rows={10}
+            className="font-mono text-xs"
+          />
         </CardContent>
       </Card>
 

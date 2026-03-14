@@ -8,6 +8,11 @@ export interface TenantSettings {
   brand_name: string | null;
   logo_url: string | null;
   primary_color: string | null;
+  button_text_color: string | null;
+  menu_text_color: string | null;
+  brand_text_color: string | null;
+  font_family: string | null;
+  custom_css: string | null;
   address: string | null;
   phone: string | null;
   website: string | null;
