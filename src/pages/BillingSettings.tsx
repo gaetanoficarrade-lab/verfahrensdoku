@@ -18,6 +18,7 @@ interface TenantPlanInfo {
   subscriptionStatus: string | null;
   currentClients: number;
   currentProjects: number;
+  isFree: boolean;
 }
 
 export default function BillingSettings() {
