@@ -221,10 +221,12 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-2">
-            <Label>Wie werden Unterlagen übermittelt?</Label>
-            <Textarea value={answers.document_transfer_method || ''} onChange={(e) => set('document_transfer_method', e.target.value)} placeholder="z.B. DATEV Unternehmen Online, E-Mail, Pendelordner..." />
-          </div>
+          {answers.BOOKKEEPING_BY && answers.BOOKKEEPING_BY !== 'self' && (
+            <div className="space-y-2">
+              <Label>Wie werden Unterlagen übermittelt?</Label>
+              <Textarea value={answers.document_transfer_method || ''} onChange={(e) => set('document_transfer_method', e.target.value)} placeholder="z.B. DATEV Unternehmen Online, E-Mail, Pendelordner..." />
+            </div>
+          )}
         </div>
       );
       case 3: return (
