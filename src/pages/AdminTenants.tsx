@@ -44,6 +44,7 @@ interface Tenant {
   solo_expires_at: string | null;
   trial_ends_at: string | null;
   source: string | null;
+  max_team_members: number | null;
   created_at: string;
 }
 
