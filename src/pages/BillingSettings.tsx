@@ -18,6 +18,7 @@ interface TenantPlanInfo {
   subscriptionStatus: string | null;
   currentClients: number;
   currentProjects: number;
+  isFree: boolean;
 }
 
 export default function BillingSettings() {
@@ -31,7 +32,7 @@ export default function BillingSettings() {
     const load = async () => {
       setLoading(true);
       const [tenantRes, clientsRes, projectsRes] = await Promise.all([
-        supabase.from('tenants').select('plan_id, trial_ends_at, subscription_status, plans(name, max_clients, max_projects, price_monthly)').eq('id', effectiveTenantId).single(),
+        supabase.from('tenants').select('plan_id, trial_ends_at, subscription_status, is_free, plans(name, max_clients, max_projects, price_monthly)').eq('id', effectiveTenantId).single(),
         supabase.from('clients').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId),
         supabase.from('projects').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId),
       ]);
@@ -45,6 +46,7 @@ export default function BillingSettings() {
         subscriptionStatus: (tenantRes.data as any)?.subscription_status || null,
         currentClients: clientsRes.count || 0,
         currentProjects: projectsRes.count || 0,
+        isFree: (tenantRes.data as any)?.is_free === true,
       });
       setLoading(false);
     };
@@ -55,7 +57,7 @@ export default function BillingSettings() {
     return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   }
 
-  const showUpgrade = isTrialing || trialExpired || tenantPlan?.subscriptionStatus === 'trialing';
+  const showUpgrade = !tenantPlan?.isFree && (isTrialing || trialExpired || tenantPlan?.subscriptionStatus === 'trialing');
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -100,7 +102,13 @@ export default function BillingSettings() {
         <Card>
           <CardHeader>
             <CardTitle>Aktueller Plan: {tenantPlan.planName}</CardTitle>
-            <CardDescription>{tenantPlan.priceMonthly ? `${tenantPlan.priceMonthly.toFixed(2)} € / Monat` : 'Einmalzahlung'}</CardDescription>
+            <CardDescription>
+              {tenantPlan.isFree
+                ? 'Kostenlos – keine Abrechnung'
+                : tenantPlan.priceMonthly
+                  ? `${tenantPlan.priceMonthly.toFixed(2)} € / Monat`
+                  : 'Einmalzahlung'}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
