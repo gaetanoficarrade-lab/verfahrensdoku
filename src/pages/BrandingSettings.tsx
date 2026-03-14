@@ -163,21 +163,32 @@ export default function BrandingSettings() {
                   <Upload className="h-5 w-5 text-muted-foreground" />
                 </div>
               )}
-              <div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploadMutation.isPending}
-                >
-                  {uploadMutation.isPending ? (
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  ) : (
-                    <Upload className="h-4 w-4 mr-2" />
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadMutation.isPending}
+                  >
+                    {uploadMutation.isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    ) : (
+                      <Upload className="h-4 w-4 mr-2" />
+                    )}
+                    {form.logo_url ? 'Logo ersetzen' : 'Logo hochladen'}
+                  </Button>
+                  {form.logo_url && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={handleLogoRemove}
+                    >
+                      Entfernen
+                    </Button>
                   )}
-                  Logo hochladen
-                </Button>
-                <p className="text-xs text-muted-foreground mt-1">PNG, JPG, SVG – max. 2 MB</p>
+                </div>
+                <p className="text-xs text-muted-foreground">PNG, JPG, SVG – max. 2 MB</p>
               </div>
               <input
                 ref={fileInputRef}
