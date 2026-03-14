@@ -173,6 +173,15 @@ export default function AGB() {
           </section>
         </div>
       </main>
+
+      <footer className="border-t border-[#e5e5e5] py-6 px-6 mt-16">
+        <div className="max-w-3xl mx-auto flex flex-wrap items-center justify-center gap-6 text-xs text-[#86868b]">
+          <Link to="/impressum" className="hover:text-[#1d1d1f] transition-colors">Impressum</Link>
+          <Link to="/datenschutz" className="hover:text-[#1d1d1f] transition-colors">Datenschutz</Link>
+          <Link to="/agb" className="hover:text-[#1d1d1f] transition-colors">AGB</Link>
+          <Link to="/avv" className="hover:text-[#1d1d1f] transition-colors">AVV</Link>
+        </div>
+      </footer>
     </div>
   );
 }
