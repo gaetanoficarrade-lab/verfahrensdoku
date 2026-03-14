@@ -67,11 +67,36 @@ export default function BrandingSettings() {
 
     try {
       const url = await uploadMutation.mutateAsync({ file, tenantId: effectiveTenantId });
-      setForm((prev) => ({ ...prev, logo_url: url }));
+      // Add cache buster to force browser to load the new image
+      setForm((prev) => ({ ...prev, logo_url: url + '?t=' + Date.now() }));
       toast.success('Logo hochgeladen');
     } catch (err: any) {
       toast.error('Fehler beim Hochladen: ' + err.message);
     }
+    // Reset file input so the same file or a new file can be selected again
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleLogoRemove = async () => {
+    if (!effectiveTenantId) return;
+    try {
+      // Try to remove old files from storage
+      const { data: files } = await supabase.storage
+        .from('tenant-assets')
+        .list(effectiveTenantId);
+      if (files && files.length > 0) {
+        const logoFiles = files.filter(f => f.name.startsWith('logo.'));
+        if (logoFiles.length > 0) {
+          await supabase.storage
+            .from('tenant-assets')
+            .remove(logoFiles.map(f => `${effectiveTenantId}/${f.name}`));
+        }
+      }
+    } catch {
+      // ignore storage errors
+    }
+    setForm((prev) => ({ ...prev, logo_url: '' }));
+    toast.success('Logo entfernt – bitte speichern Sie die Einstellungen.');
   };
 
   const handleSave = async () => {
