@@ -113,12 +113,12 @@ const steps = [
   {
     num: '01',
     title: 'Onboarding ausfüllen',
-    desc: 'Beantworte wenige Fragen zu deinem Mandanten – die KI erkennt automatisch, welche Kapitel relevant sind.',
+    desc: 'Beantworte wenige Fragen zu deinem Unternehmen oder Kunden – das System erkennt automatisch, welche Kapitel relevant sind.',
   },
   {
     num: '02',
-    title: 'KI generiert die Texte',
-    desc: 'Auf Basis der Antworten erstellt die KI professionelle, GoBD-konforme Kapitelinhalte. Jedes Kapitel kannst du individuell anpassen.',
+    title: 'Inhalte erstellen lassen',
+    desc: 'Auf Basis deiner Antworten werden professionelle, GoBD-konforme Kapitelinhalte generiert. Jedes Kapitel kannst du individuell anpassen.',
   },
   {
     num: '03',
