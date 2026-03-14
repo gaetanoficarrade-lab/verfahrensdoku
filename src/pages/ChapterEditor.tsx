@@ -339,8 +339,9 @@ export default function ChapterEditor() {
         .update({ client_precheck_hints: allHints })
         .eq('id', cdId);
     } catch (err: any) {
-      console.error('Precheck error:', err);
-      toast({ title: 'Fehler bei der Prüfung', description: 'Die KI-Prüfung konnte nicht durchgeführt werden.', variant: 'destructive' });
+      console.error('Precheck error details:', JSON.stringify(err, null, 2), err?.message, err?.status);
+      const detail = err?.message || err?.msg || 'Unbekannter Fehler';
+      toast({ title: 'Fehler bei der Prüfung', description: `Die KI-Prüfung konnte nicht durchgeführt werden: ${detail}`, variant: 'destructive' });
     } finally {
       setPrecheckLoading(false);
     }
