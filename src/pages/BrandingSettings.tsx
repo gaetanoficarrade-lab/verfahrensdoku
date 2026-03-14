@@ -225,6 +225,27 @@ export default function BrandingSettings() {
     toast.info('Farben & Schrift auf Standard zurückgesetzt. Bitte speichern.');
   };
 
+  const handleResetName = () => {
+    setForm((prev) => ({ ...prev, brand_name: '' }));
+    toast.info('Firmenname zurückgesetzt. Bitte speichern.');
+  };
+
+  const handleResetLogo = async () => {
+    if (effectiveTenantId) {
+      try {
+        const { data: files } = await supabase.storage.from('tenant-assets').list(effectiveTenantId);
+        if (files && files.length > 0) {
+          const logoFiles = files.filter(f => f.name.startsWith('logo.'));
+          if (logoFiles.length > 0) {
+            await supabase.storage.from('tenant-assets').remove(logoFiles.map(f => `${effectiveTenantId}/${f.name}`));
+          }
+        }
+      } catch {}
+    }
+    setForm((prev) => ({ ...prev, logo_url: '' }));
+    toast.info('Logo zurückgesetzt. Bitte speichern.');
+  };
+
   const handleSavePreset = () => {
     if (!presetName.trim()) { toast.error('Bitte geben Sie einen Namen ein.'); return; }
     const preset: Partial<FormState> = {};
