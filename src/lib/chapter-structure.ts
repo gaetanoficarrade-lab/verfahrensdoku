@@ -67,7 +67,7 @@ export const GOBD_CHAPTERS: MainChapter[] = [
       {
         key: '2_6', number: '2.6', title: 'Digitalisierung / Scanprozess',
         isActive: (a) => !!a.HAS_SCAN_PROCESS,
-        inactiveText: 'Im Unternehmen werden keine Papierbelege digitalisiert. Alle Belege liegen bereits in digitaler Form vor oder werden ausschließlich in Papierform archiviert.',
+        inactiveText: 'Im Unternehmen fallen keine Papierbelege an, die digitalisiert werden müssen. Alle eingehenden Belege liegen bereits in digitaler Form vor.',
       },
       {
         key: '2_7', number: '2.7', title: 'Buchhaltungsverarbeitung',
