@@ -18,7 +18,7 @@ export default function AGB() {
 
       <main className="max-w-3xl mx-auto px-6 py-16">
         <h1 className="text-3xl font-bold mb-4">Allgemeine Geschäftsbedingungen (AGB)</h1>
-        <p className="text-sm text-[#86868b] mb-12">GoBD-Suite – Stand: März 2025</p>
+        <p className="text-sm text-[#86868b] mb-12">GoBD-Suite – Stand: März 2026</p>
 
         <div className="space-y-10 text-[15px] leading-relaxed text-[#1d1d1f]">
           <section>
