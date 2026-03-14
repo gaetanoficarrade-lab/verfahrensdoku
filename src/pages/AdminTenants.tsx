@@ -266,7 +266,7 @@ const AdminTenants = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Unterkonten</h1>
-          <p className="text-sm text-muted-foreground mt-1">Verwaltung aller Kanzleien und Berater</p>
+          <p className="text-sm text-muted-foreground mt-1"></p>
         </div>
         <Button onClick={openCreate} className="gap-2">
           <Plus className="h-4 w-4" />
