@@ -48,7 +48,7 @@ export default function BillingSettings() {
         currentClients: clientsRes.count || 0,
         currentProjects: projectsRes.count || 0,
       });
-      setAllPlans((plansRes.data || []) as Plan[]);
+      
       setLoading(false);
     };
     load();
