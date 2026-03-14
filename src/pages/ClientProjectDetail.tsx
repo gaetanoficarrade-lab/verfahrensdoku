@@ -61,14 +61,14 @@ export default function ClientProjectDetail() {
     const [projRes, chapRes, onbRes] = await Promise.all([
       supabase.from('projects').select('id, name, status, workflow_status, client_id').eq('id', id).single(),
       supabase.from('chapter_data').select('id, chapter_key, status, client_notes, editor_text, generated_text').eq('project_id', id),
-      supabase.from('project_onboarding').select('id, answers, completed').eq('project_id', id).maybeSingle(),
+      supabase.from('project_onboarding').select('id, answers, completed_at').eq('project_id', id).maybeSingle(),
     ]);
     setProject(projRes.data);
     setChapters(chapRes.data || []);
     const onb = onbRes.data;
     setAnswers((onb?.answers as OnboardingAnswers) || {});
     setOnboardingId(onb?.id || null);
-    const isComplete = onb?.completed === true;
+    const isComplete = !!onb?.completed_at;
     setOnboardingComplete(isComplete);
     // Auto-show onboarding if not completed
     if (!isComplete && onb) {

@@ -454,6 +454,17 @@ CREATE POLICY "Project onboarding tenant access" ON public.project_onboarding
     ) OR public.has_role(auth.uid(), 'super_admin')
   );
 
+-- Client users can read and update their own project onboarding
+CREATE POLICY "Client users access own onboarding" ON public.project_onboarding
+  FOR ALL TO authenticated
+  USING (
+    project_id IN (
+      SELECT p.id FROM public.projects p
+      JOIN public.clients c ON p.client_id = c.id
+      WHERE c.user_id = auth.uid()
+    )
+  );
+
 -- Chapter Data: follows project access
 CREATE POLICY "Chapter data tenant access" ON public.chapter_data
   FOR ALL TO authenticated
