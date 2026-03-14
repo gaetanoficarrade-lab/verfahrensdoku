@@ -389,7 +389,8 @@ const AdminTenants = () => {
                   </Button>
                 </div>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         </CardContent>
       </Card>
