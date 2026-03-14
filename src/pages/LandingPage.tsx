@@ -180,11 +180,21 @@ export default function LandingPage() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="text-sm sm:text-base font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4"
+          >
+            Das erste vollumfängliche VD-Tool im DACH-Raum
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.15 }}
             className="text-lg sm:text-xl lg:text-2xl text-[#86868b] max-w-2xl mx-auto mb-12 leading-relaxed"
           >
-            gobdsuite erstellt GoBD-konforme Verfahrensdokumentationen per KI –
-            vollautomatisch, prüfungssicher und mit einem Klick als PDF.
+            gobdsuite erstellt GoBD-konforme Verfahrensdokumentationen –
+            prüfungssicher, effizient und mit einem Klick als PDF.
+            Für Steuerberater, Freelancer und alle, die ein Business führen.
           </motion.p>
 
           <motion.div
