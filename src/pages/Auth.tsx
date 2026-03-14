@@ -178,6 +178,19 @@ const Auth = () => {
               >
                 {isResetMode ? 'Zurück zur Anmeldung' : 'Passwort vergessen?'}
               </button>
+
+              {!isResetMode && (
+                <p className="text-center text-xs text-muted-foreground pt-2 border-t border-border">
+                  Noch kein Konto?{' '}
+                  <button
+                    type="button"
+                    onClick={() => navigate('/test-starten')}
+                    className="text-primary hover:underline font-medium"
+                  >
+                    7 Tage kostenlos testen
+                  </button>
+                </p>
+              )}
             </form>
           </CardContent>
         </Card>

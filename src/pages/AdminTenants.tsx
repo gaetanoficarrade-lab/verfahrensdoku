@@ -190,11 +190,10 @@ const AdminTenants = () => {
       max_team_members: form.max_team_members_unlimited ? null : form.max_team_members,
     };
 
-    // Auto-set trialing for new tenants (all plans)
-    if (!editingTenant && !form.is_free) {
+    // If trial_active is set, ensure trialing status
+    if (!editingTenant && form.trial_active && !form.is_free) {
       payload.subscription_status = 'trialing';
       payload.trial_ends_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-      payload.trial_active = true;
     }
 
     if (editingTenant) {
