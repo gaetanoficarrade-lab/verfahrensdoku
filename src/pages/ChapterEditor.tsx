@@ -175,9 +175,10 @@ export default function ChapterEditor() {
         hasLoadedRef.current = true;
         setEditorText(chData.editor_text || chData.generated_text || '');
         setStatus(chData.status || 'empty');
-        setSavedPrecheckHints(
-          Array.isArray(chData.client_precheck_hints) ? chData.client_precheck_hints : []
-        );
+        const hints = Array.isArray(chData.client_precheck_hints) ? chData.client_precheck_hints : [];
+        setSavedPrecheckHints(hints);
+        // If precheck was already done (hints exist), allow submission
+        if (hints.length > 0) setPrecheckDone(true);
 
         const { data: filesData } = await supabase
           .from('chapter_files')
