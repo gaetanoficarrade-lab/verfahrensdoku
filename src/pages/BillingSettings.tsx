@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { CreditCard, Loader2, ArrowUpCircle, AlertTriangle } from 'lucide-react';
+import { CreditCard, Loader2, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+
 import { HelpTooltip } from '@/components/HelpTooltip';
 
 interface TenantPlan {
@@ -19,29 +18,21 @@ interface TenantPlan {
   currentProjects: number;
 }
 
-interface Plan {
-  id: string;
-  name: string;
-  max_clients: number;
-  max_projects: number;
-  price_monthly: number;
-}
 
 export default function BillingSettings() {
-  const { effectiveTenantId, user } = useAuthContext();
-  const { toast } = useToast();
+  const { effectiveTenantId } = useAuthContext();
   const [loading, setLoading] = useState(true);
   const [tenantPlan, setTenantPlan] = useState<TenantPlan | null>(null);
-  const [allPlans, setAllPlans] = useState<Plan[]>([]);
-  const [requesting, setRequesting] = useState(false);
+
+
 
   useEffect(() => {
     if (!effectiveTenantId) return;
     const load = async () => {
       setLoading(true);
-      const [tenantRes, plansRes, clientsRes, projectsRes] = await Promise.all([
+      const [tenantRes, clientsRes, projectsRes] = await Promise.all([
         supabase.from('tenants').select('plan_id, trial_ends_at, plans(name, max_clients, max_projects, price_monthly)').eq('id', effectiveTenantId).single(),
-        supabase.from('plans').select('*').order('price_monthly'),
+        
         supabase.from('clients').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId),
         supabase.from('projects').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId),
       ]);
@@ -55,7 +46,7 @@ export default function BillingSettings() {
         currentClients: clientsRes.count || 0,
         currentProjects: projectsRes.count || 0,
       });
-      setAllPlans((plansRes.data || []) as Plan[]);
+      
       setLoading(false);
     };
     load();
@@ -65,18 +56,6 @@ export default function BillingSettings() {
     ? Math.max(0, Math.ceil((new Date(tenantPlan.trialEndsAt).getTime() - Date.now()) / 86400000))
     : null;
 
-  const handleUpgradeRequest = async (planName: string) => {
-    setRequesting(true);
-    // Create notification for super_admin
-    await supabase.from('notifications').insert({
-      user_id: user?.id,
-      title: 'Upgrade angefragt',
-      message: `Lizenznehmer hat ein Upgrade auf "${planName}" angefragt.`,
-      link: '/admin/tenants',
-    });
-    toast({ title: 'Upgrade angefragt', description: 'Der Administrator wurde benachrichtigt und wird sich bei Ihnen melden.' });
-    setRequesting(false);
-  };
 
   if (loading) {
     return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
@@ -142,33 +121,6 @@ export default function BillingSettings() {
         </CardContent>
       </Card>
 
-      <div>
-        <h2 className="text-lg font-semibold text-foreground mb-3">Verfügbare Pläne</h2>
-        <div className="grid gap-4 md:grid-cols-3">
-          {allPlans.map(plan => (
-            <Card key={plan.id} className={plan.name === tenantPlan?.planName ? 'border-primary' : ''}>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">{plan.name}</CardTitle>
-                <CardDescription>{plan.price_monthly.toFixed(2)} € / Monat</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="text-sm text-muted-foreground space-y-1">
-                  <p>• {plan.max_clients} Mandanten</p>
-                  <p>• {plan.max_projects} Projekte</p>
-                </div>
-                {plan.name === tenantPlan?.planName ? (
-                  <Badge>Aktueller Plan</Badge>
-                ) : (
-                  <Button variant="outline" size="sm" className="w-full" disabled={requesting} onClick={() => handleUpgradeRequest(plan.name)}>
-                    <ArrowUpCircle className="h-4 w-4 mr-1" />
-                    Upgrade anfragen
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
 
       <Card>
         <CardHeader>
