@@ -152,6 +152,8 @@ export default function BrandingSettings() {
         menu_text_color: (settings as any).menu_text_color || '',
         brand_text_color: (settings as any).brand_text_color || '',
         sidebar_bg_color: (settings as any).sidebar_bg_color || '',
+        menu_active_color: (settings as any).menu_active_color || '',
+        menu_active_text_color: (settings as any).menu_active_text_color || '',
         font_family: (settings as any).font_family || '',
         custom_css: (settings as any).custom_css || '',
         address: settings.address || '',
