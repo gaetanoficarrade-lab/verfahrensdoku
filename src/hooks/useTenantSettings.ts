@@ -11,7 +11,7 @@ export interface TenantSettings {
   button_text_color: string | null;
   menu_text_color: string | null;
   brand_text_color: string | null;
-  font_family: string | null;
+  sidebar_bg_color: string | null;
   custom_css: string | null;
   address: string | null;
   phone: string | null;
