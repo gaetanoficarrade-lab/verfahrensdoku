@@ -300,6 +300,7 @@ export default function ProjectDetail() {
         answers,
         isFinal: true,
         versions: allVersionEntries,
+        watermarkText: pdfWatermark,
       });
       doc.save(`${companyName || 'Verfahrensdokumentation'}_V${versionLabel}.pdf`);
 
