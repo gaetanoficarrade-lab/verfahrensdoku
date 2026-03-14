@@ -141,7 +141,7 @@ export function AppSidebar() {
           )}
           {!collapsed && (
             <div className="flex flex-col">
-              <span className="text-sm font-bold text-sidebar-foreground">{brandName}</span>
+              <span className="text-sm font-bold text-amber-400">{brandName}</span>
               <span className="text-xs text-sidebar-foreground/60">
                 {showAdmin ? 'Super-Admin' : isClient ? 'Mandant' : 'Berater'}
               </span>
