@@ -72,6 +72,7 @@ const App = () => (
               <Route path="/impressum" element={<Impressum />} />
               <Route path="/datenschutz" element={<Datenschutz />} />
               <Route path="/agb" element={<AGB />} />
+              <Route path="/avv" element={<AVV />} />
               <Route path="/register" element={<Register />} />
               <Route path="/set-password" element={<SetPassword />} />
               <Route path="/client-register" element={<ClientRegister />} />
