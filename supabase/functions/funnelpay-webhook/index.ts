@@ -258,8 +258,22 @@ serve(async (req) => {
 
     // ─── Event Handlers ───
 
+    // Helper: activate a trialing tenant (trial → active)
+    const activateTenant = async (tenantId: string, planName: string) => {
+      const isSolo = planName === "solo";
+      await supabaseAdmin
+        .from("tenants")
+        .update({
+          subscription_status: "active",
+          trial_active: false,
+          solo_expires_at: isSolo ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() : null,
+        })
+        .eq("id", tenantId);
+    };
+
     switch (eventType) {
       case "checkout.session.completed": {
+        // Solo: Einmalzahlung bestätigt → Account aktivieren
         const { productId, productName } = getProductInfo();
         const planName = detectPlan(productId, productName);
         if (!planName) {
@@ -271,11 +285,24 @@ serve(async (req) => {
           break;
         }
         const tenantId = await findOrCreateTenant(planName);
+        
+        // If tenant already exists and is trialing, activate
+        const { data: existingTenant } = await supabaseAdmin
+          .from("tenants")
+          .select("subscription_status")
+          .eq("id", tenantId)
+          .single();
+        
+        if (planName === "solo" && existingTenant?.subscription_status === "trialing") {
+          await activateTenant(tenantId, planName);
+        }
+        
         await createUserAndInvite(tenantId, planName);
         break;
       }
 
       case "customer.subscription.created": {
+        // Berater/Agentur: Abo aktiviert → Account aktivieren
         const { productId, productName } = getProductInfo();
         const planName = detectPlan(productId, productName);
         if (!planName) {
@@ -287,6 +314,18 @@ serve(async (req) => {
           break;
         }
         const tenantId = await findOrCreateTenant(planName);
+        
+        // If tenant already exists and is trialing, activate
+        const { data: existingTenant2 } = await supabaseAdmin
+          .from("tenants")
+          .select("subscription_status")
+          .eq("id", tenantId)
+          .single();
+        
+        if ((planName === "berater" || planName === "agentur") && existingTenant2?.subscription_status === "trialing") {
+          await activateTenant(tenantId, planName);
+        }
+        
         await createUserAndInvite(tenantId, planName);
         break;
       }
