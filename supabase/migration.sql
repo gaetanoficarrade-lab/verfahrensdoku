@@ -465,14 +465,20 @@ CREATE POLICY "Client users access own onboarding" ON public.project_onboarding
     )
   );
 
--- Chapter Data: follows project access
+-- Chapter Data: follows project access (tenant + client)
 CREATE POLICY "Chapter data tenant access" ON public.chapter_data
   FOR ALL TO authenticated
   USING (
     project_id IN (
       SELECT id FROM public.projects
       WHERE tenant_id = public.get_user_tenant_id(auth.uid())
-    ) OR public.has_role(auth.uid(), 'super_admin')
+    )
+    OR project_id IN (
+      SELECT p.id FROM public.projects p
+      JOIN public.clients c ON p.client_id = c.id
+      WHERE c.user_id = auth.uid()
+    )
+    OR public.has_role(auth.uid(), 'super_admin')
   );
 
 -- Chapter Files: follows chapter access
