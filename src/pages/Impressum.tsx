@@ -17,33 +17,70 @@ export default function Impressum() {
       </nav>
 
       <main className="max-w-3xl mx-auto px-6 py-16">
-        <h1 className="text-3xl font-bold mb-8">Impressum</h1>
+        <h1 className="text-3xl font-bold mb-12">Impressum</h1>
 
-        <div className="prose prose-neutral max-w-none text-[#86868b] space-y-6">
-          <p>
-            <strong className="text-[#1d1d1f]">Angaben gemäß § 5 TMG</strong>
-          </p>
-          <p>
-            gobdsuite<br />
-            [Dein vollständiger Name / Firmenname]<br />
-            [Straße und Hausnummer]<br />
-            [PLZ Ort]
-          </p>
-          <p>
-            <strong className="text-[#1d1d1f]">Kontakt</strong><br />
-            E-Mail: [deine@email.de]<br />
-            Telefon: [Telefonnummer]
-          </p>
-          <p>
-            <strong className="text-[#1d1d1f]">Umsatzsteuer-ID</strong><br />
-            Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG:<br />
-            [USt-IdNr.]
-          </p>
-          <p>
-            <strong className="text-[#1d1d1f]">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</strong><br />
-            [Name]<br />
-            [Adresse]
-          </p>
+        <div className="space-y-10 text-[#86868b] leading-relaxed">
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Angaben gemäß § 5 TMG</h2>
+            <p>
+              Gaetano Ficarra<br />
+              Marketing-Systemberater für Selbstständige
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Anschrift</h2>
+            <p>
+              Elverdisser Str. 51<br />
+              33729 Bielefeld<br />
+              Deutschland
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Kontakt</h2>
+            <p>
+              WhatsApp: 0152 23856537<br />
+              E-Mail: kontakt@gaetanoficarra.de
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Berufsbezeichnung</h2>
+            <p>
+              Marketing-Systemberater<br />
+              Zertifizierter HighLevel Admin
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Streitschlichtung</h2>
+            <p>
+              Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{' '}
+              <a
+                href="https://ec.europa.eu/consumers/odr/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#e8a91a] hover:text-[#d49b15] underline"
+              >
+                https://ec.europa.eu/consumers/odr/
+              </a>
+            </p>
+            <p className="mt-3">
+              Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
+              Verbraucherschlichtungsstelle teilzunehmen.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Haftung für Inhalte</h2>
+            <p>
+              Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach den
+              allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht
+              verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen
+              zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+            </p>
+          </section>
         </div>
       </main>
     </div>
