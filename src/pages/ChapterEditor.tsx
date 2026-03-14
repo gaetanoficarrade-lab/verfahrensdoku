@@ -162,6 +162,9 @@ interface ChapterVersion {
   editor_text: string;
   changed_by: string;
   created_at: string;
+  change_reason?: string | null;
+  version_number?: number;
+  change_type?: string;
   profiles?: { first_name: string; last_name: string } | null;
 }
 
@@ -207,6 +210,9 @@ export default function ChapterEditor() {
   const [onboardingAnswers, setOnboardingAnswers] = useState<Record<string, any> | null>(null);
   const [editorTextSaving, setEditorTextSaving] = useState(false);
   const [savedPrecheckHints, setSavedPrecheckHints] = useState<string[]>([]);
+  const [changeReason, setChangeReason] = useState('');
+  const [showChangeReasonDialog, setShowChangeReasonDialog] = useState(false);
+  const [pendingSaveAction, setPendingSaveAction] = useState<'save' | 'approve' | null>(null);
 
   // Real-time precheck state
   const [precheckLoading, setPrecheckLoading] = useState(false);
@@ -384,11 +390,22 @@ export default function ChapterEditor() {
     if (!chapterDataId) return;
     const { data } = await supabase
       .from('chapter_versions')
-      .select('id, editor_text, changed_by, created_at, profiles:changed_by(first_name, last_name)')
+      .select('id, editor_text, changed_by, created_at, change_reason, version_number, change_type, profiles:changed_by(first_name, last_name)')
       .eq('chapter_data_id', chapterDataId)
       .order('created_at', { ascending: false });
     setVersions((data || []) as unknown as ChapterVersion[]);
     setVersionsOpen(true);
+  };
+
+  const getNextVersionNumber = async (): Promise<number> => {
+    if (!chapterDataId) return 1;
+    const { data } = await supabase
+      .from('chapter_versions')
+      .select('version_number')
+      .eq('chapter_data_id', chapterDataId)
+      .order('version_number', { ascending: false })
+      .limit(1);
+    return (data?.[0]?.version_number || 0) + 1;
   };
 
   const restoreVersion = (text: string) => {
@@ -569,7 +586,22 @@ export default function ChapterEditor() {
         body: { project_id: projectId, chapter_key: chapterKey, client_notes: notes },
       });
       if (error) throw error;
-      setEditorText(data.generated_text || '');
+      const generatedText = data.generated_text || '';
+      setEditorText(generatedText);
+
+      // Create version entry for AI generation
+      if (generatedText.trim()) {
+        const nextVersion = await getNextVersionNumber();
+        await supabase.from('chapter_versions').insert({
+          chapter_data_id: chapterDataId,
+          editor_text: generatedText,
+          changed_by: user?.id,
+          version_number: nextVersion,
+          change_type: 'ai_generated',
+          change_reason: 'KI-Textgenerierung',
+        });
+      }
+
       logAudit('text_generated', 'chapter', chapterDataId!, { chapter_key: chapterKey, project_id: projectId });
       toast({ title: 'Text generiert', description: `Qualitätsscore: ${data.quality_score || 0}/100` });
     } catch (err: any) {
@@ -579,25 +611,45 @@ export default function ChapterEditor() {
     }
   };
 
-  const handleSaveEditorText = async () => {
+  const handleSaveEditorText = async (reason?: string) => {
     if (!chapterDataId) return;
     setEditorTextSaving(true);
 
     // Save version before updating
     if (editorText.trim()) {
+      const nextVersion = await getNextVersionNumber();
+      const isInitial = nextVersion === 1;
       await supabase.from('chapter_versions').insert({
         chapter_data_id: chapterDataId,
         editor_text: editorText,
         changed_by: user?.id,
+        version_number: nextVersion,
+        change_type: isInitial ? 'initial' : 'edit',
+        change_reason: reason || null,
       });
     }
 
     const { error } = await supabase.from('chapter_data').update({ editor_text: editorText }).eq('id', chapterDataId);
     setEditorTextSaving(false);
+    setChangeReason('');
+    setShowChangeReasonDialog(false);
+    setPendingSaveAction(null);
     if (error) {
       toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
     } else {
       toast({ title: 'Gespeichert', description: 'Editor-Text wurde gespeichert.' });
+    }
+  };
+
+  const handleSaveClick = async () => {
+    // Check if this is a subsequent version (not initial)
+    if (!chapterDataId) return;
+    const nextVersion = await getNextVersionNumber();
+    if (nextVersion > 1) {
+      setPendingSaveAction('save');
+      setShowChangeReasonDialog(true);
+    } else {
+      handleSaveEditorText();
     }
   };
 
@@ -979,7 +1031,7 @@ export default function ChapterEditor() {
                   )}
                 </div>
                 {status !== 'advisor_approved' && (
-                  <Button variant="outline" onClick={handleSaveEditorText} disabled={editorTextSaving}>
+                  <Button variant="outline" onClick={handleSaveClick} disabled={editorTextSaving}>
                     {editorTextSaving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
                     Text speichern
                   </Button>
@@ -1018,10 +1070,26 @@ export default function ChapterEditor() {
                 <Card key={v.id}>
                   <CardContent className="py-3 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(v.created_at).toLocaleString('de-DE')}
-                        {v.profiles && ` • ${(v.profiles as any)?.first_name || ''} ${(v.profiles as any)?.last_name || ''}`}
-                      </span>
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className="text-xs">
+                            V{v.version_number || '?'}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(v.created_at).toLocaleString('de-DE')}
+                          </span>
+                          {v.profiles && (
+                            <span className="text-xs text-muted-foreground">
+                              • {(v.profiles as any)?.first_name || ''} {(v.profiles as any)?.last_name || ''}
+                            </span>
+                          )}
+                        </div>
+                        {v.change_reason && (
+                          <p className="text-xs text-muted-foreground italic pl-1">
+                            Grund: {v.change_reason}
+                          </p>
+                        )}
+                      </div>
                       <Button variant="outline" size="sm" onClick={() => restoreVersion(v.editor_text)}>
                         Wiederherstellen
                       </Button>
@@ -1033,6 +1101,41 @@ export default function ChapterEditor() {
                 </Card>
               ))
             )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Change Reason Dialog */}
+      <Dialog open={showChangeReasonDialog} onOpenChange={(open) => {
+        if (!open) { setShowChangeReasonDialog(false); setPendingSaveAction(null); setChangeReason(''); }
+      }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Änderung speichern</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <p className="text-sm text-muted-foreground">
+              Optional: Beschreiben Sie den Grund der Änderung. Dieser erscheint in der Änderungshistorie des PDFs.
+            </p>
+            <Input
+              value={changeReason}
+              onChange={e => setChangeReason(e.target.value)}
+              placeholder="z.B. Softwarewechsel, Prozessanpassung, Korrektur"
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  handleSaveEditorText(changeReason || undefined);
+                }
+              }}
+            />
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => handleSaveEditorText()}>
+                Ohne Grund speichern
+              </Button>
+              <Button onClick={() => handleSaveEditorText(changeReason || undefined)} disabled={editorTextSaving}>
+                {editorTextSaving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                Speichern
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

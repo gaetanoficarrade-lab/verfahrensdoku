@@ -1029,7 +1029,10 @@ CREATE TABLE public.chapter_versions (
   chapter_data_id UUID REFERENCES public.chapter_data(id) ON DELETE CASCADE,
   editor_text TEXT,
   changed_by UUID REFERENCES auth.users(id),
-  created_at TIMESTAMPTZ DEFAULT now()
+  created_at TIMESTAMPTZ DEFAULT now(),
+  change_reason TEXT,
+  version_number INTEGER NOT NULL DEFAULT 1,
+  change_type TEXT NOT NULL DEFAULT 'edit'
 );
 
 ALTER TABLE public.chapter_versions ENABLE ROW LEVEL SECURITY;

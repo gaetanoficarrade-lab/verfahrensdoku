@@ -16,6 +16,7 @@ interface VersionEntry {
   date: string;
   changedBy: string;
   description: string;
+  chapter?: string;
 }
 
 interface PdfParams {
@@ -457,6 +458,8 @@ export function generateVerfahrensdokumentation({
     ['Steuernummer', taxNumber || '–'],
     ['Rechtsform', answers?.legal_form || '–'],
     ['Branche', answers?.industry || '–'],
+    ['Dokumentversion', currentVersion],
+    ['Status', statusLabel],
   ];
 
   autoTable(doc, {
@@ -520,17 +523,22 @@ export function generateVerfahrensdokumentation({
   doc.text('Änderungshistorie', MARGIN, 30);
 
   const versionRows = versions.length > 0
-    ? versions.map(v => [v.version, v.date, v.changedBy, v.description])
-    : [['1.0', today, responsiblePerson || '–', 'Erstversion']];
+    ? versions.map(v => [v.version, v.date, v.chapter || '–', v.description, v.changedBy])
+    : [['1.0', today, 'Erstversion', 'Erstellt', responsiblePerson || '–']];
 
   autoTable(doc, {
     startY: 42,
-    head: [['Version', 'Datum', 'Geändert von', 'Beschreibung']],
+    head: [['Version', 'Datum', 'Kapitel', 'Beschreibung der Änderung', 'Geändert von']],
     body: versionRows,
     margin: { left: MARGIN, right: MARGIN },
     tableWidth: contentWidth,
-    styles: { font: 'helvetica', fontSize: 9, cellPadding: 3, textColor: [60, 60, 60], lineColor: [200, 200, 200], lineWidth: 0.2 },
-    headStyles: { fillColor: [240, 240, 245], textColor: [24, 24, 27], fontStyle: 'bold' },
+    styles: { font: 'helvetica', fontSize: 8, cellPadding: 3, textColor: [60, 60, 60], lineColor: [200, 200, 200], lineWidth: 0.2 },
+    headStyles: { fillColor: [240, 240, 245], textColor: [24, 24, 27], fontStyle: 'bold', fontSize: 8 },
+    columnStyles: {
+      0: { cellWidth: 18 },
+      1: { cellWidth: 25 },
+      4: { cellWidth: 35 },
+    },
   });
 
   // === TABLE OF CONTENTS ===
