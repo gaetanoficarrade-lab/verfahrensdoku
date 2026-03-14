@@ -16,8 +16,8 @@ export default function Impressum() {
         </div>
       </nav>
 
-      <main className="max-w-3xl mx-auto px-6 py-16">
-        <h1 className="text-3xl font-bold mb-12">Impressum</h1>
+        <h1 className="text-3xl font-bold mb-4">Impressum</h1>
+        <p className="text-sm text-[#86868b] mb-12">Stand: März 2026</p>
 
         <div className="space-y-10 text-[#86868b] leading-relaxed">
           <section>
