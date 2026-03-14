@@ -112,26 +112,15 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border p-4">
         <div className="flex items-center gap-3">
-          {logoUrl ? (
-            <img
-              src={logoUrl}
-              alt={brandName}
-              className="h-8 w-8 shrink-0 rounded-lg object-contain"
-            />
-          ) : (
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary">
-              <Shield className="h-4 w-4 text-sidebar-primary-foreground" />
-            </div>
-          )}
+          <img
+            src={logoUrl || '/images/logo.png'}
+            alt="Logo"
+            className={`shrink-0 object-contain ${collapsed ? 'h-8 w-8' : 'h-8 max-w-[140px]'}`}
+          />
           {!collapsed && (
-            <div className="flex flex-col">
-              <span className="text-sm font-bold" style={tenantSettings?.brand_text_color ? { color: tenantSettings.brand_text_color } : undefined}>
-                {brandName}
-              </span>
-              <span className="text-xs text-sidebar-foreground/60">
-                {showAdmin ? 'Super-Admin' : isClient ? 'Mandant' : 'Berater'}
-              </span>
-            </div>
+            <span className="text-xs text-sidebar-foreground/60 ml-auto">
+              {showAdmin ? 'Super-Admin' : isClient ? 'Mandant' : 'Berater'}
+            </span>
           )}
         </div>
       </SidebarHeader>
