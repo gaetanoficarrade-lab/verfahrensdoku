@@ -666,6 +666,11 @@ export default function ChapterEditor() {
                   Einreichen
                 </Button>
               </div>
+              {!precheckDone && notes.trim() && (
+                <p className="text-xs text-muted-foreground">
+                  Bitte führen Sie zuerst die KI-Prüfung durch, bevor Sie das Kapitel einreichen.
+                </p>
+              )}
 
               {/* Precheck result */}
               {precheckIsClean && (
