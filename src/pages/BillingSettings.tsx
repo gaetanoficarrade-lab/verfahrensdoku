@@ -32,7 +32,7 @@ export default function BillingSettings() {
     const load = async () => {
       setLoading(true);
       const [tenantRes, clientsRes, projectsRes] = await Promise.all([
-        supabase.from('tenants').select('plan_id, trial_ends_at, subscription_status, plans(name, max_clients, max_projects, price_monthly)').eq('id', effectiveTenantId).single(),
+        supabase.from('tenants').select('plan_id, trial_ends_at, subscription_status, is_free, plans(name, max_clients, max_projects, price_monthly)').eq('id', effectiveTenantId).single(),
         supabase.from('clients').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId),
         supabase.from('projects').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId),
       ]);
@@ -46,6 +46,7 @@ export default function BillingSettings() {
         subscriptionStatus: (tenantRes.data as any)?.subscription_status || null,
         currentClients: clientsRes.count || 0,
         currentProjects: projectsRes.count || 0,
+        isFree: (tenantRes.data as any)?.is_free === true,
       });
       setLoading(false);
     };
