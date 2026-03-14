@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Settings, Palette, Mail, Users, FileText, Globe, ScrollText, Link2, CreditCard, KeyRound } from 'lucide-react';
+import { Settings, Palette, Mail, Users, FileText, Globe, ScrollText, Link2, CreditCard, KeyRound, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTenantPlan } from '@/hooks/useTenantPlan';
 
@@ -21,6 +21,7 @@ const allTabs: TabItem[] = [
   { label: 'Aktivitäts-Log', url: '/settings/activity-log', icon: ScrollText, requiresFn: 'canUseActivityLog' },
   { label: 'Affiliate', url: '/settings/affiliate', icon: Link2, requiresFn: 'canUseAffiliate' },
   { label: 'Sicherheit', url: '/settings/security', icon: KeyRound },
+  { label: 'Hilfe', url: '/help', icon: HelpCircle },
 ];
 
 interface TenantSettingsLayoutProps {

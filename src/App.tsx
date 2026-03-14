@@ -309,7 +309,7 @@ const App = () => (
                 path="/help"
                 element={
                   <ProtectedRoute>
-                    <AppLayout><HelpPage /></AppLayout>
+                    <AppLayout><TenantSettingsLayout><HelpPage /></TenantSettingsLayout></AppLayout>
                   </ProtectedRoute>
                 }
               />
