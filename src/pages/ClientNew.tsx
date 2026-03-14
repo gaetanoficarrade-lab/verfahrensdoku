@@ -14,8 +14,17 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function ClientNew() {
   const { effectiveTenantId, isSuperAdmin } = useAuthContext();
+  const { canCreateClients, isTrialing } = useTrialRestrictions();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Block trial users from creating clients
+  useEffect(() => {
+    if (!canCreateClients && isTrialing) {
+      toast({ title: 'Testmodus', description: 'Im Testmodus können keine eigenen Mandanten angelegt werden.', variant: 'destructive' });
+      navigate('/clients');
+    }
+  }, [canCreateClients, isTrialing]);
   const [saving, setSaving] = useState(false);
   const [limitInfo, setLimitInfo] = useState<{ current: number; max: number } | null>(null);
   const [loadingLimit, setLoadingLimit] = useState(true);
