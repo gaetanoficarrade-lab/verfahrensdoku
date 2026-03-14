@@ -71,7 +71,7 @@ serve(async (req) => {
       });
     }
 
-    const { tenant_id, email } = body;
+    const { tenant_id, email, contact_name } = body;
 
     if (!tenant_id || !email) {
       return new Response(
