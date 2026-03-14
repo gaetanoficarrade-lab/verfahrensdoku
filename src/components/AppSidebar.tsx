@@ -109,12 +109,13 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="border-b border-sidebar-border p-4">
-        <div className="flex items-center justify-start px-4 py-3">
+      <SidebarHeader className="border-b border-sidebar-border">
+        <div style={{ padding: '12px 16px' }}>
           <img
             src={logoUrl || '/images/logo.png'}
             alt="Logo"
-            className={`shrink-0 object-contain ${collapsed ? 'h-8 w-8' : 'w-[180px] h-auto'}`}
+            style={collapsed ? {} : { width: '180px', height: 'auto', display: 'block' }}
+            className={`shrink-0 object-contain ${collapsed ? 'h-8 w-8' : ''}`}
           />
         </div>
       </SidebarHeader>
