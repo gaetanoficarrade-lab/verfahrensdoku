@@ -19,13 +19,6 @@ interface TenantPlan {
   currentProjects: number;
 }
 
-interface Plan {
-  id: string;
-  name: string;
-  max_clients: number;
-  max_projects: number;
-  price_monthly: number;
-}
 
 export default function BillingSettings() {
   const { effectiveTenantId, user } = useAuthContext();
