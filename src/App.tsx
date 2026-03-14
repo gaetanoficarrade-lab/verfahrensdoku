@@ -46,6 +46,7 @@ import AdvisorOverview from "./pages/AdvisorOverview";
 import TemplateSettings from "./pages/TemplateSettings";
 import TenantEmailSettings from "./pages/TenantEmailSettings";
 import AdminWebhookLogs from "./pages/AdminWebhookLogs";
+import TestStarten from "./pages/TestStarten";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
