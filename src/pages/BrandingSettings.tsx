@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useTenantSettings, useSaveTenantSettings, useUploadTenantLogo } from '@/hooks/useTenantSettings';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
