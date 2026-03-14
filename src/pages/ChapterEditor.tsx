@@ -109,6 +109,7 @@ export default function ChapterEditor() {
   // Real-time precheck state
   const [precheckLoading, setPrecheckLoading] = useState(false);
   const [precheckResult, setPrecheckResult] = useState<PrecheckResult | null>(null);
+  const [precheckDone, setPrecheckDone] = useState(false);
 
   // Amendment mode
   const [isAmending, setIsAmending] = useState(false);
