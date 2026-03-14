@@ -110,11 +110,11 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border p-4">
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center py-2">
           <img
             src={logoUrl || '/images/logo.png'}
             alt="Logo"
-            className={`shrink-0 object-contain ${collapsed ? 'h-8 w-8' : 'h-14 w-auto max-w-[200px]'}`}
+            className={`shrink-0 object-contain ${collapsed ? 'h-8 w-8' : 'h-20 w-auto max-w-[220px]'}`}
           />
         </div>
       </SidebarHeader>
