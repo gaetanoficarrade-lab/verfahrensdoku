@@ -85,30 +85,68 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Check if user exists
-    const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers({
-      filter: { email },
-    } as any);
-    const existingUser = existingUsers?.users?.find((u: any) => u.email === email);
+    const normalizedEmail = String(email).trim().toLowerCase();
 
+    const findUserByEmail = async () => {
+      let page = 1;
+      const perPage = 200;
+
+      while (page <= 10) {
+        const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage });
+        if (error) {
+          console.error("listUsers error:", error.message);
+          break;
+        }
+
+        const users = data?.users || [];
+        const found = users.find((u: any) => (u.email || "").toLowerCase() === normalizedEmail);
+        if (found) return found;
+
+        if (users.length < perPage) break;
+        page += 1;
+      }
+
+      return null;
+    };
+
+    let existingUser = await findUserByEmail();
+    let isExistingUser = !!existingUser;
     let userId: string;
 
     if (existingUser) {
       userId = existingUser.id;
     } else {
       const { data: userData, error: createError } = await supabaseAdmin.auth.admin.createUser({
-        email,
+        email: normalizedEmail,
         password: crypto.randomUUID(),
         email_confirm: true,
       });
 
       if (createError) {
-        return new Response(JSON.stringify({ error: createError.message }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        const alreadyRegistered = createError.message?.toLowerCase().includes("already been registered");
+
+        if (!alreadyRegistered) {
+          return new Response(JSON.stringify({ error: createError.message }), {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
+        existingUser = await findUserByEmail();
+        if (!existingUser) {
+          return new Response(JSON.stringify({
+            error: "User exists but could not be resolved by email lookup",
+          }), {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
+        isExistingUser = true;
+        userId = existingUser.id;
+      } else {
+        userId = userData.user.id;
       }
-      userId = userData.user.id;
     }
 
     // Role + Profile in parallel
@@ -122,7 +160,7 @@ serve(async (req) => {
     ]);
 
     // Generate link: use "recovery" for existing users, "invite" for new ones
-    const linkType = existingUser ? "recovery" : "invite";
+    const linkType = isExistingUser ? "recovery" : "invite";
     const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
       type: linkType,
       email,
