@@ -157,6 +157,14 @@ const App = () => (
                 }
               />
               <Route
+                path="/admin/webhook-logs"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminWebhookLogs /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/affiliates"
                 element={
                   <ProtectedRoute requiredRoles={['super_admin']}>
