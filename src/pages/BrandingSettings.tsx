@@ -259,25 +259,7 @@ export default function BrandingSettings() {
     );
   }
 
-  const ColorField = ({ label, field, placeholder, defaultVal }: { label: string; field: keyof FormState; placeholder: string; defaultVal: string }) => (
-    <div className="space-y-2">
-      <Label>{label}</Label>
-      <div className="flex items-center gap-4">
-        <input
-          type="color"
-          value={(form[field] as string) || defaultVal}
-          onChange={(e) => handleChange(field, e.target.value)}
-          className="h-10 w-14 rounded-md border border-input cursor-pointer"
-        />
-        <Input
-          value={form[field] as string}
-          onChange={(e) => handleChange(field, e.target.value)}
-          placeholder={placeholder}
-          className="w-48 font-mono"
-        />
-      </div>
-    </div>
-  );
+
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
