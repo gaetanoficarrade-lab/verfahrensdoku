@@ -134,13 +134,10 @@ serve(async (req) => {
       );
     }
 
-    const chapter = CHAPTER_CONTEXT[chapter_key];
-    if (!chapter) {
-      return new Response(JSON.stringify({ error: "Invalid chapter_key" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const chapter = CHAPTER_CONTEXT[chapter_key] || {
+      title: chapter_key,
+      description: "Auslöser, Durchführung, Nachweis, Aufbewahrung – allgemeine Prozessbeschreibung.",
+    };
 
     // Fetch precheck hints if available
     const { data: chapterData } = await supabase
