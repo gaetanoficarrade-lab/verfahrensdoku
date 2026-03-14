@@ -210,7 +210,6 @@ export default function TestStarten() {
                   <Label htmlFor="privacy" className="text-sm text-muted-foreground leading-tight cursor-pointer">
                     Ich habe die <Link to="/datenschutz" target="_blank" className="text-foreground underline hover:text-primary">Datenschutzerklärung</Link> gelesen und stimme zu.
                   </Label>
-                  </Label>
                 </div>
                 <div className="flex items-start gap-2">
                   <Checkbox
