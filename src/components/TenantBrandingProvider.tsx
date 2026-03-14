@@ -34,13 +34,16 @@ export function TenantBrandingProvider({ children }: { children: React.ReactNode
 
     const hsl = hexToHSL(settings.primary_color);
     if (hsl) {
+      // Set primary color across all relevant CSS variables
       document.documentElement.style.setProperty('--primary', hsl);
       document.documentElement.style.setProperty('--ring', hsl);
+      document.documentElement.style.setProperty('--sidebar-primary', hsl);
     }
 
     return () => {
       document.documentElement.style.removeProperty('--primary');
       document.documentElement.style.removeProperty('--ring');
+      document.documentElement.style.removeProperty('--sidebar-primary');
     };
   }, [settings?.primary_color]);
 
