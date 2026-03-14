@@ -187,6 +187,7 @@ const AdminTenants = () => {
       plan_id: form.plan_id || null,
       is_free: form.is_free,
       trial_active: form.trial_active,
+      max_team_members: form.max_team_members_unlimited ? null : form.max_team_members,
     };
 
     if (editingTenant) {
