@@ -76,7 +76,6 @@ export function AppSidebar() {
   const isTenantAdmin = roles.includes('tenant_admin');
   const items = showAdmin ? adminItems : isClient ? clientItems : tenantItems;
 
-  const brandName = tenantSettings?.brand_name || 'GoBD-Suite';
   const logoUrl = tenantSettings?.logo_url;
 
   const handleSignOut = async () => {

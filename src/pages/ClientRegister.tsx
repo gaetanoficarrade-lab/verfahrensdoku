@@ -134,14 +134,11 @@ const ClientRegister = () => {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full max-w-md">
         <div className="mb-8 text-center">
-          {tenantBranding?.logo_url ? (
-            <img src={tenantBranding.logo_url} alt={tenantBranding.brand_name || 'Logo'} className="mx-auto mb-4 h-14 w-14 rounded-xl object-contain" />
-          ) : (
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary">
-              <Shield className="h-7 w-7 text-primary-foreground" />
-            </div>
-          )}
-          <h1 className="text-2xl font-bold text-foreground">{tenantBranding?.brand_name || 'GoBD-Suite'}</h1>
+          <img
+            src={tenantBranding?.logo_url || '/images/logo.png'}
+            alt="Logo"
+            className="mx-auto mb-4 h-14 object-contain"
+          />
           <p className="mt-1 text-sm text-muted-foreground">Konto erstellen</p>
         </div>
 

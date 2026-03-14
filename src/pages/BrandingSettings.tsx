@@ -338,22 +338,10 @@ export default function BrandingSettings() {
         <TabsContent value="brand" className="space-y-4 mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Firmenname & Logo</CardTitle>
-              <CardDescription>Ersetzen „GoBD-Suite" überall: Navigation, Registrierung, E-Mails</CardDescription>
+              <CardTitle>Logo</CardTitle>
+              <CardDescription>Ihr Logo wird in der Navigation, auf Login-Seiten und in E-Mails angezeigt.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label>Firmenname</Label>
-                <div className="flex items-center gap-2">
-                  <Input value={form.brand_name} onChange={(e) => handleChange('brand_name', e.target.value)} placeholder="z.B. Musterkanzlei GmbH" className="flex-1" />
-                  {form.brand_name && (
-                    <Button variant="ghost" size="sm" onClick={handleResetName} title="Firmenname zurücksetzen">
-                      <RotateCcw className="h-3.5 w-3.5" />
-                    </Button>
-                  )}
-                </div>
-                <p className="text-xs text-muted-foreground">Wird anstelle von "GoBD-Suite" in der Navigation angezeigt.</p>
-              </div>
               <div className="space-y-2">
                 <Label>Logo</Label>
                 <div className="flex items-center gap-4">
