@@ -234,9 +234,8 @@ serve(async (req) => {
           <h2 style="color: #1a1a1a;">Willkommen bei GoBD-Suite</h2>
           <p style="color: #555; font-size: 16px; line-height: 1.6;">${greeting}</p>
           <p style="color: #555; font-size: 16px; line-height: 1.6;">
-            Vielen Dank für Ihren Kauf des <strong>${planLabel}</strong>-Plans. Ihr Zugang ist bereit!
+            Vielen Dank für Ihren Kauf des <strong>${planLabel}</strong>-Plans. Ihr Zugang ist sofort verfügbar!
           </p>
-          ${trialHint}
           <div style="text-align: center; margin: 30px 0;">
             <a href="${inviteLink}" style="background-color: #1a1a1a; color: #ffffff; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">
               Zugang einrichten
