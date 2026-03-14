@@ -37,23 +37,42 @@ export default function AdvisorOverview() {
     if (!effectiveTenantId) return;
     const load = async () => {
       setLoading(true);
-      const { data: clientsData } = await supabase
+      const { data: clientsData, error: clientsError } = await supabase
         .from('clients')
-        .select('id, company')
+        .select('id, company, status')
         .eq('tenant_id', effectiveTenantId);
+
+      if (clientsError) {
+        console.error('Error loading clients:', clientsError);
+      }
 
       if (!clientsData) { setLoading(false); return; }
 
+      // Fetch all projects for this tenant in one query
+      const { data: allProjects } = await supabase
+        .from('projects')
+        .select('id, name, updated_at, created_at, client_id')
+        .eq('tenant_id', effectiveTenantId);
+
+      // Fetch all chapter_data for these projects in one query
+      const projectIds = (allProjects || []).map(p => p.id);
+      let allChapters: any[] = [];
+      if (projectIds.length > 0) {
+        const { data: chaptersData } = await supabase
+          .from('chapter_data')
+          .select('project_id, status, updated_at')
+          .in('project_id', projectIds);
+        allChapters = chaptersData || [];
+      }
+
       const overviews: ClientOverview[] = [];
       for (const client of clientsData) {
-        const { data: projects } = await supabase
-          .from('projects')
-          .select('id, name, updated_at')
-          .eq('client_id', client.id)
-          .order('created_at', { ascending: false })
-          .limit(1);
+        // Find the latest project for this client
+        const clientProjects = (allProjects || []).filter(p => p.client_id === client.id);
+        const project = clientProjects.sort((a, b) => 
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        )[0];
 
-        const project = projects?.[0];
         if (!project) {
           overviews.push({
             id: client.id,
@@ -69,15 +88,11 @@ export default function AdvisorOverview() {
           continue;
         }
 
-        const { data: chapters } = await supabase
-          .from('chapter_data')
-          .select('status, updated_at')
-          .eq('project_id', project.id);
-
-        const total = chapters?.length || 0;
-        const approved = chapters?.filter(c => c.status === 'advisor_approved' || c.status === 'approved').length || 0;
-        const submitted = chapters?.filter(c => c.status === 'client_submitted').length || 0;
-        const lastUpdate = chapters?.reduce((latest: string | null, c: any) => {
+        const chapters = allChapters.filter(c => c.project_id === project.id);
+        const total = chapters.length;
+        const approved = chapters.filter(c => c.status === 'advisor_approved' || c.status === 'approved').length;
+        const submitted = chapters.filter(c => c.status === 'client_submitted').length;
+        const lastUpdate = chapters.reduce((latest: string | null, c: any) => {
           if (!latest || (c.updated_at && c.updated_at > latest)) return c.updated_at;
           return latest;
         }, project.updated_at) || project.updated_at;
@@ -92,8 +107,6 @@ export default function AdvisorOverview() {
         } else if (submitted > 0) {
           ampel = 'yellow';
         } else if (daysSinceActivity >= 14) {
-          ampel = 'red';
-        } else if (total === 0) {
           ampel = 'red';
         } else {
           ampel = 'yellow';
