@@ -123,7 +123,7 @@ const AdminTenants = () => {
         html: buildInviteHtml(greeting, displayName, inviteLink),
       },
     });
-    if (emailError) throw emailError;
+    if (emailError) throw new Error(await formatFunctionError(emailError));
     if (emailData?.error) throw new Error(emailData.error);
   };
 
