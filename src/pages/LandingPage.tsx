@@ -283,14 +283,14 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           <AnimatedSection className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div variants={fadeUp}>
-              <p className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">KI-gestützt</p>
+              <p className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">Einzigartig im DACH-Raum</p>
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] mb-6">
                 Die Software, die deine{' '}
                 <span className="text-[#e8a91a]">Verfahrensdokumentation</span>{' '}
                 revolutioniert.
               </h2>
               <p className="text-xl text-[#86868b] leading-relaxed">
-                Für Steuerberater, Kanzleien und Unternehmen, die keine Zeit mehr mit manueller Dokumentation verschwenden wollen.
+                Für Steuerberater, Freelancer und alle Unternehmer, die keine Zeit mehr mit manueller Dokumentation verschwenden wollen.
               </p>
             </motion.div>
             <motion.div variants={fadeUp}>
