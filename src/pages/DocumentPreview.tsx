@@ -138,20 +138,21 @@ export default function DocumentPreview() {
       )}
 
       {/* Cover page simulation */}
-      <div className="bg-zinc-900 text-white rounded-lg p-12 text-center space-y-4 relative overflow-hidden print:bg-white print:text-black print:border print:border-border print:rounded-none">
+      <div className="bg-white text-foreground rounded-lg p-12 text-center space-y-4 relative overflow-hidden border border-border print:rounded-none">
         {!isFinal && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10 print:opacity-5">
             <span className="text-7xl font-bold rotate-[-30deg] text-red-500">ENTWURF</span>
           </div>
         )}
-        <FileText className="h-12 w-12 mx-auto opacity-50" />
-        <h1 className="text-3xl font-bold">Verfahrensdokumentation</h1>
-        <p className="text-lg opacity-80">nach GoBD</p>
-        <div className="w-16 h-px bg-zinc-500 mx-auto print:bg-border" />
-        <p className="text-xl font-semibold">{companyName}</p>
-        <p className="opacity-70">{projectName}</p>
-        <p className="text-sm opacity-50">Erstellt am: {today}</p>
-        <Badge className={`mt-4 ${isFinal ? 'bg-green-600' : 'bg-orange-600'}`}>
+        <FileText className="h-12 w-12 mx-auto text-muted-foreground/50" />
+        <h1 className="text-3xl font-bold text-zinc-900">Verfahrensdokumentation</h1>
+        <p className="text-lg text-zinc-500">nach GoBD</p>
+        <div className="w-16 h-px bg-zinc-300 mx-auto" />
+        <p className="text-xl font-semibold text-zinc-900">{companyName}</p>
+        <p className="text-zinc-500">{projectName}</p>
+        <p className="text-sm text-zinc-400">Erstellt am: {today}</p>
+        <p className="text-sm text-zinc-400">Version 1.0</p>
+        <Badge className={`mt-4 ${isFinal ? 'bg-green-600' : 'bg-orange-600'} text-white`}>
           {isFinal ? 'FINAL' : 'ENTWURF'}
         </Badge>
       </div>
