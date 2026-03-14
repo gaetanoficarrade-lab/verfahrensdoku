@@ -51,21 +51,33 @@ export default function ClientProjectDetail() {
   const [loading, setLoading] = useState(true);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [openChapters, setOpenChapters] = useState<string[]>(['1']);
+  const [onboardingId, setOnboardingId] = useState<string | null>(null);
+  const [onboardingComplete, setOnboardingComplete] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  const fetchData = async () => {
+    if (!id) return;
+    setLoading(true);
+    const [projRes, chapRes, onbRes] = await Promise.all([
+      supabase.from('projects').select('id, name, status, workflow_status, client_id').eq('id', id).single(),
+      supabase.from('chapter_data').select('id, chapter_key, status, client_notes, editor_text, generated_text').eq('project_id', id),
+      supabase.from('project_onboarding').select('id, answers, completed').eq('project_id', id).maybeSingle(),
+    ]);
+    setProject(projRes.data);
+    setChapters(chapRes.data || []);
+    const onb = onbRes.data;
+    setAnswers((onb?.answers as OnboardingAnswers) || {});
+    setOnboardingId(onb?.id || null);
+    const isComplete = onb?.completed === true;
+    setOnboardingComplete(isComplete);
+    // Auto-show onboarding if not completed
+    if (!isComplete && onb) {
+      setShowOnboarding(true);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    if (!id) return;
-    const fetchData = async () => {
-      setLoading(true);
-      const [projRes, chapRes, onbRes] = await Promise.all([
-        supabase.from('projects').select('id, name, status, workflow_status, client_id').eq('id', id).single(),
-        supabase.from('chapter_data').select('id, chapter_key, status, client_notes, editor_text, generated_text').eq('project_id', id),
-        supabase.from('project_onboarding').select('answers').eq('project_id', id).maybeSingle(),
-      ]);
-      setProject(projRes.data);
-      setChapters(chapRes.data || []);
-      setAnswers((onbRes.data?.answers as OnboardingAnswers) || {});
-      setLoading(false);
-    };
     fetchData();
   }, [id]);
 
