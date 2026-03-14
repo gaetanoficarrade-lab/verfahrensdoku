@@ -225,6 +225,7 @@ export default function BrandingSettings() {
       logAudit('settings_updated', 'tenant_settings', effectiveTenantId || undefined);
       toast.success('Einstellungen gespeichert');
     } catch (err: any) {
+      console.error('BrandingSave error:', err, JSON.stringify(err));
       toast.error('Fehler beim Speichern: ' + err.message);
     }
   };
