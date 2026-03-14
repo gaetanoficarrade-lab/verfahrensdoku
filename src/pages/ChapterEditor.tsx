@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, AlertTriangle, CheckCircle2, Mic, PenLine, Search, History, MessageSquare, FileText } from 'lucide-react';
+import { ArrowLeft, Loader2, Upload, X, FileIcon, Send, ShieldCheck, Sparkles, AlertTriangle, CheckCircle2, Mic, PenLine, Search, History, MessageSquare, FileText, Check } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { logAudit } from '@/lib/auditLog';
 import { triggerWebhook } from '@/lib/webhookTrigger';
