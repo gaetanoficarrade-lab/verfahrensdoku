@@ -52,6 +52,7 @@ import LandingPage from "./pages/LandingPage";
 import Impressum from "./pages/Impressum";
 import Datenschutz from "./pages/Datenschutz";
 import AGB from "./pages/AGB";
+import AVV from "./pages/AVV";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -71,6 +72,7 @@ const App = () => (
               <Route path="/impressum" element={<Impressum />} />
               <Route path="/datenschutz" element={<Datenschutz />} />
               <Route path="/agb" element={<AGB />} />
+              <Route path="/avv" element={<AVV />} />
               <Route path="/register" element={<Register />} />
               <Route path="/set-password" element={<SetPassword />} />
               <Route path="/client-register" element={<ClientRegister />} />

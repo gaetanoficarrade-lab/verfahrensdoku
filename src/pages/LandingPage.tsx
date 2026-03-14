@@ -502,6 +502,7 @@ export default function LandingPage() {
             <Link to="/datenschutz" className="hover:text-[#1d1d1f] transition-colors">Datenschutz</Link>
             <Link to="/impressum" className="hover:text-[#1d1d1f] transition-colors">Impressum</Link>
             <Link to="/agb" className="hover:text-[#1d1d1f] transition-colors">AGB</Link>
+            <Link to="/avv" className="hover:text-[#1d1d1f] transition-colors">AVV</Link>
           </div>
         </div>
       </footer>
