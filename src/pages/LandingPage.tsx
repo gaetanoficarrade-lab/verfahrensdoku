@@ -72,25 +72,25 @@ const painPoints = [
 
 const benefits = [
   {
-    icon: Bot,
-    title: 'KI schreibt deine Doku',
-    desc: 'Professionelle Verfahrensdokumentationen in Minuten. Die KI kennt alle GoBD-Anforderungen und formuliert prüfungssichere Texte.',
+    icon: Zap,
+    title: 'Fertige Doku in Minuten',
+    desc: 'Beantworte wenige Fragen und erhalte eine vollständige, prüfungssichere Verfahrensdokumentation – mit KI-Unterstützung bei der Texterstellung.',
     metric: '90% weniger Zeitaufwand',
   },
   {
     icon: Shield,
     title: 'Immer GoBD-konform',
-    desc: '30 Pflichtkapitel, KI-Precheck, automatische Vollständigkeitsprüfung. Du lieferst ab – die KI sichert ab.',
+    desc: '30 Pflichtkapitel, automatische Vollständigkeitsprüfung und Precheck. Du lieferst ab – gobdsuite sichert ab.',
     metric: '100% Abdeckung',
   },
   {
     icon: Users,
-    title: 'Mandanten arbeiten mit',
-    desc: 'Deine Mandanten beantworten Fragen direkt im Portal. Keine E-Mail-Schleifen, kein Nachfragen.',
+    title: 'Zusammenarbeit leicht gemacht',
+    desc: 'Kunden und Teammitglieder beantworten Fragen direkt im Portal. Keine E-Mail-Schleifen, kein Nachfragen.',
     metric: 'Zero Reibungsverlust',
   },
   {
-    icon: Zap,
+    icon: FileText,
     title: 'Ein Klick. Fertige PDF.',
     desc: 'GoBD-konforme Verfahrensdokumentation als professionelle PDF – auf Knopfdruck, mit deinem Branding.',
     metric: 'Sofort einsatzbereit',
@@ -103,8 +103,8 @@ const benefits = [
   },
   {
     icon: Building2,
-    title: 'White-Label für Kanzleien',
-    desc: 'Eigenes Logo, eigene Farben – deine Mandanten sehen nur deine Marke. Komplett anpassbar.',
+    title: 'White-Label für Dienstleister',
+    desc: 'Eigenes Logo, eigene Farben – deine Kunden sehen nur deine Marke. Komplett anpassbar.',
     metric: 'Dein Tool, deine Marke',
   },
 ];
