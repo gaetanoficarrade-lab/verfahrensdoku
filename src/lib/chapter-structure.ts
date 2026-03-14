@@ -95,7 +95,7 @@ export const GOBD_CHAPTERS: MainChapter[] = [
       {
         key: '3_3', number: '3.3', title: 'E-Rechnungsprozesse',
         isActive: (a) => a.HAS_E_INVOICING === 'yes',
-        inactiveText: 'Das Unternehmen nutzt derzeit keine E-Rechnungsverfahren (z. B. ZUGFeRD, XRechnung). Rechnungen werden in herkömmlicher Form verarbeitet.',
+        inactiveText: 'Das Unternehmen empfängt und versendet derzeit keine elektronischen Rechnungen im Format ZUGFeRD oder XRechnung. Die Rechnungsstellung erfolgt ausschließlich im PDF-Format.',
       },
       {
         key: '3_4', number: '3.4', title: 'Cloud-Software / SaaS',
