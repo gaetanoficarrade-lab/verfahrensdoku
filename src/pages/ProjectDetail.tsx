@@ -18,6 +18,7 @@ import OnboardingWizard from '@/components/OnboardingWizard';
 import { GOBD_CHAPTERS, CHAPTER_TITLE_MAP } from '@/lib/chapter-structure';
 import { generateVerfahrensdokumentation } from '@/lib/generatePdf';
 import type { OnboardingAnswers } from '@/lib/onboarding-variables';
+import { useTrialRestrictions } from '@/hooks/useTrialRestrictions';
 
 const statusConfig: Record<string, { label: string; icon: typeof Circle; className: string }> = {
   empty: { label: 'Offen', icon: Circle, className: 'text-muted-foreground bg-muted' },
