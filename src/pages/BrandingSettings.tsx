@@ -358,7 +358,9 @@ export default function BrandingSettings() {
                         {form.logo_url ? 'Logo ersetzen' : 'Logo hochladen'}
                       </Button>
                       {form.logo_url && (
-                        <Button variant="destructive" size="sm" onClick={handleLogoRemove}>Entfernen</Button>
+                        <Button variant="ghost" size="sm" onClick={handleResetLogo} title="Logo zurücksetzen">
+                          <RotateCcw className="h-3.5 w-3.5 mr-1" /> Zurücksetzen
+                        </Button>
                       )}
                     </div>
                     <p className="text-xs text-muted-foreground">PNG, JPG, SVG – max. 2 MB</p>
