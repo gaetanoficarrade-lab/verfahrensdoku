@@ -91,6 +91,12 @@ function applyLivePreview(form: FormState) {
   if (form.sidebar_bg_color) {
     setHSL('--sidebar-background', form.sidebar_bg_color);
   }
+  if (form.menu_active_color) {
+    setHSL('--sidebar-accent', form.menu_active_color);
+  }
+  if (form.menu_active_text_color) {
+    setHSL('--sidebar-accent-foreground', form.menu_active_text_color);
+  }
   if (form.font_family) {
     root.style.fontFamily = `${form.font_family}, var(--font-sans, sans-serif)`;
   } else {
