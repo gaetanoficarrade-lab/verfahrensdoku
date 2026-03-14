@@ -52,7 +52,7 @@ export const GOBD_CHAPTERS: MainChapter[] = [
       {
         key: '2_3', number: '2.3', title: 'Kassenprozesse',
         isActive: (a) => !!a.HAS_CASH,
-        inactiveText: 'Im Unternehmen finden keine Bargeschäfte statt. Eine Kassenbuchführung ist daher nicht erforderlich und wird nicht durchgeführt.',
+        inactiveText: 'Im Rahmen der Geschäftstätigkeit werden keine Bargeschäfte getätigt. Ein Kassensystem oder eine Registrierkasse wird nicht eingesetzt. Sämtliche Geschäftsvorfälle werden ausschließlich über den unbaren Zahlungsverkehr abgewickelt. Ein Kassenbuch wird daher nicht geführt. Die Dokumentationspflichten gemäß § 146 Abs. 1 AO für Kasseneinnahmen und -ausgaben entfallen entsprechend.',
       },
       {
         key: '2_4', number: '2.4', title: 'Zahlungsanbieter',
