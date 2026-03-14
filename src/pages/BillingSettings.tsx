@@ -32,7 +32,7 @@ export default function BillingSettings() {
     if (!effectiveTenantId) return;
     const load = async () => {
       setLoading(true);
-      const [tenantRes, plansRes, clientsRes, projectsRes] = await Promise.all([
+      const [tenantRes, clientsRes, projectsRes] = await Promise.all([
         supabase.from('tenants').select('plan_id, trial_ends_at, plans(name, max_clients, max_projects, price_monthly)').eq('id', effectiveTenantId).single(),
         
         supabase.from('clients').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId),
