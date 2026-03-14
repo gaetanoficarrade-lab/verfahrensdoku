@@ -109,7 +109,7 @@ export const GOBD_CHAPTERS: MainChapter[] = [
       {
         key: '3_6', number: '3.6', title: 'Zahlungsplattformen',
         isActive: (a) => !!a.USES_PAYMENT_PROVIDER || !!a.USES_MARKETPLACE,
-        inactiveText: 'Das Unternehmen nutzt keine Zahlungsplattformen oder Marktplätze. Dieses Unterkapitel entfällt.',
+        inactiveText: 'Es sind keine externen Zahlungsplattformen oder Marktplatz-Schnittstellen technisch eingebunden. Der gesamte Zahlungsverkehr wird über die regulären Bankverbindungen abgewickelt.',
       },
     ],
   },
