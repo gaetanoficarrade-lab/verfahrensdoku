@@ -166,10 +166,7 @@ const Register = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="password">Passwort</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input id="password" type="password" placeholder="Min. 8 Zeichen" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-10" required />
-                </div>
+                <PasswordInput id="password" placeholder="Min. 8 Zeichen" value={password} onChange={(e) => setPassword(e.target.value)} required />
               </div>
 
               <div className="space-y-2">
