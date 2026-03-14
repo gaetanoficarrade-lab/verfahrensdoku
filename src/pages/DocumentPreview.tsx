@@ -121,6 +121,7 @@ export default function DocumentPreview() {
       })),
       answers,
       isFinal,
+      versions: versionEntries,
     });
     doc.save(`${companyName || 'Verfahrensdokumentation'}.pdf`);
   };
