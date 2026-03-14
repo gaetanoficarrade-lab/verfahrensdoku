@@ -212,7 +212,7 @@ export default function DocumentPreview() {
         <p className="text-xl font-semibold text-zinc-900">{companyName}</p>
         <p className="text-zinc-500">{projectName}</p>
         <p className="text-sm text-zinc-400">Erstellt am: {today}</p>
-        <p className="text-sm text-zinc-400">Version 1.0</p>
+        <p className="text-sm text-zinc-400">Version {versionEntries.length > 0 ? versionEntries[versionEntries.length - 1].version : '1.0'}</p>
         <Badge className={`mt-4 ${isFinal ? 'bg-green-600' : 'bg-orange-600'} text-white`}>
           {isFinal ? 'FINAL' : 'ENTWURF'}
         </Badge>
