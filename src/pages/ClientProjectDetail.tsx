@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, CheckCircle2, Clock, AlertCircle, Circle, ChevronDown, Ban, Download } from 'lucide-react';
+import { ArrowLeft, Loader2, CheckCircle2, Clock, AlertCircle, Circle, ChevronDown, Ban, Download, Rocket } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,6 +13,7 @@ import { logAudit } from '@/lib/auditLog';
 import { triggerWebhook } from '@/lib/webhookTrigger';
 import { GOBD_CHAPTERS } from '@/lib/chapter-structure';
 import type { OnboardingAnswers } from '@/lib/onboarding-variables';
+import OnboardingWizard from '@/components/OnboardingWizard';
 
 const statusConfig: Record<string, { label: string; icon: typeof Circle; className: string }> = {
   empty: { label: 'Offen', icon: Circle, className: 'text-muted-foreground bg-muted' },
@@ -50,21 +51,33 @@ export default function ClientProjectDetail() {
   const [loading, setLoading] = useState(true);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [openChapters, setOpenChapters] = useState<string[]>(['1']);
+  const [onboardingId, setOnboardingId] = useState<string | null>(null);
+  const [onboardingComplete, setOnboardingComplete] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  const fetchData = async () => {
+    if (!id) return;
+    setLoading(true);
+    const [projRes, chapRes, onbRes] = await Promise.all([
+      supabase.from('projects').select('id, name, status, workflow_status, client_id').eq('id', id).single(),
+      supabase.from('chapter_data').select('id, chapter_key, status, client_notes, editor_text, generated_text').eq('project_id', id),
+      supabase.from('project_onboarding').select('id, answers, completed').eq('project_id', id).maybeSingle(),
+    ]);
+    setProject(projRes.data);
+    setChapters(chapRes.data || []);
+    const onb = onbRes.data;
+    setAnswers((onb?.answers as OnboardingAnswers) || {});
+    setOnboardingId(onb?.id || null);
+    const isComplete = onb?.completed === true;
+    setOnboardingComplete(isComplete);
+    // Auto-show onboarding if not completed
+    if (!isComplete && onb) {
+      setShowOnboarding(true);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    if (!id) return;
-    const fetchData = async () => {
-      setLoading(true);
-      const [projRes, chapRes, onbRes] = await Promise.all([
-        supabase.from('projects').select('id, name, status, workflow_status, client_id').eq('id', id).single(),
-        supabase.from('chapter_data').select('id, chapter_key, status, client_notes, editor_text, generated_text').eq('project_id', id),
-        supabase.from('project_onboarding').select('answers').eq('project_id', id).maybeSingle(),
-      ]);
-      setProject(projRes.data);
-      setChapters(chapRes.data || []);
-      setAnswers((onbRes.data?.answers as OnboardingAnswers) || {});
-      setLoading(false);
-    };
     fetchData();
   }, [id]);
 
@@ -149,6 +162,43 @@ export default function ClientProjectDetail() {
           PDF erstellen
         </Button>
       </div>
+
+      {/* Onboarding Wizard */}
+      {showOnboarding && id && (
+        <OnboardingWizard
+          projectId={id}
+          onboardingId={onboardingId || ''}
+          initialAnswers={answers}
+          onComplete={() => {
+            setShowOnboarding(false);
+            setOnboardingComplete(true);
+            fetchData();
+          }}
+        />
+      )}
+
+      {/* Onboarding Banner */}
+      {!onboardingComplete && !showOnboarding && (
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+          <Card className="border-primary/30 bg-primary/5">
+            <CardContent className="flex items-center gap-4 py-5">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
+                <Rocket className="h-6 w-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-foreground">Onboarding starten</h3>
+                <p className="text-sm text-muted-foreground">
+                  Bitte füllen Sie zunächst das Onboarding aus, damit Ihre Verfahrensdokumentation korrekt erstellt werden kann.
+                </p>
+              </div>
+              <Button onClick={() => setShowOnboarding(true)}>
+                <Rocket className="h-4 w-4 mr-2" />
+                Hier starten
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       <div className="space-y-3">
         {GOBD_CHAPTERS.map((mainCh, i) => {
