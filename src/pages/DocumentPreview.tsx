@@ -9,6 +9,7 @@ import { generateVerfahrensdokumentation } from '@/lib/generatePdf';
 import { getNegativvermerk } from '@/lib/chapter-leitfragen';
 import type { OnboardingAnswers } from '@/lib/onboarding-variables';
 import { CHAPTER_TITLE_MAP } from '@/lib/chapter-structure';
+import { useTrialRestrictions } from '@/hooks/useTrialRestrictions';
 
 interface VersionEntry {
   version: string;
