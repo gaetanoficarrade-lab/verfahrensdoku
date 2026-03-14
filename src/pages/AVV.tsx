@@ -1,8 +1,16 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import landingLogo from '@/assets/landing-logo.png';
 
 export default function AVV() {
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    return () => { document.head.removeChild(meta); };
+  }, []);
   return (
     <div className="min-h-screen bg-white text-[#1d1d1f] antialiased">
       <nav className="border-b border-[#e5e5e5]">
