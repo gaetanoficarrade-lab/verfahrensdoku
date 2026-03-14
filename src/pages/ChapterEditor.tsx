@@ -1016,7 +1016,7 @@ export default function ChapterEditor() {
                   )}
                 </div>
                 {status !== 'advisor_approved' && (
-                  <Button variant="outline" onClick={handleSaveEditorText} disabled={editorTextSaving}>
+                  <Button variant="outline" onClick={handleSaveClick} disabled={editorTextSaving}>
                     {editorTextSaving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
                     Text speichern
                   </Button>
