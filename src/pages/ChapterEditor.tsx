@@ -660,8 +660,6 @@ export default function ChapterEditor() {
                   className="gap-2"
                   onClick={handleSubmit}
                   title={!precheckDone ? 'Bitte führen Sie zuerst die Prüfung durch' : undefined}
-                  className="gap-2"
-                  onClick={handleSubmit}
                 >
                   {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                   Einreichen
