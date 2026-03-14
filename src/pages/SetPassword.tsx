@@ -110,17 +110,12 @@ const SetPassword = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="passwordConfirm">Passwort bestätigen</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    id="passwordConfirm"
-                    type="password"
-                    value={passwordConfirm}
-                    onChange={(e) => setPasswordConfirm(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
+                <PasswordInput
+                  id="passwordConfirm"
+                  value={passwordConfirm}
+                  onChange={(e) => setPasswordConfirm(e.target.value)}
+                  required
+                />
               </div>
 
               <Button type="submit" className="w-full" disabled={isLoading}>
