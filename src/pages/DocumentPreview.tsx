@@ -110,6 +110,8 @@ export default function DocumentPreview() {
     load();
   }, [id]);
 
+  const { pdfWatermark } = useTrialRestrictions();
+
   const handleDownload = () => {
     const doc = generateVerfahrensdokumentation({
       companyName,
@@ -123,6 +125,7 @@ export default function DocumentPreview() {
       answers,
       isFinal,
       versions: versionEntries,
+      watermarkText: pdfWatermark,
     });
     doc.save(`${companyName || 'Verfahrensdokumentation'}.pdf`);
   };
