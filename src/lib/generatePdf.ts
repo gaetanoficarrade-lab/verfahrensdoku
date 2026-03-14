@@ -458,6 +458,8 @@ export function generateVerfahrensdokumentation({
     ['Steuernummer', taxNumber || '–'],
     ['Rechtsform', answers?.legal_form || '–'],
     ['Branche', answers?.industry || '–'],
+    ['Dokumentversion', currentVersion],
+    ['Status', statusLabel],
   ];
 
   autoTable(doc, {
