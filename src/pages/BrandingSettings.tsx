@@ -365,6 +365,8 @@ export default function BrandingSettings() {
               <ColorField label="Seitenleiste – Hintergrundfarbe" field="sidebar_bg_color" value={form.sidebar_bg_color} placeholder="#141414 (Standard)" defaultVal="#141414" onChange={handleChange} />
               <ColorField label="Seitenleiste – Schriftfarbe" field="menu_text_color" value={form.menu_text_color} placeholder="#c7c7c7 (Standard)" defaultVal="#c7c7c7" onChange={handleChange} />
               <ColorField label="Toolname-Schriftfarbe" field="brand_text_color" value={form.brand_text_color} placeholder="#ffffff (Standard)" defaultVal="#ffffff" onChange={handleChange} />
+              <ColorField label="Aktiver Menüpunkt – Hintergrundfarbe" field="menu_active_color" value={form.menu_active_color} placeholder="#262626 (Standard)" defaultVal="#262626" onChange={handleChange} />
+              <ColorField label="Aktiver Menüpunkt – Schriftfarbe" field="menu_active_text_color" value={form.menu_active_text_color} placeholder="#d9d9d9 (Standard)" defaultVal="#d9d9d9" onChange={handleChange} />
               <Separator />
               <div>
                 <Label className="mb-2 block">Button-Vorschau</Label>
