@@ -209,7 +209,19 @@ export default function BrandingSettings() {
 
   const handleSave = async () => {
     try {
-      await saveMutation.mutateAsync(form);
+      // Only send fields that exist in the DB to avoid schema cache errors
+      const dbFields: (keyof FormState)[] = [
+        'brand_name', 'logo_url', 'primary_color', 'button_text_color',
+        'menu_text_color', 'brand_text_color', 'sidebar_bg_color',
+        'menu_active_color', 'menu_active_text_color', 'font_family',
+        'custom_css', 'address', 'phone', 'website', 'imprint',
+        'imprint_url', 'privacy_text', 'privacy_url',
+      ];
+      const payload: Record<string, any> = {};
+      dbFields.forEach(f => {
+        if (form[f] !== undefined) payload[f] = form[f] || null;
+      });
+      await saveMutation.mutateAsync(payload);
       logAudit('settings_updated', 'tenant_settings', effectiveTenantId || undefined);
       toast.success('Einstellungen gespeichert');
     } catch (err: any) {
