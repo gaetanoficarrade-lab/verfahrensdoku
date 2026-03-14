@@ -22,6 +22,11 @@ export default function BrandingSettings() {
   const [form, setForm] = useState({
     brand_name: '',
     primary_color: '#1e3a5f',
+    button_text_color: '',
+    menu_text_color: '',
+    brand_text_color: '',
+    font_family: '',
+    custom_css: '',
     address: '',
     phone: '',
     website: '',
@@ -37,6 +42,11 @@ export default function BrandingSettings() {
       setForm({
         brand_name: settings.brand_name || '',
         primary_color: settings.primary_color || '#1e3a5f',
+        button_text_color: settings.button_text_color || '',
+        menu_text_color: settings.menu_text_color || '',
+        brand_text_color: settings.brand_text_color || '',
+        font_family: settings.font_family || '',
+        custom_css: settings.custom_css || '',
         address: settings.address || '',
         phone: settings.phone || '',
         website: settings.website || '',
