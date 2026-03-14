@@ -8,31 +8,43 @@ const corsHeaders = {
 };
 
 const CHAPTER_CONTEXT: Record<string, { title: string; description: string }> = {
-  general_info: {
-    title: "Allgemeine Informationen",
-    description:
-      "Unternehmensname, Rechtsform, Branche, Gründungsjahr, Mitarbeiteranzahl, Geschäftsführung, Standorte, Organisationsstruktur, Verantwortlichkeiten.",
-  },
-  it_systems: {
-    title: "IT-Umfeld",
-    description:
-      "Hardware, Software, Betriebssysteme, Netzwerkinfrastruktur, ERP-/Buchhaltungssysteme, Schnittstellen, Berechtigungskonzepte, Datensicherung, Notfallkonzept.",
-  },
-  processes: {
-    title: "Geschäftsprozesse",
-    description:
-      "Einkauf, Verkauf, Lager, Zahlungsverkehr, Lohnabrechnung, Reisekostenabrechnung, steuerrelevante Prozesse, Belegfluss, Kontierungsregeln.",
-  },
-  archiving: {
-    title: "Archivierung",
-    description:
-      "Aufbewahrungsfristen, Speicherorte, Speichermedien, Zugriffsrechte, Löschkonzepte, Revisionssicherheit, Indexierung, Konvertierungsverfahren.",
-  },
-  controls: {
-    title: "Internes Kontrollsystem (IKS)",
-    description:
-      "Zugriffskontrollen, Plausibilitätsprüfungen, Vier-Augen-Prinzip, Protokollierung, Schutzmaßnahmen gegen Manipulation, Überwachungsmaßnahmen.",
-  },
+  // Kapitel 1 – Allgemeine Beschreibung
+  "1_1": { title: "Unternehmensbeschreibung", description: "Kerntätigkeit, Branche, Rechtsform, Geschäftsmodell, Geschäftsvorgänge, Auftragsanbahnung, Belegentstehung." },
+  "1_2": { title: "Organisatorischer Aufbau", description: "Aufgabenverteilung im Tagesablauf, Weitergabe von Aufgaben und Belegen, Standorte, Abteilungen." },
+  "1_3": { title: "Zuständigkeiten & Verantwortlichkeiten", description: "Aufgabenverteilung im buchhalterischen Ablauf, Verantwortung für Buchhaltung, IT, Vertretungsregelungen." },
+  "1_4": { title: "Buchführungsgrundsätze", description: "Ablauf der Buchführung, Umgang mit Korrekturen, Protokollierung, Kontenrahmen, Buchungssystematik." },
+  "1_5": { title: "Pflege der Verfahrensdokumentation", description: "Wann und wie die Verfahrensdokumentation aktualisiert wird, Verantwortung, Versionierung." },
+  // Kapitel 2 – Anwenderdokumentation
+  "2_1": { title: "Rechnungsausgang / Debitoren", description: "Auftrag → Rechnung, Rechnungserstellung, Nummerierung, Übermittlung, Ablage, Archivierung." },
+  "2_2": { title: "Rechnungseingang / Kreditoren", description: "Empfang/Erfassung, Prüfung/Freigabe, Verbuchung, Ablage, Archivierung." },
+  "2_3": { title: "Kassenprozesse", description: "Bargeschäft-Ablauf, Tagesabschluss, Kassenbuch, Belege → Buchhaltung, Aufbewahrung." },
+  "2_4": { title: "Zahlungsanbieter", description: "Umsätze → Buchhaltung, Belegzuordnung, Gebührenerfassung, Abgleich, Archivierung." },
+  "2_5": { title: "Marktplatz-/Plattformverkäufe", description: "Bestellungen → Buchung, Sammelzahlungen/Gebühren, Umsatzerfassung, Abrechnungen." },
+  "2_6": { title: "Digitalisierung / Scanprozess", description: "Scanverfahren, Bildqualität, Qualitätssicherung, Originalverbleib." },
+  "2_7": { title: "Buchhaltungsverarbeitung", description: "Beleg → Buchhaltung, Buchung/Zuordnung, dauerhafte Ablage, Periodenabschluss." },
+  "2_8": { title: "Zahlungsverkehr / Bank", description: "Zahlung/Autorisierung, Zuordnung Beleg/Buchung, Abstimmung, Kontoauszüge, Archivierung." },
+  "2_9": { title: "Personal / Lohn", description: "Lohnabrechnungs-Auslöser, Ablauf, Software, Übertragung in FiBu, Aufbewahrung." },
+  // Kapitel 3 – Technische Systemdokumentation
+  "3_1": { title: "Buchhaltungssoftware", description: "Softwarename, Zugriffsregelung, Updates, Berechtigungen." },
+  "3_2": { title: "Schnittstellen", description: "Datenfluss zwischen Systemen, Datenformate, Fehlererkennung, Fehlerbehandlung." },
+  "3_3": { title: "E-Rechnungsprozesse", description: "Empfang ZUGFeRD/XRechnung, XML-Erhalt, Validierung, Aufbewahrung." },
+  "3_4": { title: "Cloud-Software / SaaS", description: "Eingesetzte Systeme, Serverstandort, Datenzugriffssicherheit, AV-Verträge." },
+  "3_5": { title: "E-Mail-Systeme & Archivierung", description: "Erkennung steuerrelevanter Mails, E-Mail-Provider, Archivierung, Aufbewahrung." },
+  "3_6": { title: "Zahlungsplattformen", description: "Technische Anbindung, Transaktionslogs, Datenintegrität, Umsatzerfassung." },
+  // Kapitel 4 – Betriebsdokumentation
+  "4_1": { title: "Datensicherung", description: "Sicherungsablauf, Häufigkeit, Umfang, Speicherort, Verantwortlichkeit, Verlustfall." },
+  "4_2": { title: "Wiederherstellung", description: "Ablauf einer Backup-Wiederherstellung, Testzyklen, Wiederherstellungszeit." },
+  "4_3": { title: "Systemänderungen & Updates", description: "Update-Durchführung, Planung, Freigabe, Dokumentation, Systemwechsel, Datenintegrität." },
+  "4_4": { title: "Archivierung & Aufbewahrung", description: "Aufbewahrungsort, Wiederfindbarkeit, Fristen, Formate, Lesbarkeit, Löschung." },
+  "4_5": { title: "Datenzugriff der Finanzverwaltung", description: "Bereitstellung für Prüfer, Exportformat, Z1/Z2/Z3, Ansprechpartner." },
+  "4_6": { title: "Änderungs- und Versionsmanagement", description: "Nachvollziehbare Änderungsdokumentation, Versionierung, Changelog, Genehmigung." },
+  "4_7": { title: "Digitalisierung von Papierbelegen", description: "Schritt-für-Schritt-Digitalisierung, Qualitätskontrolle, Originalverbleib." },
+  // Kapitel 5 – Internes Kontrollsystem
+  "5_1": { title: "Berechtigungen", description: "Zugriff/Rechte, Funktionstrennung, Vergabe, Entzug, Überprüfung." },
+  "5_2": { title: "Freigaben", description: "Nachweisbare Freigaben, Freigabe-Erteilung, Kompetenzen, Wertgrenzen." },
+  "5_3": { title: "Plausibilitätskontrollen", description: "Regelmäßige Prüfungen, Nachweisbarkeit, automatische Prüfungen, Abweichungen." },
+  "5_4": { title: "Verantwortlichkeiten", description: "Kontrollverantwortung, Durchführungssicherstellung, IKS-Gesamtverantwortung." },
+  "5_5": { title: "Umgang mit Fehlern", description: "Fehlererkennung/-korrektur, Korrekturdokumentation, Eskalation, Prävention." },
 };
 
 const normalizeHints = (value: unknown): string[] => {
@@ -122,13 +134,10 @@ serve(async (req) => {
       );
     }
 
-    const chapter = CHAPTER_CONTEXT[chapter_key];
-    if (!chapter) {
-      return new Response(JSON.stringify({ error: "Invalid chapter_key" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const chapter = CHAPTER_CONTEXT[chapter_key] || {
+      title: chapter_key,
+      description: "Auslöser, Durchführung, Nachweis, Aufbewahrung – allgemeine Prozessbeschreibung.",
+    };
 
     // Fetch precheck hints if available
     const { data: chapterData } = await supabase
