@@ -114,10 +114,20 @@ serve(async (req) => {
     let userId: string | null = existingUser?.id || null;
 
     if (!existingUser) {
+      // Parse contact_name into first/last
+      const nameParts = (contact_name || '').trim().split(/\s+/);
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
       const { data: userData, error: createError } = await supabaseAdmin.auth.admin.createUser({
         email: normalizedEmail,
         password: crypto.randomUUID(),
         email_confirm: true,
+        user_metadata: {
+          first_name: firstName,
+          last_name: lastName,
+          tenant_id: tenant_id,
+        },
       });
 
       if (createError) {
