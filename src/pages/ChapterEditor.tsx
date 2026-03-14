@@ -351,7 +351,7 @@ export default function ChapterEditor() {
       }
 
       console.error('Precheck error details:', JSON.stringify(err, null, 2), detail, err?.status);
-      toast({ title: 'Fehler bei der Prüfung', description: `Die KI-Prüfung konnte nicht durchgeführt werden: ${detail}`, variant: 'destructive' });
+      toast({ title: 'Fehler bei der Prüfung', description: `Die Prüfung konnte nicht durchgeführt werden: ${detail}`, variant: 'destructive' });
     } finally {
       setPrecheckLoading(false);
     }
