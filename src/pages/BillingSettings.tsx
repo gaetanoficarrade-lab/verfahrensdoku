@@ -5,34 +5,33 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
-
+import { useTrialRestrictions } from '@/hooks/useTrialRestrictions';
 import { HelpTooltip } from '@/components/HelpTooltip';
+import PlanSelection from '@/components/PlanSelection';
 
-interface TenantPlan {
+interface TenantPlanInfo {
   planName: string;
   maxClients: number;
   maxProjects: number;
   priceMonthly: number;
   trialEndsAt: string | null;
+  subscriptionStatus: string | null;
   currentClients: number;
   currentProjects: number;
 }
 
-
 export default function BillingSettings() {
   const { effectiveTenantId } = useAuthContext();
+  const { isTrialing, daysLeft, trialExpired } = useTrialRestrictions();
   const [loading, setLoading] = useState(true);
-  const [tenantPlan, setTenantPlan] = useState<TenantPlan | null>(null);
-
-
+  const [tenantPlan, setTenantPlan] = useState<TenantPlanInfo | null>(null);
 
   useEffect(() => {
     if (!effectiveTenantId) return;
     const load = async () => {
       setLoading(true);
       const [tenantRes, clientsRes, projectsRes] = await Promise.all([
-        supabase.from('tenants').select('plan_id, trial_ends_at, plans(name, max_clients, max_projects, price_monthly)').eq('id', effectiveTenantId).single(),
-        
+        supabase.from('tenants').select('plan_id, trial_ends_at, subscription_status, plans(name, max_clients, max_projects, price_monthly)').eq('id', effectiveTenantId).single(),
         supabase.from('clients').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId),
         supabase.from('projects').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId),
       ]);
@@ -43,26 +42,23 @@ export default function BillingSettings() {
         maxProjects: plan?.max_projects || 0,
         priceMonthly: plan?.price_monthly || 0,
         trialEndsAt: (tenantRes.data as any)?.trial_ends_at || null,
+        subscriptionStatus: (tenantRes.data as any)?.subscription_status || null,
         currentClients: clientsRes.count || 0,
         currentProjects: projectsRes.count || 0,
       });
-      
       setLoading(false);
     };
     load();
   }, [effectiveTenantId]);
 
-  const trialDaysLeft = tenantPlan?.trialEndsAt
-    ? Math.max(0, Math.ceil((new Date(tenantPlan.trialEndsAt).getTime() - Date.now()) / 86400000))
-    : null;
-
-
   if (loading) {
     return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   }
 
+  const showUpgrade = isTrialing || trialExpired || tenantPlan?.subscriptionStatus === 'trialing';
+
   return (
-    <div className="space-y-6 max-w-3xl mx-auto">
+    <div className="space-y-6 max-w-4xl mx-auto">
       <div>
         <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
           <CreditCard className="h-6 w-6" />
@@ -72,68 +68,69 @@ export default function BillingSettings() {
         <p className="text-sm text-muted-foreground mt-1">Ihr aktueller Plan und Nutzung</p>
       </div>
 
-      {trialDaysLeft !== null && trialDaysLeft > 0 && (
+      {/* Trial info */}
+      {isTrialing && daysLeft !== null && daysLeft > 0 && (
         <Card className="border-accent">
           <CardContent className="flex items-center gap-3 py-4">
             <AlertTriangle className="h-5 w-5 text-accent" />
             <div className="flex-1">
               <p className="text-sm font-medium text-foreground">
-                Testphase: noch {trialDaysLeft} Tag{trialDaysLeft !== 1 ? 'e' : ''} verbleibend
+                Testmodus aktiv – noch {daysLeft} Tag{daysLeft !== 1 ? 'e' : ''}
               </p>
-              <p className="text-xs text-muted-foreground">Nach Ablauf der Testphase benötigen Sie einen aktiven Plan.</p>
+              <p className="text-xs text-muted-foreground">Wählen Sie einen Plan um alle Funktionen freizuschalten.</p>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {trialDaysLeft !== null && trialDaysLeft <= 0 && (
+      {trialExpired && (
         <Card className="border-destructive">
           <CardContent className="flex items-center gap-3 py-4">
             <AlertTriangle className="h-5 w-5 text-destructive" />
             <div className="flex-1">
-              <p className="text-sm font-medium text-destructive">Testphase abgelaufen</p>
+              <p className="text-sm font-medium text-destructive">Testzugang abgelaufen</p>
               <p className="text-xs text-muted-foreground">Bitte wählen Sie einen Plan um fortzufahren.</p>
             </div>
           </CardContent>
         </Card>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Aktueller Plan: {tenantPlan?.planName}</CardTitle>
-          <CardDescription>{tenantPlan?.priceMonthly ? `${tenantPlan.priceMonthly.toFixed(2)} € / Monat` : 'Kostenlos'}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Mandanten</span>
-              <span className="font-medium">{tenantPlan?.currentClients} / {tenantPlan?.maxClients}</span>
-            </div>
-            <Progress value={tenantPlan?.maxClients ? (tenantPlan.currentClients / tenantPlan.maxClients) * 100 : 0} className="h-2" />
-          </div>
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Projekte</span>
-              <span className="font-medium">{tenantPlan?.currentProjects} / {tenantPlan?.maxProjects}</span>
-            </div>
-            <Progress value={tenantPlan?.maxProjects ? (tenantPlan.currentProjects / tenantPlan.maxProjects) * 100 : 0} className="h-2" />
-          </div>
-        </CardContent>
-      </Card>
+      {/* Current plan info (only if not trialing) */}
+      {!showUpgrade && tenantPlan && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Aktueller Plan: {tenantPlan.planName}</CardTitle>
+            <CardDescription>{tenantPlan.priceMonthly ? `${tenantPlan.priceMonthly.toFixed(2)} € / Monat` : 'Einmalzahlung'}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {tenantPlan.maxClients > 0 && (
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Mandanten</span>
+                  <span className="font-medium">{tenantPlan.currentClients} / {tenantPlan.maxClients}</span>
+                </div>
+                <Progress value={tenantPlan.maxClients ? (tenantPlan.currentClients / tenantPlan.maxClients) * 100 : 0} className="h-2" />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
+      {/* Plan selection for upgrade */}
+      {showUpgrade && (
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-foreground">Plan auswählen</h2>
+          <PlanSelection currentPlan={tenantPlan?.planName} />
+        </div>
+      )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Zahlungsmethode</CardTitle>
-          <CardDescription>Wird in Kürze verfügbar sein</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button variant="outline" disabled>
-            <CreditCard className="h-4 w-4 mr-2" />
-            Zahlungsmethode hinterlegen
-          </Button>
-        </CardContent>
-      </Card>
+      {/* Upgrade from active plan */}
+      {!showUpgrade && tenantPlan?.planName?.toLowerCase() !== 'agentur' && (
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-foreground">Upgrade</h2>
+          <PlanSelection currentPlan={tenantPlan?.planName} />
+        </div>
+      )}
     </div>
   );
 }
