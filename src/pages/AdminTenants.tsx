@@ -298,7 +298,17 @@ const AdminTenants = () => {
                 Noch keine Unterkonten vorhanden.
               </p>
             )}
-            {tenants.map((tenant) => (
+            {tenants.map((tenant) => {
+              const subStatusLabel: Record<string, string> = {
+                active: 'Aktiv', trialing: 'Testphase', past_due: 'Überfällig',
+                canceled: 'Gekündigt', suspended: 'Gesperrt',
+              };
+              const subStatusColor: Record<string, string> = {
+                active: 'default', trialing: 'secondary', past_due: 'destructive',
+                canceled: 'outline', suspended: 'destructive',
+              };
+              const expiresAt = tenant.solo_expires_at || tenant.trial_ends_at;
+              return (
               <motion.div
                 key={tenant.id}
                 initial={{ opacity: 0 }}
@@ -311,10 +321,30 @@ const AdminTenants = () => {
                   </div>
                   <div className="min-w-0">
                     <p className="font-medium text-foreground truncate">{tenant.name}</p>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
                       <span>{tenant.contact_email || '–'}</span>
                       <span>·</span>
                       <span>{getPlanName(tenant.plan_id)}</span>
+                      {tenant.subscription_status && (
+                        <>
+                          <span>·</span>
+                          <Badge variant={subStatusColor[tenant.subscription_status] as any || 'outline'} className="text-[10px] py-0 px-1.5">
+                            {subStatusLabel[tenant.subscription_status] || tenant.subscription_status}
+                          </Badge>
+                        </>
+                      )}
+                      {expiresAt && (
+                        <>
+                          <span>·</span>
+                          <span>Läuft ab: {new Date(expiresAt).toLocaleDateString('de-DE')}</span>
+                        </>
+                      )}
+                      {tenant.source && (
+                        <>
+                          <span>·</span>
+                          <span className="capitalize">{tenant.source}</span>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
