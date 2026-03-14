@@ -53,7 +53,57 @@ export default function DocumentPreview() {
         setIsFinal((projRes.data as any).status === 'completed');
       }
       setChapters(chapRes.data || []);
-      setAnswers((onbRes.data?.answers as OnboardingAnswers) || {});
+      const onbAnswers = (onbRes.data?.answers as OnboardingAnswers) || {};
+      setAnswers(onbAnswers);
+
+      // Load all chapter versions for the project to build change history
+      if (chapRes.data && chapRes.data.length > 0) {
+        const chapterDataIds = chapRes.data.map((c: any) => c.chapter_key);
+        // Get chapter_data IDs first
+        const { data: cdIds } = await supabase
+          .from('chapter_data')
+          .select('id, chapter_key')
+          .eq('project_id', id);
+
+        if (cdIds && cdIds.length > 0) {
+          const { data: allVersions } = await supabase
+            .from('chapter_versions')
+            .select('id, chapter_data_id, version_number, change_reason, change_type, created_at, changed_by, profiles:changed_by(first_name, last_name)')
+            .in('chapter_data_id', cdIds.map(c => c.id))
+            .order('created_at', { ascending: true });
+
+          if (allVersions && allVersions.length > 0) {
+            const cdKeyMap: Record<string, string> = {};
+            for (const cd of cdIds) {
+              cdKeyMap[cd.id] = cd.chapter_key;
+            }
+
+            const today = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const entries: VersionEntry[] = [
+              { version: '1.0', date: today, changedBy: '–', description: 'Erstversion', chapter: 'Erstversion' },
+            ];
+
+            let versionCounter = 0;
+            for (const v of allVersions) {
+              if ((v as any).change_type === 'initial') continue;
+              versionCounter++;
+              const chKey = cdKeyMap[(v as any).chapter_data_id];
+              const chTitle = chKey ? (CHAPTER_TITLE_MAP[chKey] || chKey) : '–';
+              const profile = (v as any).profiles;
+              const name = profile ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() : '–';
+              entries.push({
+                version: `1.${versionCounter}`,
+                date: new Date((v as any).created_at).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+                changedBy: name,
+                description: (v as any).change_reason || 'Kapitelinhalt aktualisiert',
+                chapter: `Kap. ${chTitle}`,
+              });
+            }
+            setVersionEntries(entries);
+          }
+        }
+      }
+
       setLoading(false);
     };
     load();
