@@ -15,7 +15,7 @@ import { logAudit } from '@/lib/auditLog';
 
 const DEFAULTS = {
   brand_name: '',
-  primary_color: '#1e3a5f',
+  primary_color: '',
   button_text_color: '',
   menu_text_color: '',
   brand_text_color: '',
