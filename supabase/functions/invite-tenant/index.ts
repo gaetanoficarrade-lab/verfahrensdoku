@@ -29,21 +29,20 @@ serve(async (req) => {
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    // Parse body and verify JWT in parallel (getClaims is faster than getUser)
-    const token = authHeader.replace("Bearer ", "");
-    const [{ data: claimsData, error: claimsError }, body] = await Promise.all([
-      supabaseAuth.auth.getClaims(token),
+    // Parse body and verify user in parallel
+    const [{ data: userData, error: userError }, body] = await Promise.all([
+      supabaseAuth.auth.getUser(),
       req.json(),
     ]);
 
-    if (claimsError || !claimsData?.claims?.sub) {
+    if (userError || !userData?.user?.id) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const callerId = claimsData.claims.sub;
+    const callerId = userData.user.id;
 
     // Role check
     const { data: callerRoles } = await supabaseAuth
