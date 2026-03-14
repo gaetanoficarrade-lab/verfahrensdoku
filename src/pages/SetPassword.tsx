@@ -93,10 +93,13 @@ const SetPassword = () => {
     setIsLoading(false);
   };
 
-  if (loading) {
+  if (loading || (!sessionReady && window.location.hash.includes('access_token'))) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="text-center space-y-3">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+          <p className="text-sm text-muted-foreground">Sitzung wird hergestellt...</p>
+        </div>
       </div>
     );
   }
