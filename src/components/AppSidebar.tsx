@@ -45,12 +45,10 @@ const adminItems = [
 const tenantItems = [
   { title: 'Dashboard', url: '/', icon: LayoutDashboard },
   { title: 'Mandanten', url: '/clients', icon: Users },
-  { title: 'Einstellungen', url: '/settings/billing', icon: Settings },
 ];
 
 const clientItems = [
   { title: 'Dashboard', url: '/client', icon: LayoutDashboard },
-  { title: 'Einstellungen', url: '/client/settings', icon: Settings },
 ];
 
 export function AppSidebar() {
