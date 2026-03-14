@@ -111,20 +111,23 @@ serve(async (req) => {
       userId = userData.user.id;
     }
 
-    // Role + Profile + Invite link in parallel
-    const [,, { data: linkData, error: linkError }] = await Promise.all([
+    // Role + Profile in parallel
+    await Promise.all([
       supabaseAdmin
         .from("user_roles")
         .upsert({ user_id: userId, role: "tenant_admin" }, { onConflict: "user_id,role" }),
       supabaseAdmin
         .from("profiles")
         .upsert({ user_id: userId, tenant_id }, { onConflict: "user_id" }),
-      supabaseAdmin.auth.admin.generateLink({
-        type: "invite",
-        email,
-        options: { redirectTo: `${APP_URL}/set-password` },
-      }),
     ]);
+
+    // Generate link: use "recovery" for existing users, "invite" for new ones
+    const linkType = existingUser ? "recovery" : "invite";
+    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
+      type: linkType,
+      email,
+      options: { redirectTo: `${APP_URL}/set-password` },
+    });
 
     if (linkError) {
       return new Response(JSON.stringify({ error: linkError.message }), {
