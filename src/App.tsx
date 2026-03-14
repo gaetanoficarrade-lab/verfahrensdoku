@@ -45,6 +45,7 @@ import TrialExpired from "./pages/TrialExpired";
 import AdvisorOverview from "./pages/AdvisorOverview";
 import TemplateSettings from "./pages/TemplateSettings";
 import TenantEmailSettings from "./pages/TenantEmailSettings";
+import AdminWebhookLogs from "./pages/AdminWebhookLogs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -152,6 +153,14 @@ const App = () => (
                 element={
                   <ProtectedRoute requiredRoles={['super_admin']}>
                     <AppLayout><AdminPromoCodes /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/webhook-logs"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminWebhookLogs /></AppLayout>
                   </ProtectedRoute>
                 }
               />

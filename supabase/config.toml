@@ -39,3 +39,6 @@ verify_jwt = false
 
 [functions.send-invite-email]
 verify_jwt = false
+
+[functions.funnelpay-webhook]
+verify_jwt = false
