@@ -82,9 +82,9 @@ serve(async (req) => {
 
     const chapterContext = CHAPTER_CONTEXT[chapter_key] || chapter_key;
 
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-    if (!GEMINI_API_KEY) {
-      return new Response(JSON.stringify({ error: "GEMINI_API_KEY ist nicht konfiguriert." }), {
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) {
+      return new Response(JSON.stringify({ error: "OPENAI_API_KEY ist nicht konfiguriert." }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -121,38 +121,38 @@ ${onboarding_answers ? `Onboarding-Antworten:\n${JSON.stringify(onboarding_answe
 
 Analysiere die Notizen und gib strukturierte Hinweise zurück.`;
 
-    const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            { role: "user", parts: [{ text: systemPrompt + "\n\n" + userPrompt }] },
-          ],
-          generationConfig: {
-            responseMimeType: "application/json",
-            temperature: 0.3,
-          },
-        }),
-      }
-    );
+    const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+        temperature: 0.3,
+        response_format: { type: "json_object" },
+      }),
+    });
 
-    if (!geminiResponse.ok) {
-      const errText = await geminiResponse.text();
-      console.error("Gemini API error:", geminiResponse.status, errText);
+    if (!openaiResponse.ok) {
+      const errText = await openaiResponse.text();
+      console.error("OpenAI API error:", openaiResponse.status, errText);
       const errorMessage =
-        geminiResponse.status === 429
-          ? "Gemini Kontingent aufgebraucht. Bitte API-Abrechnung in Google AI Studio aktivieren."
-          : `Gemini API Fehler (${geminiResponse.status})`;
+        openaiResponse.status === 429
+          ? "OpenAI Rate-Limit erreicht. Bitte versuchen Sie es in Kürze erneut."
+          : `OpenAI API Fehler (${openaiResponse.status})`;
       return new Response(
         JSON.stringify({ error: errorMessage }),
-        { status: geminiResponse.status === 429 ? 429 : 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: openaiResponse.status === 429 ? 429 : 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const geminiData = await geminiResponse.json();
-    const rawText = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+    const openaiData = await openaiResponse.json();
+    const rawText = openaiData?.choices?.[0]?.message?.content || "{}";
 
     let result: { hints: string[]; missing_fields: string[]; confidence: number };
     try {
