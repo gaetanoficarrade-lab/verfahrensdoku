@@ -258,7 +258,10 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
         <div className="space-y-4">
           <YesNo label="Haben Sie ein separates Geschäftskonto?" value={answers.HAS_BUSINESS_ACCOUNT} onChange={(v) => set('HAS_BUSINESS_ACCOUNT', v)} />
           <YesNo label="Nutzen Sie Onlinebanking?" value={answers.USES_ONLINE_BANKING} onChange={(v) => set('USES_ONLINE_BANKING', v)} />
-          <TriSelect label="Gibt es einen automatischen Bankdatenimport?" value={answers.HAS_AUTO_BANK_IMPORT as TriState} onChange={(v) => set('HAS_AUTO_BANK_IMPORT', v)} />
+          <div className="space-y-2">
+            <TriSelect label="Werden Kontoumsätze automatisch in Ihre Buchhaltungssoftware importiert?" value={answers.HAS_AUTO_BANK_IMPORT as TriState} onChange={(v) => set('HAS_AUTO_BANK_IMPORT', v)} />
+            <p className="text-xs text-muted-foreground">z.B. automatischer Kontoabruf in Lexware, sevDesk, DATEV oder ähnlichen Programmen – statt manuelle Eingabe der Umsätze</p>
+          </div>
         </div>
       );
       case 6: return (
