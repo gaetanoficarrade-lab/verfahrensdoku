@@ -1230,3 +1230,12 @@ INSERT INTO public.plan_upgrade_rules (from_plan_id, to_plan_id, requires_setup_
 SELECT b.id, a.id, false
 FROM public.plans b, public.plans a
 WHERE b.name = 'Berater' AND a.name = 'Agentur';
+
+
+-- 25. INLINE-VERSIONIERUNG: Erweiterung document_versions
+-- =====================================================
+
+ALTER TABLE public.document_versions
+  ADD COLUMN IF NOT EXISTS version_label TEXT,
+  ADD COLUMN IF NOT EXISTS chapters_snapshot JSONB,
+  ADD COLUMN IF NOT EXISTS change_log JSONB DEFAULT '[]'::jsonb;
