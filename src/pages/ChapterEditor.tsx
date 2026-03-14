@@ -342,8 +342,15 @@ export default function ChapterEditor() {
         .update({ client_precheck_hints: allHints })
         .eq('id', cdId);
     } catch (err: any) {
-      console.error('Precheck error details:', JSON.stringify(err, null, 2), err?.message, err?.status);
-      const detail = err?.message || err?.msg || 'Unbekannter Fehler';
+      let detail = err?.message || err?.msg || 'Unbekannter Fehler';
+
+      if (err?.context instanceof Response) {
+        const payload = await err.context.clone().json().catch(() => null);
+        const fallbackText = payload ? '' : await err.context.text().catch(() => '');
+        detail = payload?.error || payload?.details || fallbackText || detail;
+      }
+
+      console.error('Precheck error details:', JSON.stringify(err, null, 2), detail, err?.status);
       toast({ title: 'Fehler bei der Prüfung', description: `Die KI-Prüfung konnte nicht durchgeführt werden: ${detail}`, variant: 'destructive' });
     } finally {
       setPrecheckLoading(false);
