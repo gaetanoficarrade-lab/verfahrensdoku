@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Settings, Palette, Mail, Users, FileText, Globe, ScrollText, Link2, CreditCard, KeyRound, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTenantPlan } from '@/hooks/useTenantPlan';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface TabItem {
   label: string;
@@ -38,6 +39,8 @@ export function TenantSettingsLayout({ children }: TenantSettingsLayoutProps) {
     return tenantPlan[tab.requiresFn];
   });
 
+  const activeTab = tabs.find(tab => tab.url === location.pathname);
+
   return (
     <div className="space-y-6">
       <div>
@@ -48,8 +51,33 @@ export function TenantSettingsLayout({ children }: TenantSettingsLayoutProps) {
         <p className="text-sm text-muted-foreground mt-1">Verwalten Sie Ihren Account und Ihre Präferenzen</p>
       </div>
 
-      {/* Horizontal tab bar */}
-      <div className="rounded-xl bg-card border border-border p-1.5 shadow-sm">
+      {/* Mobile: Dropdown */}
+      <div className="md:hidden">
+        <Select value={location.pathname} onValueChange={(val) => navigate(val)}>
+          <SelectTrigger className="w-full bg-card border-border">
+            <div className="flex items-center gap-2">
+              {activeTab && <activeTab.icon className="h-4 w-4 text-accent" />}
+              <SelectValue placeholder="Bereich wählen" />
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <SelectItem key={tab.url} value={tab.url}>
+                  <div className="flex items-center gap-2">
+                    <Icon className="h-4 w-4" />
+                    {tab.label}
+                  </div>
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Desktop: Horizontal tab bar */}
+      <div className="hidden md:block rounded-xl bg-card border border-border p-1.5 shadow-sm">
         <nav className="flex gap-1 overflow-x-auto" aria-label="Einstellungen">
           {tabs.map((tab) => {
             const isActive = location.pathname === tab.url;
