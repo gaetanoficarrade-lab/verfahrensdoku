@@ -88,6 +88,7 @@ export default function ProjectDetail() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuthContext();
+  const { maxEditableChapters, pdfWatermark, isTrialing } = useTrialRestrictions();
   const [project, setProject] = useState<Project | null>(null);
   const [chapters, setChapters] = useState<ChapterData[]>([]);
   const [onboarding, setOnboarding] = useState<Onboarding | null>(null);
