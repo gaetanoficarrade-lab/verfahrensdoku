@@ -103,15 +103,19 @@ export default function BillingSettings() {
             <CardDescription>{tenantPlan.priceMonthly ? `${tenantPlan.priceMonthly.toFixed(2)} € / Monat` : 'Einmalzahlung'}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {tenantPlan.maxClients > 0 && (
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Mandanten</span>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Mandanten</span>
+                {tenantPlan.maxClients >= 999 || tenantPlan.maxClients === 0 ? (
+                  <span className="font-medium">{tenantPlan.currentClients} <span className="text-muted-foreground font-normal">(unbegrenzt)</span></span>
+                ) : (
                   <span className="font-medium">{tenantPlan.currentClients} / {tenantPlan.maxClients}</span>
-                </div>
-                <Progress value={tenantPlan.maxClients ? (tenantPlan.currentClients / tenantPlan.maxClients) * 100 : 0} className="h-2" />
+                )}
               </div>
-            )}
+              {tenantPlan.maxClients > 0 && tenantPlan.maxClients < 999 && (
+                <Progress value={(tenantPlan.currentClients / tenantPlan.maxClients) * 100} className="h-2" />
+              )}
+            </div>
           </CardContent>
         </Card>
       )}
