@@ -38,6 +38,8 @@ CREATE TABLE public.tenants (
   contact_email TEXT,
   plan_id UUID REFERENCES public.plans(id),
   is_active BOOLEAN NOT NULL DEFAULT true,
+  is_free BOOLEAN NOT NULL DEFAULT false,
+  trial_active BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
