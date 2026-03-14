@@ -166,6 +166,25 @@ export function AppSidebar() {
 
       <SidebarFooter className="border-t border-sidebar-border p-2">
         <SidebarMenu>
+          {/* Einstellungen link for tenant_admin / client */}
+          {!showAdmin && (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={isActive(isClient ? '/client/settings' : '/settings/billing')}
+                tooltip="Einstellungen"
+              >
+                <NavLink
+                  to={isClient ? '/client/settings' : '/settings/billing'}
+                  className="hover:bg-sidebar-accent/50"
+                  activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                >
+                  <Settings className="h-4 w-4" />
+                  {!collapsed && <span>Einstellungen</span>}
+                </NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={handleSignOut}
