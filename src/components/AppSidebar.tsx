@@ -109,8 +109,8 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="border-b border-sidebar-border">
-        <div className="flex items-center px-4 py-4" style={{ backgroundColor: '#1a1f2e' }}>
+      <SidebarHeader className="border-b border-gray-200">
+        <div className="flex items-center px-4 py-4" style={{ backgroundColor: '#f8f8f8' }}>
           {collapsed ? (
             <img
               src={logoUrl || '/images/logo.png'}
