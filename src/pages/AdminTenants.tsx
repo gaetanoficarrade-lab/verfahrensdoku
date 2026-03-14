@@ -37,6 +37,8 @@ interface Tenant {
   contact_email: string | null;
   is_active: boolean;
   plan_id: string | null;
+  is_free: boolean;
+  trial_active: boolean;
   created_at: string;
 }
 
