@@ -336,7 +336,7 @@ export default function AdminSettingsPlans() {
                       {rule.requires_setup_fee ? (
                         <span className="text-xs text-muted-foreground ml-2">+ Setup Fee</span>
                       ) : (
-                        <span className="text-xs text-green-600 ml-2">Keine erneute Setup Fee</span>
+                        <span className="text-xs text-primary ml-2">Keine erneute Setup Fee</span>
                       )}
                     </div>
                     <Button variant="ghost" size="sm" className="text-destructive" onClick={() => handleDeleteUpgradeRule(rule.id)}>
