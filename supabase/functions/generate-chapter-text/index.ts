@@ -335,14 +335,35 @@ ${precheckHints.length > 0 ? `--- Ergänzungen/Hinweise ---\n${precheckHints.map
     }
 
     const openaiData = await openaiResponse.json();
-    const rawText = openaiData?.choices?.[0]?.message?.content || "{}";
+    const rawContent = openaiData?.choices?.[0]?.message?.content || "";
 
-    let result: { generated_text: string; quality_score: number };
-    try {
-      result = JSON.parse(rawText);
-    } catch {
-      result = { generated_text: rawText, quality_score: 0 };
+    // Parse marker-based format
+    let generatedText = rawContent;
+    let pruefhinweise: string[] = [];
+
+    const vbMarker = "---VERFAHRENSBESCHREIBUNG---";
+    const phMarker = "---PRUEFHINWEISE---";
+
+    const vbIndex = rawContent.indexOf(vbMarker);
+    const phIndex = rawContent.indexOf(phMarker);
+
+    if (vbIndex !== -1 && phIndex !== -1) {
+      generatedText = rawContent.substring(vbIndex + vbMarker.length, phIndex).trim();
+      const phSection = rawContent.substring(phIndex + phMarker.length).trim();
+      pruefhinweise = phSection
+        .split("\n")
+        .map((line: string) => line.replace(/^[•\-]\s*/, "").trim())
+        .filter((line: string) => line.length > 0 && !line.toLowerCase().includes("keine lücken erkannt"));
+    } else if (vbIndex !== -1) {
+      generatedText = rawContent.substring(vbIndex + vbMarker.length).trim();
     }
+
+    // Auto-append for pflege_vfd chapters
+    if (chapter_key === "1_5" || chapter_key === "pflege_vfd") {
+      generatedText += "\n\nDie Verfahrensdokumentation wird bei wesentlichen Änderungen der betrieblichen Abläufe, der eingesetzten Software oder der organisatorischen Zuständigkeiten aktualisiert. Jede Änderung wird mit Datum und Versionsnummer dokumentiert.";
+    }
+
+    const result = { generated_text: generatedText, quality_score: pruefhinweise.length === 0 ? 100 : 70 };
 
     // Save to chapter_data
     const { data: existing } = await supabase
@@ -357,9 +378,7 @@ ${precheckHints.length > 0 ? `--- Ergänzungen/Hinweise ---\n${precheckHints.map
         .from("chapter_data")
         .update({
           generated_text: result.generated_text,
-          generated_hints: result.quality_score < 60
-            ? ["Textqualität unter 60% – bitte Eingaben vervollständigen"]
-            : null,
+          generated_hints: pruefhinweise.length > 0 ? pruefhinweise : null,
         })
         .eq("id", existing.id);
     } else {
