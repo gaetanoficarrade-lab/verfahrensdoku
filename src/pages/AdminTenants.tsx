@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import {
   Building2, Plus, Pencil, Trash2, Power, PowerOff, Eye, Send, Loader2, X, RefreshCw, Mail,
 } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -36,6 +37,8 @@ interface Tenant {
   contact_email: string | null;
   is_active: boolean;
   plan_id: string | null;
+  is_free: boolean;
+  trial_active: boolean;
   created_at: string;
 }
 
@@ -48,7 +51,7 @@ const AdminTenants = () => {
   const [editingTenant, setEditingTenant] = useState<Tenant | null>(null);
   const [deletingTenant, setDeletingTenant] = useState<Tenant | null>(null);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ name: '', contact_name: '', contact_email: '', plan_id: '' });
+  const [form, setForm] = useState({ name: '', contact_name: '', contact_email: '', plan_id: '', is_free: false, trial_active: false });
   const { toast } = useToast();
   const { startImpersonation } = useAuthContext();
   const navigate = useNavigate();
@@ -146,7 +149,7 @@ const AdminTenants = () => {
 
   const openCreate = () => {
     setEditingTenant(null);
-    setForm({ name: '', contact_name: '', contact_email: '', plan_id: '' });
+    setForm({ name: '', contact_name: '', contact_email: '', plan_id: '', is_free: false, trial_active: false });
     setDialogOpen(true);
   };
 
@@ -157,6 +160,8 @@ const AdminTenants = () => {
       contact_name: t.contact_name || '',
       contact_email: t.contact_email || '',
       plan_id: t.plan_id || '',
+      is_free: t.is_free ?? false,
+      trial_active: t.trial_active ?? false,
     });
     setDialogOpen(true);
   };
@@ -172,6 +177,8 @@ const AdminTenants = () => {
       contact_name: form.contact_name.trim() || null,
       contact_email: form.contact_email.trim() || null,
       plan_id: form.plan_id || null,
+      is_free: form.is_free,
+      trial_active: form.trial_active,
     };
 
     if (editingTenant) {
@@ -388,6 +395,22 @@ const AdminTenants = () => {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="is_free">Kostenlos (kein Zahlungspflichtig)</Label>
+              <Switch
+                id="is_free"
+                checked={form.is_free}
+                onCheckedChange={(v) => setForm({ ...form, is_free: v })}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="trial_active">Testphase aktiv</Label>
+              <Switch
+                id="trial_active"
+                checked={form.trial_active}
+                onCheckedChange={(v) => setForm({ ...form, trial_active: v })}
+              />
             </div>
           </div>
           <DialogFooter>
