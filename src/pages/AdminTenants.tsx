@@ -57,7 +57,7 @@ const AdminTenants = () => {
   const [editingTenant, setEditingTenant] = useState<Tenant | null>(null);
   const [deletingTenant, setDeletingTenant] = useState<Tenant | null>(null);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ name: '', contact_name: '', contact_email: '', plan_id: '', is_free: false, trial_active: false });
+  const [form, setForm] = useState({ name: '', contact_name: '', contact_email: '', plan_id: '', is_free: false, trial_active: false, max_team_members_unlimited: true, max_team_members: 5 });
   const { toast } = useToast();
   const { startImpersonation } = useAuthContext();
   const navigate = useNavigate();
