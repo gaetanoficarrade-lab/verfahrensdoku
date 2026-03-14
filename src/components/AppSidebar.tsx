@@ -18,7 +18,6 @@ import { NavLink } from '@/components/NavLink';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useTenantSettings } from '@/hooks/useTenantSettings';
-import { useTenantPlan } from '@/hooks/useTenantPlan';
 import { Button } from '@/components/ui/button';
 import {
   Sidebar,
