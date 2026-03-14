@@ -65,6 +65,7 @@ const App = () => (
               <Route path="/register" element={<Register />} />
               <Route path="/set-password" element={<SetPassword />} />
               <Route path="/client-register" element={<ClientRegister />} />
+              <Route path="/test-starten" element={<TestStarten />} />
 
               {/* Protected routes with layout */}
               <Route
