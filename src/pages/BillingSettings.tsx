@@ -20,8 +20,7 @@ interface TenantPlan {
 
 
 export default function BillingSettings() {
-  const { effectiveTenantId, user } = useAuthContext();
-  const { toast } = useToast();
+  const { effectiveTenantId } = useAuthContext();
   const [loading, setLoading] = useState(true);
   const [tenantPlan, setTenantPlan] = useState<TenantPlan | null>(null);
 
