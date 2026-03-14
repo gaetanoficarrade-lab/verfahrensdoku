@@ -379,18 +379,22 @@ export default function BrandingSettings() {
             <CardHeader>
               <CardTitle>Button-Farben</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-5">
-              <ColorField label="Buttonfarbe (Akzentfarbe)" field="primary_color" value={form.primary_color} placeholder="#1e3a5f" defaultVal="#1e3a5f" onChange={handleChange} />
-              <ColorField label="Button-Schriftfarbe" field="button_text_color" value={form.button_text_color} placeholder="#ffffff (Standard)" defaultVal="#ffffff" onChange={handleChange} />
-              <div className="pt-2">
-                <div className="text-xs font-medium text-muted-foreground mb-2">Vorschau</div>
-                <div className="flex gap-3">
-                  <Button size="sm" style={{ backgroundColor: form.primary_color, color: form.button_text_color || '#fff' }}>
-                    Beispiel-Button
-                  </Button>
-                  <Button size="sm" variant="outline" style={{ borderColor: form.primary_color, color: form.primary_color }}>
-                    Outline-Button
-                  </Button>
+            <CardContent>
+              <div className="flex gap-8 items-start">
+                <div className="flex-1 space-y-5">
+                  <ColorField label="Buttonfarbe (Akzentfarbe)" field="primary_color" value={form.primary_color} placeholder="#1e3a5f" defaultVal="#1e3a5f" onChange={handleChange} />
+                  <ColorField label="Button-Schriftfarbe" field="button_text_color" value={form.button_text_color} placeholder="#ffffff (Standard)" defaultVal="#ffffff" onChange={handleChange} />
+                </div>
+                <div className="w-48 shrink-0 pt-2">
+                  <div className="text-xs font-medium text-muted-foreground mb-3">Vorschau</div>
+                  <div className="flex flex-col gap-2">
+                    <Button size="sm" style={{ backgroundColor: form.primary_color, color: form.button_text_color || '#fff' }}>
+                      Beispiel-Button
+                    </Button>
+                    <Button size="sm" variant="outline" style={{ borderColor: form.primary_color, color: form.primary_color }}>
+                      Outline-Button
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -401,22 +405,26 @@ export default function BrandingSettings() {
             <CardHeader>
               <CardTitle>Seitenleiste</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-5">
-              <ColorField label="Hintergrundfarbe" field="sidebar_bg_color" value={form.sidebar_bg_color} placeholder="#141414 (Standard)" defaultVal="#141414" onChange={handleChange} />
-              <ColorField label="Schriftfarbe" field="menu_text_color" value={form.menu_text_color} placeholder="#c7c7c7 (Standard)" defaultVal="#c7c7c7" onChange={handleChange} />
-              <ColorField label="Toolname-Schriftfarbe" field="brand_text_color" value={form.brand_text_color} placeholder="#ffffff (Standard)" defaultVal="#ffffff" onChange={handleChange} />
-              <div className="pt-2">
-                <div className="text-xs font-medium text-muted-foreground mb-2">Vorschau</div>
-                <div className="rounded-lg overflow-hidden border border-border w-52">
-                  <div className="p-3 space-y-1.5" style={{ backgroundColor: form.sidebar_bg_color || '#141414' }}>
-                    <div className="text-xs font-bold truncate" style={{ color: form.brand_text_color || '#ffffff' }}>
-                      {form.brand_name || 'GoBD-Suite'}
-                    </div>
-                    <div className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs" style={{ color: form.menu_text_color || '#c7c7c7' }}>
-                      ○ Menüpunkt
-                    </div>
-                    <div className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs" style={{ color: form.menu_text_color || '#c7c7c7' }}>
-                      ○ Menüpunkt
+            <CardContent>
+              <div className="flex gap-8 items-start">
+                <div className="flex-1 space-y-5">
+                  <ColorField label="Hintergrundfarbe" field="sidebar_bg_color" value={form.sidebar_bg_color} placeholder="#141414 (Standard)" defaultVal="#141414" onChange={handleChange} />
+                  <ColorField label="Schriftfarbe" field="menu_text_color" value={form.menu_text_color} placeholder="#c7c7c7 (Standard)" defaultVal="#c7c7c7" onChange={handleChange} />
+                  <ColorField label="Toolname-Schriftfarbe" field="brand_text_color" value={form.brand_text_color} placeholder="#ffffff (Standard)" defaultVal="#ffffff" onChange={handleChange} />
+                </div>
+                <div className="w-48 shrink-0 pt-2">
+                  <div className="text-xs font-medium text-muted-foreground mb-3">Vorschau</div>
+                  <div className="rounded-lg overflow-hidden border border-border">
+                    <div className="p-3 space-y-1.5" style={{ backgroundColor: form.sidebar_bg_color || '#141414' }}>
+                      <div className="text-xs font-bold truncate" style={{ color: form.brand_text_color || '#ffffff' }}>
+                        {form.brand_name || 'GoBD-Suite'}
+                      </div>
+                      <div className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs" style={{ color: form.menu_text_color || '#c7c7c7' }}>
+                        ○ Menüpunkt
+                      </div>
+                      <div className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs" style={{ color: form.menu_text_color || '#c7c7c7' }}>
+                        ○ Menüpunkt
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -429,24 +437,28 @@ export default function BrandingSettings() {
             <CardHeader>
               <CardTitle>Aktiver Menüpunkt</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-5">
-              <ColorField label="Hintergrundfarbe" field="menu_active_color" value={form.menu_active_color} placeholder="#262626 (Standard)" defaultVal="#262626" onChange={handleChange} />
-              <ColorField label="Schriftfarbe" field="menu_active_text_color" value={form.menu_active_text_color} placeholder="#d9d9d9 (Standard)" defaultVal="#d9d9d9" onChange={handleChange} />
-              <div className="pt-2">
-                <div className="text-xs font-medium text-muted-foreground mb-2">Vorschau</div>
-                <div className="rounded-lg overflow-hidden border border-border w-52">
-                  <div className="p-3 space-y-1.5" style={{ backgroundColor: form.sidebar_bg_color || '#141414' }}>
-                    <div className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs" style={{ color: form.menu_text_color || '#c7c7c7' }}>
-                      ○ Menüpunkt
-                    </div>
-                    <div className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs" style={{
-                      backgroundColor: form.menu_active_color || '#262626',
-                      color: form.menu_active_text_color || '#d9d9d9',
-                    }}>
-                      ● Aktiver Menüpunkt
-                    </div>
-                    <div className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs" style={{ color: form.menu_text_color || '#c7c7c7' }}>
-                      ○ Menüpunkt
+            <CardContent>
+              <div className="flex gap-8 items-start">
+                <div className="flex-1 space-y-5">
+                  <ColorField label="Hintergrundfarbe" field="menu_active_color" value={form.menu_active_color} placeholder="#262626 (Standard)" defaultVal="#262626" onChange={handleChange} />
+                  <ColorField label="Schriftfarbe" field="menu_active_text_color" value={form.menu_active_text_color} placeholder="#d9d9d9 (Standard)" defaultVal="#d9d9d9" onChange={handleChange} />
+                </div>
+                <div className="w-48 shrink-0 pt-2">
+                  <div className="text-xs font-medium text-muted-foreground mb-3">Vorschau</div>
+                  <div className="rounded-lg overflow-hidden border border-border">
+                    <div className="p-3 space-y-1.5" style={{ backgroundColor: form.sidebar_bg_color || '#141414' }}>
+                      <div className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs" style={{ color: form.menu_text_color || '#c7c7c7' }}>
+                        ○ Menüpunkt
+                      </div>
+                      <div className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs" style={{
+                        backgroundColor: form.menu_active_color || '#262626',
+                        color: form.menu_active_text_color || '#d9d9d9',
+                      }}>
+                        ● Aktiver Menüpunkt
+                      </div>
+                      <div className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs" style={{ color: form.menu_text_color || '#c7c7c7' }}>
+                        ○ Menüpunkt
+                      </div>
                     </div>
                   </div>
                 </div>
