@@ -160,6 +160,8 @@ const AdminTenants = () => {
       contact_name: t.contact_name || '',
       contact_email: t.contact_email || '',
       plan_id: t.plan_id || '',
+      is_free: t.is_free ?? false,
+      trial_active: t.trial_active ?? false,
     });
     setDialogOpen(true);
   };
