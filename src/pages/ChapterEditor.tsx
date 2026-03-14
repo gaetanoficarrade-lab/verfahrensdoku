@@ -162,6 +162,9 @@ interface ChapterVersion {
   editor_text: string;
   changed_by: string;
   created_at: string;
+  change_reason?: string | null;
+  version_number?: number;
+  change_type?: string;
   profiles?: { first_name: string; last_name: string } | null;
 }
 

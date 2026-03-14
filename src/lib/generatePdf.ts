@@ -16,6 +16,7 @@ interface VersionEntry {
   date: string;
   changedBy: string;
   description: string;
+  chapter?: string;
 }
 
 interface PdfParams {
