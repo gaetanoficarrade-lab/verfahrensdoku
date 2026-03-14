@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+
 import { HelpTooltip } from '@/components/HelpTooltip';
 
 interface TenantPlan {
