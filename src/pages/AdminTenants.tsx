@@ -168,6 +168,8 @@ const AdminTenants = () => {
       plan_id: t.plan_id || '',
       is_free: t.is_free ?? false,
       trial_active: t.trial_active ?? false,
+      max_team_members_unlimited: t.max_team_members === null,
+      max_team_members: t.max_team_members ?? 5,
     });
     setDialogOpen(true);
   };
