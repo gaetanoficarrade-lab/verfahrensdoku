@@ -36,6 +36,7 @@ export default function DocumentPreview() {
   const [chapters, setChapters] = useState<ChapterData[]>([]);
   const [answers, setAnswers] = useState<OnboardingAnswers>({});
   const [isFinal, setIsFinal] = useState(false);
+  const [versionEntries, setVersionEntries] = useState<VersionEntry[]>([]);
 
   useEffect(() => {
     if (!id) return;
