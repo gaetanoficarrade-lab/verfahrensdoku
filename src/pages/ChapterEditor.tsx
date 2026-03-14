@@ -675,7 +675,7 @@ export default function ChapterEditor() {
               </div>
               {!precheckDone && notes.trim() && (
                 <p className="text-xs text-muted-foreground">
-                  Bitte führen Sie zuerst die KI-Prüfung durch, bevor Sie das Kapitel einreichen.
+                  Bitte führen Sie zuerst die Prüfung durch, bevor Sie das Kapitel einreichen.
                 </p>
               )}
 
