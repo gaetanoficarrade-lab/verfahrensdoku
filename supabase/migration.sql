@@ -612,6 +612,11 @@ CREATE TABLE public.tenant_settings (
   imprint_url TEXT,
   privacy_text TEXT,
   privacy_url TEXT,
+  button_text_color TEXT,
+  menu_text_color TEXT,
+  brand_text_color TEXT,
+  font_family TEXT,
+  custom_css TEXT,
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
