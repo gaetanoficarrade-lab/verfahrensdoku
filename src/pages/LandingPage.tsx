@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { CookieSettingsButton } from '@/components/CookieBanner';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import {
@@ -498,11 +499,12 @@ export default function LandingPage() {
       <footer className="py-8 px-6 border-t border-[#e5e5e5]">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#86868b]">
           <p>© {new Date().getFullYear()} gobdsuite. Alle Rechte vorbehalten.</p>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap gap-6">
             <Link to="/datenschutz" className="hover:text-[#1d1d1f] transition-colors">Datenschutz</Link>
             <Link to="/impressum" className="hover:text-[#1d1d1f] transition-colors">Impressum</Link>
             <Link to="/agb" className="hover:text-[#1d1d1f] transition-colors">AGB</Link>
             <Link to="/avv" className="hover:text-[#1d1d1f] transition-colors">AVV</Link>
+            <CookieSettingsButton />
           </div>
         </div>
       </footer>

@@ -17,7 +17,8 @@ export default function Impressum() {
       </nav>
 
       <main className="max-w-3xl mx-auto px-6 py-16">
-        <h1 className="text-3xl font-bold mb-12">Impressum</h1>
+        <h1 className="text-3xl font-bold mb-4">Impressum</h1>
+        <p className="text-sm text-[#86868b] mb-12">Stand: März 2026</p>
 
         <div className="space-y-10 text-[#86868b] leading-relaxed">
           <section>
@@ -83,6 +84,15 @@ export default function Impressum() {
           </section>
         </div>
       </main>
+
+      <footer className="border-t border-[#e5e5e5] py-6 px-6 mt-16">
+        <div className="max-w-3xl mx-auto flex flex-wrap items-center justify-center gap-6 text-xs text-[#86868b]">
+          <Link to="/impressum" className="hover:text-[#1d1d1f] transition-colors">Impressum</Link>
+          <Link to="/datenschutz" className="hover:text-[#1d1d1f] transition-colors">Datenschutz</Link>
+          <Link to="/agb" className="hover:text-[#1d1d1f] transition-colors">AGB</Link>
+          <Link to="/avv" className="hover:text-[#1d1d1f] transition-colors">AVV</Link>
+        </div>
+      </footer>
     </div>
   );
 }
