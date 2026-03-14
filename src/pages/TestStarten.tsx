@@ -220,7 +220,8 @@ export default function TestStarten() {
                     className="mt-1"
                   />
                   <Label htmlFor="terms" className="text-sm text-muted-foreground leading-tight cursor-pointer">
-                    Ich stimme den <span className="text-foreground underline">AGB</span> zu.
+                    Ich stimme den <Link to="/agb" target="_blank" className="text-foreground underline hover:text-primary">AGB</Link> zu.
+                  </Label>
                   </Label>
                 </div>
               </div>
