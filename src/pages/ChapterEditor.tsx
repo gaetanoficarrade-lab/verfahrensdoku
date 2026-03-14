@@ -180,7 +180,7 @@ export default function ChapterEditor() {
         // Restore precheck result from DB so it survives tab switches
         if (hints.length > 0) {
           setPrecheckDone(true);
-          setPrecheckResult({ hints, missing_fields: [] });
+          setPrecheckResult({ hints, missing_fields: [], confidence: 1 });
         }
 
         const { data: filesData } = await supabase
