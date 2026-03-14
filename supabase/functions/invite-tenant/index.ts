@@ -152,28 +152,20 @@ serve(async (req) => {
       ]);
     }
 
-    // Generate link: existing users -> recovery, new users -> invite
-    let linkType: "invite" | "recovery" = isExistingUser ? "recovery" : "invite";
-    let { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
+    // IMPORTANT: createUser() creates a registered auth user already,
+    // therefore we must generate a recovery link (not invite) for password setup.
+    const linkType: "recovery" = "recovery";
+    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
       type: linkType,
       email: normalizedEmail,
       options: { redirectTo: `${APP_URL}/set-password` },
     });
 
-    // Safety fallback: if invite fails with duplicate user, switch to recovery
-    if (linkError && linkType === "invite" && linkError.message?.toLowerCase().includes("already been registered")) {
-      linkType = "recovery";
-      const retry = await supabaseAdmin.auth.admin.generateLink({
-        type: "recovery",
-        email: normalizedEmail,
-        options: { redirectTo: `${APP_URL}/set-password` },
-      });
-      linkData = retry.data;
-      linkError = retry.error;
-    }
-
     if (linkError) {
-      return new Response(JSON.stringify({ error: linkError.message }), {
+      return new Response(JSON.stringify({
+        error: linkError.message,
+        details: { link_type: linkType, existing_user: isExistingUser },
+      }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
