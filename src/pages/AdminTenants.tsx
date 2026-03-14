@@ -149,7 +149,7 @@ const AdminTenants = () => {
 
   const openCreate = () => {
     setEditingTenant(null);
-    setForm({ name: '', contact_name: '', contact_email: '', plan_id: '' });
+    setForm({ name: '', contact_name: '', contact_email: '', plan_id: '', is_free: false, trial_active: false });
     setDialogOpen(true);
   };
 
