@@ -277,22 +277,6 @@ export default function HelpPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <Video className="h-4 w-4" />
-                Erklärvideos
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                <div className="text-center space-y-2">
-                  <Video className="h-12 w-12 text-muted-foreground/40 mx-auto" />
-                  <p className="text-sm text-muted-foreground">Erklärvideos werden in Kürze verfügbar sein.</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
     </div>
