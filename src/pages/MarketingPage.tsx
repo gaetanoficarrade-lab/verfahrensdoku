@@ -366,7 +366,7 @@ export default function MarketingPage() {
   useSEO({
     title: 'GoBD-Suite – Verfahrensdokumentation erstellen | GoBD-konform & KI-gestützt',
     description: 'GoBD-Suite ist das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde. Jetzt kostenlos testen.',
-    canonical: 'https://vd.gaetanoficarra.de',
+    canonical: 'https://gobd-suite.de',
     keywords: 'Verfahrensdokumentation, GoBD, GoBD-konform, Verfahrensdokumentation erstellen, GoBD Tool, Buchhaltung Software, Betriebsprüfung',
     author: 'Gaetano Ficarra',
     robots: 'index, follow',
