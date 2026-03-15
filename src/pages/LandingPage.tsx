@@ -388,12 +388,12 @@ export default function LandingPage() {
       </section>
 
       {/* ─── PLANS TEASER ─── */}
-      <section className="py-32 px-6">
+      <section className="py-16 sm:py-32 px-4 sm:px-6">
         <AnimatedSection className="max-w-3xl mx-auto text-center">
           <motion.p variants={fadeUp} className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">
             Flexible Pläne
           </motion.p>
-          <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-bold tracking-tight mb-6">
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6">
             Für jede Unternehmensgröße
             <br />
             <span className="text-[#86868b]">der passende Plan.</span>
