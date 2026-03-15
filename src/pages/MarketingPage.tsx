@@ -347,16 +347,21 @@ export default function MarketingPage() {
             </Reveal>
             <div className="grid md:grid-cols-3 gap-10">
               {[
-                { num: '1', icon: FileText, title: 'Onboarding ausfüllen', text: 'Beantworte 7 kurze Fragen zu deinem Unternehmen. Das dauert 5 Minuten und steuert welche Kapitel für dich relevant sind.' },
-                { num: '2', icon: Sparkles, title: 'Kapitel beschreiben', text: 'Beschreibe in deinen eigenen Worten wie du arbeitest. Kein Fachjargon, keine Paragraphen. Die KI prüft und vervollständigt.' },
-                { num: '3', icon: Download, title: 'PDF herunterladen', text: 'Deine fertige, GoBD-konforme Verfahrensdokumentation als professionelles PDF. Bereit für die nächste Prüfung.' },
+                { num: '1', icon: FileText, title: 'Onboarding ausfüllen', text: 'Beantworte 7 kurze Fragen zu deinem Unternehmen. Das dauert 5 Minuten und steuert welche Kapitel für dich relevant sind.', img: null },
+                { num: '2', icon: Sparkles, title: 'Kapitel beschreiben', text: 'Beschreibe in deinen eigenen Worten wie du arbeitest. Kein Fachjargon, keine Paragraphen. Die KI prüft und vervollständigt.', img: mockupEditor },
+                { num: '3', icon: Download, title: 'PDF herunterladen', text: 'Deine fertige, GoBD-konforme Verfahrensdokumentation als professionelles PDF. Bereit für die nächste Prüfung.', img: mockupPdf },
               ].map((s, i) => (
                 <Reveal key={i} delay={i * 0.12}>
                   <div className="flex flex-col items-center">
                     <span className="text-[80px] font-bold leading-none mb-2" style={{ color: C.yellow, opacity: 0.3 }} aria-hidden="true">{s.num}</span>
                     <s.icon size={32} className="mb-4" style={{ color: C.dark }} aria-hidden="true" />
                     <h3 className="text-lg font-bold mb-2" style={{ color: C.dark }}>{s.title}</h3>
-                    <p className="leading-relaxed" style={{ color: C.textGray }}>{s.text}</p>
+                    <p className="leading-relaxed mb-4" style={{ color: C.textGray }}>{s.text}</p>
+                    {s.img && (
+                      <div className="rounded-xl overflow-hidden mt-2" style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.10)' }}>
+                        <img src={s.img} alt={s.title} className="w-full h-auto" loading="lazy" />
+                      </div>
+                    )}
                   </div>
                 </Reveal>
               ))}
