@@ -31,6 +31,7 @@ export default function MarketingNav() {
 
   const isSubpage = ['/fuer-selbststaendige', '/fuer-dienstleister'].includes(location.pathname);
   const isResource = ['/verfahrensdokumentation-erstellen'].includes(location.pathname);
+  const isBlog = location.pathname.startsWith('/blog');
   const isHome = location.pathname === '/';
 
   const DropdownItem = ({ to, children }: { to: string; children: React.ReactNode }) => (
@@ -89,10 +90,11 @@ export default function MarketingNav() {
               <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 rounded-xl py-2 min-w-[280px]"
                 style={{ background: C.white, boxShadow: '0 8px 32px rgba(0,0,0,0.12)', border: '1px solid rgba(0,0,0,0.06)' }}>
                 <DropdownItem to="/verfahrensdokumentation-erstellen">VD erstellen – Anleitung</DropdownItem>
-                <DropdownItem to="/blog">Blog</DropdownItem>
               </div>
             )}
           </div>
+
+          <Link to="/blog" className="hover:opacity-70 transition-opacity" style={{ color: isBlog ? C.yellow : C.dark, fontWeight: isBlog ? 700 : 500 }}>Blog</Link>
         </div>
 
         <div className="hidden md:flex items-center gap-4">
@@ -124,7 +126,7 @@ export default function MarketingNav() {
           }
           <p className="text-xs font-semibold mt-2 uppercase tracking-wider" style={{ color: '#6E6E73' }}>Ressourcen</p>
           <Link to="/verfahrensdokumentation-erstellen" onClick={() => setMobileMenu(false)} className="pl-3">VD erstellen – Anleitung</Link>
-          <Link to="/blog" onClick={() => setMobileMenu(false)} className="pl-3">Blog</Link>
+          <Link to="/blog" onClick={() => setMobileMenu(false)}>Blog</Link>
           <hr style={{ borderColor: C.border }} />
           <Link to="/auth" onClick={() => setMobileMenu(false)}>Anmelden</Link>
           <Link to="/test-starten" onClick={() => setMobileMenu(false)}
