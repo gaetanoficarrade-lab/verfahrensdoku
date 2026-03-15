@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, type ReactNode } from 'react';
+import productSolution from '@/assets/product-solution.png';
 import { Link } from 'react-router-dom';
 import {
   AlertTriangle, Euro, Clock, Check, X, ChevronDown, ChevronUp,
