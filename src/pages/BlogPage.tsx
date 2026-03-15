@@ -78,16 +78,7 @@ export default function BlogPage() {
 
   return (
     <div className="font-sans" style={{ color: C.dark }}>
-      {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 lg:px-12" style={{ height: 64, background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(12px)', borderBottom: `1px solid ${C.border}` }}>
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl" style={{ color: C.dark }}>
-          <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-8" width={32} height={32} />
-        </Link>
-        <div className="hidden md:flex items-center gap-4">
-          <Link to="/auth" className="text-[15px] font-medium hover:opacity-70 transition-opacity" style={{ color: C.dark }}>Anmelden</Link>
-          <Link to="/test-starten" className="inline-flex items-center font-semibold text-[15px]" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '10px 20px' }}>Kostenlos testen</Link>
-        </div>
-      </nav>
+      <MarketingNav />
 
       <main className="pt-24 pb-20 px-6">
         <div className="max-w-6xl mx-auto">
