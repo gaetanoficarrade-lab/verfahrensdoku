@@ -695,6 +695,11 @@ export default function MarketingPage() {
                 </Reveal>
               ))}
             </div>
+            <Reveal delay={0.3}>
+              <p className="text-center text-xs mt-8" style={{ color: C.textGray, opacity: 0.7 }}>
+                * Die dargestellten Ergebnisse können variieren. Individuelle Ergebnisse hängen von verschiedenen Faktoren ab.
+              </p>
+            </Reveal>
           </div>
         </section>
 
