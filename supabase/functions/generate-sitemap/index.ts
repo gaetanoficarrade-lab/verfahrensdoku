@@ -28,10 +28,10 @@ serve(async (req) => {
 
     const staticPages = [
       { url: '/', priority: '1.0', changefreq: 'daily' },
+      { url: '/fuer-selbststaendige', priority: '0.8', changefreq: 'weekly' },
+      { url: '/fuer-dienstleister', priority: '0.8', changefreq: 'weekly' },
+      { url: '/verfahrensdokumentation-erstellen', priority: '0.8', changefreq: 'weekly' },
       { url: '/blog', priority: '0.8', changefreq: 'daily' },
-      { url: '/datenschutz', priority: '0.3', changefreq: 'monthly' },
-      { url: '/impressum', priority: '0.3', changefreq: 'monthly' },
-      { url: '/agb', priority: '0.3', changefreq: 'monthly' },
     ];
 
     const blogUrls = (posts || []).map((p: any) => ({
