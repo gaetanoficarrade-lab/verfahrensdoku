@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { CookieBanner, CookieSettingsButton } from '@/components/CookieBanner';
 import mockupClients from '@/assets/mockup-clients.png';
 import mockupPdf from '@/assets/mockup-pdf.png';
+import MarketingNav from '@/components/MarketingNav';
 import {
   Check, X, ChevronDown, ChevronUp, Menu, XIcon, Star,
   UserPlus, FileText, Eye, CheckCircle2, Download,
