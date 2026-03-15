@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo, type ReactNode } from 'react';
+import { CookieBanner, CookieSettingsButton } from '@/components/CookieBanner';
 import mockupDashboard from '@/assets/mockup-dashboard.png';
 import mockupEditor from '@/assets/mockup-editor.png';
 import mockupPdf from '@/assets/mockup-pdf.png';
