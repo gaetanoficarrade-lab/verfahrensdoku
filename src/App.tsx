@@ -84,6 +84,7 @@ const App = () => (
               <Route path="/client-register" element={<ClientRegister />} />
               <Route path="/test-starten" element={<TestStarten />} />
               <Route path="/blog" element={<BlogPage />} />
+              <Route path="/fuer-selbststaendige" element={<FuerSelbststaendige />} />
               <Route path="/blog/:slug" element={<BlogPostPage />} />
 
               {/* Protected routes with layout */}
