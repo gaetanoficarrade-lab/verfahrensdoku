@@ -180,8 +180,8 @@ export default function MarketingPage() {
         style={{ height: 64, background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderBottom: `1px solid ${C.border}` }}
         aria-label="Hauptnavigation"
       >
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl" style={{ color: C.dark }}>
-          <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-8" width={32} height={32} />
+        <Link to="/" className="flex items-center gap-2 font-bold text-xl shrink-0" style={{ color: C.dark }}>
+          <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-7 w-auto" />
         </Link>
         <div className="hidden md:flex items-center gap-8 text-[15px] font-medium" style={{ color: C.dark }}>
           <a href="#funktionen" className="hover:opacity-70 transition-opacity">Funktionen</a>
