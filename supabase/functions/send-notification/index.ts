@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      const appUrl = 'https://vd.gaetanoficarra.de';
+      const appUrl = 'https://gobd-suite.de';
       const fullLink = link ? `${appUrl}${link}` : appUrl;
 
       const templateKey = typeToTemplateKey[type];
