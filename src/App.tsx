@@ -192,6 +192,14 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/admin/blog"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminBlog /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
 
               <Route
                 path="/clients"
