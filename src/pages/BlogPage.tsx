@@ -4,6 +4,9 @@ import { Calendar, Clock, ArrowRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useSEO } from '@/hooks/useSEO';
+import MarketingNav from '@/components/MarketingNav';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { useSEO } from '@/hooks/useSEO';
 
 const C = {
   yellow: '#FAC81E', dark: '#44484E', white: '#FFFFFF',
