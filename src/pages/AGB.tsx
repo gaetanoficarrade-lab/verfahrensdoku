@@ -85,7 +85,7 @@ export default function AGB() {
 
           <S title="§ 5 Vergütung und Zahlungsbedingungen">
             <P>5.1 Die Entgelte richten sich nach der zum Zeitpunkt des Vertragsschlusses geltenden Preisliste. Alle Preise verstehen sich als Nettobeträge zuzüglich der gesetzlich geltenden Umsatzsteuer.</P>
-            <P>5.2 Plan Solo wird als Einmalbetrag in Rechnung gestellt. Wiederkehrende Pläne (Berater, Agentur) werden monatlich im Voraus abgerechnet. Setup-Gebühren sind einmalig fällig.</P>
+            <P>5.2 Plan Solo wird als Einmalbetrag in Rechnung gestellt. Plan Berater und Plan Agentur werden monatlich oder jährlich im Voraus abgerechnet, je nach gewähltem Abrechnungszeitraum bei Vertragsschluss.</P>
             <P>5.3 Zahlungen sind innerhalb von 14 Tagen nach Rechnungsstellung fällig. Bei Zahlungsverzug ist der Anbieter berechtigt, Verzugszinsen in Höhe von 9 Prozentpunkten über dem Basiszinssatz gemäß § 288 Abs. 2 BGB zu berechnen.</P>
             <P>5.4 Der Anbieter behält sich vor, die Preise mit einer Ankündigungsfrist von mindestens 4 Wochen zum Ende des jeweiligen Abrechnungszeitraums anzupassen. Widerspricht der Kunde der Anpassung nicht innerhalb von 2 Wochen nach Zugang der Ankündigung, gilt die Anpassung als angenommen.</P>
             <P>5.5 Der Anbieter ist berechtigt, den Zugang zum Dienst zu sperren, sofern Zahlungen trotz Mahnung nicht beglichen werden.</P>
