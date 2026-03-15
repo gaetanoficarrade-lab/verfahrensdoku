@@ -125,7 +125,7 @@ export default function FuerSelbststaendige() {
     "@type": "WebPage",
     "name": "Verfahrensdokumentation für Selbstständige",
     "description": "GoBD-konforme Verfahrensdokumentation für Selbstständige erstellen mit KI-Unterstützung",
-    "url": "https://vd.gaetanoficarra.de/fuer-selbststaendige",
+    "url": "https://gobd-suite.de/fuer-selbststaendige",
     "mainEntity": {
       "@type": "SoftwareApplication",
       "name": "GoBD-Suite",
