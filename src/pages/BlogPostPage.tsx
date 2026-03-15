@@ -159,8 +159,8 @@ export default function BlogPostPage() {
       "datePublished": post.published_at,
       "dateModified": post.updated_at,
       "author": { "@type": "Person", "name": "Gaetano Ficarra", "url": "https://gaetanoficarra.de" },
-      "publisher": { "@type": "Organization", "name": "GoBD-Suite", "logo": { "@type": "ImageObject", "url": "https://vd.gaetanoficarra.de/images/logo.png" } },
-      "mainEntityOfPage": { "@type": "WebPage", "@id": `https://vd.gaetanoficarra.de/blog/${post.slug}` },
+      "publisher": { "@type": "Organization", "name": "GoBD-Suite", "logo": { "@type": "ImageObject", "url": "https://gobd-suite.de/images/logo.png" } },
+      "mainEntityOfPage": { "@type": "WebPage", "@id": `https://gobd-suite.de/blog/${post.slug}` },
       ...(post.cover_image_url ? { "image": post.cover_image_url } : {}),
     }];
   }, [post]);
