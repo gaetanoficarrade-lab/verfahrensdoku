@@ -125,7 +125,7 @@ export default function FuerSelbststaendige() {
     "@type": "WebPage",
     "name": "Verfahrensdokumentation für Selbstständige",
     "description": "GoBD-konforme Verfahrensdokumentation für Selbstständige erstellen mit KI-Unterstützung",
-    "url": "https://vd.gaetanoficarra.de/fuer-selbststaendige",
+    "url": "https://gobd-suite.de/fuer-selbststaendige",
     "mainEntity": {
       "@type": "SoftwareApplication",
       "name": "GoBD-Suite",
@@ -136,7 +136,7 @@ export default function FuerSelbststaendige() {
   useSEO({
     title: 'Verfahrensdokumentation für Selbstständige – GoBD-konform in 60 Minuten | GoBD-Suite',
     description: 'Als Selbstständiger GoBD-konform werden ohne Steuerberater. GoBD-Suite erstellt deine Verfahrensdokumentation KI-gestützt in unter einer Stunde. Jetzt testen.',
-    canonical: 'https://vd.gaetanoficarra.de/fuer-selbststaendige',
+    canonical: 'https://gobd-suite.de/fuer-selbststaendige',
     keywords: 'Verfahrensdokumentation Selbstständige, GoBD Freelancer, Verfahrensdokumentation erstellen, GoBD-konform',
     author: 'Gaetano Ficarra',
     robots: 'index, follow',
@@ -144,7 +144,7 @@ export default function FuerSelbststaendige() {
     ogDescription: 'GoBD-konform in 60 Minuten. Ohne Steuerberater. Ohne Juristendeutsch.',
     ogType: 'website',
     ogLocale: 'de_DE',
-    ogImage: 'https://vd.gaetanoficarra.de/og-image.png',
+    ogImage: 'https://gobd-suite.de/og-image.png',
     jsonLd: [jsonLd],
   });
 

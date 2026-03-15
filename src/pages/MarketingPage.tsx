@@ -336,7 +336,7 @@ export default function MarketingPage() {
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
       "description": "Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt und GoBD-konform.",
-      "url": "https://vd.gaetanoficarra.de",
+      "url": "https://gobd-suite.de",
       "offers": [
         { "@type": "Offer", "name": "Solo", "price": "980", "priceCurrency": "EUR", "priceSpecification": { "@type": "UnitPriceSpecification", "billingDuration": "P1Y" } },
         { "@type": "Offer", "name": "Berater", "price": "399", "priceCurrency": "EUR", "priceSpecification": { "@type": "UnitPriceSpecification", "billingDuration": "P1M" } },
@@ -357,8 +357,8 @@ export default function MarketingPage() {
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "GoBD-Suite",
-      "url": "https://vd.gaetanoficarra.de",
-      "logo": "https://vd.gaetanoficarra.de/images/logo.png",
+      "url": "https://gobd-suite.de",
+      "logo": "https://gobd-suite.de/images/logo.png",
       "contactPoint": { "@type": "ContactPoint", "contactType": "customer service", "availableLanguage": "German" },
     },
   ], []);
@@ -366,7 +366,7 @@ export default function MarketingPage() {
   useSEO({
     title: 'GoBD-Suite – Verfahrensdokumentation erstellen | GoBD-konform & KI-gestützt',
     description: 'GoBD-Suite ist das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde. Jetzt kostenlos testen.',
-    canonical: 'https://vd.gaetanoficarra.de',
+    canonical: 'https://gobd-suite.de',
     keywords: 'Verfahrensdokumentation, GoBD, GoBD-konform, Verfahrensdokumentation erstellen, GoBD Tool, Buchhaltung Software, Betriebsprüfung',
     author: 'Gaetano Ficarra',
     robots: 'index, follow',
@@ -374,7 +374,7 @@ export default function MarketingPage() {
     ogDescription: 'Das erste vollständige VD-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde.',
     ogType: 'website',
     ogLocale: 'de_DE',
-    ogImage: 'https://vd.gaetanoficarra.de/og-image.png',
+    ogImage: 'https://gobd-suite.de/og-image.png',
     twitterCard: 'summary_large_image',
     twitterTitle: 'GoBD-Suite',
     twitterDescription: 'Das erste vollständige VD-Tool im DACH-Raum.',

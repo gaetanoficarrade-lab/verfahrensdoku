@@ -12,4 +12,4 @@ Disallow: /set-password
 Disallow: /client-register
 Disallow: /client
 
-Sitemap: https://vd.gaetanoficarra.de/sitemap.xml
+Sitemap: https://gobd-suite.de/sitemap.xml

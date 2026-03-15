@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      const appUrl = 'https://vd.gaetanoficarra.de';
+      const appUrl = 'https://gobd-suite.de';
       const fullLink = link ? `${appUrl}${link}` : appUrl;
 
       const templateKey = typeToTemplateKey[type];
@@ -141,7 +141,7 @@ Deno.serve(async (req) => {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              from: `${brandName} <noreply@vd.gaetanoficarra.de>`,
+              from: `${brandName} <noreply@gobd-suite.de>`,
               to: [recipientEmail],
               subject: emailSubject,
               html: emailHtml,

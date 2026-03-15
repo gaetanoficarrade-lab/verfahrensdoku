@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { QRCodeSVG } from 'qrcode.react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const BASE_URL = 'https://vd.gaetanoficarra.de';
+const BASE_URL = 'https://gobd-suite.de';
 const SLUG_REGEX = /^[a-z0-9][a-z0-9-]{1,}[a-z0-9]$/;
 
 function slugify(text: string): string {

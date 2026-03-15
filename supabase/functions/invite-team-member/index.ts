@@ -8,7 +8,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const APP_URL = "https://vd.gaetanoficarra.de";
+const APP_URL = "https://gobd-suite.de";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -140,7 +140,7 @@ serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: `${brandName} <noreply@vd.gaetanoficarra.de>`,
+            from: `${brandName} <noreply@gobd-suite.de>`,
             to: [email],
             subject,
             html,

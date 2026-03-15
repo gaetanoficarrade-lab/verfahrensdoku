@@ -92,7 +92,7 @@ export default function FuerDienstleister() {
     "@context": "https://schema.org", "@type": "WebPage",
     "name": "GoBD-Suite für Berater und Agenturen",
     "description": "Verfahrensdokumentation als Dienstleistung anbieten mit GoBD-Suite. Whitelabel, unbegrenzte Mandanten, neue Einnahmequelle.",
-    "url": "https://vd.gaetanoficarra.de/fuer-dienstleister",
+    "url": "https://gobd-suite.de/fuer-dienstleister",
     "mainEntity": {
       "@type": "SoftwareApplication", "name": "GoBD-Suite",
       "offers": [
@@ -105,12 +105,12 @@ export default function FuerDienstleister() {
   useSEO({
     title: 'Verfahrensdokumentation als Dienstleistung anbieten – GoBD-Suite für Berater & Agenturen',
     description: 'Biete deinen Mandanten GoBD-konforme Verfahrensdokumentationen an. Mit GoBD-Suite als Berater oder Agentur neue Einnahmen generieren. Whitelabel inklusive.',
-    canonical: 'https://vd.gaetanoficarra.de/fuer-dienstleister',
+    canonical: 'https://gobd-suite.de/fuer-dienstleister',
     keywords: 'Verfahrensdokumentation Dienstleister, GoBD Berater, Verfahrensdokumentation Whitelabel, GoBD-Suite Agentur',
     author: 'Gaetano Ficarra', robots: 'index, follow',
     ogTitle: 'GoBD-Suite für Berater & Agenturen – Verfahrensdokumentation als Dienstleistung',
     ogDescription: 'Neue Einnahmequelle für Steuerberater, Buchhalter und Consultants. Whitelabel. Unbegrenzte Mandanten.',
-    ogType: 'website', ogLocale: 'de_DE', ogImage: 'https://vd.gaetanoficarra.de/og-image.png',
+    ogType: 'website', ogLocale: 'de_DE', ogImage: 'https://gobd-suite.de/og-image.png',
     jsonLd: [jsonLd],
   });
 
