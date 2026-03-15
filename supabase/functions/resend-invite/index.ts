@@ -140,7 +140,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: `${brandName} <noreply@vd.gaetanoficarra.de>`,
+        from: `${brandName} <noreply@gobd-suite.de>`,
         to: [email],
         subject,
         html: `

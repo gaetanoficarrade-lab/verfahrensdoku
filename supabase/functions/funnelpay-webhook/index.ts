@@ -422,7 +422,7 @@ serve(async (req) => {
           method: "POST",
           headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
           body: JSON.stringify({
-            from: "GoBD-Suite <noreply@vd.gaetanoficarra.de>",
+            from: "GoBD-Suite <noreply@gobd-suite.de>",
             to: [adminEmail],
             subject: "⚠ Funnelpay Webhook Fehler",
             html: `<p>Event: ${eventType}</p><p>Kunde: ${customerEmail}</p><p>Fehler: ${e instanceof Error ? e.message : String(e)}</p>`,
