@@ -181,7 +181,7 @@ function PricingToggleSection() {
             style={{ background: annual ? C.yellow : 'transparent', color: C.dark }}
           >
             Jährlich
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: C.green, color: '#fff' }}>2 Monate gratis</span>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: C.green, color: '#fff' }}>–17 %</span>
           </button>
         </div>
       </div>
