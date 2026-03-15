@@ -200,8 +200,22 @@ export default function BlogPostPage() {
       <MarketingNav />
 
       <main className="pt-20">
+        {/* Cover Banner */}
+        {post.cover_image_url && (
+          <div className="w-full max-w-5xl mx-auto px-6 pt-8">
+            <div className="relative w-full rounded-2xl overflow-hidden shadow-xl" style={{ aspectRatio: '21/9' }}>
+              <img
+                src={post.cover_image_url}
+                alt={post.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)' }} />
+            </div>
+          </div>
+        )}
+
         {/* Header */}
-        <div className="max-w-[720px] mx-auto px-6 pt-12 pb-8">
+        <div className="max-w-[720px] mx-auto px-6 pt-10 pb-8">
           <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm font-medium mb-8 hover:opacity-70 transition-opacity" style={{ color: C.textGray }}>
             <ArrowLeft size={14} /> Zurück zum Blog
           </Link>
