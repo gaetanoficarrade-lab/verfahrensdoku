@@ -66,20 +66,18 @@ export default function BlogPostPage() {
       setLoading(true);
       await seedBlogArticleVD2025();
 
+      const currentSeeded = SEEDED_BLOG_ARTICLES.find(a => a.slug === slug);
       const fallbackPost = SEEDED_FULL_POSTS.find(p => p.slug === slug) ?? null;
-      const fallbackRelated = SEEDED_FULL_POSTS
-        .filter(p => p.slug !== slug)
-        .sort((a, b) => +new Date(b.published_at) - +new Date(a.published_at))
-        .slice(0, 3)
-        .map(({ id, title, slug: relatedSlug, excerpt, cover_image_url, category, reading_time_minutes, published_at }) => ({
-          id,
-          title,
-          slug: relatedSlug,
-          excerpt,
-          cover_image_url,
-          category,
-          reading_time_minutes,
-          published_at,
+
+      // Use specific related slugs if defined, otherwise default
+      const relatedSlugs = currentSeeded?.related_slugs;
+      const fallbackRelated = (relatedSlugs
+        ? SEEDED_FULL_POSTS.filter(p => relatedSlugs.includes(p.slug))
+        : SEEDED_FULL_POSTS.filter(p => p.slug !== slug)
+            .sort((a, b) => +new Date(b.published_at) - +new Date(a.published_at))
+            .slice(0, 3)
+      ).map(({ id, title, slug: relatedSlug, excerpt, cover_image_url, category, reading_time_minutes, published_at }) => ({
+          id, title, slug: relatedSlug, excerpt, cover_image_url, category, reading_time_minutes, published_at,
         }));
 
       const { data, error } = await supabase
@@ -149,9 +147,11 @@ export default function BlogPostPage() {
     return () => observer.disconnect();
   }, [headings]);
 
+  const seededArticle = SEEDED_BLOG_ARTICLES.find(a => a.slug === slug);
+
   const jsonLd = useMemo(() => {
     if (!post) return [];
-    return [{
+    const base = [{
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "headline": post.title,
@@ -163,7 +163,11 @@ export default function BlogPostPage() {
       "mainEntityOfPage": { "@type": "WebPage", "@id": `https://gobd-suite.de/blog/${post.slug}` },
       ...(post.cover_image_url ? { "image": post.cover_image_url } : {}),
     }];
-  }, [post]);
+    if (seededArticle?.additional_json_ld) {
+      return [...base, ...seededArticle.additional_json_ld];
+    }
+    return base;
+  }, [post, seededArticle]);
 
   useSEO({
     title: post ? `${post.meta_title || post.title} | GoBD-Suite Blog` : 'Blog | GoBD-Suite',
@@ -270,8 +274,8 @@ export default function BlogPostPage() {
             {/* CTA Box */}
             <div className="mt-16 rounded-[18px] p-10 text-center relative overflow-hidden" style={{ background: C.bgLight }}>
               <div className="absolute top-0 left-0 right-0 h-1" style={{ background: C.yellow }} />
-              <h2 className="text-2xl font-bold mb-3" style={{ color: C.dark }}>Bereit deine Verfahrensdokumentation zu erstellen?</h2>
-              <p className="mb-6" style={{ color: C.textGray }}>Starte jetzt kostenlos – ohne Kreditkarte, fertig in unter 60 Minuten.</p>
+              <h2 className="text-2xl font-bold mb-3" style={{ color: C.dark }}>{seededArticle?.cta_title || 'Bereit deine Verfahrensdokumentation zu erstellen?'}</h2>
+              <p className="mb-6" style={{ color: C.textGray }}>{seededArticle?.cta_description || 'Starte jetzt kostenlos – ohne Kreditkarte, fertig in unter 60 Minuten.'}</p>
               <Link to="/test-starten" className="inline-flex items-center font-semibold text-[15px] transition-all duration-200 hover:shadow-lg"
                 style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '14px 28px' }}
               >
@@ -424,6 +428,29 @@ function MarkdownRenderer({ content }: { content: string }) {
         <ol key={key++} style={{ listStyleType: 'decimal', paddingLeft: 24, margin: '16px 0', color: C.textGray, fontSize: 18, lineHeight: 1.8 }}>
           {items.map((item, j) => <li key={j} style={{ marginBottom: 4 }}>{formatInline(item)}</li>)}
         </ol>
+      );
+      continue;
+    }
+
+    // Checkbox list
+    if (line.startsWith('- [ ] ') || line.startsWith('- [x] ')) {
+      const items: { checked: boolean; text: string }[] = [];
+      while (i < lines.length && (lines[i].startsWith('- [ ] ') || lines[i].startsWith('- [x] '))) {
+        const checked = lines[i].startsWith('- [x] ');
+        items.push({ checked, text: lines[i].slice(6) });
+        i++;
+      }
+      elements.push(
+        <ul key={key++} style={{ listStyle: 'none', padding: 0, margin: '16px 0' }}>
+          {items.map((item, j) => (
+            <li key={j} className="flex items-start gap-3" style={{ marginBottom: 8, fontSize: 18, lineHeight: 1.8, color: C.textGray }}>
+              <span className="shrink-0 mt-1.5 flex items-center justify-center rounded" style={{ width: 22, height: 22, background: item.checked ? C.yellow : 'transparent', border: `2px solid ${C.yellow}` }}>
+                {item.checked && <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke={C.dark} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+              </span>
+              <span>{formatInline(item.text)}</span>
+            </li>
+          ))}
+        </ul>
       );
       continue;
     }
