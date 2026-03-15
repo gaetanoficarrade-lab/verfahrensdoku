@@ -92,9 +92,11 @@ export function useSEO({
     if (twitterTitle) setMeta('twitter:title', twitterTitle);
     if (twitterDescription) setMeta('twitter:description', twitterDescription);
 
-    // JSON-LD
+    // JSON-LD – remove pre-rendered duplicates first, then add fresh
     const scripts: HTMLScriptElement[] = [];
     if (jsonLd) {
+      // Remove any existing JSON-LD scripts to prevent duplicates from SSR/prerender
+      document.querySelectorAll('script[type="application/ld+json"]').forEach((el) => el.remove());
       jsonLd.forEach((data) => {
         const script = document.createElement('script');
         script.type = 'application/ld+json';
