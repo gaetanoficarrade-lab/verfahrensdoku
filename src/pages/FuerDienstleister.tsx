@@ -195,7 +195,7 @@ export default function FuerDienstleister() {
               </Reveal>
               <Reveal delay={0.1}>
                 <h1 className="text-4xl md:text-[52px] lg:text-[60px] font-bold leading-[1.08] tracking-tight mb-6" style={{ color: C.dark }}>
-                  Biete deinen Mandanten <span style={{ background: 'rgba(250,200,30,0.2)', borderRadius: 4, padding: '0 6px' }}>GoBD-konforme</span> Verfahrensdokumentationen an.<br className="hidden md:inline" /> Unter deinem Namen.
+                  Biete deinen Mandanten <span style={{ background: 'rgba(250,200,30,0.2)', borderRadius: 4, padding: '0 6px' }}>GoBD-konforme</span> Verfahrens&shy;dokumentationen an. Unter deinem Namen.
                 </h1>
               </Reveal>
               <Reveal delay={0.2}>
