@@ -229,37 +229,6 @@ export default function AdminSettingsGeneral() {
           </CardContent>
         </Card>
 
-        {/* Affiliate Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Link2 className="h-5 w-5" />
-              Affiliate
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label>Cookie-Laufzeit (Tage)</Label>
-              <Input
-                type="number"
-                min={1}
-                max={365}
-                value={platformSettings.affiliate_cookie_days}
-                onChange={(e) => setPlatformSettings(p => ({ ...p, affiliate_cookie_days: e.target.value }))}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Standard-Provision (%)</Label>
-              <Input
-                type="number"
-                min={0}
-                max={100}
-                value={platformSettings.affiliate_default_commission}
-                onChange={(e) => setPlatformSettings(p => ({ ...p, affiliate_default_commission: e.target.value }))}
-              />
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Invitation Settings */}
         <Card>
