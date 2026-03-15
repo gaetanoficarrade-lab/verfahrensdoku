@@ -626,7 +626,7 @@ export default function MarketingPage() {
         <section className="py-20 md:py-28 px-6 text-center" style={{ background: C.dark }}>
           <Reveal>
             <p className="text-2xl md:text-3xl font-bold leading-tight mb-4" style={{ color: C.white }}>
-              ⚡ Jede Woche ohne Verfahrensdokumentation ist ein vermeidbares Risiko.
+              Jede Woche ohne Verfahrensdokumentation ist ein vermeidbares Risiko.
             </p>
             <p className="text-lg mb-10" style={{ color: 'rgba(255,255,255,0.8)' }}>
               Das Finanzamt wartet nicht. Deine Verfahrensdokumentation kann heute fertig sein.
