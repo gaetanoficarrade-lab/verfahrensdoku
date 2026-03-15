@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, type ReactNode } from 'react';
+import SocialProofNotification from '@/components/SocialProofNotification';
 import { Link } from 'react-router-dom';
 import { CookieBanner, CookieSettingsButton } from '@/components/CookieBanner';
 import MarketingNav from '@/components/MarketingNav';
@@ -167,6 +168,7 @@ export default function VerfahrensdokumentationErstellen() {
 
   return (
     <div className="font-sans" style={{ color: C.dark }}>
+      <SocialProofNotification />
       <MarketingNav />
 
       <main>

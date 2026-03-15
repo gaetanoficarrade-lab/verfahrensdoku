@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useSEO } from '@/hooks/useSEO';
+import SocialProofNotification from '@/components/SocialProofNotification';
 
 /* ─── Design tokens ─── */
 const C = {
@@ -411,6 +412,7 @@ export default function MarketingPage() {
 
   return (
     <div className="font-sans" style={{ color: C.dark }}>
+      <SocialProofNotification />
       <MarketingNav />
 
       <main>
