@@ -37,6 +37,21 @@ interface RelatedPost {
   published_at: string;
 }
 
+const SEEDED_FULL_POSTS: FullPost[] = SEEDED_BLOG_ARTICLES.map((article, index) => ({
+  id: `seed-${index}-${article.slug}`,
+  title: article.title,
+  slug: article.slug,
+  excerpt: article.excerpt,
+  content: article.content,
+  cover_image_url: article.cover_image_url ?? null,
+  category: article.category,
+  reading_time_minutes: article.reading_time_minutes,
+  published_at: article.published_at,
+  updated_at: article.published_at,
+  meta_title: article.meta_title,
+  meta_description: article.meta_description,
+}));
+
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<FullPost | null>(null);
