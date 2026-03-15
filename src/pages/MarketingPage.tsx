@@ -678,7 +678,7 @@ export default function MarketingPage() {
                       <li key={t} className="flex items-center gap-2 text-[15px]" style={{ color: C.textGray }}><Check size={16} style={{ color: C.green }} /> {t}</li>
                     ))}
                   </ul>
-                  <a href="#preise" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Für Dienstleister</a>
+                  <Link to="/fuer-dienstleister" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Für Dienstleister</Link>
                   <div className="mt-6 flex-1 flex items-end">
                     <img src={mockupLaptopOverview} alt="GoBD-Suite Berater-Übersicht auf einem Laptop" className="w-full h-auto" loading="lazy" />
                   </div>
