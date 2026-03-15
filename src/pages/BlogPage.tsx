@@ -51,6 +51,7 @@ export default function BlogPage() {
   useEffect(() => {
     (async () => {
       setLoading(true);
+      await seedBlogArticleVD2025();
       const from = (page - 1) * perPage;
       const to = from + perPage - 1;
 
