@@ -325,7 +325,7 @@ export default function LandingPage() {
               <motion.div
                 key={b.title}
                 variants={fadeUp}
-                className="rounded-3xl border border-[#e5e5e5] p-10 sm:p-12 transition-all duration-500 hover:shadow-lg hover:shadow-black/5 group bg-[#fafafa]"
+                className="rounded-3xl border border-[#e5e5e5] p-6 sm:p-10 md:p-12 transition-all duration-500 hover:shadow-lg hover:shadow-black/5 group bg-[#fafafa]"
               >
                 <div className="flex items-start gap-5">
                   <div className="w-12 h-12 rounded-2xl bg-[#e8a91a]/10 flex items-center justify-center shrink-0 group-hover:bg-[#e8a91a]/15 transition-colors">
