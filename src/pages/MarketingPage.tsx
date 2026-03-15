@@ -58,17 +58,26 @@ function useCountUp(end: number, duration = 1500, trigger = false) {
   const hasAnimated = useRef(false);
 
   useEffect(() => {
-    if (!trigger || hasAnimated.current) return;
+    const isPrerenderAgent = typeof navigator !== 'undefined' && (
+      navigator.webdriver || /HeadlessChrome|puppeteer|playwright/i.test(navigator.userAgent)
+    );
+
+    if (!trigger || hasAnimated.current || isPrerenderAgent) return;
+
     hasAnimated.current = true;
     setValue(0);
+
     const start = performance.now();
     const animate = (now: number) => {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       setValue(Math.round(eased * end));
-      if (progress < 1) rafRef.current = requestAnimationFrame(animate);
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(animate);
+      }
     };
+
     rafRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafRef.current);
   }, [trigger, end, duration]);
