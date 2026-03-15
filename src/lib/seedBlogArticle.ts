@@ -906,73 +906,114 @@ Und dann kannst du dir den Satz "Das gilt bestimmt nicht für mich" für immer s
 - [§ 162 AO – Schätzung von Besteuerungsgrundlagen](https://www.gesetze-im-internet.de/ao_1977/__162.html)
 - [§ 238 HGB – Buchführungspflicht](https://www.gesetze-im-internet.de/hgb/__238.html)`;
 
-export async function seedBlogArticleVD2025() {
-  const articles = [
-    {
-      slug: 'verfahrensdokumentation-2025-was-sich-geaendert-hat',
-      title: 'Verfahrensdokumentation 2025: Was sich geändert hat und was jetzt wirklich Pflicht ist',
-      category: 'GoBD',
-      reading_time_minutes: 7,
-      meta_title: 'Verfahrensdokumentation 2025 – Was sich geändert hat und was Pflicht ist',
-      meta_description: 'Was hat sich 2025 bei der Verfahrensdokumentation geändert? Welche Pflichten gelten jetzt? Alles was du wissen musst – mit offiziellen Quellen.',
-      excerpt: 'Seit 2025 prüft das Finanzamt aktiv ob Verfahrensdokumentationen vorliegen. Was sich geändert hat, was jetzt Pflicht ist und warum die meisten Selbstständigen unvorbereitet sind.',
-      content: ARTICLE_CONTENT,
-    },
-    {
-      slug: 'verfahrensdokumentation-vorlage-steuerberater-oder-tool',
-      title: 'Verfahrensdokumentation erstellen: Vorlage, Steuerberater oder Tool – was lohnt sich wirklich?',
-      category: 'GoBD',
-      reading_time_minutes: 8,
-      meta_title: 'Verfahrensdokumentation: Vorlage, Steuerberater oder Tool – der ehrliche Vergleich',
-      meta_description: 'Verfahrensdokumentation erstellen: Kostenlose Vorlage, Steuerberater beauftragen oder Tool nutzen? Wir vergleichen ehrlich Kosten, Aufwand und Risiken.',
-      excerpt: 'Vorlage aus dem Internet, Steuerberater beauftragen oder Tool nutzen? Wir vergleichen alle drei Wege ehrlich – mit Kosten, Zeitaufwand und den Risiken die keiner erwähnt.',
-      content: ARTICLE_2_CONTENT,
-    },
-    {
-      slug: 'betriebspruefung-ohne-verfahrensdokumentation',
-      title: 'Was passiert bei einer Betriebsprüfung ohne Verfahrensdokumentation?',
-      category: 'GoBD',
-      reading_time_minutes: 7,
-      meta_title: 'Betriebsprüfung ohne Verfahrensdokumentation – Was droht wirklich?',
-      meta_description: 'Was passiert wenn der Betriebsprüfer kommt und du keine Verfahrensdokumentation hast? Die ehrliche Antwort – mit offiziellen Quellen.',
-      excerpt: 'Der Betriebsprüfer sitzt vor dir und fragt nach der Verfahrensdokumentation. Du hast keine. Was jetzt passiert – und warum es schlimmer sein kann als du denkst.',
-      content: ARTICLE_3_CONTENT,
-    },
-    {
-      slug: 'verfahrensdokumentation-als-dienstleistung-anbieten',
-      title: 'Verfahrensdokumentation als Dienstleistung anbieten: So verdienst du damit Geld',
-      category: 'Dienstleister',
-      reading_time_minutes: 8,
-      meta_title: 'Verfahrensdokumentation als Dienstleistung anbieten – So geht es',
-      meta_description: 'Wie Steuerberater, Buchhalter und Consultants mit Verfahrensdokumentationen eine neue Einnahmequelle aufbauen. Konkrete Zahlen und Strategie.',
-      excerpt: 'Deine Mandanten brauchen eine Verfahrensdokumentation – die meisten wissen es nur noch nicht. Wie du das als Dienstleister zur profitablen Einnahmequelle machst.',
-      content: ARTICLE_4_CONTENT,
-    },
-    {
-      slug: 'verfahrensdokumentation-freelancer',
-      title: 'GoBD-konforme Verfahrensdokumentation für Freelancer: Was wirklich reinmuss',
-      category: 'GoBD',
-      reading_time_minutes: 7,
-      meta_title: 'Verfahrensdokumentation für Freelancer 2025 – Was wirklich reinmuss',
-      meta_description: 'Als Freelancer eine GoBD-konforme Verfahrensdokumentation erstellen: Was Pflicht ist, was nicht und wie du es in unter einer Stunde erledigst.',
-      excerpt: 'Viele Freelancer denken die Verfahrensdokumentation ist nur für große Unternehmen. Falsch. Was du als Freelancer wirklich brauchst – und was du getrost weglassen kannst.',
-      content: ARTICLE_5_CONTENT,
-    },
-  ];
+export interface SeededBlogArticle {
+  slug: string;
+  title: string;
+  category: string;
+  reading_time_minutes: number;
+  meta_title: string;
+  meta_description: string;
+  excerpt: string;
+  content: string;
+  published: boolean;
+  published_at: string;
+  cover_image_url?: string | null;
+}
 
-  for (const article of articles) {
-    const { data: existing } = await supabase
+export const SEEDED_BLOG_ARTICLES: SeededBlogArticle[] = [
+  {
+    slug: 'verfahrensdokumentation-2025-was-sich-geaendert-hat',
+    title: 'Verfahrensdokumentation 2025: Was sich geändert hat und was jetzt wirklich Pflicht ist',
+    category: 'GoBD',
+    reading_time_minutes: 7,
+    meta_title: 'Verfahrensdokumentation 2025 – Was sich geändert hat und was Pflicht ist',
+    meta_description: 'Was hat sich 2025 bei der Verfahrensdokumentation geändert? Welche Pflichten gelten jetzt? Alles was du wissen musst – mit offiziellen Quellen.',
+    excerpt: 'Seit 2025 prüft das Finanzamt aktiv ob Verfahrensdokumentationen vorliegen. Was sich geändert hat, was jetzt Pflicht ist und warum die meisten Selbstständigen unvorbereitet sind.',
+    content: ARTICLE_CONTENT,
+    published: true,
+    published_at: '2026-03-11T09:00:00.000Z',
+    cover_image_url: null,
+  },
+  {
+    slug: 'verfahrensdokumentation-vorlage-steuerberater-oder-tool',
+    title: 'Verfahrensdokumentation erstellen: Vorlage, Steuerberater oder Tool – was lohnt sich wirklich?',
+    category: 'GoBD',
+    reading_time_minutes: 8,
+    meta_title: 'Verfahrensdokumentation: Vorlage, Steuerberater oder Tool – der ehrliche Vergleich',
+    meta_description: 'Verfahrensdokumentation erstellen: Kostenlose Vorlage, Steuerberater beauftragen oder Tool nutzen? Wir vergleichen ehrlich Kosten, Aufwand und Risiken.',
+    excerpt: 'Vorlage aus dem Internet, Steuerberater beauftragen oder Tool nutzen? Wir vergleichen alle drei Wege ehrlich – mit Kosten, Zeitaufwand und den Risiken die keiner erwähnt.',
+    content: ARTICLE_2_CONTENT,
+    published: true,
+    published_at: '2026-03-12T09:00:00.000Z',
+    cover_image_url: null,
+  },
+  {
+    slug: 'betriebspruefung-ohne-verfahrensdokumentation',
+    title: 'Was passiert bei einer Betriebsprüfung ohne Verfahrensdokumentation?',
+    category: 'GoBD',
+    reading_time_minutes: 7,
+    meta_title: 'Betriebsprüfung ohne Verfahrensdokumentation – Was droht wirklich?',
+    meta_description: 'Was passiert wenn der Betriebsprüfer kommt und du keine Verfahrensdokumentation hast? Die ehrliche Antwort – mit offiziellen Quellen.',
+    excerpt: 'Der Betriebsprüfer sitzt vor dir und fragt nach der Verfahrensdokumentation. Du hast keine. Was jetzt passiert – und warum es schlimmer sein kann als du denkst.',
+    content: ARTICLE_3_CONTENT,
+    published: true,
+    published_at: '2026-03-13T09:00:00.000Z',
+    cover_image_url: null,
+  },
+  {
+    slug: 'verfahrensdokumentation-als-dienstleistung-anbieten',
+    title: 'Verfahrensdokumentation als Dienstleistung anbieten: So verdienst du damit Geld',
+    category: 'Dienstleister',
+    reading_time_minutes: 8,
+    meta_title: 'Verfahrensdokumentation als Dienstleistung anbieten – So geht es',
+    meta_description: 'Wie Steuerberater, Buchhalter und Consultants mit Verfahrensdokumentationen eine neue Einnahmequelle aufbauen. Konkrete Zahlen und Strategie.',
+    excerpt: 'Deine Mandanten brauchen eine Verfahrensdokumentation – die meisten wissen es nur noch nicht. Wie du das als Dienstleister zur profitablen Einnahmequelle machst.',
+    content: ARTICLE_4_CONTENT,
+    published: true,
+    published_at: '2026-03-14T09:00:00.000Z',
+    cover_image_url: null,
+  },
+  {
+    slug: 'verfahrensdokumentation-freelancer',
+    title: 'GoBD-konforme Verfahrensdokumentation für Freelancer: Was wirklich reinmuss',
+    category: 'GoBD',
+    reading_time_minutes: 7,
+    meta_title: 'Verfahrensdokumentation für Freelancer 2025 – Was wirklich reinmuss',
+    meta_description: 'Als Freelancer eine GoBD-konforme Verfahrensdokumentation erstellen: Was Pflicht ist, was nicht und wie du es in unter einer Stunde erledigst.',
+    excerpt: 'Viele Freelancer denken die Verfahrensdokumentation ist nur für große Unternehmen. Falsch. Was du als Freelancer wirklich brauchst – und was du getrost weglassen kannst.',
+    content: ARTICLE_5_CONTENT,
+    published: true,
+    published_at: '2026-03-15T09:00:00.000Z',
+    cover_image_url: null,
+  },
+];
+
+export async function seedBlogArticleVD2025() {
+  const { error: tableCheckError } = await supabase.from('blog_posts').select('id').limit(1);
+
+  if (tableCheckError?.code === '42P01') {
+    console.warn('blog_posts table missing. Falling back to local blog data.');
+    return { success: false, tableMissing: true };
+  }
+
+  for (const article of SEEDED_BLOG_ARTICLES) {
+    const { data: existing, error: checkError } = await supabase
       .from('blog_posts')
       .select('id')
       .eq('slug', article.slug)
       .maybeSingle();
 
+    if (checkError) {
+      console.error(`Failed checking article "${article.slug}":`, checkError.message);
+      continue;
+    }
+
     if (!existing) {
-      await supabase.from('blog_posts').insert({
-        ...article,
-        published: true,
-        published_at: new Date().toISOString(),
-      });
+      const { error: insertError } = await supabase.from('blog_posts').insert(article);
+      if (insertError) {
+        console.error(`Failed seeding article "${article.slug}":`, insertError.message);
+        continue;
+      }
       console.log(`Article "${article.slug}" seeded.`);
     }
   }
