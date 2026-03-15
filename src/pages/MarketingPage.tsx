@@ -236,7 +236,7 @@ export default function MarketingPage() {
             <div>
               <Reveal>
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full mb-6" style={{ background: C.yellow, color: C.dark }}>
-                  🏆 Das erste VD-Tool im DACH-Raum
+                  Das erste VD-Tool im DACH-Raum
                 </span>
               </Reveal>
               <Reveal delay={0.1}>
@@ -258,7 +258,7 @@ export default function MarketingPage() {
                   </SecondaryBtn>
                 </div>
                 <p className="mt-4 text-sm font-semibold" style={{ color: C.green }}>
-                  ✅ 30 Tage Zufriedenheitsgarantie – kein Risiko
+                  30 Tage Zufriedenheitsgarantie – kein Risiko
                 </p>
               </Reveal>
               <Reveal delay={0.3}>
@@ -626,7 +626,7 @@ export default function MarketingPage() {
         <section className="py-20 md:py-28 px-6 text-center" style={{ background: C.dark }}>
           <Reveal>
             <p className="text-2xl md:text-3xl font-bold leading-tight mb-4" style={{ color: C.white }}>
-              ⚡ Jede Woche ohne Verfahrensdokumentation ist ein vermeidbares Risiko.
+              Jede Woche ohne Verfahrensdokumentation ist ein vermeidbares Risiko.
             </p>
             <p className="text-lg mb-10" style={{ color: 'rgba(255,255,255,0.8)' }}>
               Das Finanzamt wartet nicht. Deine Verfahrensdokumentation kann heute fertig sein.
