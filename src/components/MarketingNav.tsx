@@ -115,7 +115,7 @@ export default function MarketingNav() {
             ? <a href="#funktionen" onClick={() => setMobileMenu(false)}>Funktionen</a>
             : <Link to="/#funktionen" onClick={() => setMobileMenu(false)}>Funktionen</Link>
           }
-          <p className="text-xs font-semibold mt-2 uppercase tracking-wider" style={{ color: C.textGray || '#6E6E73' }}>Für wen?</p>
+          <p className="text-xs font-semibold mt-2 uppercase tracking-wider" style={{ color: '#6E6E73' }}>Für wen?</p>
           <Link to="/fuer-selbststaendige" onClick={() => setMobileMenu(false)} className="pl-3">Für Selbstständige</Link>
           <Link to="/fuer-dienstleister" onClick={() => setMobileMenu(false)} className="pl-3">Für Dienstleister</Link>
           {isHome
