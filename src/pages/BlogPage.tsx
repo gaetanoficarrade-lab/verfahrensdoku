@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useSEO } from '@/hooks/useSEO';
 import MarketingNav from '@/components/MarketingNav';
-import { seedBlogArticleVD2025 } from '@/lib/seedBlogArticle';
+import { seedBlogArticleVD2025, SEEDED_BLOG_ARTICLES } from '@/lib/seedBlogArticle';
 
 const C = {
   yellow: '#FAC81E', dark: '#44484E', white: '#FFFFFF',
@@ -51,24 +51,62 @@ export default function BlogPage() {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      await seedBlogArticleVD2025();
       const from = (page - 1) * perPage;
       const to = from + perPage - 1;
 
-      const { count } = await supabase
+      await seedBlogArticleVD2025();
+
+      const fallbackAll = [...SEEDED_BLOG_ARTICLES]
+        .filter(article => article.published)
+        .sort((a, b) => +new Date(b.published_at) - +new Date(a.published_at));
+      const fallbackSlice = fallbackAll
+        .slice(from, to + 1)
+        .map((article, index) => ({
+          id: `seed-${from + index}-${article.slug}`,
+          title: article.title,
+          slug: article.slug,
+          excerpt: article.excerpt,
+          cover_image_url: article.cover_image_url ?? null,
+          category: article.category,
+          reading_time_minutes: article.reading_time_minutes,
+          published_at: article.published_at,
+        } as BlogPost));
+
+      const { count, error: countError } = await supabase
         .from('blog_posts')
         .select('id', { count: 'exact', head: true })
         .eq('published', true);
 
-      setTotal(count ?? 0);
+      if (countError?.code === '42P01') {
+        setTotal(fallbackAll.length);
+        setPosts(fallbackSlice);
+        setLoading(false);
+        return;
+      }
 
-      const { data } = await supabase
+      const { data, error: listError } = await supabase
         .from('blog_posts')
         .select('id, title, slug, excerpt, cover_image_url, category, reading_time_minutes, published_at')
         .eq('published', true)
         .order('published_at', { ascending: false })
         .range(from, to);
 
+      if (listError?.code === '42P01') {
+        setTotal(fallbackAll.length);
+        setPosts(fallbackSlice);
+        setLoading(false);
+        return;
+      }
+
+      if (countError || listError) {
+        console.error('Failed loading blog posts:', countError?.message || listError?.message);
+        setTotal(fallbackAll.length);
+        setPosts(fallbackSlice);
+        setLoading(false);
+        return;
+      }
+
+      setTotal(count ?? 0);
       setPosts((data as BlogPost[]) ?? []);
       setLoading(false);
     })();

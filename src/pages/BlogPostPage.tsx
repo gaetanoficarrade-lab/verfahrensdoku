@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useSEO } from '@/hooks/useSEO';
 import MarketingNav from '@/components/MarketingNav';
 import { CookieBanner } from '@/components/CookieBanner';
-
+import { seedBlogArticleVD2025, SEEDED_BLOG_ARTICLES } from '@/lib/seedBlogArticle';
 const C = {
   yellow: '#FAC81E', dark: '#44484E', white: '#FFFFFF',
   bgLight: '#F5F5F7', textGray: '#6E6E73', border: '#E5E5E5',
@@ -37,6 +37,21 @@ interface RelatedPost {
   published_at: string;
 }
 
+const SEEDED_FULL_POSTS: FullPost[] = SEEDED_BLOG_ARTICLES.map((article, index) => ({
+  id: `seed-${index}-${article.slug}`,
+  title: article.title,
+  slug: article.slug,
+  excerpt: article.excerpt,
+  content: article.content,
+  cover_image_url: article.cover_image_url ?? null,
+  category: article.category,
+  reading_time_minutes: article.reading_time_minutes,
+  published_at: article.published_at,
+  updated_at: article.published_at,
+  meta_title: article.meta_title,
+  meta_description: article.meta_description,
+}));
+
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<FullPost | null>(null);
@@ -49,30 +64,67 @@ export default function BlogPostPage() {
     if (!slug) return;
     (async () => {
       setLoading(true);
-      const { data } = await supabase
+      await seedBlogArticleVD2025();
+
+      const fallbackPost = SEEDED_FULL_POSTS.find(p => p.slug === slug) ?? null;
+      const fallbackRelated = SEEDED_FULL_POSTS
+        .filter(p => p.slug !== slug)
+        .sort((a, b) => +new Date(b.published_at) - +new Date(a.published_at))
+        .slice(0, 3)
+        .map(({ id, title, slug: relatedSlug, excerpt, cover_image_url, category, reading_time_minutes, published_at }) => ({
+          id,
+          title,
+          slug: relatedSlug,
+          excerpt,
+          cover_image_url,
+          category,
+          reading_time_minutes,
+          published_at,
+        }));
+
+      const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
         .eq('slug', slug)
         .eq('published', true)
-        .single();
+        .maybeSingle();
 
-      if (data) {
-        setPost(data as FullPost);
-        const hMatches = (data.content || '').match(/^##\s+(.+)$/gm) || [];
-        setHeadings(hMatches.map((h: string) => {
-          const text = h.replace(/^##\s+/, '');
-          return { id: slugify(text), text };
-        }));
+      const resolvedPost = (error?.code === '42P01' || !data) ? fallbackPost : (data as FullPost);
+      setPost(resolvedPost);
 
-        const { data: rel } = await supabase
-          .from('blog_posts')
-          .select('id, title, slug, excerpt, cover_image_url, category, reading_time_minutes, published_at')
-          .eq('published', true)
-          .neq('slug', slug)
-          .order('published_at', { ascending: false })
-          .limit(3);
-        setRelated((rel as RelatedPost[]) ?? []);
+      const hMatches = (resolvedPost?.content || '').match(/^##\s+(.+)$/gm) || [];
+      setHeadings(hMatches.map((h: string) => {
+        const text = h.replace(/^##\s+/, '');
+        return { id: slugify(text), text };
+      }));
+
+      if (error?.code === '42P01') {
+        setRelated(fallbackRelated);
+        setLoading(false);
+        return;
       }
+
+      if (error) {
+        console.error('Failed loading blog post:', error.message);
+        setRelated(fallbackRelated);
+        setLoading(false);
+        return;
+      }
+
+      const { data: rel, error: relError } = await supabase
+        .from('blog_posts')
+        .select('id, title, slug, excerpt, cover_image_url, category, reading_time_minutes, published_at')
+        .eq('published', true)
+        .neq('slug', slug)
+        .order('published_at', { ascending: false })
+        .limit(3);
+
+      if (relError?.code === '42P01' || relError) {
+        setRelated(fallbackRelated);
+      } else {
+        setRelated((rel as RelatedPost[]) ?? fallbackRelated);
+      }
+
       setLoading(false);
     })();
   }, [slug]);
