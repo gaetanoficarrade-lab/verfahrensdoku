@@ -81,8 +81,7 @@ export default function SocialProofNotification() {
 
   return (
     <div
-      className={`fixed bottom-6 left-6 z-50 max-w-[280px] rounded-xl bg-white p-3 pr-8 md:p-4 md:pr-9 shadow-[0_4px_24px_rgba(0,0,0,0.12)] transition-transform duration-400 ${leaving ? '-translate-x-[120%]' : 'animate-[slideInLeft_0.4s_ease-out]'}`}
-      style={{ fontFamily: 'inherit' }}
+      className={`fixed bottom-6 left-6 z-50 max-w-[280px] rounded-xl bg-white p-3 pr-8 md:p-4 md:pr-9 shadow-[0_4px_24px_rgba(0,0,0,0.12)] transition-transform duration-400 ${leaving ? '-translate-x-[120%]' : 'animate-slideInLeft'}`}
     >
       {/* close */}
       <button
