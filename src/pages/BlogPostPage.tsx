@@ -276,8 +276,8 @@ export default function BlogPostPage() {
             {/* CTA Box */}
             <div className="mt-16 rounded-[18px] p-10 text-center relative overflow-hidden" style={{ background: C.bgLight }}>
               <div className="absolute top-0 left-0 right-0 h-1" style={{ background: C.yellow }} />
-              <h2 className="text-2xl font-bold mb-3" style={{ color: C.dark }}>Bereit deine Verfahrensdokumentation zu erstellen?</h2>
-              <p className="mb-6" style={{ color: C.textGray }}>Starte jetzt kostenlos – ohne Kreditkarte, fertig in unter 60 Minuten.</p>
+              <h2 className="text-2xl font-bold mb-3" style={{ color: C.dark }}>{seededArticle?.cta_title || 'Bereit deine Verfahrensdokumentation zu erstellen?'}</h2>
+              <p className="mb-6" style={{ color: C.textGray }}>{seededArticle?.cta_description || 'Starte jetzt kostenlos – ohne Kreditkarte, fertig in unter 60 Minuten.'}</p>
               <Link to="/test-starten" className="inline-flex items-center font-semibold text-[15px] transition-all duration-200 hover:shadow-lg"
                 style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '14px 28px' }}
               >
