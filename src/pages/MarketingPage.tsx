@@ -502,7 +502,7 @@ export default function MarketingPage() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto mt-12 pt-8 text-center text-xs" style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>
-          © 2025 GoBD-Suite · Alle Rechte vorbehalten
+          © {new Date().getFullYear()} GoBD-Suite · Alle Rechte vorbehalten
         </div>
       </footer>
     </div>
