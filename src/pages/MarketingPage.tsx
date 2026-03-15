@@ -52,16 +52,18 @@ function Reveal({ children, className = '', delay = 0 }: { children: ReactNode; 
 
 /* ─── Counter hook ─── */
 function useCountUp(end: number, duration = 1500, trigger = false) {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(end);
   const rafRef = useRef<number>(0);
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
-    if (!trigger) return;
+    if (!trigger || hasAnimated.current) return;
+    hasAnimated.current = true;
+    setValue(0);
     const start = performance.now();
     const animate = (now: number) => {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      // ease-out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setValue(Math.round(eased * end));
       if (progress < 1) rafRef.current = requestAnimationFrame(animate);
