@@ -7,6 +7,7 @@ import mockupClients from '@/assets/mockup-clients.png';
 import mockupOverview from '@/assets/mockup-overview.png';
 import mockupOnboarding from '@/assets/mockup-onboarding.png';
 import mockupSoloDashboard from '@/assets/mockup-solo-dashboard.png';
+import mockupLaptopOverview from '@/assets/mockup-laptop-overview.png';
 import productSolution from '@/assets/product-solution.png';
 import { Link } from 'react-router-dom';
 import {
@@ -597,13 +598,8 @@ export default function MarketingPage() {
                     ))}
                   </ul>
                   <a href="#preise" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Für Dienstleister</a>
-                  <div className="rounded-xl overflow-hidden mt-6 flex-1 flex flex-col" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-                    <div className="flex items-center gap-1.5 px-3 py-2 shrink-0" style={{ background: '#f0f0f0' }}>
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF5F57' }} />
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FEBC2E' }} />
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
-                    </div>
-                    <img src={mockupClients} alt="GoBD-Suite Mandantenübersicht mit mehreren Kunden" className="w-full flex-1 object-cover object-top" loading="lazy" />
+                  <div className="mt-6 flex-1 flex items-end">
+                    <img src={mockupLaptopOverview} alt="GoBD-Suite Berater-Übersicht auf einem Laptop" className="w-full h-auto" loading="lazy" />
                   </div>
                 </article>
               </Reveal>
