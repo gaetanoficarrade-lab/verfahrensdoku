@@ -487,6 +487,212 @@ Das Risiko einer Betriebsprüfung ohne VD dauert potenziell Jahre.
 - [§ 193 AO – Zulässigkeit der Außenprüfung](https://www.gesetze-im-internet.de/ao_1977/__193.html)
 - [§ 147 AO – Aufbewahrungspflichten](https://www.gesetze-im-internet.de/ao_1977/__147.html)`;
 
+const ARTICLE_4_CONTENT = `**Stand: März 2026**
+
+## Eine Pflicht die kaum jemand erfüllt
+
+Lass uns mit einer Zahl anfangen.
+
+Schätzungsweise haben über 80 Prozent aller kleinen und mittleren Unternehmen in Deutschland keine GoBD-konforme Verfahrensdokumentation.
+
+Das ist keine Schätzung ins Blaue – das ist die Realität die Betriebsprüfer täglich erleben.
+
+Für dich als Dienstleister bedeutet das: Fast jeder deiner Mandanten oder Kunden hat einen ungelösten Compliance-Bedarf.
+
+Und dieser Bedarf wächst. Seit 2025 prüft das Finanzamt aktiv.
+
+Das ist deine Chance.
+
+---
+
+## Wer kann das anbieten?
+
+Kurze Antwort: Fast jeder der bereits mit Unternehmen arbeitet.
+
+**Steuerberater und Buchhalter:**
+
+Du hast ohnehin Einblick in die Buchhaltung deiner Mandanten. Die VD ist eine logische Ergänzung deines Leistungsportfolios. Du hilfst deinen Mandanten bei der Compliance – und verdienst dabei.
+
+**Unternehmensberater und Consultants:**
+
+Du begleitest Unternehmen bei der Digitalisierung und Prozessoptimierung. Die VD passt perfekt in dieses Bild – du dokumentierst was du ohnehin aufbaust.
+
+**Marketing-Agenturen und IT-Dienstleister:**
+
+Du richtest digitale Tools und Systeme ein. Wer neue Software implementiert braucht auch eine aktualisierte VD. Das ist ein natürliches Upsell.
+
+**Freelancer mit Beratungsfokus:**
+
+Du hast Kunden die Unterstützung bei Compliance-Themen suchen. Die VD ist ein konkretes, abgrenzbares Produkt das du anbieten kannst.
+
+**Quelle:** [GoBD – Verantwortlichkeit des Unternehmens](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/2019-11-28-GoBD.html)
+
+---
+
+## Was du deinen Mandanten anbietest
+
+Das Produkt ist klar: Eine GoBD-konforme Verfahrensdokumentation.
+
+Aber wie du es verkaufst macht den Unterschied.
+
+**Falsch:** "Ich erstelle Ihnen eine Verfahrensdokumentation nach GoBD."
+
+**Richtig:** "Ich schütze Sie vor den finanziellen Folgen einer Betriebsprüfung ohne VD – und das in unter zwei Wochen."
+
+Der Unterschied: Einer beschreibt was du tust. Der andere beschreibt was der Mandant bekommt.
+
+Menschen kaufen keine Dienstleistungen. Sie kaufen Sicherheit, Zeit und das Vermeiden von Schmerz.
+
+---
+
+## Wie der Prozess in der Praxis aussieht
+
+Mit dem richtigen Tool ist der Aufwand überschaubar. Hier ist ein realistischer Ablauf:
+
+**Woche 1: Mandant onboarden**
+
+Du legst den Mandanten im Tool an und sendest ihm eine Einladung. Er bekommt Zugang zu seinem Portal und füllt dort die Leitfragen aus – in seiner eigenen Zeit, in seiner eigenen Sprache.
+
+Das dauert für ihn 45 bis 90 Minuten. Dein Aufwand in dieser Phase: 15 Minuten.
+
+**Woche 1-2: Kapitel bearbeiten**
+
+Dein Mandant beschreibt seine Abläufe. Die KI erstellt daraus GoBD-konforme Texte. Du bekommst eine Benachrichtigung wenn Kapitel zur Freigabe bereit sind.
+
+**Woche 2: Prüfen und finalisieren**
+
+Du gehst die Kapitel durch, prüfst ob alles vollständig und korrekt ist, gibst Hinweise wo nötig und finalisierst das Dokument.
+
+Dein Aufwand in dieser Phase: 1-2 Stunden.
+
+**Ergebnis:**
+
+Ein professionelles, GoBD-konformes PDF unter deinem Brand – bereit für die nächste Betriebsprüfung.
+
+Gesamtaufwand deinerseits: 1,5 bis 3 Stunden pro Mandant.
+
+---
+
+## Was du verdienen kannst
+
+Lass uns konkret werden.
+
+Der Markt für VD-Erstellung ist noch wenig gesättigt. Das bedeutet: Du kannst faire Preise durchsetzen.
+
+**Typische Marktpreise:**
+
+Einfache VD (Einzelunternehmer, 1-2 Systeme): 800 € bis 1.200 €
+
+Standard VD (KMU, mehrere Systeme): 1.200 € bis 2.000 €
+
+Komplexe VD (mehrere Standorte, viele Schnittstellen): 2.000 € bis 3.500 €
+
+Jährliche Aktualisierung: 200 € bis 500 €
+
+**Beispielrechnung Berater-Plan:**
+
+Du hast 5 Mandanten pro Monat:
+
+- Durchschnittspreis pro VD: 1.500 €
+- Monatlicher Umsatz: 7.500 €
+- Tool-Kosten: 399 €/Monat
+- Dein Aufwand: ca. 10-15 Stunden/Monat
+- Dein Netto-Stundensatz: ca. 470 € - 700 €
+
+Das sind realistische Zahlen für einen gut positionierten Dienstleister.
+
+---
+
+## Wie du es positionierst
+
+Drei Positionierungsstrategien die funktionieren:
+
+**Strategie 1: Compliance-Paket**
+
+Du bündelst die VD mit anderen Compliance-Leistungen. "Jahresabschluss + Verfahrensdokumentation + steuerliche Beratung" als Paketpreis.
+
+Das erhöht den Gesamtumsatz pro Mandant ohne dass du viel mehr Zeit investierst.
+
+**Strategie 2: Betriebsprüfungs-Vorbereitung**
+
+Du positionierst dich als der Experte für Betriebsprüfungssicherheit.
+
+"Bei einer Betriebsprüfung sollten Sie vorbereitet sein. Ich stelle sicher dass das so ist."
+
+Das ist ein konkreter Nutzen den Unternehmer verstehen.
+
+**Strategie 3: Digitalisierungsbegleitung**
+
+Jedes Unternehmen das neue Software einführt braucht eine aktualisierte VD. Du bietest die VD-Aktualisierung als selbstverständlichen Teil der Implementierung an.
+
+---
+
+## Whitelabel: Dein Brand, dein Produkt
+
+Wenn du das professionell angehen willst, ist Whitelabel entscheidend.
+
+Dein Mandant soll nicht sehen welches Tool du nutzt – er soll deine Dienstleistung erleben.
+
+Das bedeutet:
+
+- Dein Logo auf dem PDF-Deckblatt
+- Deine Kontaktdaten im Dokument
+- Dein Firmenname in der Fußzeile
+- Keine Erwähnung von GoBD-Suite
+
+Für deinen Mandanten bist du der Anbieter. Das stärkt deine Marke und rechtfertigt deinen Preis.
+
+---
+
+## Was du brauchst um anzufangen
+
+Technisch gesehen nicht viel:
+
+1. Einen Account bei GoBD-Suite (Berater- oder Agentur-Plan)
+2. Eine klare Leistungsbeschreibung für deine Kunden
+3. Einen Preis der deinen Aufwand reflektiert
+
+Das war es.
+
+Du brauchst keine GoBD-Zertifizierung. Du brauchst keine jahrelange Erfahrung mit Steuerrecht. Das Tool übernimmt die fachliche Aufbereitung – du übernimmst die Kundenbeziehung und die Prüfung.
+
+**Wichtig:** Du bist verantwortlich dafür dass die erstellten Dokumente den tatsächlichen Abläufen deiner Mandanten entsprechen. Prüfe die generierten Texte sorgfältig bevor du finalisierst.
+
+---
+
+## Der richtige Einstieg
+
+Mein Empfehlung: Fang mit einem Mandanten an.
+
+Nicht mit einem Großprojekt. Mit einem Mandanten bei dem du weißt dass das Business überschaubar ist.
+
+Lern den Prozess kennen. Optimiere dein Vorgehen. Dann skaliere.
+
+Die meisten Dienstleister die damit anfangen haben nach dem ersten Mandanten verstanden: Der Aufwand ist überschaubar, die Marge ist gut, der Mandant ist dankbar.
+
+Das ist eine gute Kombination.
+
+---
+
+## Fazit
+
+Die Verfahrensdokumentation ist eine der wenigen Dienstleistungen die drei Eigenschaften kombiniert:
+
+Erstens: Es gibt einen echten gesetzlichen Bedarf.
+
+Zweitens: Die meisten Unternehmen haben ihn noch nicht erfüllt.
+
+Drittens: Der Aufwand mit dem richtigen Tool ist gering.
+
+Das ist eine Marktlücke die sich gerade schließt. Wer jetzt einsteigt ist früh positioniert.
+
+**Quellen und weiterführende Links:**
+
+- [GoBD Volltext (BMF-Schreiben 28.11.2019)](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/2019-11-28-GoBD.html)
+- [§ 147 AO – Aufbewahrungspflichten](https://www.gesetze-im-internet.de/ao_1977/__147.html)
+- [§ 162 AO – Schätzung von Besteuerungsgrundlagen](https://www.gesetze-im-internet.de/ao_1977/__162.html)
+- [§ 238 HGB – Buchführungspflicht](https://www.gesetze-im-internet.de/hgb/__238.html)`;
+
 export async function seedBlogArticleVD2025() {
   const { data: existing } = await supabase
     .from('blog_posts')
@@ -552,6 +758,28 @@ export async function seedBlogArticleVD2025() {
       content: ARTICLE_3_CONTENT,
     });
     console.log('Article 3 seeded.');
+  }
+
+  const { data: existing4 } = await supabase
+    .from('blog_posts')
+    .select('id')
+    .eq('slug', 'verfahrensdokumentation-als-dienstleistung-anbieten')
+    .maybeSingle();
+
+  if (!existing4) {
+    await supabase.from('blog_posts').insert({
+      slug: 'verfahrensdokumentation-als-dienstleistung-anbieten',
+      title: 'Verfahrensdokumentation als Dienstleistung anbieten: So verdienst du damit Geld',
+      category: 'Dienstleister',
+      reading_time_minutes: 8,
+      published: true,
+      published_at: new Date().toISOString(),
+      meta_title: 'Verfahrensdokumentation als Dienstleistung anbieten – So geht es',
+      meta_description: 'Wie Steuerberater, Buchhalter und Consultants mit Verfahrensdokumentationen eine neue Einnahmequelle aufbauen. Konkrete Zahlen und Strategie.',
+      excerpt: 'Deine Mandanten brauchen eine Verfahrensdokumentation – die meisten wissen es nur noch nicht. Wie du das als Dienstleister zur profitablen Einnahmequelle machst.',
+      content: ARTICLE_4_CONTENT,
+    });
+    console.log('Article 4 seeded.');
   }
 
   return { success: true };
