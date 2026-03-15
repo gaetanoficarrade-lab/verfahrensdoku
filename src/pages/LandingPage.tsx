@@ -281,12 +281,12 @@ export default function LandingPage() {
       </section>
 
       {/* ─── HERO STATEMENT + AI IMAGE ─── */}
-      <section className="py-32 px-6 bg-[#fafafa]">
+      <section className="py-16 sm:py-32 px-4 sm:px-6 bg-[#fafafa]">
         <div className="max-w-6xl mx-auto">
-          <AnimatedSection className="grid lg:grid-cols-2 gap-16 items-center">
+          <AnimatedSection className="grid lg:grid-cols-2 gap-10 sm:gap-16 items-center">
             <motion.div variants={fadeUp}>
               <p className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">Einzigartig im DACH-Raum</p>
-              <h2 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] mb-6">
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.1] mb-6">
                 Die Software, die deine{' '}
                 <span className="text-[#e8a91a]">Verfahrensdokumentation</span>{' '}
                 revolutioniert.
