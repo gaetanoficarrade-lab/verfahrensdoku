@@ -1303,6 +1303,7 @@ export const SEEDED_BLOG_ARTICLES: SeededBlogArticle[] = [
     content: ARTICLE_6_CONTENT,
     published: true,
     published_at: '2026-03-15T10:00:00.000Z',
+    cover_image_url: '/images/blog-gobd-checkliste.png',
     cta_title: 'Deine Verfahrensdokumentation mit allen 10 Blöcken erstellen?',
     cta_description: 'GoBD-Suite führt dich durch jeden Block – KI-gestützt, vollständig und in unter einer Stunde fertig.',
     related_slugs: [
