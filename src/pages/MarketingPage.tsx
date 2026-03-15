@@ -181,7 +181,7 @@ function PricingToggleSection() {
             style={{ background: annual ? C.yellow : 'transparent', color: C.dark }}
           >
             Jährlich
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: C.green, color: '#fff' }}>2 Monate gratis</span>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: C.green, color: '#fff' }}>–17 %</span>
           </button>
         </div>
       </div>
@@ -204,7 +204,7 @@ function PricingToggleSection() {
           name="Agentur"
           price={annual ? '665 €' : '799 €'}
           unit="/Monat"
-          sub={annual ? '7.990 € jährlich · 2 Monate gratis' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
+          sub={annual ? '7.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
           highlighted
           features={[
             { text: 'Unbegrenzte Mandanten', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
@@ -217,7 +217,7 @@ function PricingToggleSection() {
           name="Berater"
           price={annual ? '332 €' : '399 €'}
           unit="/Monat"
-          sub={annual ? '3.990 € jährlich · 2 Monate gratis' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
+          sub={annual ? '3.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
           features={[
             { text: 'Bis zu 5 Mandanten', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
             { text: 'Mandanten-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
