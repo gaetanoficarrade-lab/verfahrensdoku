@@ -529,9 +529,6 @@ export default function MarketingPage() {
                 </Reveal>
               ))}
             </div>
-            <Reveal delay={0.3}>
-              <p className="text-center mt-8 text-xs" style={{ color: C.textGray }}>* Namen auf Wunsch anonymisiert.</p>
-            </Reveal>
           </div>
         </section>
 
