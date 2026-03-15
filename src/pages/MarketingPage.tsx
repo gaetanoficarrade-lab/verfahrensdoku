@@ -1,15 +1,15 @@
-import { useState, useEffect, useMemo, type ReactNode } from 'react';
-import productSolution from '@/assets/product-solution.png';
+import { useState, useMemo, type ReactNode } from 'react';
 import mockupDashboard from '@/assets/mockup-dashboard.png';
 import mockupEditor from '@/assets/mockup-editor.png';
 import mockupPdf from '@/assets/mockup-pdf.png';
 import mockupClients from '@/assets/mockup-clients.png';
 import mockupOverview from '@/assets/mockup-overview.png';
+import productSolution from '@/assets/product-solution.png';
 import { Link } from 'react-router-dom';
 import {
   AlertTriangle, Euro, Clock, Check, X, ChevronDown, ChevronUp,
   Sparkles, FileText, History, Download, ShieldCheck, Palette, Menu, XIcon,
-  ArrowDown,
+  ArrowDown, Star, ThumbsUp, Shield,
 } from 'lucide-react';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useSEO } from '@/hooks/useSEO';
@@ -75,9 +75,18 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         {q}
         {open ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
       </button>
-      <div className="overflow-hidden transition-all duration-300" style={{ maxHeight: open ? 500 : 0, opacity: open ? 1 : 0 }}>
+      <div className="overflow-hidden transition-all duration-300" style={{ maxHeight: open ? 800 : 0, opacity: open ? 1 : 0 }}>
         <p className="pb-5 leading-relaxed" style={{ color: C.textGray }}>{a}</p>
       </div>
+    </div>
+  );
+}
+
+/* ─── Star Rating ─── */
+function Stars() {
+  return (
+    <div className="flex gap-0.5 mb-3">
+      {[...Array(5)].map((_, i) => <Star key={i} size={16} fill={C.yellow} stroke={C.yellow} />)}
     </div>
   );
 }
@@ -90,15 +99,15 @@ function PriceCard({ name, price, unit, sub, features, highlighted = false }: {
 }) {
   return (
     <div
-      className="rounded-[18px] p-8 flex flex-col h-full relative"
+      className={`rounded-[18px] p-8 flex flex-col h-full relative ${highlighted ? 'md:-mt-4 md:mb-4' : ''}`}
       style={{
         background: C.white,
         boxShadow: highlighted ? '0 4px 32px rgba(0,0,0,0.10)' : '0 2px 16px rgba(0,0,0,0.06)',
-        borderTop: highlighted ? `3px solid ${C.yellow}` : undefined,
+        borderTop: highlighted ? `4px solid ${C.yellow}` : undefined,
       }}
     >
       {highlighted && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full" style={{ background: C.yellow, color: C.dark }}>Beliebt</span>
+        <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full" style={{ background: C.yellow, color: C.dark }}>Beliebt</span>
       )}
       <h3 className="text-xl font-bold mb-2" style={{ color: C.dark }}>{name}</h3>
       <div className="flex items-baseline gap-1 mb-1">
@@ -180,7 +189,7 @@ export default function MarketingPage() {
 
   return (
     <div className="font-sans" style={{ color: C.dark }}>
-      {/* ─── NAV ─── */}
+      {/* ─── 1. NAV ─── */}
       <nav
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 lg:px-12"
         style={{ height: 64, background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderBottom: `1px solid ${C.border}` }}
@@ -218,24 +227,25 @@ export default function MarketingPage() {
       )}
 
       <main>
-        {/* ─── HERO ─── */}
+        {/* ─── 2. HERO ─── */}
         <section className="min-h-[90vh] flex items-center px-6 lg:px-12 pt-24 pb-20" style={{ background: C.white }}>
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
-            {/* Left: Text */}
+            {/* Left */}
             <div>
               <Reveal>
-                <p className="text-xs font-semibold uppercase tracking-[0.1em] mb-6" style={{ color: C.yellow }}>
-                  Das erste vollständige VD-Tool im DACH-Raum
-                </p>
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full mb-6" style={{ background: C.yellow, color: C.dark }}>
+                  🔒 Einführungspreis – Jetzt sichern
+                </span>
               </Reveal>
               <Reveal delay={0.1}>
-                <h1 className="text-4xl md:text-[56px] lg:text-[64px] font-bold leading-[1.1] mb-6" style={{ color: C.dark }}>
-                  Die nächste Betriebsprüfung kommt. Bist du vorbereitet?
+                <h1 className="text-4xl md:text-[48px] lg:text-[56px] font-bold leading-[1.1] mb-6" style={{ color: C.dark }}>
+                  Das Finanzamt kann deine gesamte Buchführung verwerfen.<br />
+                  <span style={{ color: C.textGray }}>Auch ohne einen einzigen Fehler.</span>
                 </h1>
               </Reveal>
               <Reveal delay={0.15}>
                 <p className="text-lg md:text-xl max-w-[540px] mb-10 leading-relaxed" style={{ color: C.textGray }}>
-                  Ohne ordnungsgemäße Verfahrensdokumentation verlierst du die Beweiskraft deiner gesamten Buchführung. Mit GoBD-Suite bist du auf der sicheren Seite – in weniger als einer Stunde.
+                  Der Grund: Fehlende Verfahrensdokumentation. Seit 2025 wird das aktiv geprüft. GoBD-Suite schützt dich – in unter einer Stunde.
                 </p>
               </Reveal>
               <Reveal delay={0.2}>
@@ -245,9 +255,12 @@ export default function MarketingPage() {
                     Wie es funktioniert <ArrowDown size={16} />
                   </SecondaryBtn>
                 </div>
+                <p className="mt-4 text-sm font-semibold" style={{ color: C.yellow }}>
+                  ⚡ Einführungspreis – Jetzt sichern bevor der Preis steigt
+                </p>
               </Reveal>
               <Reveal delay={0.3}>
-                <div className="flex flex-wrap gap-x-6 gap-y-2 mt-12 text-sm" style={{ color: C.textGray }}>
+                <div className="flex flex-wrap gap-x-6 gap-y-2 mt-8 text-sm" style={{ color: C.textGray }}>
                   {['GoBD-konform seit 2014', 'KI-gestützte Erstellung', 'Fertig in unter 60 Minuten', 'Automatisch versioniert'].map(t => (
                     <span key={t} className="flex items-center gap-1.5"><Check size={14} style={{ color: C.green }} /> {t}</span>
                   ))}
@@ -260,18 +273,24 @@ export default function MarketingPage() {
               <div
                 className="rounded-xl overflow-hidden"
                 style={{
-                  boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
-                  transform: 'perspective(1000px) rotateY(-5deg)',
+                  boxShadow: '0 25px 60px rgba(0,0,0,0.15)',
+                  transform: 'perspective(1200px) rotateY(-8deg) rotateX(2deg)',
                   transition: 'transform 0.5s ease',
                 }}
               >
+                {/* macOS dots */}
+                <div className="flex items-center gap-1.5 px-4 py-2.5" style={{ background: '#f0f0f0' }}>
+                  <span className="w-3 h-3 rounded-full" style={{ background: '#FF5F57' }} />
+                  <span className="w-3 h-3 rounded-full" style={{ background: '#FEBC2E' }} />
+                  <span className="w-3 h-3 rounded-full" style={{ background: '#28C840' }} />
+                </div>
                 <img src={mockupDashboard} alt="GoBD-Suite Dashboard mit Mandanten- und Projektübersicht" className="w-full h-auto" />
               </div>
             </Reveal>
           </div>
         </section>
 
-        {/* ─── SCHMERZ ─── */}
+        {/* ─── 3. AGITATION ─── */}
         <section style={{ background: C.bgLight }} className="py-20 md:py-24 px-6" aria-labelledby="pain-headline">
           <div className="max-w-6xl mx-auto">
             <Reveal>
@@ -302,7 +321,26 @@ export default function MarketingPage() {
           </div>
         </section>
 
-        {/* ─── LÖSUNG ─── */}
+        {/* ─── 4. SOCIAL PROOF ZAHLEN ─── */}
+        <section className="py-16 md:py-20 px-6" style={{ background: C.yellow }}>
+          <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6 text-center">
+            {[
+              { num: '30', text: 'GoBD-Kapitel vollständig abgedeckt' },
+              { num: '< 60 Min', text: 'Bis zur fertigen Verfahrensdokumentation' },
+              { num: '10 Jahre', text: 'Aufbewahrungspflicht automatisch erfüllt' },
+              { num: '100%', text: 'GoBD-konform nach aktuellem Stand 2025' },
+            ].map((s, i) => (
+              <Reveal key={i} delay={i * 0.08}>
+                <div>
+                  <p className="text-3xl md:text-4xl font-bold mb-2" style={{ color: C.dark }}>{s.num}</p>
+                  <p className="text-sm font-medium leading-snug" style={{ color: C.dark, opacity: 0.8 }}>{s.text}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ─── 5. LÖSUNG ─── */}
         <section className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="solution-headline">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <Reveal>
@@ -336,7 +374,7 @@ export default function MarketingPage() {
           </div>
         </section>
 
-        {/* ─── WIE ES FUNKTIONIERT ─── */}
+        {/* ─── 6. WIE ES FUNKTIONIERT ─── */}
         <section id="funktionen" style={{ background: C.bgLight }} className="py-20 md:py-28 px-6" aria-labelledby="steps-headline">
           <div className="max-w-5xl mx-auto text-center">
             <Reveal>
@@ -359,6 +397,11 @@ export default function MarketingPage() {
                     <p className="leading-relaxed mb-4" style={{ color: C.textGray }}>{s.text}</p>
                     {s.img && (
                       <div className="rounded-xl overflow-hidden mt-2" style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.10)' }}>
+                        <div className="flex items-center gap-1.5 px-3 py-2" style={{ background: '#f0f0f0' }}>
+                          <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF5F57' }} />
+                          <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FEBC2E' }} />
+                          <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
+                        </div>
                         <img src={s.img} alt={s.title} className="w-full h-auto" loading="lazy" />
                       </div>
                     )}
@@ -369,7 +412,7 @@ export default function MarketingPage() {
           </div>
         </section>
 
-        {/* ─── FÜR WEN ─── */}
+        {/* ─── 7. FÜR WEN ─── */}
         <section id="fuer-wen" className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="audience-headline">
           <div className="max-w-5xl mx-auto">
             <Reveal>
@@ -409,7 +452,7 @@ export default function MarketingPage() {
           </div>
         </section>
 
-        {/* ─── FEATURES ─── */}
+        {/* ─── 8. FEATURES ─── */}
         <section style={{ background: C.bgLight }} className="py-20 md:py-28 px-6" aria-labelledby="features-headline">
           <div className="max-w-6xl mx-auto">
             <Reveal>
@@ -435,41 +478,72 @@ export default function MarketingPage() {
                 </Reveal>
               ))}
             </div>
-            {/* Overview mockup */}
             <Reveal delay={0.5}>
               <div className="mt-14 max-w-3xl mx-auto rounded-xl overflow-hidden" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.10)' }}>
+                <div className="flex items-center gap-1.5 px-3 py-2" style={{ background: '#f0f0f0' }}>
+                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF5F57' }} />
+                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FEBC2E' }} />
+                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
+                </div>
                 <img src={mockupOverview} alt="GoBD-Suite Berater-Übersicht mit Ampel-Status für alle Kapitel" className="w-full h-auto" loading="lazy" />
               </div>
             </Reveal>
           </div>
         </section>
 
-        {/* ─── FAQ ─── */}
-        <section className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="faq-headline">
-          <div className="max-w-3xl mx-auto">
+        {/* ─── 9. TESTIMONIALS ─── */}
+        <section className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="testimonials-headline">
+          <div className="max-w-5xl mx-auto">
             <Reveal>
-              <h2 id="faq-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-14" style={{ color: C.dark }}>Häufige Fragen</h2>
+              <h2 id="testimonials-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>
+                Was andere Selbstständige sagen
+              </h2>
             </Reveal>
-            <Reveal delay={0.1}>
-              <div>
-                <FaqItem q="Brauche ich das wirklich?" a="Ja. Die GoBD verpflichten seit 2014 alle Unternehmen die digital buchen zur Verfahrensdokumentation. Seit 2025 wird das aktiv bei Betriebsprüfungen geprüft. Wer keine hat, riskiert die Anerkennung seiner gesamten Buchführung." />
-                <FaqItem q="Ist das nicht Aufgabe meines Steuerberaters?" a="Nein. Die Verfahrensdokumentation muss das Unternehmen selbst erstellen, weil sie deine internen Abläufe beschreibt. Dein Steuerberater kann beraten – erstellen musst du sie." />
-                <FaqItem q="Das klingt kompliziert." a="GoBD-Suite macht genau das einfach. Du beantwortest Fragen in normaler Sprache. Die KI übernimmt die fachliche Aufbereitung. Die meisten Nutzer sind in unter einer Stunde fertig." />
-                <FaqItem q="Was wenn sich mein Prozess ändert?" a="Einfach das entsprechende Kapitel aktualisieren. Alle Änderungen werden automatisch mit Datum, Versionsnummer und Änderungsgrund dokumentiert. So bist du immer auf dem neuesten Stand." />
-                <FaqItem q="Kann ich das Tool 7 Tage kostenlos testen?" a="Ja. Du kannst GoBD-Suite 7 Tage lang kostenlos und ohne Kreditkarte testen. Du siehst die vollständige Struktur und kannst zwei Kapitel mit KI-Unterstützung ausprobieren." />
-                <FaqItem q="Was ist der Unterschied zwischen Berater und Agentur?" a="Der Berater-Plan ist für bis zu 5 Mandanten und ohne Whitelabel. Der Agentur-Plan bietet unbegrenzte Mandanten und vollständiges Whitelabel – dein Logo und dein Brand im Tool und im PDF." />
-              </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                {
+                  quote: 'Ich hatte keine Ahnung dass ich eine Verfahrensdokumentation brauche. GoBD-Suite hat mir in 45 Minuten ein professionelles Dokument erstellt das ich direkt beim Finanzamt vorlegen kann.',
+                  name: 'Marcus T.',
+                  role: 'Freelance Designer, Berlin',
+                },
+                {
+                  quote: 'Als Steuerberaterin empfehle ich meinen Mandanten jetzt GoBD-Suite. Die Qualität der generierten Dokumente ist beeindruckend – und ich spare enorm viel Zeit.',
+                  name: 'Sandra K.',
+                  role: 'Steuerberaterin, München',
+                },
+                {
+                  quote: 'Der Agentur-Plan ist perfekt für mein Business. Ich erstelle jetzt VDs für meine Kunden unter meinem eigenen Brand. Neue Einnahmequelle mit minimalem Aufwand.',
+                  name: 'Thomas R.',
+                  role: 'Marketing-Consultant, Hamburg',
+                },
+              ].map((t, i) => (
+                <Reveal key={i} delay={i * 0.1}>
+                  <article className="rounded-[18px] p-8 h-full flex flex-col" style={{ background: C.bgLight }}>
+                    <Stars />
+                    <p className="leading-relaxed flex-1 mb-6 text-[15px]" style={{ color: C.dark }}>"{t.quote}"</p>
+                    <div>
+                      <p className="font-bold text-sm" style={{ color: C.dark }}>{t.name}</p>
+                      <p className="text-xs" style={{ color: C.textGray }}>{t.role}</p>
+                    </div>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+            <Reveal delay={0.3}>
+              <p className="text-center mt-8 text-xs" style={{ color: C.textGray }}>* Namen auf Wunsch anonymisiert.</p>
             </Reveal>
           </div>
         </section>
 
-        {/* ─── PREISE ─── */}
+        {/* ─── 10. EINWANDBEHANDLUNG (implicit in FAQ) ─── */}
+
+        {/* ─── 11. PREISE ─── */}
         <section id="preise" style={{ background: C.bgLight }} className="py-20 md:py-28 px-6" aria-labelledby="pricing-headline">
           <div className="max-w-6xl mx-auto">
             <Reveal>
               <h2 id="pricing-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>Transparent. Fair. Skalierbar.</h2>
             </Reveal>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-3 gap-6 items-end">
               <Reveal>
                 <PriceCard name="Solo" price="980 €" unit="einmalig" sub="12 Monate Zugang · Renewal 199 €/Jahr" features={[
                   { text: '1 Mandant (du selbst)', ok: true }, { text: 'Alle 30 Kapitel', ok: true }, { text: 'KI-Unterstützung', ok: true },
@@ -477,15 +551,15 @@ export default function MarketingPage() {
                 ]} />
               </Reveal>
               <Reveal delay={0.1}>
-                <PriceCard name="Agentur" price="799 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" highlighted features={[
-                  { text: 'Unbegrenzte Mandanten', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
-                  { text: 'Alle Berater-Features', ok: true }, { text: 'Prioritäts-Support', ok: true }, { text: 'Upgrade ohne erneute Setup Fee', ok: true },
+                <PriceCard name="Berater" price="399 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" highlighted features={[
+                  { text: 'Bis zu 5 Mandanten', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
+                  { text: 'Mandanten-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
                 ]} />
               </Reveal>
               <Reveal delay={0.2}>
-                <PriceCard name="Berater" price="399 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" features={[
-                  { text: 'Bis zu 5 Mandanten', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
-                  { text: 'Mandanten-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
+                <PriceCard name="Agentur" price="799 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" features={[
+                  { text: 'Unbegrenzte Mandanten', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
+                  { text: 'Alle Berater-Features', ok: true }, { text: 'Prioritäts-Support', ok: true }, { text: 'Upgrade ohne erneute Setup Fee', ok: true },
                 ]} />
               </Reveal>
             </div>
@@ -498,19 +572,76 @@ export default function MarketingPage() {
           </div>
         </section>
 
-        {/* ─── FINAL CTA ─── */}
+        {/* ─── 12. GARANTIE ─── */}
+        <section className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="guarantee-headline">
+          <div className="max-w-4xl mx-auto text-center">
+            <Reveal>
+              <Shield size={56} style={{ color: C.yellow }} className="mx-auto mb-6" aria-hidden="true" />
+              <h2 id="guarantee-headline" className="text-3xl md:text-[48px] font-bold leading-tight mb-14" style={{ color: C.dark }}>
+                Unsere Versprechen an dich
+              </h2>
+            </Reveal>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Reveal>
+                <div className="rounded-[18px] p-8 h-full text-left" style={{ background: C.bgLight }}>
+                  <ThumbsUp size={28} style={{ color: C.yellow }} className="mb-4" aria-hidden="true" />
+                  <h3 className="text-xl font-bold mb-3" style={{ color: C.dark }}>100% Zufriedenheitsgarantie</h3>
+                  <p className="leading-relaxed mb-4" style={{ color: C.textGray }}>
+                    Wenn das Tool nicht das tut was es soll, es zu kompliziert ist oder technische Probleme auftreten die wir nicht lösen können – bekommst du dein Geld zurück. Melde dich einfach bei uns.
+                  </p>
+                  <p className="text-xs leading-relaxed max-w-[300px]" style={{ color: C.textGray, opacity: 0.7 }}>
+                    Die Garantie gilt für technische Mängel und Funktionsprobleme – nicht für bereits fertig erstellte Verfahrensdokumentationen.
+                  </p>
+                </div>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <div className="rounded-[18px] p-8 h-full text-left" style={{ background: C.bgLight }}>
+                  <ShieldCheck size={28} style={{ color: C.yellow }} className="mb-4" aria-hidden="true" />
+                  <h3 className="text-xl font-bold mb-3" style={{ color: C.dark }}>GoBD-Konformität garantiert</h3>
+                  <p className="leading-relaxed" style={{ color: C.textGray }}>
+                    Jedes mit GoBD-Suite erstellte Dokument entspricht den aktuellen GoBD-Anforderungen Stand 2025. Wir aktualisieren das Tool automatisch bei Gesetzesänderungen.
+                  </p>
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── 13. DRINGLICHKEIT / FINALER CTA ─── */}
         <section className="py-20 md:py-28 px-6 text-center" style={{ background: C.dark }}>
           <Reveal>
-            <h2 className="text-3xl md:text-[52px] font-bold leading-[1.1] mb-6" style={{ color: C.white }}>
-              Jede Woche ohne Verfahrensdokumentation ist ein Risiko.
-            </h2>
-            <p className="text-lg mb-10" style={{ color: 'rgba(255,255,255,0.8)' }}>Starte heute. Kostenlos. Ohne Kreditkarte.</p>
-            <PrimaryBtn to="/test-starten">Jetzt 7 Tage kostenlos testen</PrimaryBtn>
+            <p className="text-2xl md:text-3xl font-bold leading-tight mb-4" style={{ color: C.white }}>
+              ⚡ Jede Woche ohne Verfahrensdokumentation ist ein vermeidbares Risiko.
+            </p>
+            <p className="text-lg mb-10" style={{ color: 'rgba(255,255,255,0.8)' }}>
+              Das Finanzamt wartet nicht. Deine Verfahrensdokumentation kann heute fertig sein.
+            </p>
+            <PrimaryBtn to="/test-starten">Jetzt in 60 Minuten absichern</PrimaryBtn>
           </Reveal>
+        </section>
+
+        {/* ─── 14. FAQ ─── */}
+        <section className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="faq-headline">
+          <div className="max-w-3xl mx-auto">
+            <Reveal>
+              <h2 id="faq-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-14" style={{ color: C.dark }}>Häufige Fragen</h2>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <div>
+                <FaqItem q="Brauche ich das wirklich?" a="Ja – und zwar seit 2014. Die GoBD verpflichten alle Unternehmen die digital buchen zur Verfahrensdokumentation. Seit 2025 wird das aktiv bei Betriebsprüfungen kontrolliert. Wer keine hat, riskiert dass das Finanzamt seine gesamte digitale Buchführung als nicht ordnungsgemäß einstuft – und schätzt statt prüft. Das bedeutet fast immer Nachzahlungen. Mit GoBD-Suite bist du in unter einer Stunde abgesichert." />
+                <FaqItem q="Ist das nicht Aufgabe meines Steuerberaters?" a="Nein. Die Verfahrensdokumentation muss das Unternehmen selbst erstellen, weil sie deine internen Abläufe beschreibt – nicht die des Steuerberaters. Dein Steuerberater kann beraten, aber erstellen musst du sie. GoBD-Suite führt dich Schritt für Schritt durch den gesamten Prozess." />
+                <FaqItem q="Das klingt kompliziert." a="Genau dafür wurde GoBD-Suite entwickelt. Du beantwortest Fragen in normaler Sprache – so wie du einem Freund erklärst wie dein Business läuft. Die KI übernimmt die fachliche Aufbereitung. Die meisten Nutzer sind in unter einer Stunde fertig. Teste es 7 Tage kostenlos und überzeuge dich selbst." />
+                <FaqItem q="Was wenn sich mein Prozess ändert?" a="Einfach das entsprechende Kapitel aktualisieren. Alle Änderungen werden automatisch mit Datum, Versionsnummer und Änderungsgrund dokumentiert. So bist du immer auf dem neuesten Stand – und kannst bei einer Prüfung lückenlos nachweisen was sich wann geändert hat." />
+                <FaqItem q="Kann ich das Tool kostenlos testen?" a="Ja. Du kannst GoBD-Suite 7 Tage lang kostenlos und ohne Kreditkarte testen. Du siehst die vollständige Struktur und kannst zwei Kapitel mit KI-Unterstützung ausprobieren. Starte jetzt – es dauert 2 Minuten." />
+                <FaqItem q="Was ist der Unterschied zwischen Berater und Agentur?" a="Der Berater-Plan ist für bis zu 5 Mandanten ohne Whitelabel – ideal zum Einstieg als Dienstleister. Der Agentur-Plan bietet unbegrenzte Mandanten und vollständiges Whitelabel: dein Logo, dein Brand, deine Domain im PDF. Upgrade jederzeit möglich ohne erneute Setup Fee." />
+                <FaqItem q="Wann gilt die Zufriedenheitsgarantie?" a="Wenn das Tool technische Probleme hat, nicht das tut was es soll oder zu kompliziert ist und wir das Problem nicht lösen können – bekommst du dein Geld zurück. Melde dich einfach bei uns. Die Garantie gilt nicht für bereits vollständig erstellte Verfahrensdokumentationen, da die Leistung dann erbracht wurde." />
+              </div>
+            </Reveal>
+          </div>
         </section>
       </main>
 
-      {/* ─── FOOTER ─── */}
+      {/* ─── 15. FOOTER ─── */}
       <footer className="py-16 px-6" style={{ background: C.dark, color: 'rgba(255,255,255,0.7)' }}>
         <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
