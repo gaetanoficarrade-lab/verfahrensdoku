@@ -216,7 +216,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── HERO PRODUCT IMAGE ─── */}
-      <section className="px-6 pb-24 pt-12">
+      <section className="px-4 sm:px-6 pb-16 sm:pb-24 pt-8 sm:pt-12">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
