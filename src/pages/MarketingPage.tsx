@@ -78,10 +78,12 @@ function useCountUp(end: number, duration = 1500, trigger = false) {
 function CounterStat({ num, suffix, text }: { num: number; suffix: string; text: string }) {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>(0.3);
   const count = useCountUp(num, 1500, isVisible);
+  const display = suffix === '< ' ? `< ${count}` : `${count}${suffix}`;
+  const staticDisplay = suffix === '< ' ? `< ${num}` : `${num}${suffix}`;
   return (
-    <div ref={ref}>
-      <p className="text-3xl md:text-4xl font-bold mb-2" style={{ color: C.dark }}>
-        {suffix === '< ' ? `< ${count}` : count}{suffix !== '< ' ? suffix : ''}
+    <div ref={ref} data-target={num}>
+      <p className="text-3xl md:text-4xl font-bold mb-2" style={{ color: C.dark }} data-static-value={staticDisplay}>
+        {display}
       </p>
       <p className="text-sm font-medium leading-snug" style={{ color: C.dark, opacity: 0.8 }}>{text}</p>
     </div>
