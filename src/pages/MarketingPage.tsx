@@ -535,8 +535,7 @@ export default function MarketingPage() {
                       transform: activeStep === i ? 'scale(1)' : 'scale(0.95)',
                     }}
                   >
-                    <span className="text-[80px] font-bold leading-none mb-2" style={{ color: C.yellow, opacity: 0.3 }} aria-hidden="true">{s.num}</span>
-                    <s.icon size={32} className="mb-4" style={{ color: C.dark }} aria-hidden="true" />
+                    <span className="text-[80px] font-bold leading-none mb-4" style={{ color: C.yellow, opacity: 0.3 }} aria-hidden="true">{s.num}</span>
                     <h3 className="text-lg font-bold mb-2" style={{ color: C.dark }}>{s.title}</h3>
                     <p className="leading-relaxed mb-4" style={{ color: C.textGray }}>{s.text}</p>
                     {s.img && (
