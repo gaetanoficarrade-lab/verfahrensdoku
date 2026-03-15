@@ -945,7 +945,7 @@ export const SEEDED_BLOG_ARTICLES: SeededBlogArticle[] = [
     content: ARTICLE_2_CONTENT,
     published: true,
     published_at: '2026-03-12T09:00:00.000Z',
-    cover_image_url: null,
+    cover_image_url: '/images/blog-vd-vorlage-steuerberater-tool.png',
   },
   {
     slug: 'betriebspruefung-ohne-verfahrensdokumentation',
