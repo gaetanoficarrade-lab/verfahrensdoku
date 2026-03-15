@@ -59,6 +59,7 @@ import AGB from "./pages/AGB";
 import AVV from "./pages/AVV";
 import FuerSelbststaendige from "./pages/FuerSelbststaendige";
 import FuerDienstleister from "./pages/FuerDienstleister";
+import VerfahrensdokumentationErstellen from "./pages/VerfahrensdokumentationErstellen";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
