@@ -433,8 +433,8 @@ export default function MarketingPage() {
                     ))}
                   </ul>
                   <a href="#preise" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Solo-Plan ansehen</a>
-                  <div className="rounded-xl overflow-hidden mt-6" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-                    <img src={mockupSoloDashboard} alt="GoBD-Suite Solo Dashboard mit Projektfortschritt" className="w-full h-auto" loading="lazy" />
+                  <div className="rounded-xl overflow-hidden mt-6 max-h-[200px]" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                    <img src={mockupSoloDashboard} alt="GoBD-Suite Solo Dashboard mit Projektfortschritt" className="w-full h-full object-cover object-top" loading="lazy" />
                   </div>
                 </article>
               </Reveal>
