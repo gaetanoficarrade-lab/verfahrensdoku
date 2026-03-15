@@ -357,8 +357,8 @@ export default function MarketingPage() {
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "GoBD-Suite",
-      "url": "https://vd.gaetanoficarra.de",
-      "logo": "https://vd.gaetanoficarra.de/images/logo.png",
+      "url": "https://gobd-suite.de",
+      "logo": "https://gobd-suite.de/images/logo.png",
       "contactPoint": { "@type": "ContactPoint", "contactType": "customer service", "availableLanguage": "German" },
     },
   ], []);
