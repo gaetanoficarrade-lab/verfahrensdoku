@@ -251,13 +251,13 @@ export default function LandingPage() {
       </section>
 
       {/* ─── PAIN POINTS ─── */}
-      <section className="py-32 px-6">
+      <section className="py-16 sm:py-32 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <AnimatedSection className="text-center mb-20">
+          <AnimatedSection className="text-center mb-12 sm:mb-20">
             <motion.p variants={fadeUp} className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">
               Das Problem
             </motion.p>
-            <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               Verfahrensdokumentation ist Pflicht.
               <br />
               <span className="text-[#86868b]">Aber niemand hat Zeit dafür.</span>
