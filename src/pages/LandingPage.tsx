@@ -447,10 +447,10 @@ export default function LandingPage() {
       </section>
 
       {/* ─── WAITLIST CTA ─── */}
-      <section ref={waitlistRef} className="py-32 px-6 bg-[#fafafa]">
+      <section ref={waitlistRef} className="py-16 sm:py-32 px-4 sm:px-6 bg-[#fafafa]">
         <AnimatedSection>
           <motion.div variants={fadeUp} className="max-w-xl mx-auto text-center">
-            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
               Sei unter den Ersten.
             </h2>
             <p className="text-[#86868b] mb-10 text-lg leading-relaxed">
