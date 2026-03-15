@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, type ReactNode } from 'react';
+import SocialProofNotification from '@/components/SocialProofNotification';
 import { Link } from 'react-router-dom';
 import { CookieBanner, CookieSettingsButton } from '@/components/CookieBanner';
 import mockupClients from '@/assets/mockup-clients.png';
