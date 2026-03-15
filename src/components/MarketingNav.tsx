@@ -47,7 +47,7 @@ export default function MarketingNav() {
         aria-label="Hauptnavigation"
       >
         <Link to="/" className="flex items-center gap-2 font-bold text-xl shrink-0">
-          <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-14 w-auto" />
+          <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-10 w-auto" />
         </Link>
 
         <div className="hidden md:flex items-center gap-8 text-[15px] font-medium" ref={dropdownRef} style={{ color: C.dark }}>
