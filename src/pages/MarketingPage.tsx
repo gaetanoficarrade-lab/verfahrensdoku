@@ -284,8 +284,8 @@ export default function MarketingPage() {
             <Reveal>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.1em] mb-4" style={{ color: C.yellow }}>Die Lösung</p>
-                <h2 id="solution-headline" className="text-3xl md:text-[44px] lg:text-[52px] font-bold leading-[1.1] mb-6 break-words hyphens-auto" lang="de" style={{ color: C.dark }}>
-                  Deine Verfahrens&shy;dokumentation. Fertig. Rechtssicher. In deiner Sprache.
+                <h2 id="solution-headline" className="text-3xl md:text-[44px] lg:text-[52px] font-bold leading-[1.1] mb-6" style={{ color: C.dark }}>
+                  Deine Verfahrens-<br className="hidden md:inline" />dokumentation. Fertig. Rechtssicher. In deiner Sprache.
                 </h2>
                 <p className="leading-relaxed mb-8" style={{ color: C.textGray }}>
                   GoBD-Suite ist das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. Du beantwortest Fragen wie in einem Gespräch – die KI erstellt daraus das fertige, GoBD-konforme Dokument. Kein Juristendeutsch. Kein Steuerberater nötig.
