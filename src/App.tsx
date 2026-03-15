@@ -58,6 +58,7 @@ import Datenschutz from "./pages/Datenschutz";
 import AGB from "./pages/AGB";
 import AVV from "./pages/AVV";
 import FuerSelbststaendige from "./pages/FuerSelbststaendige";
+import FuerDienstleister from "./pages/FuerDienstleister";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
