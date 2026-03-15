@@ -7,6 +7,7 @@ import mockupClients from '@/assets/mockup-clients.png';
 import mockupOverview from '@/assets/mockup-overview.png';
 import mockupOnboarding from '@/assets/mockup-onboarding.png';
 import mockupSoloDashboard from '@/assets/mockup-solo-dashboard.png';
+import mockupLaptopOverview from '@/assets/mockup-laptop-overview.png';
 import productSolution from '@/assets/product-solution.png';
 import { Link } from 'react-router-dom';
 import {
