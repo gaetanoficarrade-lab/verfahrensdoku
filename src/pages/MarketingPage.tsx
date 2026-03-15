@@ -204,7 +204,7 @@ function PricingToggleSection() {
           name="Agentur"
           price={annual ? '665 €' : '799 €'}
           unit="/Monat"
-          sub={annual ? '7.990 € jährlich · 2 Monate gratis' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
+          sub={annual ? '7.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
           highlighted
           features={[
             { text: 'Unbegrenzte Mandanten', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
