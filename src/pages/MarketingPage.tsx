@@ -305,8 +305,8 @@ export default function MarketingPage() {
               </div>
             </Reveal>
             <Reveal delay={0.2}>
-              <div className="rounded-2xl flex items-center justify-center aspect-[4/3]" style={{ background: '#E8E8ED', border: `1px solid ${C.border}` }}>
-                <span className="text-lg font-medium" style={{ color: C.textGray }}>App Screenshot</span>
+              <div className="rounded-2xl overflow-hidden" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.12)' }}>
+                <img src={productSolution} alt="GoBD-Suite Kapitel-Editor mit Sidebar und KI-gestütztem Texteditor" className="w-full h-auto" loading="lazy" />
               </div>
             </Reveal>
           </div>
