@@ -68,6 +68,7 @@ const App = () => (
           <TenantBrandingProvider>
             <Routes>
               {/* Public routes */}
+              <Route path="/" element={<MarketingPage />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/landing" element={<LandingPage />} />
               <Route path="/impressum" element={<Impressum />} />
