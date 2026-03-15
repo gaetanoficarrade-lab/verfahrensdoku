@@ -147,8 +147,8 @@ export default function AGB() {
 
           <S title="§ 15 Zufriedenheitsgarantie">
             <P>15.1 Der Anbieter bietet eine Zufriedenheitsgarantie für den Fall, dass das Tool technische Mängel aufweist, nicht die beschriebenen Funktionen erfüllt oder so komplex ist, dass eine sinnvolle Nutzung nicht möglich ist und der Anbieter das Problem nicht beheben kann.</P>
-            <P>15.2 In diesen Fällen kann der Kunde innerhalb von 30 Tagen nach Vertragsschluss eine Rückerstattung des gezahlten Entgelts verlangen. Die Rückerstattung erfolgt nach Prüfung des gemeldeten Problems durch den Anbieter.</P>
-            <P>15.3 Die Garantie gilt ausdrücklich nicht wenn der Kunde das Tool bestimmungsgemäß genutzt und bereits eine oder mehrere vollständige Verfahrensdokumentationen erstellt hat, da die vertraglich geschuldete Leistung in diesem Fall vollständig erbracht wurde.</P>
+            <P>15.2 In diesen Fällen kann der Kunde innerhalb von 30 Tagen nach Vertragsschluss eine Rückerstattung des gezahlten Entgelts verlangen, sofern die Mindestlaufzeit von 3 Monaten noch nicht abgelaufen ist. Die Rückerstattung erfolgt nach Prüfung des gemeldeten Problems durch den Anbieter. Bei jährlichen Plänen wird der anteilige Restbetrag erstattet.</P>
+            <P>15.3 Die Garantie gilt ausdrücklich nicht wenn der Kunde das Tool bestimmungsgemäß genutzt und bereits eine oder mehrere vollständige Verfahrensdokumentationen erstellt hat, da die vertraglich geschuldete Leistung in diesem Fall vollständig erbracht wurde. Ebenso besteht kein Anspruch auf Rückerstattung nach Ablauf der 3-monatigen Mindestlaufzeit beim monatlichen Modell oder nach Ablauf von 3 Monaten beim Jahresmodell.</P>
             <P>15.4 Zur Geltendmachung der Garantie ist eine schriftliche Schilderung des Problems per E-Mail an kontakt@gaetanoficarra.de erforderlich.</P>
           </S>
 
