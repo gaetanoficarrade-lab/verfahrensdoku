@@ -133,7 +133,7 @@ export default function AGB() {
 
           <S title="§ 13 Laufzeit und Kündigung">
             <P>13.1 Plan Solo läuft für 12 Monate ab Freischaltung. Eine Verlängerung erfolgt gegen eine jährliche Renewal-Gebühr.</P>
-            <P>13.2 Plan Berater und Plan Agentur laufen auf unbestimmte Zeit und können vom Kunden jederzeit zum Ende des laufenden Abrechnungsmonats ordentlich gekündigt werden.</P>
+            <P>13.2 Plan Berater und Plan Agentur haben eine Mindestlaufzeit von 3 Monaten beim monatlichen Abrechnungsmodell. Nach Ablauf der Mindestlaufzeit können sie jederzeit zum Ende des laufenden Abrechnungsmonats ordentlich gekündigt werden. Bei jährlichem Abrechnungsmodell beträgt die Mindestlaufzeit 12 Monate. Nach Ablauf verlängert sich der Vertrag automatisch um ein weiteres Jahr, sofern er nicht mit einer Frist von 30 Tagen vor Ablauf gekündigt wird.</P>
             <P>13.3 Dem Anbieter steht eine ordentliche Kündigung mit einer Frist von 30 Tagen zum Monatsende zu.</P>
             <P>13.4 Das Recht zur außerordentlichen Kündigung aus wichtigem Grund bleibt unberührt. Ein wichtiger Grund liegt insbesondere vor bei anhaltendem Zahlungsverzug, wesentlichen Vertragspflichtverletzungen oder Eröffnung eines Insolvenzverfahrens über das Vermögen des Kunden.</P>
             <P>13.5 Kündigungen bedürfen der Textform, E-Mail ist ausreichend.</P>

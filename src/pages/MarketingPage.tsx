@@ -159,11 +159,90 @@ function Stars() {
   );
 }
 
+/* ─── Pricing Toggle Section ─── */
+function PricingToggleSection() {
+  const [annual, setAnnual] = useState(false);
+
+  return (
+    <>
+      {/* Toggle */}
+      <div className="flex items-center justify-center gap-3 mb-14">
+        <div className="inline-flex rounded-full p-1" style={{ background: C.bgLight, border: `1px solid ${C.border}` }}>
+          <button
+            onClick={() => setAnnual(false)}
+            className="px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300"
+            style={{ background: !annual ? C.yellow : 'transparent', color: C.dark }}
+          >
+            Monatlich
+          </button>
+          <button
+            onClick={() => setAnnual(true)}
+            className="px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2"
+            style={{ background: annual ? C.yellow : 'transparent', color: C.dark }}
+          >
+            Jährlich
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: C.green, color: '#fff' }}>2 Monate gratis</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Cards */}
+      <div className="grid md:grid-cols-3 gap-6 items-stretch">
+        {/* Solo */}
+        <PriceCard
+          name="Solo"
+          price="980 €"
+          unit="einmalig"
+          sub="12 Monate Zugang · Renewal 199 €/Jahr"
+          features={[
+            { text: '1 Mandant (du selbst)', ok: true }, { text: 'Alle 30 Kapitel', ok: true }, { text: 'KI-Unterstützung', ok: true },
+            { text: 'Unbegrenzte Revisionen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false }, { text: 'Kein Berater-Portal', ok: false },
+          ]}
+        />
+        {/* Agentur */}
+        <PriceCard
+          name="Agentur"
+          price={annual ? '665 €' : '799 €'}
+          unit="/Monat"
+          sub={annual ? '7.990 € jährlich · 2 Monate gratis' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
+          highlighted
+          features={[
+            { text: 'Unbegrenzte Mandanten', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
+            { text: 'Alle Berater-Features', ok: true }, { text: 'Prioritäts-Support', ok: true },
+          ]}
+          annualNote={annual ? 'Jährliche Laufzeit · danach jährlich kündbar' : undefined}
+        />
+        {/* Berater */}
+        <PriceCard
+          name="Berater"
+          price={annual ? '332 €' : '399 €'}
+          unit="/Monat"
+          sub={annual ? '3.990 € jährlich · 2 Monate gratis' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
+          features={[
+            { text: 'Bis zu 5 Mandanten', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
+            { text: 'Mandanten-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
+          ]}
+          annualNote={annual ? 'Jährliche Laufzeit · danach jährlich kündbar' : undefined}
+        />
+      </div>
+
+      <p className="text-center mt-10 text-sm" style={{ color: C.textGray }}>Alle Pläne mit 7 Tagen kostenlosem Test · Keine Kreditkarte für den Test nötig</p>
+      <p className="text-center mt-2 text-xs" style={{ color: C.textGray, opacity: 0.7 }}>
+        Alle Preise zzgl. gesetzlich gültiger MwSt. · Dieses Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
+      </p>
+      <p className="text-center mt-2">
+        <Link to="/test-starten" className="text-sm font-semibold hover:opacity-70 transition-opacity" style={{ color: C.dark }}>→ Kostenlos testen</Link>
+      </p>
+    </>
+  );
+}
+
 /* ─── Price Card ─── */
-function PriceCard({ name, price, unit, sub, features, highlighted = false }: {
+function PriceCard({ name, price, unit, sub, features, highlighted = false, annualNote }: {
   name: string; price: string; unit: string; sub: string;
   features: { text: string; ok: boolean }[];
   highlighted?: boolean;
+  annualNote?: string;
 }) {
   return (
     <div
@@ -179,10 +258,12 @@ function PriceCard({ name, price, unit, sub, features, highlighted = false }: {
       )}
       <h3 className="text-xl font-bold mb-2" style={{ color: C.dark }}>{name}</h3>
       <div className="flex items-baseline gap-1 mb-1">
-        <span className="text-4xl font-bold" style={{ color: C.dark }}>{price}</span>
+        <span className="text-4xl font-bold transition-all duration-300" style={{ color: C.dark }}>{price}</span>
         <span className="text-sm" style={{ color: C.textGray }}>{unit}</span>
       </div>
-      <p className="text-xs mb-6" style={{ color: C.textGray }}>{sub}</p>
+      <p className="text-xs mb-1" style={{ color: C.textGray }}>{sub}</p>
+      {annualNote && <p className="text-xs mb-4" style={{ color: C.textGray, opacity: 0.7 }}>{annualNote}</p>}
+      {!annualNote && <div className="mb-5" />}
       <ul className="space-y-2 mb-8 flex-1">
         {features.map((f, i) => (
           <li key={i} className="flex items-center gap-2 text-[15px]" style={{ color: f.ok ? C.dark : C.textGray }}>
