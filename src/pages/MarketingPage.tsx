@@ -236,7 +236,7 @@ export default function MarketingPage() {
             <div>
               <Reveal>
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full mb-6" style={{ background: C.yellow, color: C.dark }}>
-                  🔒 Einführungspreis – Jetzt sichern
+                  🏆 Das erste VD-Tool im DACH-Raum
                 </span>
               </Reveal>
               <Reveal delay={0.1}>
