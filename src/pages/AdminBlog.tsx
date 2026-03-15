@@ -66,7 +66,15 @@ export default function AdminBlog() {
     setLoading(false);
   }
 
-  useEffect(() => { load(); }, [filter]);
+  const seeded = useRef(false);
+  useEffect(() => {
+    if (!seeded.current) {
+      seeded.current = true;
+      seedBlogArticleVD2025().then(() => load());
+    } else {
+      load();
+    }
+  }, [filter]);
 
   function openNew() {
     setEditing(null);
