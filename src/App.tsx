@@ -49,6 +49,7 @@ import TenantEmailSettings from "./pages/TenantEmailSettings";
 import AdminWebhookLogs from "./pages/AdminWebhookLogs";
 import TestStarten from "./pages/TestStarten";
 import LandingPage from "./pages/LandingPage";
+import MarketingPage from "./pages/MarketingPage";
 import Impressum from "./pages/Impressum";
 import Datenschutz from "./pages/Datenschutz";
 import AGB from "./pages/AGB";
@@ -67,6 +68,7 @@ const App = () => (
           <TenantBrandingProvider>
             <Routes>
               {/* Public routes */}
+              <Route path="/" element={<MarketingPage />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/landing" element={<LandingPage />} />
               <Route path="/impressum" element={<Impressum />} />
@@ -79,14 +81,6 @@ const App = () => (
               <Route path="/test-starten" element={<TestStarten />} />
 
               {/* Protected routes with layout */}
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <AppLayout><Index /></AppLayout>
-                  </ProtectedRoute>
-                }
-              />
               <Route
                 path="/overview"
                 element={
