@@ -990,6 +990,40 @@ export const SEEDED_BLOG_ARTICLES: SeededBlogArticle[] = [
     published_at: '2026-03-15T09:00:00.000Z',
     cover_image_url: '/images/blog-gobd-freelancer.png',
   },
+  {
+    slug: 'gobd-checkliste-verfahrensdokumentation',
+    title: 'GoBD-Checkliste 2025: Was deine Verfahrensdokumentation wirklich enthalten muss',
+    category: 'GoBD',
+    reading_time_minutes: 10,
+    meta_title: 'GoBD-Checkliste 2025 – Verfahrensdokumentation vollständig erstellen',
+    meta_description: 'Die komplette GoBD-Checkliste 2025: Was muss in eine Verfahrensdokumentation? Alle Pflichtbestandteile, Prozessbeschreibungen und Anforderungen an Revisionssicherheit auf einen Blick.',
+    excerpt: 'Was gehört wirklich in eine GoBD-konforme Verfahrensdokumentation? Die komplette Checkliste 2025 – von Belegfluss über Revisionssicherheit bis zum internen Kontrollsystem.',
+    content: ARTICLE_6_CONTENT,
+    published: true,
+    published_at: '2026-03-15T10:00:00.000Z',
+    cta_title: 'Deine Verfahrensdokumentation mit allen 10 Blöcken erstellen?',
+    cta_description: 'GoBD-Suite führt dich durch jeden Block – KI-gestützt, vollständig und in unter einer Stunde fertig.',
+    related_slugs: [
+      'verfahrensdokumentation-2025-was-sich-geaendert-hat',
+      'betriebspruefung-ohne-verfahrensdokumentation',
+      'verfahrensdokumentation-freelancer',
+    ],
+    additional_json_ld: [
+      {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "GoBD-konforme Verfahrensdokumentation erstellen",
+        "description": "Schritt-für-Schritt Checkliste für eine vollständige GoBD-konforme Verfahrensdokumentation",
+        "step": [
+          { "@type": "HowToStep", "name": "Unternehmensbeschreibung", "text": "Beschreibe dein Unternehmen, deine Tätigkeit und wie Geschäftsvorfälle entstehen" },
+          { "@type": "HowToStep", "name": "Organisation der Buchführung", "text": "Dokumentiere Zuständigkeiten, Verantwortlichkeiten und Belegfluss" },
+          { "@type": "HowToStep", "name": "IT-Systeme dokumentieren", "text": "Liste alle eingesetzten Software-Systeme und deren Zugriffsrechte auf" },
+          { "@type": "HowToStep", "name": "Schnittstellen beschreiben", "text": "Dokumentiere wie Daten zwischen deinen Systemen fließen" },
+          { "@type": "HowToStep", "name": "Revisionssicherheit nachweisen", "text": "Beschreibe wie Unveränderbarkeit deiner Belege sichergestellt wird" },
+        ],
+      },
+    ],
+  },
 ];
 
 const ARTICLE_6_CONTENT = `**Stand: März 2026**
