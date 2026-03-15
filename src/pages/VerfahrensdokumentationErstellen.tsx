@@ -167,38 +167,7 @@ export default function VerfahrensdokumentationErstellen() {
 
   return (
     <div className="font-sans" style={{ color: C.dark }}>
-      {/* ─── NAV ─── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 lg:px-12"
-        style={{ height: 64, background: scrolled ? 'rgba(255,255,255,0.85)' : 'transparent', backdropFilter: scrolled ? 'blur(20px)' : 'none', WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none', borderBottom: scrolled ? '1px solid rgba(0,0,0,0.08)' : '1px solid transparent', boxShadow: scrolled ? '0 2px 20px rgba(0,0,0,0.06)' : 'none', transition: 'all 0.3s ease' }}
-        aria-label="Hauptnavigation"
-      >
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl shrink-0"><img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-14 w-auto" /></Link>
-        <div className="hidden md:flex items-center gap-8 text-[15px] font-medium" style={{ color: C.dark }}>
-          <Link to="/#funktionen" className="hover:opacity-70 transition-opacity">Funktionen</Link>
-          <Link to="/#fuer-wen" className="hover:opacity-70 transition-opacity">Für wen?</Link>
-          <Link to="/#preise" className="hover:opacity-70 transition-opacity">Preise</Link>
-          <Link to="/blog" className="hover:opacity-70 transition-opacity">Blog</Link>
-        </div>
-        <div className="hidden md:flex items-center gap-4">
-          <Link to="/auth" className="text-[15px] font-medium hover:opacity-70 transition-opacity" style={{ color: C.dark }}>Anmelden</Link>
-          <PrimaryBtn to="/test-starten">Kostenlos testen</PrimaryBtn>
-        </div>
-        <button className="md:hidden" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Menü öffnen">
-          {mobileMenu ? <XIcon size={24} /> : <Menu size={24} />}
-        </button>
-      </nav>
-
-      {mobileMenu && (
-        <div className="fixed inset-0 z-40 flex flex-col pt-20 px-8 gap-6 text-lg font-medium md:hidden" style={{ background: C.white, color: C.dark }}>
-          <Link to="/#funktionen" onClick={() => setMobileMenu(false)}>Funktionen</Link>
-          <Link to="/#fuer-wen" onClick={() => setMobileMenu(false)}>Für wen?</Link>
-          <Link to="/#preise" onClick={() => setMobileMenu(false)}>Preise</Link>
-          <Link to="/blog" onClick={() => setMobileMenu(false)}>Blog</Link>
-          <hr style={{ borderColor: C.border }} />
-          <Link to="/auth" onClick={() => setMobileMenu(false)}>Anmelden</Link>
-          <PrimaryBtn to="/test-starten">Kostenlos testen</PrimaryBtn>
-        </div>
-      )}
+      <MarketingNav />
 
       <main>
         {/* ═══ 1. HERO ═══ */}
