@@ -42,7 +42,7 @@ export default function BlogPage() {
   useSEO({
     title: 'Blog | GoBD-Suite',
     description: 'Alles über GoBD, Verfahrensdokumentation und digitale Buchführung.',
-    canonical: 'https://vd.gaetanoficarra.de/blog',
+    canonical: 'https://gobd-suite.de/blog',
     ogTitle: 'GoBD-Suite Blog',
     ogDescription: 'Alles über GoBD, Verfahrensdokumentation und digitale Buchführung.',
     robots: 'index, follow',

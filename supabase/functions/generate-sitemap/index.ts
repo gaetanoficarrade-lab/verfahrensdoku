@@ -7,7 +7,7 @@ const corsHeaders = {
   'Content-Type': 'application/xml; charset=utf-8',
 };
 
-const BASE_URL = 'https://vd.gaetanoficarra.de';
+const BASE_URL = 'https://gobd-suite.de';
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
