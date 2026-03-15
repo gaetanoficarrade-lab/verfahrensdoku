@@ -182,7 +182,7 @@ export default function MarketingPage() {
         aria-label="Hauptnavigation"
       >
         <Link to="/" className="flex items-center gap-2 font-bold text-xl shrink-0" style={{ color: C.dark }}>
-          <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-7 w-auto" />
+          <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-14 w-auto" />
         </Link>
         <div className="hidden md:flex items-center gap-8 text-[15px] font-medium" style={{ color: C.dark }}>
           <a href="#funktionen" className="hover:opacity-70 transition-opacity">Funktionen</a>
@@ -284,8 +284,8 @@ export default function MarketingPage() {
             <Reveal>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.1em] mb-4" style={{ color: C.yellow }}>Die Lösung</p>
-                <h2 id="solution-headline" className="text-3xl md:text-[44px] lg:text-[52px] font-bold leading-[1.1] mb-6 break-words hyphens-auto" lang="de" style={{ color: C.dark }}>
-                  Deine Verfahrens&shy;dokumentation. Fertig. Rechtssicher. In deiner Sprache.
+                <h2 id="solution-headline" className="text-3xl md:text-[44px] lg:text-[52px] font-bold leading-[1.1] mb-6" style={{ color: C.dark }}>
+                  Deine Verfahrens-<br className="hidden md:inline" />dokumentation. Fertig. Rechtssicher. In deiner Sprache.
                 </h2>
                 <p className="leading-relaxed mb-8" style={{ color: C.textGray }}>
                   GoBD-Suite ist das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. Du beantwortest Fragen wie in einem Gespräch – die KI erstellt daraus das fertige, GoBD-konforme Dokument. Kein Juristendeutsch. Kein Steuerberater nötig.
@@ -476,7 +476,7 @@ export default function MarketingPage() {
       <footer className="py-16 px-6" style={{ background: C.dark, color: 'rgba(255,255,255,0.7)' }}>
         <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-7 w-auto mb-4" style={{ filter: 'brightness(0) invert(1)' }} loading="lazy" />
+            <img src="/images/logo-light.png" alt="GoBD-Suite Logo" className="h-10 w-auto mb-4" loading="lazy" />
             <p className="text-sm leading-relaxed">Die erste vollständige Verfahrensdokumentations-Lösung für Selbstständige und Dienstleister im DACH-Raum.</p>
           </div>
           <div>
