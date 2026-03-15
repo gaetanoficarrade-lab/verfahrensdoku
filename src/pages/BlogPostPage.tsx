@@ -149,9 +149,11 @@ export default function BlogPostPage() {
     return () => observer.disconnect();
   }, [headings]);
 
+  const seededArticle = SEEDED_BLOG_ARTICLES.find(a => a.slug === slug);
+
   const jsonLd = useMemo(() => {
     if (!post) return [];
-    return [{
+    const base = [{
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "headline": post.title,
@@ -163,7 +165,11 @@ export default function BlogPostPage() {
       "mainEntityOfPage": { "@type": "WebPage", "@id": `https://gobd-suite.de/blog/${post.slug}` },
       ...(post.cover_image_url ? { "image": post.cover_image_url } : {}),
     }];
-  }, [post]);
+    if (seededArticle?.additional_json_ld) {
+      return [...base, ...seededArticle.additional_json_ld];
+    }
+    return base;
+  }, [post, seededArticle]);
 
   useSEO({
     title: post ? `${post.meta_title || post.title} | GoBD-Suite Blog` : 'Blog | GoBD-Suite',
