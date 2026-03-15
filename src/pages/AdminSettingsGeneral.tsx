@@ -46,7 +46,7 @@ export default function AdminSettingsGeneral() {
         supabase.from('plans').select('id, name').order('name'),
         supabase.from('platform_settings').select('key, value').in('key', [
           'trial_enabled', 'trial_days', 'session_timeout_minutes', 'session_warning_minutes',
-          'affiliate_cookie_days', 'affiliate_default_commission', 'invite_expiry_days',
+          'invite_expiry_days',
         ]),
       ]);
 
