@@ -182,7 +182,7 @@ export default function MarketingPage() {
         aria-label="Hauptnavigation"
       >
         <Link to="/" className="flex items-center gap-2 font-bold text-xl shrink-0" style={{ color: C.dark }}>
-          <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-7 w-auto" />
+          <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-14 w-auto" />
         </Link>
         <div className="hidden md:flex items-center gap-8 text-[15px] font-medium" style={{ color: C.dark }}>
           <a href="#funktionen" className="hover:opacity-70 transition-opacity">Funktionen</a>
