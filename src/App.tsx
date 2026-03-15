@@ -35,8 +35,6 @@ import ActivityLog from "./pages/ActivityLog";
 import TeamSettings from "./pages/TeamSettings";
 import WebhookSettings from "./pages/WebhookSettings";
 import ClientRegister from "./pages/ClientRegister";
-import AffiliateSettings from "./pages/AffiliateSettings";
-import AdminAffiliates from "./pages/AdminAffiliates";
 import DocumentPreview from "./pages/DocumentPreview";
 import SecuritySettings from "./pages/SecuritySettings";
 import HelpPage from "./pages/HelpPage";
