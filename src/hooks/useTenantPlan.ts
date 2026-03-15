@@ -29,7 +29,7 @@ export interface TenantPlanInfo {
   canUseWebhooks: boolean;
   canUseTemplates: boolean;
   canUseEmailTemplates: boolean;
-  canUseAffiliate: boolean;
+  
   canUseActivityLog: boolean;
 }
 
