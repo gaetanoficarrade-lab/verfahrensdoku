@@ -566,9 +566,9 @@ export default function MarketingPage() {
                 Für Selbstständige. Für Dienstleister. Für alle.
               </h2>
             </Reveal>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-6 items-stretch">
               <Reveal>
-                <article className="rounded-[18px] p-8 h-full" style={{ background: C.white, border: `1px solid ${C.border}` }}>
+                <article className="rounded-[18px] p-8 h-full flex flex-col" style={{ background: C.white, border: `1px solid ${C.border}` }}>
                   <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-4" style={{ background: C.bgLight, color: C.dark }}>Solo-Plan</span>
                   <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>Du willst deine VD selbst erstellen</h3>
                   <ul className="space-y-2 mb-8">
@@ -577,18 +577,18 @@ export default function MarketingPage() {
                     ))}
                   </ul>
                   <a href="#preise" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Solo-Plan ansehen</a>
-                  <div className="rounded-xl overflow-hidden mt-6" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-                    <div className="flex items-center gap-1.5 px-3 py-2" style={{ background: '#f0f0f0' }}>
+                  <div className="rounded-xl overflow-hidden mt-6 flex-1 flex flex-col" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                    <div className="flex items-center gap-1.5 px-3 py-2 shrink-0" style={{ background: '#f0f0f0' }}>
                       <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF5F57' }} />
                       <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FEBC2E' }} />
                       <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
                     </div>
-                    <img src={mockupSoloDashboard} alt="GoBD-Suite Solo Dashboard mit Projektfortschritt" className="w-full h-auto" loading="lazy" />
+                    <img src={mockupSoloDashboard} alt="GoBD-Suite Solo Dashboard mit Projektfortschritt" className="w-full flex-1 object-cover object-top" loading="lazy" />
                   </div>
                 </article>
               </Reveal>
               <Reveal delay={0.1}>
-                <article className="rounded-[18px] p-8 h-full" style={{ background: C.white, border: `1px solid ${C.border}`, borderTopWidth: 3, borderTopColor: C.yellow }}>
+                <article className="rounded-[18px] p-8 h-full flex flex-col" style={{ background: C.white, border: `1px solid ${C.border}`, borderTopWidth: 3, borderTopColor: C.yellow }}>
                   <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-4" style={{ background: C.yellow, color: C.dark }}>Berater & Agentur</span>
                   <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>Du willst VDs als Dienstleistung anbieten</h3>
                   <ul className="space-y-2 mb-8">
@@ -596,14 +596,14 @@ export default function MarketingPage() {
                       <li key={t} className="flex items-center gap-2 text-[15px]" style={{ color: C.textGray }}><Check size={16} style={{ color: C.green }} /> {t}</li>
                     ))}
                   </ul>
-                  <a href="#preise" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200 mb-6" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Für Dienstleister</a>
-                  <div className="rounded-xl overflow-hidden mt-6" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-                    <div className="flex items-center gap-1.5 px-3 py-2" style={{ background: '#f0f0f0' }}>
+                  <a href="#preise" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Für Dienstleister</a>
+                  <div className="rounded-xl overflow-hidden mt-6 flex-1 flex flex-col" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                    <div className="flex items-center gap-1.5 px-3 py-2 shrink-0" style={{ background: '#f0f0f0' }}>
                       <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF5F57' }} />
                       <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FEBC2E' }} />
                       <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
                     </div>
-                    <img src={mockupClients} alt="GoBD-Suite Mandantenübersicht mit mehreren Kunden" className="w-full h-auto" loading="lazy" />
+                    <img src={mockupClients} alt="GoBD-Suite Mandantenübersicht mit mehreren Kunden" className="w-full flex-1 object-cover object-top" loading="lazy" />
                   </div>
                 </article>
               </Reveal>
