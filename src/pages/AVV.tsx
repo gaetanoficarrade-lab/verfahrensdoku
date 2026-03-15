@@ -118,13 +118,8 @@ export default function AVV() {
                 <tbody>
                   <tr className="border-b border-[#e5e5e5]">
                     <td className="px-4 py-2">Netcup GmbH</td>
-                    <td className="px-4 py-2">Server-Hosting, Infrastruktur</td>
+                    <td className="px-4 py-2">Server-Hosting, Infrastruktur, Self-hosted Supabase (Datenbank, Authentifizierung, Edge Functions)</td>
                     <td className="px-4 py-2">Deutschland</td>
-                  </tr>
-                  <tr className="border-b border-[#e5e5e5]">
-                    <td className="px-4 py-2">Supabase, Inc.</td>
-                    <td className="px-4 py-2">Datenbank, Authentifizierung, Edge Functions</td>
-                    <td className="px-4 py-2">EU (Frankfurt)</td>
                   </tr>
                   <tr className="border-b border-[#e5e5e5]">
                     <td className="px-4 py-2">OpenAI, Inc.</td>
@@ -164,10 +159,16 @@ export default function AVV() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">§ 9 Schlussbestimmungen</h2>
-            <p className="mb-2">9.1 Sollten einzelne Bestimmungen dieses AVV unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.</p>
-            <p className="mb-2">9.2 Es gilt das Recht der Bundesrepublik Deutschland.</p>
-            <p>9.3 Änderungen dieses AVV bedürfen der Textform.</p>
+            <h2 className="text-xl font-semibold mb-3">§ 9 Haftung bei Datenschutzverletzungen</h2>
+            <p className="mb-2">9.1 Der Auftragsverarbeiter haftet gegenüber dem Verantwortlichen für Schäden, die durch eine nicht DSGVO-konforme Verarbeitung entstehen, soweit er die Pflichtverletzung zu vertreten hat.</p>
+            <p>9.2 Der Auftragsverarbeiter haftet nicht für Schäden, die auf unrichtige, unvollständige oder datenschutzrechtlich unzulässige Weisungen des Verantwortlichen zurückzuführen sind.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold mb-3">§ 10 Schlussbestimmungen</h2>
+            <p className="mb-2">10.1 Sollten einzelne Bestimmungen dieses AVV unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.</p>
+            <p className="mb-2">10.2 Es gilt das Recht der Bundesrepublik Deutschland.</p>
+            <p>10.3 Änderungen dieses AVV bedürfen der Textform.</p>
           </section>
         </div>
       </main>
