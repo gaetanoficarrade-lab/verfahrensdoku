@@ -49,7 +49,7 @@ const Auth = () => {
   // Redirect if already logged in
   useEffect(() => {
     if (!loading && session) {
-      navigate('/');
+      navigate('/dashboard');
     }
   }, [session, loading, navigate]);
 
