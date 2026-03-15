@@ -1,8 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Calendar, Clock, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft, ArrowRight, User } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSEO } from '@/hooks/useSEO';
+import MarketingNav from '@/components/MarketingNav';
+import { CookieBanner } from '@/components/CookieBanner';
 
 const C = {
   yellow: '#FAC81E', dark: '#44484E', white: '#FFFFFF',
@@ -41,6 +43,7 @@ export default function BlogPostPage() {
   const [related, setRelated] = useState<RelatedPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [headings, setHeadings] = useState<{ id: string; text: string }[]>([]);
+  const [activeHeading, setActiveHeading] = useState('');
 
   useEffect(() => {
     if (!slug) return;
@@ -55,14 +58,12 @@ export default function BlogPostPage() {
 
       if (data) {
         setPost(data as FullPost);
-        // extract headings from markdown
         const hMatches = (data.content || '').match(/^##\s+(.+)$/gm) || [];
         setHeadings(hMatches.map((h: string) => {
           const text = h.replace(/^##\s+/, '');
-          return { id: text.toLowerCase().replace(/[^a-z0-9äöü]+/gi, '-'), text };
+          return { id: slugify(text), text };
         }));
 
-        // related posts
         const { data: rel } = await supabase
           .from('blog_posts')
           .select('id, title, slug, excerpt, cover_image_url, category, reading_time_minutes, published_at')
@@ -75,6 +76,26 @@ export default function BlogPostPage() {
       setLoading(false);
     })();
   }, [slug]);
+
+  // Active heading observer
+  useEffect(() => {
+    if (headings.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveHeading(entry.target.id);
+          }
+        }
+      },
+      { rootMargin: '-80px 0px -60% 0px', threshold: 0.1 }
+    );
+    headings.forEach(h => {
+      const el = document.getElementById(h.id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [headings]);
 
   const jsonLd = useMemo(() => {
     if (!post) return [];
@@ -115,93 +136,58 @@ export default function BlogPostPage() {
   if (!post) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: C.white, color: C.dark }}>
+        <MarketingNav />
         <h1 className="text-2xl font-bold">Artikel nicht gefunden</h1>
         <Link to="/blog" className="font-semibold hover:opacity-70" style={{ color: C.dark }}>← Zurück zum Blog</Link>
       </div>
     );
   }
 
-  // Simple markdown to HTML (handles ##, **, *, -, links, paragraphs)
-  function renderMarkdown(md: string) {
-    const lines = md.split('\n');
-    const elements: React.ReactNode[] = [];
-    let i = 0;
-
-    while (i < lines.length) {
-      const line = lines[i];
-
-      if (line.startsWith('## ')) {
-        const text = line.slice(3);
-        const id = text.toLowerCase().replace(/[^a-z0-9äöü]+/gi, '-');
-        elements.push(<h2 key={i} id={id} className="text-2xl font-bold mt-10 mb-4" style={{ color: C.dark }}>{text}</h2>);
-      } else if (line.startsWith('### ')) {
-        elements.push(<h3 key={i} className="text-xl font-bold mt-8 mb-3" style={{ color: C.dark }}>{line.slice(4)}</h3>);
-      } else if (line.startsWith('- ')) {
-        const items: string[] = [];
-        while (i < lines.length && lines[i].startsWith('- ')) {
-          items.push(lines[i].slice(2));
-          i++;
-        }
-        elements.push(
-          <ul key={`ul-${i}`} className="list-disc pl-6 space-y-1 mb-4" style={{ color: C.textGray }}>
-            {items.map((item, j) => <li key={j}>{formatInline(item)}</li>)}
-          </ul>
-        );
-        continue;
-      } else if (line.trim() === '') {
-        // skip
-      } else {
-        elements.push(<p key={i} className="mb-4 leading-relaxed" style={{ color: C.textGray }}>{formatInline(line)}</p>);
-      }
-      i++;
-    }
-    return elements;
-  }
-
-  function formatInline(text: string): React.ReactNode {
-    // Bold **text**
-    const parts = text.split(/(\*\*[^*]+\*\*)/g);
-    return parts.map((part, i) => {
-      if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={i} style={{ color: C.dark }}>{part.slice(2, -2)}</strong>;
-      }
-      return part;
-    });
-  }
-
   return (
     <div className="font-sans" style={{ color: C.dark }}>
-      {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 lg:px-12" style={{ height: 64, background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(12px)', borderBottom: `1px solid ${C.border}` }}>
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl" style={{ color: C.dark }}>
-          <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-8" width={32} height={32} />
-        </Link>
-        <div className="hidden md:flex items-center gap-4">
-          <Link to="/blog" className="text-[15px] font-medium hover:opacity-70" style={{ color: C.dark }}>Blog</Link>
-          <Link to="/auth" className="text-[15px] font-medium hover:opacity-70" style={{ color: C.dark }}>Anmelden</Link>
-        </div>
-      </nav>
+      <MarketingNav />
 
       <main className="pt-20">
-        {/* Cover image */}
-        <div className="w-full aspect-[21/9] max-h-[480px] flex items-center justify-center" style={{ background: '#E8E8ED' }}>
-          {post.cover_image_url ? (
-            <img src={post.cover_image_url} alt={post.title} className="w-full h-full object-cover" />
-          ) : (
-            <span style={{ color: C.textGray }}>Titelbild</span>
-          )}
+        {/* Header */}
+        <div className="max-w-[720px] mx-auto px-6 pt-12 pb-8">
+          <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm font-medium mb-8 hover:opacity-70 transition-opacity" style={{ color: C.textGray }}>
+            <ArrowLeft size={14} /> Zurück zum Blog
+          </Link>
+          <span className="inline-block text-xs font-bold px-3 py-1.5 rounded-full mb-5" style={{ background: C.yellow, color: C.dark }}>
+            {post.category}
+          </span>
+          <h1 className="text-3xl md:text-[40px] font-bold leading-[1.15] mb-5" style={{ color: C.dark }}>
+            {post.title}
+          </h1>
+          <div className="flex flex-wrap items-center gap-4 text-sm" style={{ color: C.textGray }}>
+            <span className="flex items-center gap-1.5"><User size={14} /> Gaetano Ficarra</span>
+            <span className="flex items-center gap-1.5"><Calendar size={14} /> {new Date(post.published_at).toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
+            <span className="flex items-center gap-1.5"><Clock size={14} /> {post.reading_time_minutes} Min. Lesezeit</span>
+          </div>
+          <div className="mt-8" style={{ height: 1, background: C.border }} />
         </div>
 
-        <div className="max-w-6xl mx-auto px-6 py-12 flex gap-12">
+        {/* Body with TOC */}
+        <div className="max-w-7xl mx-auto px-6 flex gap-0">
           {/* Sticky TOC desktop */}
           {headings.length > 0 && (
-            <aside className="hidden lg:block w-56 shrink-0">
-              <div className="sticky top-24">
-                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: C.textGray }}>Inhalt</p>
-                <ul className="space-y-2">
+            <aside className="hidden xl:block w-64 shrink-0">
+              <div className="sticky top-24 pr-8">
+                <p className="text-[11px] font-bold uppercase tracking-widest mb-4" style={{ color: C.textGray }}>Inhalt</p>
+                <ul className="space-y-1.5">
                   {headings.map(h => (
                     <li key={h.id}>
-                      <a href={`#${h.id}`} className="text-sm hover:opacity-70 transition-opacity block leading-snug" style={{ color: C.dark }}>{h.text}</a>
+                      <a
+                        href={`#${h.id}`}
+                        className="text-[13px] block py-1 pl-3 transition-all duration-200 leading-snug rounded-r"
+                        style={{
+                          color: activeHeading === h.id ? C.dark : C.textGray,
+                          fontWeight: activeHeading === h.id ? 600 : 400,
+                          borderLeft: `2px solid ${activeHeading === h.id ? C.yellow : 'transparent'}`,
+                        }}
+                      >
+                        {h.text}
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -210,28 +196,20 @@ export default function BlogPostPage() {
           )}
 
           {/* Article */}
-          <article className="flex-1 max-w-3xl">
-            <Link to="/blog" className="inline-flex items-center gap-1 text-sm font-medium mb-6 hover:opacity-70" style={{ color: C.dark }}>
-              <ArrowLeft size={14} /> Zurück zum Blog
-            </Link>
-            <span className="inline-block text-xs font-semibold px-2.5 py-1 rounded-full mb-4" style={{ background: C.bgLight, color: C.dark }}>{post.category}</span>
-            <h1 className="text-3xl md:text-[44px] font-bold leading-[1.15] mb-4" style={{ color: C.dark }}>{post.title}</h1>
-            <div className="flex items-center gap-4 text-sm mb-10" style={{ color: C.textGray }}>
-              <span>Gaetano Ficarra</span>
-              <span className="flex items-center gap-1"><Calendar size={14} /> {new Date(post.published_at).toLocaleDateString('de-DE')}</span>
-              <span className="flex items-center gap-1"><Clock size={14} /> {post.reading_time_minutes} Min. Lesezeit</span>
+          <article className="flex-1 max-w-[720px] mx-auto pb-20">
+            <div className="blog-prose">
+              <MarkdownRenderer content={post.content} />
             </div>
 
-            <div className="prose-custom">
-              {renderMarkdown(post.content)}
-            </div>
-
-            {/* CTA */}
-            <div className="mt-16 rounded-[18px] p-10 text-center" style={{ background: C.bgLight }}>
+            {/* CTA Box */}
+            <div className="mt-16 rounded-[18px] p-10 text-center relative overflow-hidden" style={{ background: C.bgLight }}>
+              <div className="absolute top-0 left-0 right-0 h-1" style={{ background: C.yellow }} />
               <h2 className="text-2xl font-bold mb-3" style={{ color: C.dark }}>Bereit deine Verfahrensdokumentation zu erstellen?</h2>
-              <p className="mb-6" style={{ color: C.textGray }}>Starte jetzt kostenlos – ohne Kreditkarte.</p>
-              <Link to="/test-starten" className="inline-flex items-center font-semibold text-[15px]" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>
-                Kostenlos testen
+              <p className="mb-6" style={{ color: C.textGray }}>Starte jetzt kostenlos – ohne Kreditkarte, fertig in unter 60 Minuten.</p>
+              <Link to="/test-starten" className="inline-flex items-center font-semibold text-[15px] transition-all duration-200 hover:shadow-lg"
+                style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '14px 28px' }}
+              >
+                Jetzt kostenlos testen
               </Link>
             </div>
           </article>
@@ -240,15 +218,16 @@ export default function BlogPostPage() {
         {/* Related posts */}
         {related.length > 0 && (
           <section className="py-16 px-6" style={{ background: C.bgLight }}>
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               <h2 className="text-2xl font-bold mb-8" style={{ color: C.dark }}>Weitere Artikel</h2>
               <div className="grid md:grid-cols-3 gap-6">
                 {related.map(r => (
-                  <Link key={r.id} to={`/blog/${r.slug}`} className="block rounded-[18px] overflow-hidden transition-shadow hover:shadow-lg" style={{ background: C.white, boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
+                  <Link key={r.id} to={`/blog/${r.slug}`} className="block rounded-[18px] overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-1" style={{ background: C.white, boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
                     <div className="aspect-[16/9] flex items-center justify-center" style={{ background: '#E8E8ED' }}>
                       {r.cover_image_url ? <img src={r.cover_image_url} alt={r.title} className="w-full h-full object-cover" loading="lazy" /> : <span className="text-sm" style={{ color: C.textGray }}>Titelbild</span>}
                     </div>
                     <div className="p-5">
+                      <span className="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full mb-2" style={{ background: C.bgLight, color: C.dark }}>{r.category}</span>
                       <h3 className="font-bold mb-1 leading-snug" style={{ color: C.dark }}>{r.title}</h3>
                       <p className="text-sm line-clamp-2" style={{ color: C.textGray }}>{r.excerpt}</p>
                       <span className="inline-flex items-center gap-1 mt-3 text-sm font-semibold" style={{ color: C.dark }}>Weiterlesen <ArrowRight size={14} /></span>
@@ -261,9 +240,144 @@ export default function BlogPostPage() {
         )}
       </main>
 
+      {/* Footer */}
       <footer className="py-12 px-6 text-center text-xs" style={{ background: C.dark, color: 'rgba(255,255,255,0.5)' }}>
-        © 2025 GoBD-Suite · <Link to="/impressum" className="hover:text-white">Impressum</Link> · <Link to="/datenschutz" className="hover:text-white">Datenschutz</Link>
+        © {new Date().getFullYear()} GoBD-Suite · <Link to="/impressum" className="hover:text-white transition-colors">Impressum</Link> · <Link to="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link>
       </footer>
+
+      <CookieBanner />
     </div>
   );
+}
+
+/* ─── Helpers ─── */
+function slugify(text: string) {
+  return text.toLowerCase().replace(/[^a-z0-9äöüß]+/gi, '-').replace(/(^-|-$)/g, '');
+}
+
+/* ─── Markdown Renderer ─── */
+function MarkdownRenderer({ content }: { content: string }) {
+  const lines = content.split('\n');
+  const elements: React.ReactNode[] = [];
+  let i = 0;
+  let key = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Horizontal rule
+    if (/^---\s*$/.test(line.trim())) {
+      elements.push(<hr key={key++} className="my-10" style={{ border: 'none', borderTop: `1px solid ${C.border}` }} />);
+      i++;
+      continue;
+    }
+
+    // H2
+    if (line.startsWith('## ')) {
+      const text = line.slice(3);
+      const id = slugify(text);
+      elements.push(
+        <h2 key={key++} id={id} className="scroll-mt-24" style={{ fontSize: 28, fontWeight: 700, color: C.dark, marginTop: 48, marginBottom: 16, lineHeight: 1.3 }}>
+          {text}
+        </h2>
+      );
+      i++;
+      continue;
+    }
+
+    // H3
+    if (line.startsWith('### ')) {
+      elements.push(
+        <h3 key={key++} style={{ fontSize: 22, fontWeight: 600, color: C.dark, marginTop: 32, marginBottom: 12, lineHeight: 1.35 }}>
+          {line.slice(4)}
+        </h3>
+      );
+      i++;
+      continue;
+    }
+
+    // Blockquote
+    if (line.startsWith('> ')) {
+      const quoteLines: string[] = [];
+      while (i < lines.length && lines[i].startsWith('> ')) {
+        quoteLines.push(lines[i].slice(2));
+        i++;
+      }
+      elements.push(
+        <blockquote key={key++} style={{ borderLeft: `4px solid ${C.yellow}`, paddingLeft: 24, margin: '24px 0', fontStyle: 'italic', color: C.textGray, fontSize: 18, lineHeight: 1.8 }}>
+          {quoteLines.map((ql, j) => <p key={j}>{formatInline(ql)}</p>)}
+        </blockquote>
+      );
+      continue;
+    }
+
+    // Unordered list
+    if (line.startsWith('- ')) {
+      const items: string[] = [];
+      while (i < lines.length && lines[i].startsWith('- ')) {
+        items.push(lines[i].slice(2));
+        i++;
+      }
+      elements.push(
+        <ul key={key++} style={{ listStyleType: 'disc', paddingLeft: 24, margin: '16px 0', color: C.textGray, fontSize: 18, lineHeight: 1.8 }}>
+          {items.map((item, j) => <li key={j} style={{ marginBottom: 4 }}>{formatInline(item)}</li>)}
+        </ul>
+      );
+      continue;
+    }
+
+    // Empty line
+    if (line.trim() === '') {
+      i++;
+      continue;
+    }
+
+    // Paragraph
+    elements.push(
+      <p key={key++} style={{ fontSize: 18, lineHeight: 1.8, color: C.textGray, marginBottom: 24 }}>
+        {formatInline(line)}
+      </p>
+    );
+    i++;
+  }
+
+  return <>{elements}</>;
+}
+
+function formatInline(text: string): React.ReactNode {
+  // Process links and bold
+  const parts: React.ReactNode[] = [];
+  let remaining = text;
+  let partKey = 0;
+
+  while (remaining.length > 0) {
+    // Check for link [text](url)
+    const linkMatch = remaining.match(/^(.*?)\[([^\]]+)\]\(([^)]+)\)(.*)/s);
+    // Check for bold **text**
+    const boldMatch = remaining.match(/^(.*?)\*\*([^*]+)\*\*(.*)/s);
+
+    if (linkMatch && (!boldMatch || linkMatch.index! <= boldMatch.index!)) {
+      if (linkMatch[1]) parts.push(<span key={partKey++}>{linkMatch[1]}</span>);
+      parts.push(
+        <a key={partKey++} href={linkMatch[3]} target="_blank" rel="noopener noreferrer"
+          className="transition-colors"
+          style={{ color: C.yellow, textDecoration: 'none' }}
+          onMouseEnter={e => (e.currentTarget.style.textDecoration = 'underline')}
+          onMouseLeave={e => (e.currentTarget.style.textDecoration = 'none')}
+        >
+          {linkMatch[2]}
+        </a>
+      );
+      remaining = linkMatch[4];
+    } else if (boldMatch) {
+      if (boldMatch[1]) parts.push(<span key={partKey++}>{boldMatch[1]}</span>);
+      parts.push(<strong key={partKey++} style={{ color: C.dark, fontWeight: 600 }}>{boldMatch[2]}</strong>);
+      remaining = boldMatch[3];
+    } else {
+      parts.push(<span key={partKey++}>{remaining}</span>);
+      remaining = '';
+    }
+  }
+
+  return parts.length === 1 ? parts[0] : <>{parts}</>;
 }

@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { seedBlogArticleVD2025 } from '@/lib/seedBlogArticle';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -65,7 +66,15 @@ export default function AdminBlog() {
     setLoading(false);
   }
 
-  useEffect(() => { load(); }, [filter]);
+  const seeded = useRef(false);
+  useEffect(() => {
+    if (!seeded.current) {
+      seeded.current = true;
+      seedBlogArticleVD2025().then(() => load());
+    } else {
+      load();
+    }
+  }, [filter]);
 
   function openNew() {
     setEditing(null);
