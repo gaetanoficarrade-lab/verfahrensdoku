@@ -433,8 +433,13 @@ export default function MarketingPage() {
                     ))}
                   </ul>
                   <a href="#preise" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Solo-Plan ansehen</a>
-                  <div className="rounded-xl overflow-hidden mt-6 max-h-[200px]" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-                    <img src={mockupSoloDashboard} alt="GoBD-Suite Solo Dashboard mit Projektfortschritt" className="w-full h-full object-cover object-top" loading="lazy" />
+                  <div className="rounded-xl overflow-hidden mt-6" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                    <div className="flex items-center gap-1.5 px-3 py-2" style={{ background: '#f0f0f0' }}>
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF5F57' }} />
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FEBC2E' }} />
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
+                    </div>
+                    <img src={mockupSoloDashboard} alt="GoBD-Suite Solo Dashboard mit Projektfortschritt" className="w-full h-auto" loading="lazy" />
                   </div>
                 </article>
               </Reveal>
@@ -448,8 +453,13 @@ export default function MarketingPage() {
                     ))}
                   </ul>
                   <a href="#preise" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200 mb-6" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Für Dienstleister</a>
-                  <div className="rounded-xl overflow-hidden mt-4 max-h-[200px]" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-                    <img src={mockupClients} alt="GoBD-Suite Mandantenübersicht mit mehreren Kunden" className="w-full h-full object-cover object-top" loading="lazy" />
+                  <div className="rounded-xl overflow-hidden mt-6" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                    <div className="flex items-center gap-1.5 px-3 py-2" style={{ background: '#f0f0f0' }}>
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF5F57' }} />
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FEBC2E' }} />
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
+                    </div>
+                    <img src={mockupClients} alt="GoBD-Suite Mandantenübersicht mit mehreren Kunden" className="w-full h-auto" loading="lazy" />
                   </div>
                 </article>
               </Reveal>
