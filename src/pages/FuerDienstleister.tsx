@@ -564,6 +564,7 @@ export default function FuerDienstleister() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto mt-12 pt-8 text-center text-xs" style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>
+          <p className="mb-3"><Link to="/fuer-selbststaendige" className="hover:text-white transition-colors">Du willst deine eigene VD erstellen? Hier entlang →</Link></p>
           © {new Date().getFullYear()} GoBD-Suite · Alle Rechte vorbehalten
         </div>
       </footer>
