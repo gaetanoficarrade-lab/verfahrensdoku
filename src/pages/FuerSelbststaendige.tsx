@@ -144,7 +144,7 @@ export default function FuerSelbststaendige() {
     ogDescription: 'GoBD-konform in 60 Minuten. Ohne Steuerberater. Ohne Juristendeutsch.',
     ogType: 'website',
     ogLocale: 'de_DE',
-    ogImage: 'https://vd.gaetanoficarra.de/og-image.png',
+    ogImage: 'https://gobd-suite.de/og-image.png',
     jsonLd: [jsonLd],
   });
 
