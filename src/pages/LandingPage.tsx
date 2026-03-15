@@ -344,13 +344,13 @@ export default function LandingPage() {
       </section>
 
       {/* ─── HOW IT WORKS + PDF IMAGE ─── */}
-      <section className="py-32 px-6 bg-[#fafafa]">
+      <section className="py-16 sm:py-32 px-4 sm:px-6 bg-[#fafafa]">
         <div className="max-w-6xl mx-auto">
-          <AnimatedSection className="text-center mb-20">
+          <AnimatedSection className="text-center mb-12 sm:mb-20">
             <motion.p variants={fadeUp} className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">
               So funktioniert's
             </motion.p>
-            <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               Drei Schritte.
               <br />
               <span className="text-[#86868b]">Das war's.</span>
