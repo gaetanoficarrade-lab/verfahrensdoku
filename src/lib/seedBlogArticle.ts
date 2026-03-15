@@ -971,7 +971,7 @@ export const SEEDED_BLOG_ARTICLES: SeededBlogArticle[] = [
     content: ARTICLE_4_CONTENT,
     published: true,
     published_at: '2026-03-14T09:00:00.000Z',
-    cover_image_url: null,
+    cover_image_url: '/images/blog-vd-dienstleistung.png',
   },
   {
     slug: 'verfahrensdokumentation-freelancer',
