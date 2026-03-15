@@ -924,6 +924,308 @@ export interface SeededBlogArticle {
   additional_json_ld?: object[];
 }
 
+const ARTICLE_6_CONTENT = `**Stand: März 2026**
+
+## Die meisten Verfahrensdokumentationen sind unvollständig
+
+Und das ist kein böser Wille.
+
+Es liegt daran dass kaum jemand genau weiß was wirklich reinmuss.
+
+Die GoBD beschreiben es auf 50 Seiten Behördendeutsch. Dein Steuerberater erklärt es vielleicht wenn du fragst. Und im Internet findest du entweder zu wenig oder zu viel.
+
+Dieser Artikel ist anders.
+
+Hier bekommst du eine vollständige, praktische Checkliste – Schritt für Schritt, ohne Fachchinesisch. Was muss rein. Was kann weg. Und warum.
+
+---
+
+## Was ist das Ziel einer Verfahrensdokumentation?
+
+Bevor wir zur Checkliste kommen – kurz das Wichtigste.
+
+Eine Verfahrensdokumentation beschreibt wie dein Unternehmen seine digitale Buchführung organisiert.
+
+Das Ziel: Ein sachkundiger Dritter – lies: ein Betriebsprüfer vom Finanzamt – soll anhand deines Dokuments verstehen können:
+
+- Wie Geschäftsvorfälle entstehen
+- Welche Belege dabei entstehen
+- Wie diese Belege verarbeitet werden
+- Wo sie archiviert werden
+- Wie sichergestellt wird dass nichts verändert wurde
+
+Das sind die fünf Grundfragen. Alles andere ist Ausgestaltung.
+
+**Rechtsgrundlage:** [GoBD Randziffer 151 ff. – BMF-Schreiben 28.11.2019](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/2019-11-28-GoBD.html)
+
+---
+
+## Die vollständige GoBD-Checkliste 2025
+
+### ✅ Block 1: Allgemeine Unternehmensbeschreibung
+
+Das ist der Einstieg. Klingt simpel – wird aber oft vergessen oder zu oberflächlich behandelt.
+
+**Was muss rein:**
+
+- [ ] Name und Rechtsform des Unternehmens
+- [ ] Branche und Geschäftstätigkeit (konkret: womit verdienst du Geld?)
+- [ ] Wie entstehen Geschäftsvorfälle? (Auftragsanbahnung, Angebotsphase, Auftragserteilung)
+- [ ] Welche Belege entstehen bei einem typischen Auftrag? (Angebote, Auftragsbestätigungen, Rechnungen, Zahlungsnachweise)
+- [ ] Wer ist verantwortlich für die Buchführung?
+- [ ] Wird ein Steuerberater eingesetzt?
+
+**Warum das wichtig ist:** Der Prüfer braucht diesen Kontext um alles andere beurteilen zu können. Ohne Unternehmensbeschreibung fehlt die Grundlage.
+
+---
+
+### ✅ Block 2: Organisation der Buchführung
+
+Hier geht es um die Zuständigkeiten und Verantwortlichkeiten im buchhalterischen Ablauf.
+
+**Was muss rein:**
+
+- [ ] Aufgabenverteilung: Wer bucht, wer prüft, wer gibt frei?
+- [ ] Wie werden Belege intern weitergegeben? (Belegfluss vom Eingang bis zur Buchung)
+- [ ] Wie ist die Funktionstrennung geregelt? (Vier-Augen-Prinzip falls vorhanden)
+- [ ] Zuständigkeiten bei Abwesenheit
+- [ ] Einbindung externer Dienstleister (Steuerberater, Buchhalter)
+
+**Keyword-Hinweis:** Zuständigkeiten und Verantwortlichkeiten sind Pflichtbestandteile – viele Dokumente erwähnen sie nur am Rande. Das reicht nicht.
+
+---
+
+### ✅ Block 3: Eingesetzte IT-Systeme und Software
+
+Das ist das Herzstück der technischen Systemdokumentation. Hier werden die meisten Fehler gemacht.
+
+**Was muss rein:**
+
+- [ ] Welche Software wird für die Buchhaltung genutzt? (Name der Software reicht – keine Versionsnummer nötig)
+- [ ] Welche Software für Rechnungsstellung?
+- [ ] Welche Zahlungsanbieter werden genutzt? (Stripe, PayPal, Funnelpay etc.)
+- [ ] Cloud-Dienste für Belegablage? (Google Drive, OneDrive, Dropbox)
+- [ ] E-Commerce-Plattformen oder Marktplätze? (Amazon, Etsy, eigener Shop)
+- [ ] Wie sind die Zugriffsrechte geregelt? (Wer darf was in welchem System?)
+- [ ] Wie werden Software-Updates durchgeführt?
+
+**Rechtsgrundlage:** [GoBD Randziffer 100 ff. – Systemdokumentation](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/2019-11-28-GoBD.html)
+
+---
+
+### ✅ Block 4: Schnittstellenmanagement und Datenflüsse
+
+Dieser Block wird am häufigsten vergessen. Und genau hier schauen Betriebsprüfer besonders genau hin.
+
+**Was muss rein:**
+
+- [ ] Wie fließen Daten zwischen den Systemen? (Beispiel: Funnelpay → Stripe → Lexoffice)
+- [ ] Sind die Schnittstellen automatisiert oder manuell?
+- [ ] Wie werden Übertragungsfehler erkannt?
+- [ ] Was passiert wenn eine Schnittstelle ausfällt?
+- [ ] Wie werden Zahlungsdienstleister in die Buchhaltung integriert?
+- [ ] Wie werden Umsätze aus Zahlungsanbietern den Buchungen zugeordnet?
+
+**Warum das wichtig ist:** Moderne Businesses nutzen viele Tools. Das Finanzamt will wissen wie die Daten zwischen diesen Tools fließen und ob dabei etwas verloren gehen kann.
+
+---
+
+### ✅ Block 5: Belegfluss und Prozessbeschreibungen
+
+Die Prozessbeschreibung ist das Herzstück der gesamten Verfahrensdokumentation.
+
+Hier beschreibst du für jeden relevanten Prozess: Auslöser → Durchführung → Nachweis → Aufbewahrung
+
+**Rechnungsausgang – was muss rein:**
+
+- [ ] Wie entsteht eine Ausgangsrechnung?
+- [ ] Welche Software erstellt die Rechnung?
+- [ ] Wie wird die Rechnung übermittelt? (E-Mail, Post, automatisch via Tool)
+- [ ] Wo wird die Rechnung unveränderbar gespeichert?
+- [ ] Wie ist sichergestellt dass die Rechnung nicht nachträglich geändert werden kann?
+
+**Rechnungseingang – was muss rein:**
+
+- [ ] Wie kommen Eingangsrechnungen an? (E-Mail, Download, Post)
+- [ ] Wie werden sie erfasst und geprüft?
+- [ ] Wie erfolgt die Freigabe zur Zahlung?
+- [ ] Wo werden sie unveränderbar archiviert?
+
+**Zahlungsverkehr – was muss rein:**
+
+- [ ] Wie werden Zahlungen autorisiert?
+- [ ] Wie werden Zahlungen Belegen zugeordnet?
+- [ ] Wie erfolgt der Kontoabgleich?
+- [ ] Onlinebanking: Wie ist der Zugriff geregelt?
+
+**Rechtsgrundlage:** [§ 147 AO – Aufbewahrungspflichten](https://www.gesetze-im-internet.de/ao_1977/__147.html)
+
+---
+
+### ✅ Block 6: Revisionssicherheit und Unveränderbarkeit
+
+Revisionssicherheit ist einer der zentralen Begriffe der GoBD. Und einer der am häufigsten missverstandenen.
+
+Was bedeutet revisionssicher?
+
+Ein Dokument ist revisionssicher wenn es nach der Ablage nicht mehr verändert werden kann – oder wenn jede Änderung lückenlos protokolliert wird.
+
+**Was muss rein:**
+
+- [ ] Wie ist sichergestellt dass Belege nicht nachträglich verändert werden können?
+- [ ] Nutzt du Software die Rechnungen sperrt? (Stornopflicht statt Löschen)
+- [ ] Wie wird die Unveränderbarkeit bei archivierten Dokumenten gewährleistet?
+- [ ] Gibt es ein Änderungsprotokoll / Audit-Log?
+- [ ] Wie lange werden Dokumente aufbewahrt? (Faustregel: 10 Jahre für steuerrelevante Unterlagen)
+
+**Wichtig:** Revisionssicherheit bedeutet nicht dass du keine Fehler korrigieren kannst. Es bedeutet dass Korrekturen nachvollziehbar dokumentiert werden müssen – zum Beispiel durch Stornorechnung mit neuer Rechnungsnummer.
+
+**Rechtsgrundlage:** [§ 239 HGB – Führung der Handelsbücher](https://www.gesetze-im-internet.de/hgb/__239.html)
+
+---
+
+### ✅ Block 7: Ersetzungsscannen (falls zutreffend)
+
+Relevant wenn du Papierbelege digitalisierst und die Originale danach vernichtest.
+
+**Was muss rein:**
+
+- [ ] Wie werden Papierbelege digitalisiert? (Scanner, Smartphone-App, Dienstleister)
+- [ ] Wie wird die Qualität des Scans geprüft? (Lesbarkeit, Vollständigkeit)
+- [ ] Was passiert mit den Originalen nach dem Scan? (Aufbewahren oder vernichten – beides muss dokumentiert sein)
+- [ ] Wie ist sichergestellt dass der Scan bildtreu ist?
+
+**Hinweis:** Wenn du keine Papierbelege scannst und alles digital eingeht – diesen Block kurz als "nicht relevant" dokumentieren. Auch das ist eine valide Aussage.
+
+---
+
+### ✅ Block 8: Datensicherung und Backup
+
+Ein häufig vergessener Block – dabei schauen Prüfer explizit darauf.
+
+**Was muss rein:**
+
+- [ ] Wie werden Daten regelmäßig gesichert?
+- [ ] Wo liegen die Backups? (Lokal, Cloud, externer Dienstleister)
+- [ ] Wer ist verantwortlich für die Datensicherung?
+- [ ] Wie oft werden Backups erstellt?
+- [ ] Wie wird eine Wiederherstellung getestet?
+- [ ] Was passiert bei Datenverlust?
+
+---
+
+### ✅ Block 9: Internes Kontrollsystem (IKS)
+
+Das Interne Kontrollsystem – kurz IKS – beschreibt wie du sicherstellst dass deine Buchführung korrekt und vollständig ist.
+
+Klingt komplex. Ist es nicht.
+
+**Was muss rein:**
+
+- [ ] Welche regelmäßigen Kontrollen führst du durch? (Kontoabgleich, Umsatzabstimmung, Belegprüfung)
+- [ ] Wie werden Fehler erkannt?
+- [ ] Wie werden Fehler korrigiert? (Stornobuchung, Korrekturrechnung)
+- [ ] Wird die Durchführung der Kontrollen dokumentiert?
+- [ ] Wer ist für Kontrollen verantwortlich?
+
+**Rechtsgrundlage:** [GoBD Randziffer 130 ff. – Internes Kontrollsystem](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/2019-11-28-GoBD.html)
+
+---
+
+### ✅ Block 10: Archivierung und Datenzugriff
+
+Der letzte Block – und für Betriebsprüfungen besonders relevant.
+
+**Was muss rein:**
+
+- [ ] Wo werden Dokumente langfristig archiviert?
+- [ ] Wie können Dokumente gezielt wiedergefunden werden?
+- [ ] Wie lange werden welche Dokumente aufbewahrt? (Rechnungen: 10 Jahre, Handels- und Geschäftsbriefe: 6 Jahre)
+- [ ] Wie wird sichergestellt dass archivierte Dokumente lesbar bleiben?
+- [ ] Wie können Daten für eine Betriebsprüfung bereitgestellt werden? (Z1: Lesezugriff im System, Z2: Datenexport, Z3: Datenträgerüberlassung)
+
+**Rechtsgrundlage:** [§ 147 AO – Aufbewahrungsfristen](https://www.gesetze-im-internet.de/ao_1977/__147.html) | [§ 257 HGB – Aufbewahrung von Unterlagen](https://www.gesetze-im-internet.de/hgb/__257.html)
+
+---
+
+## Die häufigsten Lücken in der Praxis
+
+Nach allem was Betriebsprüfer berichten – das sind die Stellen die am häufigsten fehlen:
+
+**1. Schnittstellenbeschreibung fehlt komplett**
+
+Wer nutzt Stripe, Funnelpay oder ähnliches und beschreibt nirgends wie die Daten ins Buchhaltungssystem kommen – hat eine Lücke.
+
+**2. Revisionssicherheit nur behauptet nicht bewiesen**
+
+"Wir speichern alles unveränderbar" reicht nicht. Beschreibe konkret wie das technisch sichergestellt ist.
+
+**3. IKS fehlt oder ist zu oberflächlich**
+
+Ein Satz zu internen Kontrollen reicht nicht. Konkrete Kontrollen mit Häufigkeit und Verantwortlichkeit müssen benannt werden.
+
+**4. Datenzugriff für Prüfer nicht beschrieben**
+
+Wie genau können Daten für eine Betriebsprüfung bereitgestellt werden? Z1, Z2 oder Z3? Das muss dokumentiert sein.
+
+**5. Versionierung fehlt**
+
+Jede Änderung an der Verfahrensdokumentation muss mit Datum und Beschreibung dokumentiert werden. Ohne Änderungshistorie ist die VD nicht GoBD-konform.
+
+---
+
+## Wie oft muss die Verfahrensdokumentation aktualisiert werden?
+
+Bei jeder wesentlichen Änderung.
+
+Das bedeutet konkret:
+
+- Neue Software eingeführt → VD aktualisieren
+- Zahlungsanbieter gewechselt → VD aktualisieren
+- Prozess geändert → VD aktualisieren
+- Neuer Mitarbeiter mit Buchungszugang → VD aktualisieren
+
+Eine jährliche Überprüfung ist empfehlenswert auch wenn sich nichts geändert hat – einfach um zu bestätigen dass alles noch aktuell ist.
+
+---
+
+## Checkliste auf einen Blick
+
+Kurze Zusammenfassung aller 10 Blöcke:
+
+✅ Block 1: Allgemeine Unternehmensbeschreibung
+✅ Block 2: Organisation der Buchführung
+✅ Block 3: IT-Systeme und Software
+✅ Block 4: Schnittstellenmanagement
+✅ Block 5: Belegfluss und Prozessbeschreibungen
+✅ Block 6: Revisionssicherheit und Unveränderbarkeit
+✅ Block 7: Ersetzungsscannen (falls relevant)
+✅ Block 8: Datensicherung und Backup
+✅ Block 9: Internes Kontrollsystem (IKS)
+✅ Block 10: Archivierung und Datenzugriff
+
+Wenn alle 10 Blöcke vollständig ausgefüllt sind hast du eine GoBD-konforme Verfahrensdokumentation die einer Betriebsprüfung standhält.
+
+---
+
+## Fazit
+
+Eine vollständige Verfahrensdokumentation ist kein Hexenwerk – aber es braucht Struktur.
+
+Die häufigsten Fehler entstehen nicht aus Unwissenheit sondern aus Lückenhaftigkeit. Ein Block vergessen, eine Schnittstelle nicht beschrieben, das IKS zu oberflächlich – und der Prüfer findet eine Angriffsfläche.
+
+Mit dieser Checkliste hast du alles was du brauchst um deine VD vollständig und GoBD-konform zu erstellen.
+
+Und mit GoBD-Suite erledigst du das in unter einer Stunde – die KI führt dich durch jeden Block und stellt sicher dass nichts fehlt.
+
+**Quellen und weiterführende Links:**
+
+- [GoBD Volltext (BMF-Schreiben 28.11.2019)](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/2019-11-28-GoBD.html)
+- [§ 147 AO – Aufbewahrungspflichten](https://www.gesetze-im-internet.de/ao_1977/__147.html)
+- [§ 257 HGB – Aufbewahrung von Unterlagen](https://www.gesetze-im-internet.de/hgb/__257.html)
+- [§ 239 HGB – Führung der Handelsbücher](https://www.gesetze-im-internet.de/hgb/__239.html)
+- [§ 238 HGB – Buchführungspflicht](https://www.gesetze-im-internet.de/hgb/__238.html)`;
+
 export const SEEDED_BLOG_ARTICLES: SeededBlogArticle[] = [
   {
     slug: 'verfahrensdokumentation-2025-was-sich-geaendert-hat',
