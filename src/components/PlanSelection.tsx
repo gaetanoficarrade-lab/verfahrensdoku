@@ -118,7 +118,7 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
           'Webhooks & Vorlagen',
           'E-Mail-Vorlagen',
           'Aktivitäts-Log',
-          'Affiliate-Programm',
+          
         ]}
         checkoutUrlKey="berater"
         checkoutUrls={checkoutUrls}
