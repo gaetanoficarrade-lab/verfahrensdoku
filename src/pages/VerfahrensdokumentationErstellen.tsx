@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { CookieBanner, CookieSettingsButton } from '@/components/CookieBanner';
+import MarketingNav from '@/components/MarketingNav';
 import {
   Check, X, ChevronDown, ChevronUp, Menu, XIcon,
   Scale, Calendar, AlertTriangle, BookOpen, Cpu, Settings, ShieldCheck, FileText,
