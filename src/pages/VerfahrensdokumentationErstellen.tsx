@@ -114,7 +114,7 @@ export default function VerfahrensdokumentationErstellen() {
     author: 'Gaetano Ficarra', robots: 'index, follow',
     ogTitle: 'Verfahrensdokumentation erstellen 2025 – So geht es richtig',
     ogDescription: 'GoBD-konforme Verfahrensdokumentation in 60 Minuten erstellen. KI-gestützt, alle 30 Kapitel, fertig als PDF.',
-    ogType: 'website', ogLocale: 'de_DE', ogImage: 'https://gobd-suite.de/og-image.png',
+    ogType: 'website', ogLocale: 'de_DE', ogImage: 'https://gobd-suite.de/images/logo.png',
     jsonLd: [howToSchema, faqSchema],
   });
 

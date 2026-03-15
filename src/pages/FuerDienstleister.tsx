@@ -110,7 +110,7 @@ export default function FuerDienstleister() {
     author: 'Gaetano Ficarra', robots: 'index, follow',
     ogTitle: 'GoBD-Suite für Berater & Agenturen – Verfahrensdokumentation als Dienstleistung',
     ogDescription: 'Neue Einnahmequelle für Steuerberater, Buchhalter und Consultants. Whitelabel. Unbegrenzte Mandanten.',
-    ogType: 'website', ogLocale: 'de_DE', ogImage: 'https://gobd-suite.de/og-image.png',
+    ogType: 'website', ogLocale: 'de_DE', ogImage: 'https://gobd-suite.de/images/logo.png',
     jsonLd: [jsonLd],
   });
 

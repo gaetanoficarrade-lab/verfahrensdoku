@@ -380,7 +380,7 @@ export default function MarketingPage() {
     ogDescription: 'Das erste vollständige VD-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde.',
     ogType: 'website',
     ogLocale: 'de_DE',
-    ogImage: 'https://gobd-suite.de/og-image.png',
+    ogImage: 'https://gobd-suite.de/images/logo.png',
     twitterCard: 'summary_large_image',
     twitterTitle: 'GoBD-Suite',
     twitterDescription: 'Das erste vollständige VD-Tool im DACH-Raum.',
