@@ -82,6 +82,14 @@ const App = () => (
 
               {/* Protected routes with layout */}
               <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout><Index /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/overview"
                 element={
                   <ProtectedRoute requiredRoles={['tenant_admin', 'tenant_user']}>
