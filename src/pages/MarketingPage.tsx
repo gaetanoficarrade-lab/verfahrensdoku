@@ -1,4 +1,4 @@
-import { useState, useMemo, type ReactNode } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, type ReactNode } from 'react';
 import mockupDashboard from '@/assets/mockup-dashboard.png';
 import mockupEditor from '@/assets/mockup-editor.png';
 import mockupPdf from '@/assets/mockup-pdf.png';
@@ -28,7 +28,7 @@ const C = {
   border: '#E5E5E5',
 } as const;
 
-/* ─── Reveal wrapper ─── */
+/* ─── Reveal wrapper (upgraded: translateY(-20px → 0), 0.6s) ─── */
 function Reveal({ children, className = '', delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>();
   return (
@@ -37,8 +37,8 @@ function Reveal({ children, className = '', delay = 0 }: { children: ReactNode; 
       className={className}
       style={{
         opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(32px)',
-        transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`,
+        transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+        transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
       }}
     >
       {children}
@@ -46,15 +46,79 @@ function Reveal({ children, className = '', delay = 0 }: { children: ReactNode; 
   );
 }
 
-/* ─── Buttons ─── */
+/* ─── Counter hook ─── */
+function useCountUp(end: number, duration = 1500, trigger = false) {
+  const [value, setValue] = useState(0);
+  const rafRef = useRef<number>(0);
+
+  useEffect(() => {
+    if (!trigger) return;
+    const start = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.round(eased * end));
+      if (progress < 1) rafRef.current = requestAnimationFrame(animate);
+    };
+    rafRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [trigger, end, duration]);
+
+  return value;
+}
+
+function CounterStat({ num, suffix, text }: { num: number; suffix: string; text: string }) {
+  const { ref, isVisible } = useScrollReveal<HTMLDivElement>(0.3);
+  const count = useCountUp(num, 1500, isVisible);
+  return (
+    <div ref={ref}>
+      <p className="text-3xl md:text-4xl font-bold mb-2" style={{ color: C.dark }}>
+        {suffix === '< ' ? `< ${count}` : count}{suffix !== '< ' ? suffix : ''}
+      </p>
+      <p className="text-sm font-medium leading-snug" style={{ color: C.dark, opacity: 0.8 }}>{text}</p>
+    </div>
+  );
+}
+
+/* ─── Wave Divider ─── */
+function WaveDivider({ from, to, flip = false }: { from: string; to: string; flip?: boolean }) {
+  return (
+    <div className="relative w-full overflow-hidden" style={{ height: 60, background: to, transform: flip ? 'scaleY(-1)' : undefined }}>
+      <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+        <path d="M0,0 C360,60 1080,0 1440,60 L1440,0 L0,0 Z" fill={from} />
+      </svg>
+    </div>
+  );
+}
+
+/* ─── Glassmorphism style helper ─── */
+const glass: React.CSSProperties = {
+  background: 'rgba(255, 255, 255, 0.7)',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  border: '1px solid rgba(255, 255, 255, 0.8)',
+  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
+};
+
+/* ─── Primary Button with glow ─── */
 function PrimaryBtn({ children, to, className = '' }: { children: ReactNode; to: string; className?: string }) {
   return (
     <Link
       to={to}
       className={`inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200 ${className}`}
       style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}
-      onMouseEnter={e => (e.currentTarget.style.background = '#e5b71a')}
-      onMouseLeave={e => (e.currentTarget.style.background = C.yellow)}
+      onMouseEnter={e => {
+        e.currentTarget.style.background = '#e5b71a';
+        e.currentTarget.style.boxShadow = '0 0 20px rgba(250, 200, 30, 0.4)';
+        e.currentTarget.style.transform = 'translateY(-1px)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.background = C.yellow;
+        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.transform = 'translateY(0)';
+      }}
     >
       {children}
     </Link>
@@ -130,11 +194,55 @@ function PriceCard({ name, price, unit, sub, features, highlighted = false }: {
   );
 }
 
+/* ─── Sticky Steps hook ─── */
+function useActiveStep(count: number) {
+  const refs = useRef<(HTMLDivElement | null)[]>([]);
+  const [active, setActive] = useState(0);
+
+  const setRef = useCallback((i: number) => (el: HTMLDivElement | null) => {
+    refs.current[i] = el;
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const idx = refs.current.indexOf(entry.target as HTMLDivElement);
+            if (idx !== -1) setActive(idx);
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+    refs.current.forEach(el => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, [count]);
+
+  return { active, setRef };
+}
+
 /* ═══════════════════════════════════════════════
    MARKETING PAGE
    ═══════════════════════════════════════════════ */
 export default function MarketingPage() {
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  /* 6. Nav scroll effect */
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  /* 5. Sticky steps */
+  const steps = [
+    { num: '1', icon: FileText, title: 'Onboarding ausfüllen', text: 'Beantworte 7 kurze Fragen zu deinem Unternehmen. Das dauert 5 Minuten und steuert welche Kapitel für dich relevant sind.', img: mockupOnboarding },
+    { num: '2', icon: Sparkles, title: 'Kapitel beschreiben', text: 'Beschreibe in deinen eigenen Worten wie du arbeitest. Kein Fachjargon, keine Paragraphen. Die KI prüft und vervollständigt.', img: mockupEditor },
+    { num: '3', icon: Download, title: 'PDF herunterladen', text: 'Deine fertige, GoBD-konforme Verfahrensdokumentation als professionelles PDF. Bereit für die nächste Prüfung.', img: mockupPdf },
+  ];
+  const { active: activeStep, setRef: setStepRef } = useActiveStep(steps.length);
 
   const jsonLdSchemas = useMemo(() => [
     {
@@ -189,12 +297,40 @@ export default function MarketingPage() {
     jsonLd: jsonLdSchemas,
   });
 
+  /* ─── Float keyframes (injected once) ─── */
+  useEffect(() => {
+    const id = 'marketing-float-keyframes';
+    if (document.getElementById(id)) return;
+    const style = document.createElement('style');
+    style.id = id;
+    style.textContent = `
+      @keyframes heroFloat {
+        0%, 100% { transform: perspective(1200px) rotateY(-8deg) rotateX(2deg) translateY(0px); box-shadow: 0 25px 60px rgba(0,0,0,0.15); }
+        50% { transform: perspective(1200px) rotateY(-8deg) rotateX(2deg) translateY(-10px); box-shadow: 0 35px 70px rgba(0,0,0,0.10); }
+      }
+      @keyframes heroSlideUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => { document.getElementById(id)?.remove(); };
+  }, []);
+
   return (
     <div className="font-sans" style={{ color: C.dark }}>
-      {/* ─── 1. NAV ─── */}
+      {/* ─── 1. NAV (6. transparent → glass on scroll) ─── */}
       <nav
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 lg:px-12"
-        style={{ height: 64, background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderBottom: `1px solid ${C.border}` }}
+        style={{
+          height: 64,
+          background: scrolled ? 'rgba(255,255,255,0.85)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(0,0,0,0.08)' : '1px solid transparent',
+          boxShadow: scrolled ? '0 2px 20px rgba(0,0,0,0.06)' : 'none',
+          transition: 'all 0.3s ease',
+        }}
         aria-label="Hauptnavigation"
       >
         <Link to="/" className="flex items-center gap-2 font-bold text-xl shrink-0" style={{ color: C.dark }}>
@@ -229,11 +365,17 @@ export default function MarketingPage() {
       )}
 
       <main>
-        {/* ─── 2. HERO ─── */}
-        <section className="min-h-[90vh] flex items-center px-6 lg:px-12 pt-24 pb-20" style={{ background: C.white }}>
-          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
+        {/* ─── 2. HERO (with radial gradient + slide-up + highlight) ─── */}
+        <section
+          className="min-h-[90vh] flex items-center px-6 lg:px-12 pt-24 pb-20 relative overflow-hidden"
+          style={{ background: C.white }}
+        >
+          {/* Radial gradient overlay */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(250, 200, 30, 0.15), transparent)' }} />
+
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full relative z-10">
             {/* Left */}
-            <div>
+            <div style={{ animation: 'heroSlideUp 0.8s ease-out both' }}>
               <Reveal>
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full mb-6" style={{ background: C.yellow, color: C.dark }}>
                   Das erste VD-Tool im DACH-Raum
@@ -270,15 +412,11 @@ export default function MarketingPage() {
               </Reveal>
             </div>
 
-            {/* Right: Dashboard mockup */}
+            {/* Right: Dashboard mockup (9. floating animation) */}
             <Reveal delay={0.25} className="hidden lg:block">
               <div
                 className="rounded-xl overflow-hidden"
-                style={{
-                  boxShadow: '0 25px 60px rgba(0,0,0,0.15)',
-                  transform: 'perspective(1200px) rotateY(-8deg) rotateX(2deg)',
-                  transition: 'transform 0.5s ease',
-                }}
+                style={{ animation: 'heroFloat 3s ease-in-out infinite' }}
               >
                 {/* macOS dots */}
                 <div className="flex items-center gap-1.5 px-4 py-2.5" style={{ background: '#f0f0f0' }}>
@@ -292,12 +430,15 @@ export default function MarketingPage() {
           </div>
         </section>
 
-        {/* ─── 3. AGITATION ─── */}
-        <section style={{ background: C.bgLight }} className="py-20 md:py-24 px-6" aria-labelledby="pain-headline">
+        {/* ─── Wave: white → agitation ─── */}
+        <WaveDivider from={C.white} to={C.bgLight} />
+
+        {/* ─── 3. AGITATION (8. gradient bg) ─── */}
+        <section style={{ background: `linear-gradient(180deg, ${C.bgLight} 0%, ${C.white} 100%)` }} className="py-20 md:py-24 px-6" aria-labelledby="pain-headline">
           <div className="max-w-6xl mx-auto">
             <Reveal>
               <h2 id="pain-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>
-                Was passiert ohne Verfahrensdokumentation?
+                Was passiert ohne <span style={{ background: 'rgba(250, 200, 30, 0.2)', borderRadius: 4, padding: '0 6px' }}>Verfahrensdokumentation</span>?
               </h2>
             </Reveal>
             <div className="grid md:grid-cols-3 gap-6">
@@ -307,7 +448,7 @@ export default function MarketingPage() {
                 { Icon: Clock, title: 'Stundenlanger Stress statt 5 Minuten vorlegen', text: 'Wer vorbereitet ist, übergibt ein Dokument und geht. Wer es nicht ist, erklärt sich stundenlang.' },
               ].map((c, i) => (
                 <Reveal key={i} delay={i * 0.1}>
-                  <article className="rounded-[18px] p-8 h-full" style={{ background: C.white, boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
+                  <article className="rounded-[18px] p-8 h-full" style={{ ...glass }}>
                     <c.Icon size={32} style={{ color: C.yellow }} className="mb-4" aria-hidden="true" />
                     <h3 className="text-lg font-bold mb-2" style={{ color: C.dark }}>{c.title}</h3>
                     <p className="leading-relaxed" style={{ color: C.textGray }}>{c.text}</p>
@@ -323,24 +464,18 @@ export default function MarketingPage() {
           </div>
         </section>
 
-        {/* ─── 4. SOCIAL PROOF ZAHLEN ─── */}
+        {/* ─── 4. SOCIAL PROOF ZAHLEN (3. counter animation) ─── */}
         <section className="py-16 md:py-20 px-6" style={{ background: C.yellow }}>
           <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6 text-center">
-            {[
-              { num: '30', text: 'GoBD-Kapitel vollständig abgedeckt' },
-              { num: '< 60 Min', text: 'Bis zur fertigen Verfahrensdokumentation' },
-              { num: '10 Jahre', text: 'Aufbewahrungspflicht automatisch erfüllt' },
-              { num: '100%', text: 'GoBD-konform nach aktuellem Stand 2025' },
-            ].map((s, i) => (
-              <Reveal key={i} delay={i * 0.08}>
-                <div>
-                  <p className="text-3xl md:text-4xl font-bold mb-2" style={{ color: C.dark }}>{s.num}</p>
-                  <p className="text-sm font-medium leading-snug" style={{ color: C.dark, opacity: 0.8 }}>{s.text}</p>
-                </div>
-              </Reveal>
-            ))}
+            <CounterStat num={30} suffix="" text="GoBD-Kapitel vollständig abgedeckt" />
+            <CounterStat num={60} suffix="< " text="Bis zur fertigen Verfahrensdokumentation" />
+            <CounterStat num={10} suffix=" Jahre" text="Aufbewahrungspflicht automatisch erfüllt" />
+            <CounterStat num={100} suffix="%" text="GoBD-konform nach aktuellem Stand 2025" />
           </div>
         </section>
+
+        {/* ─── Wave: yellow → white ─── */}
+        <WaveDivider from={C.yellow} to={C.white} />
 
         {/* ─── 5. LÖSUNG ─── */}
         <section className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="solution-headline">
@@ -376,8 +511,11 @@ export default function MarketingPage() {
           </div>
         </section>
 
-        {/* ─── 6. WIE ES FUNKTIONIERT ─── */}
-        <section id="funktionen" style={{ background: C.bgLight }} className="py-20 md:py-28 px-6" aria-labelledby="steps-headline">
+        {/* ─── Wave: white → bgLight ─── */}
+        <WaveDivider from={C.white} to={C.bgLight} />
+
+        {/* ─── 6. WIE ES FUNKTIONIERT (5. sticky step activation) ─── */}
+        <section id="funktionen" style={{ background: `linear-gradient(180deg, ${C.bgLight} 0%, ${C.white} 100%)` }} className="py-20 md:py-28 px-6" aria-labelledby="steps-headline">
           <div className="max-w-5xl mx-auto text-center">
             <Reveal>
               <p className="text-xs font-semibold uppercase tracking-[0.1em] mb-4" style={{ color: C.yellow }}>So einfach geht es</p>
@@ -386,13 +524,16 @@ export default function MarketingPage() {
               </h2>
             </Reveal>
             <div className="grid md:grid-cols-3 gap-10">
-              {[
-                { num: '1', icon: FileText, title: 'Onboarding ausfüllen', text: 'Beantworte 7 kurze Fragen zu deinem Unternehmen. Das dauert 5 Minuten und steuert welche Kapitel für dich relevant sind.', img: mockupOnboarding },
-                { num: '2', icon: Sparkles, title: 'Kapitel beschreiben', text: 'Beschreibe in deinen eigenen Worten wie du arbeitest. Kein Fachjargon, keine Paragraphen. Die KI prüft und vervollständigt.', img: mockupEditor },
-                { num: '3', icon: Download, title: 'PDF herunterladen', text: 'Deine fertige, GoBD-konforme Verfahrensdokumentation als professionelles PDF. Bereit für die nächste Prüfung.', img: mockupPdf },
-              ].map((s, i) => (
+              {steps.map((s, i) => (
                 <Reveal key={i} delay={i * 0.12}>
-                  <div className="flex flex-col items-center">
+                  <div
+                    ref={setStepRef(i)}
+                    className="flex flex-col items-center transition-all duration-500"
+                    style={{
+                      opacity: activeStep === i ? 1 : 0.4,
+                      transform: activeStep === i ? 'scale(1)' : 'scale(0.95)',
+                    }}
+                  >
                     <span className="text-[80px] font-bold leading-none mb-2" style={{ color: C.yellow, opacity: 0.3 }} aria-hidden="true">{s.num}</span>
                     <s.icon size={32} className="mb-4" style={{ color: C.dark }} aria-hidden="true" />
                     <h3 className="text-lg font-bold mb-2" style={{ color: C.dark }}>{s.title}</h3>
@@ -413,6 +554,9 @@ export default function MarketingPage() {
             </div>
           </div>
         </section>
+
+        {/* ─── Wave: white → white ─── */}
+        <WaveDivider from={C.white} to={C.white} />
 
         {/* ─── 7. FÜR WEN ─── */}
         <section id="fuer-wen" className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="audience-headline">
@@ -467,8 +611,11 @@ export default function MarketingPage() {
           </div>
         </section>
 
-        {/* ─── 8. FEATURES ─── */}
-        <section style={{ background: C.bgLight }} className="py-20 md:py-28 px-6" aria-labelledby="features-headline">
+        {/* ─── Wave: white → bgLight ─── */}
+        <WaveDivider from={C.white} to={C.bgLight} />
+
+        {/* ─── 8. FEATURES (4. glassmorphism cards, 8. gradient bg) ─── */}
+        <section style={{ background: `linear-gradient(180deg, ${C.bgLight} 0%, ${C.white} 100%)` }} className="py-20 md:py-28 px-6" aria-labelledby="features-headline">
           <div className="max-w-6xl mx-auto">
             <Reveal>
               <h2 id="features-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>
@@ -485,7 +632,7 @@ export default function MarketingPage() {
                 { Icon: Palette, title: 'Whitelabel für Dienstleister', text: 'Dein Logo, dein Brand, deine Domain im PDF. Für Agentur-Kunden.' },
               ].map((f, i) => (
                 <Reveal key={i} delay={i * 0.08}>
-                  <article className="rounded-[18px] p-8 h-full" style={{ background: C.white, boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
+                  <article className="rounded-[18px] p-8 h-full" style={{ ...glass }}>
                     <f.Icon size={28} className="mb-4" style={{ color: C.yellow }} aria-hidden="true" />
                     <h3 className="text-lg font-bold mb-2" style={{ color: C.dark }}>{f.title}</h3>
                     <p className="leading-relaxed text-[15px]" style={{ color: C.textGray }}>{f.text}</p>
@@ -506,7 +653,10 @@ export default function MarketingPage() {
           </div>
         </section>
 
-        {/* ─── 9. TESTIMONIALS ─── */}
+        {/* ─── Wave: white → white ─── */}
+        <WaveDivider from={C.white} to={C.white} />
+
+        {/* ─── 9. TESTIMONIALS (4. glassmorphism) ─── */}
         <section className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="testimonials-headline">
           <div className="max-w-5xl mx-auto">
             <Reveal>
@@ -533,7 +683,7 @@ export default function MarketingPage() {
                 },
               ].map((t, i) => (
                 <Reveal key={i} delay={i * 0.1}>
-                  <article className="rounded-[18px] p-8 h-full flex flex-col" style={{ background: C.bgLight }}>
+                  <article className="rounded-[18px] p-8 h-full flex flex-col" style={{ ...glass, background: 'rgba(245, 245, 247, 0.7)' }}>
                     <Stars />
                     <p className="leading-relaxed flex-1 mb-6 text-[15px]" style={{ color: C.dark }}>"{t.quote}"</p>
                     <div>
@@ -547,10 +697,11 @@ export default function MarketingPage() {
           </div>
         </section>
 
-        {/* ─── 10. EINWANDBEHANDLUNG (implicit in FAQ) ─── */}
+        {/* ─── Wave: white → bgLight ─── */}
+        <WaveDivider from={C.white} to={C.bgLight} />
 
-        {/* ─── 11. PREISE ─── */}
-        <section id="preise" style={{ background: C.bgLight }} className="py-20 md:py-28 px-6" aria-labelledby="pricing-headline">
+        {/* ─── 11. PREISE (8. gradient bg) ─── */}
+        <section id="preise" style={{ background: `linear-gradient(180deg, ${C.bgLight} 0%, ${C.white} 50%, ${C.bgLight} 100%)` }} className="py-20 md:py-28 px-6" aria-labelledby="pricing-headline">
           <div className="max-w-6xl mx-auto">
             <Reveal>
               <h2 id="pricing-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>Transparent. Fair. Skalierbar.</h2>
@@ -584,6 +735,9 @@ export default function MarketingPage() {
           </div>
         </section>
 
+        {/* ─── Wave: bgLight → white ─── */}
+        <WaveDivider from={C.bgLight} to={C.white} />
+
         {/* ─── 12. GARANTIE ─── */}
         <section className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="guarantee-headline">
           <div className="max-w-4xl mx-auto text-center">
@@ -595,7 +749,7 @@ export default function MarketingPage() {
             </Reveal>
             <div className="grid md:grid-cols-2 gap-6">
               <Reveal>
-                <div className="rounded-[18px] p-8 h-full text-left" style={{ background: C.bgLight }}>
+                <div className="rounded-[18px] p-8 h-full text-left" style={{ ...glass, background: 'rgba(245, 245, 247, 0.7)' }}>
                   <ThumbsUp size={28} style={{ color: C.yellow }} className="mb-4" aria-hidden="true" />
                   <h3 className="text-xl font-bold mb-3" style={{ color: C.dark }}>100% Zufriedenheitsgarantie</h3>
                   <p className="leading-relaxed mb-4" style={{ color: C.textGray }}>
@@ -607,7 +761,7 @@ export default function MarketingPage() {
                 </div>
               </Reveal>
               <Reveal delay={0.1}>
-                <div className="rounded-[18px] p-8 h-full text-left" style={{ background: C.bgLight }}>
+                <div className="rounded-[18px] p-8 h-full text-left" style={{ ...glass, background: 'rgba(245, 245, 247, 0.7)' }}>
                   <ShieldCheck size={28} style={{ color: C.yellow }} className="mb-4" aria-hidden="true" />
                   <h3 className="text-xl font-bold mb-3" style={{ color: C.dark }}>GoBD-konforme Struktur. Deine Verantwortung.</h3>
                   <p className="leading-relaxed mb-4" style={{ color: C.textGray }}>
@@ -634,6 +788,9 @@ export default function MarketingPage() {
             <PrimaryBtn to="/test-starten">Jetzt in 60 Minuten absichern</PrimaryBtn>
           </Reveal>
         </section>
+
+        {/* ─── Wave: dark → white ─── */}
+        <WaveDivider from={C.dark} to={C.white} />
 
         {/* ─── 14. FAQ ─── */}
         <section className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="faq-headline">
