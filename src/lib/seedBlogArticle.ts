@@ -1024,7 +1024,7 @@ export const SEEDED_BLOG_ARTICLES: SeededBlogArticle[] = [
       },
     ],
   },
-
+];
 
 export async function seedBlogArticleVD2025() {
   const { error: tableCheckError } = await supabase.from('blog_posts').select('id').limit(1);
