@@ -677,13 +677,8 @@ export default function MarketingPage() {
               ))}
             </div>
             <Reveal delay={0.5}>
-              <div className="mt-14 max-w-3xl mx-auto rounded-xl overflow-hidden" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.10)' }}>
-                <div className="flex items-center gap-1.5 px-3 py-2" style={{ background: '#f0f0f0' }}>
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF5F57' }} />
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FEBC2E' }} />
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
-                </div>
-                <img src={mockupOverview} alt="GoBD-Suite Berater-Übersicht mit Ampel-Status für alle Kapitel" className="w-full h-auto" loading="lazy" />
+              <div className="mt-14 max-w-4xl mx-auto">
+                <img src={mockupLaptopPremium} alt="GoBD-Suite Dashboard auf einem Laptop – Berater-Übersicht mit Ampel-Status für alle Kapitel" className="w-full h-auto drop-shadow-2xl" loading="lazy" />
               </div>
             </Reveal>
           </div>
