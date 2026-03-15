@@ -242,7 +242,7 @@ export default function LandingPage() {
               { value: '0 €', label: 'Bußgeld-Risiko' },
             ].map((s) => (
               <motion.div key={s.label} variants={fadeUp} className="text-center">
-                <div className="text-3xl sm:text-5xl font-bold tracking-tight text-[#1d1d1f] mb-2">{s.value}</div>
+                <div className="text-2xl sm:text-5xl font-bold tracking-tight text-[#1d1d1f] mb-2">{s.value}</div>
                 <div className="text-sm text-[#86868b] uppercase tracking-widest">{s.label}</div>
               </motion.div>
             ))}
