@@ -217,7 +217,7 @@ function PricingToggleSection() {
           name="Berater"
           price={annual ? '332 €' : '399 €'}
           unit="/Monat"
-          sub={annual ? '3.990 € jährlich · 2 Monate gratis' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
+          sub={annual ? '3.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
           features={[
             { text: 'Bis zu 5 Mandanten', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
             { text: 'Mandanten-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
