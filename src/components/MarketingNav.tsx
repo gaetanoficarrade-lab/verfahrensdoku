@@ -31,6 +31,7 @@ export default function MarketingNav() {
 
   const isSubpage = ['/fuer-selbststaendige', '/fuer-dienstleister'].includes(location.pathname);
   const isResource = ['/verfahrensdokumentation-erstellen'].includes(location.pathname);
+  const isBlog = location.pathname.startsWith('/blog');
   const isHome = location.pathname === '/';
 
   const DropdownItem = ({ to, children }: { to: string; children: React.ReactNode }) => (
