@@ -90,10 +90,11 @@ export default function MarketingNav() {
               <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 rounded-xl py-2 min-w-[280px]"
                 style={{ background: C.white, boxShadow: '0 8px 32px rgba(0,0,0,0.12)', border: '1px solid rgba(0,0,0,0.06)' }}>
                 <DropdownItem to="/verfahrensdokumentation-erstellen">VD erstellen – Anleitung</DropdownItem>
-                <DropdownItem to="/blog">Blog</DropdownItem>
               </div>
             )}
           </div>
+
+          <Link to="/blog" className="hover:opacity-70 transition-opacity" style={{ color: isBlog ? C.yellow : C.dark, fontWeight: isBlog ? 700 : 500 }}>Blog</Link>
         </div>
 
         <div className="hidden md:flex items-center gap-4">
