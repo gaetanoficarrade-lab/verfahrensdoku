@@ -496,7 +496,7 @@ export default function VerfahrensdokumentationErstellen() {
 }
 
 /* ─── Akkordeon component ─── */
-function AkkordeonItem({ title, text, Icon }: { title: string; text: string; Icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }> }) {
+function AkkordeonItem({ title, text, Icon }: { title: string; text: string; Icon: React.ComponentType<any> }) {
   const [open, setOpen] = useState(false);
   return (
     <div style={{ borderBottom: `1px solid ${C.border}` }}>
