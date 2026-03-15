@@ -476,7 +476,7 @@ export default function MarketingPage() {
       <footer className="py-16 px-6" style={{ background: C.dark, color: 'rgba(255,255,255,0.7)' }}>
         <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-7 w-auto mb-4" style={{ filter: 'brightness(0) invert(1)' }} loading="lazy" />
+            <img src="/images/logo-light.png" alt="GoBD-Suite Logo" className="h-10 w-auto mb-4" loading="lazy" />
             <p className="text-sm leading-relaxed">Die erste vollständige Verfahrensdokumentations-Lösung für Selbstständige und Dienstleister im DACH-Raum.</p>
           </div>
           <div>
