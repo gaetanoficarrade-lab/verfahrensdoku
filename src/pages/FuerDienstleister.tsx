@@ -92,7 +92,7 @@ export default function FuerDienstleister() {
     "@context": "https://schema.org", "@type": "WebPage",
     "name": "GoBD-Suite für Berater und Agenturen",
     "description": "Verfahrensdokumentation als Dienstleistung anbieten mit GoBD-Suite. Whitelabel, unbegrenzte Mandanten, neue Einnahmequelle.",
-    "url": "https://vd.gaetanoficarra.de/fuer-dienstleister",
+    "url": "https://gobd-suite.de/fuer-dienstleister",
     "mainEntity": {
       "@type": "SoftwareApplication", "name": "GoBD-Suite",
       "offers": [
