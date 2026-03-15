@@ -66,20 +66,18 @@ export default function BlogPostPage() {
       setLoading(true);
       await seedBlogArticleVD2025();
 
+      const currentSeeded = SEEDED_BLOG_ARTICLES.find(a => a.slug === slug);
       const fallbackPost = SEEDED_FULL_POSTS.find(p => p.slug === slug) ?? null;
-      const fallbackRelated = SEEDED_FULL_POSTS
-        .filter(p => p.slug !== slug)
-        .sort((a, b) => +new Date(b.published_at) - +new Date(a.published_at))
-        .slice(0, 3)
-        .map(({ id, title, slug: relatedSlug, excerpt, cover_image_url, category, reading_time_minutes, published_at }) => ({
-          id,
-          title,
-          slug: relatedSlug,
-          excerpt,
-          cover_image_url,
-          category,
-          reading_time_minutes,
-          published_at,
+
+      // Use specific related slugs if defined, otherwise default
+      const relatedSlugs = currentSeeded?.related_slugs;
+      const fallbackRelated = (relatedSlugs
+        ? SEEDED_FULL_POSTS.filter(p => relatedSlugs.includes(p.slug))
+        : SEEDED_FULL_POSTS.filter(p => p.slug !== slug)
+            .sort((a, b) => +new Date(b.published_at) - +new Date(a.published_at))
+            .slice(0, 3)
+      ).map(({ id, title, slug: relatedSlug, excerpt, cover_image_url, category, reading_time_minutes, published_at }) => ({
+          id, title, slug: relatedSlug, excerpt, cover_image_url, category, reading_time_minutes, published_at,
         }));
 
       const { data, error } = await supabase
