@@ -166,13 +166,13 @@ export default function LandingPage() {
       </nav>
 
       {/* ─── HERO ─── */}
-      <section className="pt-40 pb-10 px-6">
+      <section className="pt-28 sm:pt-40 pb-10 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto text-center">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="text-5xl sm:text-7xl lg:text-[5.5rem] font-bold tracking-tight leading-[1.05] mb-8"
+            className="text-3xl sm:text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tight leading-[1.05] mb-6 sm:mb-8"
           >
             Verfahrensdokumentation.
             <br />
@@ -192,7 +192,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.15 }}
-            className="text-lg sm:text-xl lg:text-2xl text-[#86868b] max-w-2xl mx-auto mb-12 leading-relaxed"
+            className="text-base sm:text-xl lg:text-2xl text-[#86868b] max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed"
           >
             gobdsuite erstellt GoBD-konforme Verfahrensdokumentationen –
             prüfungssicher, effizient und mit einem Klick als PDF.
@@ -216,7 +216,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── HERO PRODUCT IMAGE ─── */}
-      <section className="px-6 pb-24 pt-12">
+      <section className="px-4 sm:px-6 pb-16 sm:pb-24 pt-8 sm:pt-12">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -233,7 +233,7 @@ export default function LandingPage() {
 
       {/* ─── STATS RIBBON ─── */}
       <section className="border-y border-[#e5e5e5] bg-[#fafafa]">
-        <div className="max-w-6xl mx-auto px-6 py-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
           <AnimatedSection className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
               { value: '30', label: 'GoBD-Kapitel' },
@@ -242,7 +242,7 @@ export default function LandingPage() {
               { value: '0 €', label: 'Bußgeld-Risiko' },
             ].map((s) => (
               <motion.div key={s.label} variants={fadeUp} className="text-center">
-                <div className="text-3xl sm:text-5xl font-bold tracking-tight text-[#1d1d1f] mb-2">{s.value}</div>
+                <div className="text-2xl sm:text-5xl font-bold tracking-tight text-[#1d1d1f] mb-2">{s.value}</div>
                 <div className="text-sm text-[#86868b] uppercase tracking-widest">{s.label}</div>
               </motion.div>
             ))}
@@ -251,13 +251,13 @@ export default function LandingPage() {
       </section>
 
       {/* ─── PAIN POINTS ─── */}
-      <section className="py-32 px-6">
+      <section className="py-16 sm:py-32 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <AnimatedSection className="text-center mb-20">
+          <AnimatedSection className="text-center mb-12 sm:mb-20">
             <motion.p variants={fadeUp} className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">
               Das Problem
             </motion.p>
-            <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               Verfahrensdokumentation ist Pflicht.
               <br />
               <span className="text-[#86868b]">Aber niemand hat Zeit dafür.</span>
@@ -281,12 +281,12 @@ export default function LandingPage() {
       </section>
 
       {/* ─── HERO STATEMENT + AI IMAGE ─── */}
-      <section className="py-32 px-6 bg-[#fafafa]">
+      <section className="py-16 sm:py-32 px-4 sm:px-6 bg-[#fafafa]">
         <div className="max-w-6xl mx-auto">
-          <AnimatedSection className="grid lg:grid-cols-2 gap-16 items-center">
+          <AnimatedSection className="grid lg:grid-cols-2 gap-10 sm:gap-16 items-center">
             <motion.div variants={fadeUp}>
               <p className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">Einzigartig im DACH-Raum</p>
-              <h2 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] mb-6">
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.1] mb-6">
                 Die Software, die deine{' '}
                 <span className="text-[#e8a91a]">Verfahrensdokumentation</span>{' '}
                 revolutioniert.
@@ -307,13 +307,13 @@ export default function LandingPage() {
       </section>
 
       {/* ─── BENEFITS ─── */}
-      <section className="py-32 px-6">
+      <section className="py-16 sm:py-32 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <AnimatedSection className="text-center mb-20">
+          <AnimatedSection className="text-center mb-12 sm:mb-20">
             <motion.p variants={fadeUp} className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">
               Die Lösung
             </motion.p>
-            <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               Alles was du brauchst.
               <br />
               <span className="text-[#86868b]">In einer Plattform.</span>
@@ -325,7 +325,7 @@ export default function LandingPage() {
               <motion.div
                 key={b.title}
                 variants={fadeUp}
-                className="rounded-3xl border border-[#e5e5e5] p-10 sm:p-12 transition-all duration-500 hover:shadow-lg hover:shadow-black/5 group bg-[#fafafa]"
+                className="rounded-3xl border border-[#e5e5e5] p-6 sm:p-10 md:p-12 transition-all duration-500 hover:shadow-lg hover:shadow-black/5 group bg-[#fafafa]"
               >
                 <div className="flex items-start gap-5">
                   <div className="w-12 h-12 rounded-2xl bg-[#e8a91a]/10 flex items-center justify-center shrink-0 group-hover:bg-[#e8a91a]/15 transition-colors">
@@ -344,13 +344,13 @@ export default function LandingPage() {
       </section>
 
       {/* ─── HOW IT WORKS + PDF IMAGE ─── */}
-      <section className="py-32 px-6 bg-[#fafafa]">
+      <section className="py-16 sm:py-32 px-4 sm:px-6 bg-[#fafafa]">
         <div className="max-w-6xl mx-auto">
-          <AnimatedSection className="text-center mb-20">
+          <AnimatedSection className="text-center mb-12 sm:mb-20">
             <motion.p variants={fadeUp} className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">
               So funktioniert's
             </motion.p>
-            <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               Drei Schritte.
               <br />
               <span className="text-[#86868b]">Das war's.</span>
@@ -388,12 +388,12 @@ export default function LandingPage() {
       </section>
 
       {/* ─── PLANS TEASER ─── */}
-      <section className="py-32 px-6">
+      <section className="py-16 sm:py-32 px-4 sm:px-6">
         <AnimatedSection className="max-w-3xl mx-auto text-center">
           <motion.p variants={fadeUp} className="text-sm font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4">
             Flexible Pläne
           </motion.p>
-          <motion.h2 variants={fadeUp} className="text-4xl sm:text-5xl font-bold tracking-tight mb-6">
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6">
             Für jede Unternehmensgröße
             <br />
             <span className="text-[#86868b]">der passende Plan.</span>
@@ -416,16 +416,16 @@ export default function LandingPage() {
       </section>
 
       {/* ─── URGENCY ─── */}
-      <section className="py-32 px-6">
+      <section className="py-16 sm:py-32 px-4 sm:px-6">
         <AnimatedSection>
           <motion.div
             variants={fadeUp}
-            className="max-w-4xl mx-auto text-center relative rounded-[2rem] overflow-hidden bg-[#1d1d1f] text-white"
+            className="max-w-4xl mx-auto text-center relative rounded-2xl sm:rounded-[2rem] overflow-hidden bg-[#1d1d1f] text-white"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-[#e8a91a]/10 via-transparent to-[#e8a91a]/5 pointer-events-none" />
 
-            <div className="relative z-10 px-8 py-20 sm:px-16 sm:py-24">
-              <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-6">
+            <div className="relative z-10 px-6 py-12 sm:px-16 sm:py-24">
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6">
                 Die nächste Betriebsprüfung kommt.
                 <br />
                 <span className="text-[#e8a91a]">Bist du vorbereitet?</span>
@@ -447,10 +447,10 @@ export default function LandingPage() {
       </section>
 
       {/* ─── WAITLIST CTA ─── */}
-      <section ref={waitlistRef} className="py-32 px-6 bg-[#fafafa]">
+      <section ref={waitlistRef} className="py-16 sm:py-32 px-4 sm:px-6 bg-[#fafafa]">
         <AnimatedSection>
           <motion.div variants={fadeUp} className="max-w-xl mx-auto text-center">
-            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
               Sei unter den Ersten.
             </h2>
             <p className="text-[#86868b] mb-10 text-lg leading-relaxed">
@@ -496,7 +496,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── FOOTER ─── */}
-      <footer className="py-8 px-6 border-t border-[#e5e5e5]">
+      <footer className="py-8 px-4 sm:px-6 border-t border-[#e5e5e5]">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#86868b]">
           <p>© {new Date().getFullYear()} gobdsuite. Alle Rechte vorbehalten.</p>
           <div className="flex flex-wrap gap-6">
