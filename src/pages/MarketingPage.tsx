@@ -4,6 +4,8 @@ import mockupEditor from '@/assets/mockup-editor.png';
 import mockupPdf from '@/assets/mockup-pdf.png';
 import mockupClients from '@/assets/mockup-clients.png';
 import mockupOverview from '@/assets/mockup-overview.png';
+import mockupOnboarding from '@/assets/mockup-onboarding.png';
+import mockupSoloDashboard from '@/assets/mockup-solo-dashboard.png';
 import productSolution from '@/assets/product-solution.png';
 import { Link } from 'react-router-dom';
 import {
