@@ -432,6 +432,29 @@ function MarkdownRenderer({ content }: { content: string }) {
       continue;
     }
 
+    // Checkbox list
+    if (line.startsWith('- [ ] ') || line.startsWith('- [x] ')) {
+      const items: { checked: boolean; text: string }[] = [];
+      while (i < lines.length && (lines[i].startsWith('- [ ] ') || lines[i].startsWith('- [x] '))) {
+        const checked = lines[i].startsWith('- [x] ');
+        items.push({ checked, text: lines[i].slice(6) });
+        i++;
+      }
+      elements.push(
+        <ul key={key++} style={{ listStyle: 'none', padding: 0, margin: '16px 0' }}>
+          {items.map((item, j) => (
+            <li key={j} className="flex items-start gap-3" style={{ marginBottom: 8, fontSize: 18, lineHeight: 1.8, color: C.textGray }}>
+              <span className="shrink-0 mt-1.5 flex items-center justify-center rounded" style={{ width: 22, height: 22, background: item.checked ? C.yellow : 'transparent', border: `2px solid ${C.yellow}` }}>
+                {item.checked && <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke={C.dark} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+              </span>
+              <span>{formatInline(item.text)}</span>
+            </li>
+          ))}
+        </ul>
+      );
+      continue;
+    }
+
     // Unordered list
     if (line.startsWith('- ')) {
       const items: string[] = [];
