@@ -4,6 +4,8 @@ import mockupEditor from '@/assets/mockup-editor.png';
 import mockupPdf from '@/assets/mockup-pdf.png';
 import mockupClients from '@/assets/mockup-clients.png';
 import mockupOverview from '@/assets/mockup-overview.png';
+import mockupOnboarding from '@/assets/mockup-onboarding.png';
+import mockupSoloDashboard from '@/assets/mockup-solo-dashboard.png';
 import productSolution from '@/assets/product-solution.png';
 import { Link } from 'react-router-dom';
 import {
@@ -385,7 +387,7 @@ export default function MarketingPage() {
             </Reveal>
             <div className="grid md:grid-cols-3 gap-10">
               {[
-                { num: '1', icon: FileText, title: 'Onboarding ausfüllen', text: 'Beantworte 7 kurze Fragen zu deinem Unternehmen. Das dauert 5 Minuten und steuert welche Kapitel für dich relevant sind.', img: null },
+                { num: '1', icon: FileText, title: 'Onboarding ausfüllen', text: 'Beantworte 7 kurze Fragen zu deinem Unternehmen. Das dauert 5 Minuten und steuert welche Kapitel für dich relevant sind.', img: mockupOnboarding },
                 { num: '2', icon: Sparkles, title: 'Kapitel beschreiben', text: 'Beschreibe in deinen eigenen Worten wie du arbeitest. Kein Fachjargon, keine Paragraphen. Die KI prüft und vervollständigt.', img: mockupEditor },
                 { num: '3', icon: Download, title: 'PDF herunterladen', text: 'Deine fertige, GoBD-konforme Verfahrensdokumentation als professionelles PDF. Bereit für die nächste Prüfung.', img: mockupPdf },
               ].map((s, i) => (
@@ -431,6 +433,9 @@ export default function MarketingPage() {
                     ))}
                   </ul>
                   <a href="#preise" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Solo-Plan ansehen</a>
+                  <div className="rounded-xl overflow-hidden mt-6" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                    <img src={mockupSoloDashboard} alt="GoBD-Suite Solo Dashboard mit Projektfortschritt" className="w-full h-auto" loading="lazy" />
+                  </div>
                 </article>
               </Reveal>
               <Reveal delay={0.1}>
@@ -548,15 +553,15 @@ export default function MarketingPage() {
                 ]} />
               </Reveal>
               <Reveal delay={0.1}>
-                <PriceCard name="Berater" price="399 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" highlighted features={[
-                  { text: 'Bis zu 5 Mandanten', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
-                  { text: 'Mandanten-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
+                <PriceCard name="Agentur" price="799 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" highlighted features={[
+                  { text: 'Unbegrenzte Mandanten', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
+                  { text: 'Alle Berater-Features', ok: true }, { text: 'Prioritäts-Support', ok: true }, { text: 'Upgrade ohne erneute Setup Fee', ok: true },
                 ]} />
               </Reveal>
               <Reveal delay={0.2}>
-                <PriceCard name="Agentur" price="799 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" features={[
-                  { text: 'Unbegrenzte Mandanten', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
-                  { text: 'Alle Berater-Features', ok: true }, { text: 'Prioritäts-Support', ok: true }, { text: 'Upgrade ohne erneute Setup Fee', ok: true },
+                <PriceCard name="Berater" price="399 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" features={[
+                  { text: 'Bis zu 5 Mandanten', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
+                  { text: 'Mandanten-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
                 ]} />
               </Reveal>
             </div>
