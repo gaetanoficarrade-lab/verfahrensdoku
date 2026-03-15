@@ -1349,7 +1349,8 @@ export async function seedBlogArticleVD2025() {
     }
 
     if (!existing) {
-      const { error: insertError } = await supabase.from('blog_posts').insert(article);
+      const { cta_title, cta_description, related_slugs, additional_json_ld, ...dbArticle } = article;
+      const { error: insertError } = await supabase.from('blog_posts').insert(dbArticle);
       if (insertError) {
         console.error(`Failed seeding article "${article.slug}":`, insertError.message);
         continue;
