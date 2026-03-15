@@ -168,7 +168,7 @@ export default function BlogPostPage() {
   useSEO({
     title: post ? `${post.meta_title || post.title} | GoBD-Suite Blog` : 'Blog | GoBD-Suite',
     description: post?.meta_description || post?.excerpt || '',
-    canonical: post ? `https://vd.gaetanoficarra.de/blog/${post.slug}` : undefined,
+    canonical: post ? `https://gobd-suite.de/blog/${post.slug}` : undefined,
     ogTitle: post?.meta_title || post?.title,
     ogDescription: post?.meta_description || post?.excerpt,
     ogImage: post?.cover_image_url || undefined,
