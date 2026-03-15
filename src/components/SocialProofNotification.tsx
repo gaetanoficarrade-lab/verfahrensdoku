@@ -105,7 +105,7 @@ export default function SocialProofNotification() {
         </div>
       </div>
 
-      <p className="mt-2 text-[10px] text-gray-300 leading-tight">* Beispielhafte Darstellung</p>
+      
     </div>
   );
 }
