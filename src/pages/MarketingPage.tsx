@@ -435,6 +435,12 @@ export default function MarketingPage() {
                 </Reveal>
               ))}
             </div>
+            {/* Overview mockup */}
+            <Reveal delay={0.5}>
+              <div className="mt-14 max-w-3xl mx-auto rounded-xl overflow-hidden" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.10)' }}>
+                <img src={mockupOverview} alt="GoBD-Suite Berater-Übersicht mit Ampel-Status für alle Kapitel" className="w-full h-auto" loading="lazy" />
+              </div>
+            </Reveal>
           </div>
         </section>
 
