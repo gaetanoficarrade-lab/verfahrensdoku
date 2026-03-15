@@ -1297,3 +1297,190 @@ CREATE POLICY "Super admins can update tickets"
   USING (
     EXISTS (SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'super_admin')
   );
+
+-- =====================================================
+-- BLOG POSTS
+-- =====================================================
+
+CREATE TABLE public.blog_posts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  excerpt TEXT NOT NULL DEFAULT '',
+  content TEXT NOT NULL DEFAULT '',
+  cover_image_url TEXT,
+  category TEXT NOT NULL DEFAULT 'GoBD',
+  reading_time_minutes INTEGER NOT NULL DEFAULT 5,
+  published BOOLEAN NOT NULL DEFAULT false,
+  published_at TIMESTAMPTZ,
+  meta_title TEXT,
+  meta_description TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.blog_posts ENABLE ROW LEVEL SECURITY;
+
+-- Public: anyone can read published posts
+CREATE POLICY "Anyone can read published blog posts"
+  ON public.blog_posts FOR SELECT
+  USING (published = true);
+
+-- Super admins: full access
+CREATE POLICY "Super admins can manage blog posts"
+  ON public.blog_posts FOR ALL
+  TO authenticated
+  USING (
+    EXISTS (SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'super_admin')
+  )
+  WITH CHECK (
+    EXISTS (SELECT 1 FROM public.user_roles ur WHERE ur.user_id = auth.uid() AND ur.role = 'super_admin')
+  );
+
+-- Seed blog posts
+INSERT INTO public.blog_posts (title, slug, excerpt, content, category, reading_time_minutes, published, published_at, meta_title, meta_description) VALUES
+(
+  'Verfahrensdokumentation erstellen: Die komplette Anleitung für 2025',
+  'verfahrensdokumentation-erstellen-anleitung',
+  'Eine GoBD-konforme Verfahrensdokumentation ist seit 2014 Pflicht. Wir zeigen dir Schritt für Schritt wie du sie richtig erstellst.',
+  '## Was ist eine Verfahrensdokumentation?
+
+Eine Verfahrensdokumentation beschreibt alle IT-gestützten Geschäftsprozesse deines Unternehmens. Sie ist seit 2014 durch die **GoBD (Grundsätze zur ordnungsmäßigen Führung und Aufbewahrung von Büchern, Aufzeichnungen und Unterlagen in elektronischer Form)** verpflichtend.
+
+## Warum ist sie wichtig?
+
+Ohne Verfahrensdokumentation riskierst du bei einer Betriebsprüfung, dass deine gesamte digitale Buchführung als nicht ordnungsgemäß eingestuft wird. Das Finanzamt kann dann **schätzen** – und diese Schätzungen fallen fast immer zu deinen Ungunsten aus.
+
+## Die 4 Bestandteile
+
+Eine vollständige Verfahrensdokumentation besteht aus:
+
+- **Allgemeine Beschreibung** – Unternehmensdaten, eingesetzte Software, Verantwortlichkeiten
+- **Anwenderdokumentation** – Wie du die Software im Alltag nutzt
+- **Technische Systemdokumentation** – Hardware, Schnittstellen, Datensicherung
+- **Betriebsdokumentation** – Zugriffsrechte, Datensicherungskonzept, Notfallplan
+
+## Schritt-für-Schritt Anleitung
+
+### Schritt 1: Bestandsaufnahme
+
+Liste alle Programme und Tools auf, die du für deine Buchführung verwendest. Dazu gehören Buchhaltungssoftware, Rechnungstools, Banking-Apps und sogar Excel-Tabellen.
+
+### Schritt 2: Prozesse dokumentieren
+
+Beschreibe für jedes Tool: Wer nutzt es? Wie werden Daten eingegeben? Wie werden sie gespeichert und gesichert?
+
+### Schritt 3: Technische Details erfassen
+
+Dokumentiere deine IT-Infrastruktur: Welche Hardware, welche Betriebssysteme, welche Netzwerk-Konfiguration.
+
+### Schritt 4: Sicherheitskonzept erstellen
+
+Beschreibe dein Datensicherungskonzept, Zugriffsberechtigungen und Notfallmaßnahmen.
+
+### Schritt 5: Zusammenführen und prüfen
+
+Führe alle Informationen in einem strukturierten Dokument zusammen. Prüfe auf Vollständigkeit.
+
+## Der einfache Weg mit GoBD-Suite
+
+Mit **GoBD-Suite** sparst du dir den manuellen Aufwand. Du beantwortest einfache Fragen in deiner Sprache – die KI erstellt daraus die fertige, GoBD-konforme Verfahrensdokumentation. Fertig in unter einer Stunde.',
+  'GoBD',
+  8,
+  true,
+  now(),
+  'Verfahrensdokumentation erstellen 2025 – Schritt für Schritt Anleitung',
+  'Verfahrensdokumentation erstellen: So erstellst du eine GoBD-konforme VD in 2025. Anleitung, Checkliste und Tool-Empfehlung.'
+),
+(
+  'GoBD Verfahrensdokumentation: Warum sie Pflicht ist und was droht',
+  'gobd-verfahrensdokumentation-pflicht',
+  'Viele Selbstständige wissen nicht: Ohne Verfahrensdokumentation riskieren sie bei der Betriebsprüfung ihre gesamte Buchführung.',
+  '## Die rechtliche Grundlage
+
+Die **GoBD** (Grundsätze zur ordnungsmäßigen Führung und Aufbewahrung von Büchern, Aufzeichnungen und Unterlagen in elektronischer Form) verpflichten seit 2014 jedes Unternehmen, das digital bucht, zur Erstellung einer Verfahrensdokumentation.
+
+## Was viele nicht wissen
+
+Seit **2025** wird bei Betriebsprüfungen aktiv nach der Verfahrensdokumentation gefragt. Es reicht nicht mehr, sie nur zu haben – sie muss aktuell, vollständig und nachvollziehbar sein.
+
+## Was passiert ohne Verfahrensdokumentation?
+
+### Verwerfung der Buchführung
+
+Das Finanzamt kann deine gesamte digitale Buchführung als **nicht ordnungsgemäß** einstufen. Das bedeutet: Alle deine Aufzeichnungen verlieren ihre Beweiskraft.
+
+### Hinzuschätzungen
+
+Wenn die Buchführung verworfen wird, schätzt das Finanzamt deine Einnahmen. Diese Schätzungen basieren auf Branchendurchschnitten und liegen fast immer **deutlich über** deinen tatsächlichen Einnahmen.
+
+### Steuernachzahlungen
+
+Die Folge: Erhebliche Steuernachzahlungen plus Zinsen. Für viele Selbstständige kann das existenzbedrohend sein.
+
+## Wer braucht eine Verfahrensdokumentation?
+
+- Jeder Selbstständige und Freiberufler
+- Jedes Unternehmen mit digitaler Buchführung
+- Jeder, der Rechnungen digital erstellt oder empfängt
+- Jeder, der ein Kassensystem nutzt
+
+## Fazit
+
+Die Verfahrensdokumentation ist keine Option – sie ist **Pflicht**. Und seit 2025 wird das aktiv kontrolliert. Wer jetzt nicht handelt, riskiert bei der nächsten Betriebsprüfung empfindliche Konsequenzen.',
+  'GoBD',
+  6,
+  true,
+  now(),
+  'GoBD Verfahrensdokumentation Pflicht – Was droht ohne?',
+  'GoBD Verfahrensdokumentation: Pflicht seit 2014, aktiv geprüft seit 2025. Was droht ohne VD und wie du dich absicherst.'
+),
+(
+  'Verfahrensdokumentation: Steuerberater beauftragen oder selbst erstellen?',
+  'verfahrensdokumentation-steuerberater-oder-selbst',
+  'Wer ist verantwortlich für die Verfahrensdokumentation – du oder dein Steuerberater? Die klare Antwort überrascht viele.',
+  '## Die häufigste Frage
+
+Die mit Abstand häufigste Frage die uns erreicht: **"Macht das nicht mein Steuerberater?"** Die Antwort ist eindeutig: Nein.
+
+## Warum dein Steuerberater das nicht machen kann
+
+Die Verfahrensdokumentation beschreibt **deine internen Abläufe**: Wie du Rechnungen erstellst, wie du deine Belege verwaltest, welche Software du nutzt und wie deine Datensicherung funktioniert.
+
+Dein Steuerberater kennt diese internen Prozesse nicht im Detail. Er weiß nicht, ob du Rechnungen per Word, mit Lexoffice oder mit sevDesk erstellst. Er weiß nicht, ob du deine Belege in einem Ordner sammelst oder in einer Cloud scannst.
+
+## Was dein Steuerberater tun kann
+
+- **Beraten** über die Anforderungen der GoBD
+- **Prüfen** ob deine Verfahrensdokumentation vollständig ist
+- **Unterstützen** bei fachlichen Fragen
+
+## Was er nicht tun kann
+
+- Deine internen Prozesse beschreiben (die kennt nur du)
+- Dein IT-System dokumentieren (das kennst nur du)
+- Dein Zugriffsberechtigungskonzept erstellen
+
+## Die Kosten beim Steuerberater
+
+Wenn ein Steuerberater trotzdem die Verfahrensdokumentation erstellen soll, muss er zunächst alle deine Prozesse aufnehmen. Das bedeutet:
+
+- Mehrere Stunden Interview
+- Dokumentation und Abstimmung
+- Kosten von **2.000 bis 5.000 Euro** je nach Komplexität
+
+## Die Alternative: Selbst erstellen mit GoBD-Suite
+
+Mit **GoBD-Suite** erstellst du deine Verfahrensdokumentation selbst – in unter einer Stunde. Du beantwortest einfache Fragen in deiner eigenen Sprache, die KI übernimmt die fachliche Aufbereitung.
+
+- **980 Euro** statt 2.000-5.000 Euro beim Steuerberater
+- **Unter einer Stunde** statt mehrere Wochen
+- **Immer aktuell** durch einfache Aktualisierung
+- **Automatisch versioniert** für die Betriebsprüfung',
+  'GoBD',
+  5,
+  true,
+  now(),
+  'Verfahrensdokumentation selbst erstellen oder Steuerberater?',
+  'Verfahrensdokumentation: Steuerberater oder selbst? Wer ist verantwortlich, was kostet es und welche Option macht mehr Sinn.'
+);

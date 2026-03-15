@@ -50,6 +50,9 @@ import AdminWebhookLogs from "./pages/AdminWebhookLogs";
 import TestStarten from "./pages/TestStarten";
 import LandingPage from "./pages/LandingPage";
 import MarketingPage from "./pages/MarketingPage";
+import BlogPage from "./pages/BlogPage";
+import BlogPostPage from "./pages/BlogPostPage";
+import AdminBlog from "./pages/AdminBlog";
 import Impressum from "./pages/Impressum";
 import Datenschutz from "./pages/Datenschutz";
 import AGB from "./pages/AGB";
@@ -79,6 +82,8 @@ const App = () => (
               <Route path="/set-password" element={<SetPassword />} />
               <Route path="/client-register" element={<ClientRegister />} />
               <Route path="/test-starten" element={<TestStarten />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogPostPage />} />
 
               {/* Protected routes with layout */}
               <Route
@@ -184,6 +189,14 @@ const App = () => (
                 element={
                   <ProtectedRoute requiredRoles={['super_admin']}>
                     <AppLayout><AdminAffiliates /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/blog"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminBlog /></AppLayout>
                   </ProtectedRoute>
                 }
               />
