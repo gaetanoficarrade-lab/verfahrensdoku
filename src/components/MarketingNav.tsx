@@ -126,7 +126,7 @@ export default function MarketingNav() {
           }
           <p className="text-xs font-semibold mt-2 uppercase tracking-wider" style={{ color: '#6E6E73' }}>Ressourcen</p>
           <Link to="/verfahrensdokumentation-erstellen" onClick={() => setMobileMenu(false)} className="pl-3">VD erstellen – Anleitung</Link>
-          <Link to="/blog" onClick={() => setMobileMenu(false)} className="pl-3">Blog</Link>
+          <Link to="/blog" onClick={() => setMobileMenu(false)}>Blog</Link>
           <hr style={{ borderColor: C.border }} />
           <Link to="/auth" onClick={() => setMobileMenu(false)}>Anmelden</Link>
           <Link to="/test-starten" onClick={() => setMobileMenu(false)}
