@@ -845,6 +845,7 @@ export default function MarketingPage() {
               <li><Link to="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link></li>
               <li><Link to="/agb" className="hover:text-white transition-colors">AGB</Link></li>
               <li><Link to="/avv" className="hover:text-white transition-colors">AVV</Link></li>
+              <li><CookieSettingsButton /></li>
             </ul>
           </div>
           <div>
@@ -856,6 +857,8 @@ export default function MarketingPage() {
           © {new Date().getFullYear()} GoBD-Suite · Alle Rechte vorbehalten
         </div>
       </footer>
+
+      <CookieBanner />
     </div>
   );
 }
