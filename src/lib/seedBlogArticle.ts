@@ -918,6 +918,10 @@ export interface SeededBlogArticle {
   published: boolean;
   published_at: string;
   cover_image_url?: string | null;
+  cta_title?: string;
+  cta_description?: string;
+  related_slugs?: string[];
+  additional_json_ld?: object[];
 }
 
 export const SEEDED_BLOG_ARTICLES: SeededBlogArticle[] = [
