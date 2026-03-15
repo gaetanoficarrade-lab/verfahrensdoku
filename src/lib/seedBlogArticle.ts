@@ -693,93 +693,288 @@ Das ist eine Marktlücke die sich gerade schließt. Wer jetzt einsteigt ist frü
 - [§ 162 AO – Schätzung von Besteuerungsgrundlagen](https://www.gesetze-im-internet.de/ao_1977/__162.html)
 - [§ 238 HGB – Buchführungspflicht](https://www.gesetze-im-internet.de/hgb/__238.html)`;
 
-export async function seedBlogArticleVD2025() {
-  const { data: existing } = await supabase
-    .from('blog_posts')
-    .select('id')
-    .eq('slug', 'verfahrensdokumentation-2025-was-sich-geaendert-hat')
-    .maybeSingle();
+const ARTICLE_5_CONTENT = `**Stand: März 2026**
 
-  if (!existing) {
-    await supabase.from('blog_posts').insert({
+## Der Irrtum der sich hartnäckig hält
+
+"Ich bin doch nur Freelancer. Das gilt bestimmt nicht für mich."
+
+Diesen Satz hört man oft. Und er ist leider falsch.
+
+Die GoBD unterscheiden nicht nach Unternehmensgröße, Mitarbeiterzahl oder Rechtsform. Sie unterscheiden nach einer einzigen Frage:
+
+Führst du deine Buchführung digital?
+
+Wenn ja – brauchst du eine Verfahrensdokumentation. Punkt.
+
+Das gilt für den Konzern mit 500 Mitarbeitern genauso wie für den Freelancer der alleine von seinem Homeoffice aus arbeitet.
+
+Die gute Nachricht: Als Freelancer ist deine VD deutlich überschaubarer als die eines großen Unternehmens. Du brauchst kein 50-seitiges Dokument.
+
+Aber du brauchst ein vollständiges.
+
+---
+
+## Was die GoBD von dir verlangen
+
+Die GoBD wurden 2019 aktualisiert und sind seit dem 01.01.2020 in der aktuellen Fassung verbindlich.
+
+Kernaussage für Freelancer: Wer ein DV-gestütztes Buchführungssystem nutzt – also Software für Buchhaltung, Rechnungsstellung oder Belegverwaltung – muss dokumentieren wie dieses System eingesetzt wird.
+
+Das bedeutet: Wenn du Lexoffice, sevDesk, FastBill, Stripe, Funnelpay oder ähnliches nutzt – bist du dabei.
+
+**Quelle:** [GoBD Randziffer 34 ff. – BMF-Schreiben 28.11.2019](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/2019-11-28-GoBD.html)
+
+---
+
+## Was in deine Freelancer-VD muss
+
+Lass uns das konkret machen. Hier ist was ein typischer Freelancer dokumentieren muss:
+
+**1. Wer du bist und was du machst**
+
+Keine große Sache. Eine kurze Beschreibung deiner Tätigkeit, deiner Rechtsform (Einzelunternehmer) und wie Aufträge bei dir entstehen.
+
+Wie kommst du zu Kunden? Wie läuft ein typischer Auftrag ab? Welche Dokumente entstehen dabei?
+
+**2. Wie du deine Buchführung organisierst**
+
+Machst du sie selbst? Unterstützt dich ein Steuerberater? Welche Software nutzt du?
+
+Das klingt banal – ist aber Pflicht.
+
+**Quelle:** [§ 238 HGB – Buchführungspflicht](https://www.gesetze-im-internet.de/hgb/__238.html)
+
+**3. Welche Software du nutzt**
+
+Alle steuerrelevanten Programme müssen genannt werden:
+
+- Buchhaltungssoftware (z.B. Lexoffice, sevDesk)
+- Rechnungsstellung (z.B. FastBill, Funnelpay)
+- Zahlungsanbieter (z.B. Stripe, PayPal)
+- Cloud-Dienste für Belegablage (z.B. Google Drive, Dropbox)
+
+Du musst keine Versionsnummern nennen – der Softwarename reicht.
+
+**4. Wie Rechnungen entstehen und archiviert werden**
+
+Das ist der Kernprozess für die meisten Freelancer.
+
+Wie erstellst du eine Rechnung? Wie schickst du sie? Wo wird sie gespeichert? Wie lange?
+
+Die Antwort auf die letzte Frage ist immer dieselbe: 10 Jahre gemäß § 147 AO.
+
+**Quelle:** [§ 147 AO – Aufbewahrungspflichten](https://www.gesetze-im-internet.de/ao_1977/__147.html)
+
+**5. Wie Belege zu dir kommen**
+
+Eingangsrechnungen, Quittungen, Kontoauszüge – wie kommen die rein und wo landen sie?
+
+Per E-Mail? Download aus einem Portal? Papier das du scannst?
+
+All das muss beschrieben sein.
+
+**6. Wie du Backups machst**
+
+Das vergessen die meisten.
+
+Wo liegen deine steuerrelevanten Daten? Auf deinem Laptop? In der Cloud? Was passiert wenn dein Laptop kaputt geht?
+
+Du musst kein ausgefeiltes Backup-Konzept haben – aber du musst beschreiben was du tust.
+
+---
+
+## Was du als Freelancer NICHT brauchst
+
+Hier die Entwarnung.
+
+Als Einzelunternehmer ohne Mitarbeiter fällt vieles weg das große Unternehmen dokumentieren müssen:
+
+**Kein Berechtigungskonzept nötig**
+
+Du bist der einzige Nutzer deiner Systeme. Wer hat Zugriff? Du. Das reicht.
+
+**Kein Kassenbuch nötig**
+
+Wenn du keine Bargeschäfte machst – und das tun die wenigsten Freelancer – entfällt das Kassenprozess-Kapitel komplett.
+
+**Keine Mitarbeiter-Dokumentation nötig**
+
+Lohnbuchhaltung, Personalwesen, Zugriffsrechte für Mitarbeiter – alles irrelevant wenn du alleine arbeitest.
+
+**Keine komplexen Schnittstellenbeschreibungen**
+
+Wenn du nur eine Software nutzt, gibt es keine komplexen Datenflüsse zwischen Systemen zu beschreiben.
+
+Ein gutes Tool erkennt das automatisch durch das Onboarding und blendet irrelevante Kapitel aus.
+
+---
+
+## Der häufigste Fehler bei Freelancer-VDs
+
+Du weißt jetzt was reinmuss. Hier ist was am häufigsten schiefläuft.
+
+**Fehler 1: Zu allgemein**
+
+"Ich nutze Software für die Buchhaltung" ist keine ausreichende Beschreibung.
+
+"Ich nutze Lexoffice für die Buchhaltung. Eingangsrechnungen lade ich dort als PDF hoch. Ausgangsrechnungen erstelle ich direkt in Lexoffice und versende sie per E-Mail an meine Kunden. Lexoffice archiviert alle Belege automatisch" – das ist eine ausreichende Beschreibung.
+
+**Fehler 2: Nicht aktualisieren**
+
+Du wechselst von Lexoffice zu sevDesk. Du meldest dich bei Stripe an. Du nutzt jetzt Google Drive für die Belegablage.
+
+Jede dieser Änderungen muss in der VD aktualisiert werden. Mit Datum.
+
+**Fehler 3: Denken es reicht eine Vorlage**
+
+Eine generische Vorlage aus dem Internet beschreibt nicht deine tatsächlichen Abläufe. Das Finanzamt erkennt das.
+
+**Rechtsgrundlage:** [§ 158 AO – Beweiskraft der Buchführung](https://www.gesetze-im-internet.de/ao_1977/__158.html)
+
+---
+
+## Ein realistisches Beispiel
+
+Stell dir vor du bist Freelance Webdesigner. Du arbeitest alleine, von zuhause aus.
+
+Deine Tools:
+
+- Lexoffice für Buchhaltung und Rechnungen
+- Stripe für Zahlungsabwicklung
+- Google Drive für Belegablage
+- Externe Festplatte als Backup
+
+Was deine VD beschreibt:
+
+Wie du zu Aufträgen kommst (Empfehlung, Website), wie ein typischer Auftrag abläuft (Angebot → Auftrag → Lieferung → Rechnung), wie die Rechnung in Lexoffice erstellt wird, wie Stripe-Zahlungen in Lexoffice landen, wie Belege in Google Drive abgelegt werden, wie du Backups machst und dass du der einzige Nutzer aller Systeme bist.
+
+Das ist deine vollständige Verfahrensdokumentation.
+
+Kein Juristendeutsch. Keine 50 Seiten. Einfach eine ehrliche Beschreibung wie dein Business läuft.
+
+---
+
+## Wie lange dauert es?
+
+Für einen typischen Freelancer mit überschaubaren Systemen:
+
+- Onboarding ausfüllen: 5 Minuten
+- Relevante Kapitel beschreiben: 30-45 Minuten
+- KI-Texte prüfen und anpassen: 15-20 Minuten
+- PDF herunterladen: 1 Minute
+
+Gesamt: Unter einer Stunde.
+
+Das ist einmalig. Danach pflegst du nur noch was sich ändert.
+
+---
+
+## Was passiert wenn du es nicht machst
+
+Kurze Erinnerung.
+
+Bei einer Betriebsprüfung kann das Finanzamt deine Buchführung als nicht ordnungsgemäß einstufen wenn keine VD vorliegt.
+
+Das gibt ihm das Recht zu schätzen statt deine tatsächlichen Zahlen zu prüfen.
+
+Schätzungen liegen fast immer über deinen tatsächlichen Einnahmen.
+
+Das Ergebnis: Nachzahlungen.
+
+Für eine Stunde Aufwand ist das ein vermeidbares Risiko.
+
+**Rechtsgrundlage:** [§ 162 AO – Schätzung von Besteuerungsgrundlagen](https://www.gesetze-im-internet.de/ao_1977/__162.html)
+
+---
+
+## Fazit
+
+Als Freelancer brauchst du keine komplizierte VD. Aber du brauchst eine vollständige.
+
+Die gute Nachricht: Deine Situation ist überschaubarer als die der meisten Unternehmen. Weniger Systeme, keine Mitarbeiter, klare Prozesse.
+
+Das bedeutet: Du kannst das in unter einer Stunde erledigen.
+
+Und dann kannst du dir den Satz "Das gilt bestimmt nicht für mich" für immer sparen.
+
+**Quellen und weiterführende Links:**
+
+- [GoBD Volltext (BMF-Schreiben 28.11.2019)](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/2019-11-28-GoBD.html)
+- [§ 147 AO – Aufbewahrungspflichten](https://www.gesetze-im-internet.de/ao_1977/__147.html)
+- [§ 158 AO – Beweiskraft der Buchführung](https://www.gesetze-im-internet.de/ao_1977/__158.html)
+- [§ 162 AO – Schätzung von Besteuerungsgrundlagen](https://www.gesetze-im-internet.de/ao_1977/__162.html)
+- [§ 238 HGB – Buchführungspflicht](https://www.gesetze-im-internet.de/hgb/__238.html)`;
+
+export async function seedBlogArticleVD2025() {
+  const articles = [
+    {
       slug: 'verfahrensdokumentation-2025-was-sich-geaendert-hat',
       title: 'Verfahrensdokumentation 2025: Was sich geändert hat und was jetzt wirklich Pflicht ist',
       category: 'GoBD',
       reading_time_minutes: 7,
-      published: true,
-      published_at: new Date().toISOString(),
       meta_title: 'Verfahrensdokumentation 2025 – Was sich geändert hat und was Pflicht ist',
       meta_description: 'Was hat sich 2025 bei der Verfahrensdokumentation geändert? Welche Pflichten gelten jetzt? Alles was du wissen musst – mit offiziellen Quellen.',
       excerpt: 'Seit 2025 prüft das Finanzamt aktiv ob Verfahrensdokumentationen vorliegen. Was sich geändert hat, was jetzt Pflicht ist und warum die meisten Selbstständigen unvorbereitet sind.',
       content: ARTICLE_CONTENT,
-    });
-    console.log('Article 1 seeded.');
-  }
-
-  const { data: existing2 } = await supabase
-    .from('blog_posts')
-    .select('id')
-    .eq('slug', 'verfahrensdokumentation-vorlage-steuerberater-oder-tool')
-    .maybeSingle();
-
-  if (!existing2) {
-    await supabase.from('blog_posts').insert({
+    },
+    {
       slug: 'verfahrensdokumentation-vorlage-steuerberater-oder-tool',
       title: 'Verfahrensdokumentation erstellen: Vorlage, Steuerberater oder Tool – was lohnt sich wirklich?',
       category: 'GoBD',
       reading_time_minutes: 8,
-      published: true,
-      published_at: new Date().toISOString(),
       meta_title: 'Verfahrensdokumentation: Vorlage, Steuerberater oder Tool – der ehrliche Vergleich',
       meta_description: 'Verfahrensdokumentation erstellen: Kostenlose Vorlage, Steuerberater beauftragen oder Tool nutzen? Wir vergleichen ehrlich Kosten, Aufwand und Risiken.',
       excerpt: 'Vorlage aus dem Internet, Steuerberater beauftragen oder Tool nutzen? Wir vergleichen alle drei Wege ehrlich – mit Kosten, Zeitaufwand und den Risiken die keiner erwähnt.',
       content: ARTICLE_2_CONTENT,
-    });
-    console.log('Article 2 seeded.');
-  }
-
-  const { data: existing3 } = await supabase
-    .from('blog_posts')
-    .select('id')
-    .eq('slug', 'betriebspruefung-ohne-verfahrensdokumentation')
-    .maybeSingle();
-
-  if (!existing3) {
-    await supabase.from('blog_posts').insert({
+    },
+    {
       slug: 'betriebspruefung-ohne-verfahrensdokumentation',
       title: 'Was passiert bei einer Betriebsprüfung ohne Verfahrensdokumentation?',
       category: 'GoBD',
       reading_time_minutes: 7,
-      published: true,
-      published_at: new Date().toISOString(),
       meta_title: 'Betriebsprüfung ohne Verfahrensdokumentation – Was droht wirklich?',
       meta_description: 'Was passiert wenn der Betriebsprüfer kommt und du keine Verfahrensdokumentation hast? Die ehrliche Antwort – mit offiziellen Quellen.',
       excerpt: 'Der Betriebsprüfer sitzt vor dir und fragt nach der Verfahrensdokumentation. Du hast keine. Was jetzt passiert – und warum es schlimmer sein kann als du denkst.',
       content: ARTICLE_3_CONTENT,
-    });
-    console.log('Article 3 seeded.');
-  }
-
-  const { data: existing4 } = await supabase
-    .from('blog_posts')
-    .select('id')
-    .eq('slug', 'verfahrensdokumentation-als-dienstleistung-anbieten')
-    .maybeSingle();
-
-  if (!existing4) {
-    await supabase.from('blog_posts').insert({
+    },
+    {
       slug: 'verfahrensdokumentation-als-dienstleistung-anbieten',
       title: 'Verfahrensdokumentation als Dienstleistung anbieten: So verdienst du damit Geld',
       category: 'Dienstleister',
       reading_time_minutes: 8,
-      published: true,
-      published_at: new Date().toISOString(),
       meta_title: 'Verfahrensdokumentation als Dienstleistung anbieten – So geht es',
       meta_description: 'Wie Steuerberater, Buchhalter und Consultants mit Verfahrensdokumentationen eine neue Einnahmequelle aufbauen. Konkrete Zahlen und Strategie.',
       excerpt: 'Deine Mandanten brauchen eine Verfahrensdokumentation – die meisten wissen es nur noch nicht. Wie du das als Dienstleister zur profitablen Einnahmequelle machst.',
       content: ARTICLE_4_CONTENT,
-    });
-    console.log('Article 4 seeded.');
+    },
+    {
+      slug: 'verfahrensdokumentation-freelancer',
+      title: 'GoBD-konforme Verfahrensdokumentation für Freelancer: Was wirklich reinmuss',
+      category: 'GoBD',
+      reading_time_minutes: 7,
+      meta_title: 'Verfahrensdokumentation für Freelancer 2025 – Was wirklich reinmuss',
+      meta_description: 'Als Freelancer eine GoBD-konforme Verfahrensdokumentation erstellen: Was Pflicht ist, was nicht und wie du es in unter einer Stunde erledigst.',
+      excerpt: 'Viele Freelancer denken die Verfahrensdokumentation ist nur für große Unternehmen. Falsch. Was du als Freelancer wirklich brauchst – und was du getrost weglassen kannst.',
+      content: ARTICLE_5_CONTENT,
+    },
+  ];
+
+  for (const article of articles) {
+    const { data: existing } = await supabase
+      .from('blog_posts')
+      .select('id')
+      .eq('slug', article.slug)
+      .maybeSingle();
+
+    if (!existing) {
+      await supabase.from('blog_posts').insert({
+        ...article,
+        published: true,
+        published_at: new Date().toISOString(),
+      });
+      console.log(`Article "${article.slug}" seeded.`);
+    }
   }
 
   return { success: true };
