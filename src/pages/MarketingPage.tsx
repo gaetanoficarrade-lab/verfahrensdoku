@@ -236,7 +236,7 @@ export default function MarketingPage() {
             <div>
               <Reveal>
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full mb-6" style={{ background: C.yellow, color: C.dark }}>
-                  🔒 Einführungspreis – Jetzt sichern
+                  🏆 Das erste VD-Tool im DACH-Raum
                 </span>
               </Reveal>
               <Reveal delay={0.1}>
@@ -257,8 +257,8 @@ export default function MarketingPage() {
                     Wie es funktioniert <ArrowDown size={16} />
                   </SecondaryBtn>
                 </div>
-                <p className="mt-4 text-sm font-semibold" style={{ color: C.yellow }}>
-                  ⚡ Einführungspreis – Jetzt sichern bevor der Preis steigt
+                <p className="mt-4 text-sm font-semibold" style={{ color: C.green }}>
+                  ✅ 30 Tage Zufriedenheitsgarantie – kein Risiko
                 </p>
               </Reveal>
               <Reveal delay={0.3}>
