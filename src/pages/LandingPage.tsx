@@ -192,7 +192,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.15 }}
-            className="text-lg sm:text-xl lg:text-2xl text-[#86868b] max-w-2xl mx-auto mb-12 leading-relaxed"
+            className="text-base sm:text-xl lg:text-2xl text-[#86868b] max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed"
           >
             gobdsuite erstellt GoBD-konforme Verfahrensdokumentationen –
             prüfungssicher, effizient und mit einem Klick als PDF.
