@@ -537,6 +537,7 @@ export default function FuerSelbststaendige() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto mt-12 pt-8 text-center text-xs" style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>
+          <p className="mb-3"><Link to="/fuer-dienstleister" className="hover:text-white transition-colors">Du bist Dienstleister? Hier entlang →</Link></p>
           © {new Date().getFullYear()} GoBD-Suite · Alle Rechte vorbehalten
         </div>
       </footer>
