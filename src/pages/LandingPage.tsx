@@ -416,16 +416,16 @@ export default function LandingPage() {
       </section>
 
       {/* ─── URGENCY ─── */}
-      <section className="py-32 px-6">
+      <section className="py-16 sm:py-32 px-4 sm:px-6">
         <AnimatedSection>
           <motion.div
             variants={fadeUp}
-            className="max-w-4xl mx-auto text-center relative rounded-[2rem] overflow-hidden bg-[#1d1d1f] text-white"
+            className="max-w-4xl mx-auto text-center relative rounded-2xl sm:rounded-[2rem] overflow-hidden bg-[#1d1d1f] text-white"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-[#e8a91a]/10 via-transparent to-[#e8a91a]/5 pointer-events-none" />
 
-            <div className="relative z-10 px-8 py-20 sm:px-16 sm:py-24">
-              <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-6">
+            <div className="relative z-10 px-6 py-12 sm:px-16 sm:py-24">
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6">
                 Die nächste Betriebsprüfung kommt.
                 <br />
                 <span className="text-[#e8a91a]">Bist du vorbereitet?</span>
