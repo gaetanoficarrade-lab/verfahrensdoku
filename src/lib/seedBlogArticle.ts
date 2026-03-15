@@ -932,7 +932,7 @@ export const SEEDED_BLOG_ARTICLES: SeededBlogArticle[] = [
     content: ARTICLE_CONTENT,
     published: true,
     published_at: '2026-03-11T09:00:00.000Z',
-    cover_image_url: null,
+    cover_image_url: '/images/blog-vd-2025.png',
   },
   {
     slug: 'verfahrensdokumentation-vorlage-steuerberater-oder-tool',
