@@ -64,30 +64,67 @@ export default function BlogPostPage() {
     if (!slug) return;
     (async () => {
       setLoading(true);
-      const { data } = await supabase
+      await seedBlogArticleVD2025();
+
+      const fallbackPost = SEEDED_FULL_POSTS.find(p => p.slug === slug) ?? null;
+      const fallbackRelated = SEEDED_FULL_POSTS
+        .filter(p => p.slug !== slug)
+        .sort((a, b) => +new Date(b.published_at) - +new Date(a.published_at))
+        .slice(0, 3)
+        .map(({ id, title, slug: relatedSlug, excerpt, cover_image_url, category, reading_time_minutes, published_at }) => ({
+          id,
+          title,
+          slug: relatedSlug,
+          excerpt,
+          cover_image_url,
+          category,
+          reading_time_minutes,
+          published_at,
+        }));
+
+      const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
         .eq('slug', slug)
         .eq('published', true)
-        .single();
+        .maybeSingle();
 
-      if (data) {
-        setPost(data as FullPost);
-        const hMatches = (data.content || '').match(/^##\s+(.+)$/gm) || [];
-        setHeadings(hMatches.map((h: string) => {
-          const text = h.replace(/^##\s+/, '');
-          return { id: slugify(text), text };
-        }));
+      const resolvedPost = (error?.code === '42P01' || !data) ? fallbackPost : (data as FullPost);
+      setPost(resolvedPost);
 
-        const { data: rel } = await supabase
-          .from('blog_posts')
-          .select('id, title, slug, excerpt, cover_image_url, category, reading_time_minutes, published_at')
-          .eq('published', true)
-          .neq('slug', slug)
-          .order('published_at', { ascending: false })
-          .limit(3);
-        setRelated((rel as RelatedPost[]) ?? []);
+      const hMatches = (resolvedPost?.content || '').match(/^##\s+(.+)$/gm) || [];
+      setHeadings(hMatches.map((h: string) => {
+        const text = h.replace(/^##\s+/, '');
+        return { id: slugify(text), text };
+      }));
+
+      if (error?.code === '42P01') {
+        setRelated(fallbackRelated);
+        setLoading(false);
+        return;
       }
+
+      if (error) {
+        console.error('Failed loading blog post:', error.message);
+        setRelated(fallbackRelated);
+        setLoading(false);
+        return;
+      }
+
+      const { data: rel, error: relError } = await supabase
+        .from('blog_posts')
+        .select('id, title, slug, excerpt, cover_image_url, category, reading_time_minutes, published_at')
+        .eq('published', true)
+        .neq('slug', slug)
+        .order('published_at', { ascending: false })
+        .limit(3);
+
+      if (relError?.code === '42P01' || relError) {
+        setRelated(fallbackRelated);
+      } else {
+        setRelated((rel as RelatedPost[]) ?? fallbackRelated);
+      }
+
       setLoading(false);
     })();
   }, [slug]);
