@@ -101,7 +101,7 @@ function PriceCard({ name, price, unit, sub, features, highlighted = false }: {
 }) {
   return (
     <div
-      className={`rounded-[18px] p-8 flex flex-col h-full relative ${highlighted ? 'md:-mt-4 md:mb-4' : ''}`}
+      className="rounded-[18px] p-8 flex flex-col h-full relative"
       style={{
         background: C.white,
         boxShadow: highlighted ? '0 4px 32px rgba(0,0,0,0.10)' : '0 2px 16px rgba(0,0,0,0.06)',
