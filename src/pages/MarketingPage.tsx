@@ -1,5 +1,10 @@
 import { useState, useEffect, useMemo, type ReactNode } from 'react';
 import productSolution from '@/assets/product-solution.png';
+import mockupDashboard from '@/assets/mockup-dashboard.png';
+import mockupEditor from '@/assets/mockup-editor.png';
+import mockupPdf from '@/assets/mockup-pdf.png';
+import mockupClients from '@/assets/mockup-clients.png';
+import mockupOverview from '@/assets/mockup-overview.png';
 import { Link } from 'react-router-dom';
 import {
   AlertTriangle, Euro, Clock, Check, X, ChevronDown, ChevronUp,
@@ -214,37 +219,56 @@ export default function MarketingPage() {
 
       <main>
         {/* ─── HERO ─── */}
-        <section className="min-h-[90vh] flex flex-col items-center justify-center text-center px-6 pt-24 pb-20" style={{ background: C.white }}>
-          <Reveal>
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] mb-6" style={{ color: C.yellow }}>
-              Das erste vollständige VD-Tool im DACH-Raum
-            </p>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <h1 className="text-4xl md:text-[64px] font-bold leading-[1.1] max-w-4xl mx-auto mb-6" style={{ color: C.dark }}>
-              Die nächste Betriebsprüfung kommt. Bist du vorbereitet?
-            </h1>
-          </Reveal>
-          <Reveal delay={0.15}>
-            <p className="text-lg md:text-xl max-w-[600px] mx-auto mb-10 leading-relaxed" style={{ color: C.textGray }}>
-              Ohne ordnungsgemäße Verfahrensdokumentation verlierst du die Beweiskraft deiner gesamten Buchführung. Mit GoBD-Suite bist du auf der sicheren Seite – in weniger als einer Stunde.
-            </p>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              <PrimaryBtn to="/test-starten">Jetzt kostenlos testen</PrimaryBtn>
-              <SecondaryBtn onClick={() => document.getElementById('funktionen')?.scrollIntoView({ behavior: 'smooth' })}>
-                Wie es funktioniert <ArrowDown size={16} />
-              </SecondaryBtn>
+        <section className="min-h-[90vh] flex items-center px-6 lg:px-12 pt-24 pb-20" style={{ background: C.white }}>
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
+            {/* Left: Text */}
+            <div>
+              <Reveal>
+                <p className="text-xs font-semibold uppercase tracking-[0.1em] mb-6" style={{ color: C.yellow }}>
+                  Das erste vollständige VD-Tool im DACH-Raum
+                </p>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <h1 className="text-4xl md:text-[56px] lg:text-[64px] font-bold leading-[1.1] mb-6" style={{ color: C.dark }}>
+                  Die nächste Betriebsprüfung kommt. Bist du vorbereitet?
+                </h1>
+              </Reveal>
+              <Reveal delay={0.15}>
+                <p className="text-lg md:text-xl max-w-[540px] mb-10 leading-relaxed" style={{ color: C.textGray }}>
+                  Ohne ordnungsgemäße Verfahrensdokumentation verlierst du die Beweiskraft deiner gesamten Buchführung. Mit GoBD-Suite bist du auf der sicheren Seite – in weniger als einer Stunde.
+                </p>
+              </Reveal>
+              <Reveal delay={0.2}>
+                <div className="flex flex-wrap items-center gap-4">
+                  <PrimaryBtn to="/test-starten">Jetzt kostenlos testen</PrimaryBtn>
+                  <SecondaryBtn onClick={() => document.getElementById('funktionen')?.scrollIntoView({ behavior: 'smooth' })}>
+                    Wie es funktioniert <ArrowDown size={16} />
+                  </SecondaryBtn>
+                </div>
+              </Reveal>
+              <Reveal delay={0.3}>
+                <div className="flex flex-wrap gap-x-6 gap-y-2 mt-12 text-sm" style={{ color: C.textGray }}>
+                  {['GoBD-konform seit 2014', 'KI-gestützte Erstellung', 'Fertig in unter 60 Minuten', 'Automatisch versioniert'].map(t => (
+                    <span key={t} className="flex items-center gap-1.5"><Check size={14} style={{ color: C.green }} /> {t}</span>
+                  ))}
+                </div>
+              </Reveal>
             </div>
-          </Reveal>
-          <Reveal delay={0.3}>
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-12 text-sm" style={{ color: C.textGray }}>
-              {['GoBD-konform seit 2014', 'KI-gestützte Erstellung', 'Fertig in unter 60 Minuten', 'Automatisch versioniert'].map(t => (
-                <span key={t} className="flex items-center gap-1.5"><Check size={14} style={{ color: C.green }} /> {t}</span>
-              ))}
-            </div>
-          </Reveal>
+
+            {/* Right: Dashboard mockup */}
+            <Reveal delay={0.25} className="hidden lg:block">
+              <div
+                className="rounded-xl overflow-hidden"
+                style={{
+                  boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+                  transform: 'perspective(1000px) rotateY(-5deg)',
+                  transition: 'transform 0.5s ease',
+                }}
+              >
+                <img src={mockupDashboard} alt="GoBD-Suite Dashboard mit Mandanten- und Projektübersicht" className="w-full h-auto" />
+              </div>
+            </Reveal>
+          </div>
         </section>
 
         {/* ─── SCHMERZ ─── */}
@@ -323,16 +347,21 @@ export default function MarketingPage() {
             </Reveal>
             <div className="grid md:grid-cols-3 gap-10">
               {[
-                { num: '1', icon: FileText, title: 'Onboarding ausfüllen', text: 'Beantworte 7 kurze Fragen zu deinem Unternehmen. Das dauert 5 Minuten und steuert welche Kapitel für dich relevant sind.' },
-                { num: '2', icon: Sparkles, title: 'Kapitel beschreiben', text: 'Beschreibe in deinen eigenen Worten wie du arbeitest. Kein Fachjargon, keine Paragraphen. Die KI prüft und vervollständigt.' },
-                { num: '3', icon: Download, title: 'PDF herunterladen', text: 'Deine fertige, GoBD-konforme Verfahrensdokumentation als professionelles PDF. Bereit für die nächste Prüfung.' },
+                { num: '1', icon: FileText, title: 'Onboarding ausfüllen', text: 'Beantworte 7 kurze Fragen zu deinem Unternehmen. Das dauert 5 Minuten und steuert welche Kapitel für dich relevant sind.', img: null },
+                { num: '2', icon: Sparkles, title: 'Kapitel beschreiben', text: 'Beschreibe in deinen eigenen Worten wie du arbeitest. Kein Fachjargon, keine Paragraphen. Die KI prüft und vervollständigt.', img: mockupEditor },
+                { num: '3', icon: Download, title: 'PDF herunterladen', text: 'Deine fertige, GoBD-konforme Verfahrensdokumentation als professionelles PDF. Bereit für die nächste Prüfung.', img: mockupPdf },
               ].map((s, i) => (
                 <Reveal key={i} delay={i * 0.12}>
                   <div className="flex flex-col items-center">
                     <span className="text-[80px] font-bold leading-none mb-2" style={{ color: C.yellow, opacity: 0.3 }} aria-hidden="true">{s.num}</span>
                     <s.icon size={32} className="mb-4" style={{ color: C.dark }} aria-hidden="true" />
                     <h3 className="text-lg font-bold mb-2" style={{ color: C.dark }}>{s.title}</h3>
-                    <p className="leading-relaxed" style={{ color: C.textGray }}>{s.text}</p>
+                    <p className="leading-relaxed mb-4" style={{ color: C.textGray }}>{s.text}</p>
+                    {s.img && (
+                      <div className="rounded-xl overflow-hidden mt-2" style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.10)' }}>
+                        <img src={s.img} alt={s.title} className="w-full h-auto" loading="lazy" />
+                      </div>
+                    )}
                   </div>
                 </Reveal>
               ))}
@@ -370,7 +399,10 @@ export default function MarketingPage() {
                       <li key={t} className="flex items-center gap-2 text-[15px]" style={{ color: C.textGray }}><Check size={16} style={{ color: C.green }} /> {t}</li>
                     ))}
                   </ul>
-                  <a href="#preise" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Für Dienstleister</a>
+                  <a href="#preise" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200 mb-6" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Für Dienstleister</a>
+                  <div className="rounded-xl overflow-hidden mt-4" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                    <img src={mockupClients} alt="GoBD-Suite Mandantenübersicht mit mehreren Kunden" className="w-full h-auto" loading="lazy" />
+                  </div>
                 </article>
               </Reveal>
             </div>
@@ -403,6 +435,12 @@ export default function MarketingPage() {
                 </Reveal>
               ))}
             </div>
+            {/* Overview mockup */}
+            <Reveal delay={0.5}>
+              <div className="mt-14 max-w-3xl mx-auto rounded-xl overflow-hidden" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.10)' }}>
+                <img src={mockupOverview} alt="GoBD-Suite Berater-Übersicht mit Ampel-Status für alle Kapitel" className="w-full h-auto" loading="lazy" />
+              </div>
+            </Reveal>
           </div>
         </section>
 
