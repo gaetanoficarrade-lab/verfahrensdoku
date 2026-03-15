@@ -233,7 +233,7 @@ export default function LandingPage() {
 
       {/* ─── STATS RIBBON ─── */}
       <section className="border-y border-[#e5e5e5] bg-[#fafafa]">
-        <div className="max-w-6xl mx-auto px-6 py-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
           <AnimatedSection className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
               { value: '30', label: 'GoBD-Kapitel' },
