@@ -12,7 +12,7 @@ export const HELP_TEXTS = {
   soft_delete: 'Mandanten mit finalisierten Dokumenten können nicht gelöscht werden. Gelöschte Mandanten werden nur deaktiviert, nicht entfernt.',
   webhook: 'Webhooks ermöglichen die automatische Benachrichtigung externer Systeme bei bestimmten Ereignissen.',
   branding: 'Passen Sie das Erscheinungsbild für Ihre Mandanten an: Logo, Farben und Kontaktinformationen.',
-  affiliate: 'Empfehlen Sie die GoBD-Suite weiter und erhalten Sie eine Provision für neue Lizenznehmer.',
+  
   team: 'Laden Sie Teammitglieder ein und verwalten Sie deren Zugriffsrechte.',
   trial_period: 'Neue Lizenznehmer erhalten eine kostenlose Testphase. Nach Ablauf muss ein Plan gewählt werden.',
   billing: 'Hier sehen Sie Ihren aktuellen Plan, Ihre Nutzung und können ein Upgrade anfragen.',

@@ -29,7 +29,7 @@ export interface TenantPlanInfo {
   canUseWebhooks: boolean;
   canUseTemplates: boolean;
   canUseEmailTemplates: boolean;
-  canUseAffiliate: boolean;
+  
   canUseActivityLog: boolean;
 }
 
@@ -89,7 +89,7 @@ export function useTenantPlan(): TenantPlanInfo & { loading: boolean } {
     canUseWebhooks: hasPlan && !isSolo,
     canUseTemplates: hasPlan && !isSolo,
     canUseEmailTemplates: hasPlan && !isSolo,
-    canUseAffiliate: hasPlan && !isSolo,
+    
     canUseActivityLog: hasPlan && !isSolo,
   };
 }

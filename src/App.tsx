@@ -35,8 +35,6 @@ import ActivityLog from "./pages/ActivityLog";
 import TeamSettings from "./pages/TeamSettings";
 import WebhookSettings from "./pages/WebhookSettings";
 import ClientRegister from "./pages/ClientRegister";
-import AffiliateSettings from "./pages/AffiliateSettings";
-import AdminAffiliates from "./pages/AdminAffiliates";
 import DocumentPreview from "./pages/DocumentPreview";
 import SecuritySettings from "./pages/SecuritySettings";
 import HelpPage from "./pages/HelpPage";
@@ -191,14 +189,6 @@ const App = () => (
                 }
               />
               <Route
-                path="/admin/affiliates"
-                element={
-                  <ProtectedRoute requiredRoles={['super_admin']}>
-                    <AppLayout><AdminAffiliates /></AppLayout>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
                 path="/admin/blog"
                 element={
                   <ProtectedRoute requiredRoles={['super_admin']}>
@@ -309,14 +299,6 @@ const App = () => (
                 element={
                   <ProtectedRoute requiredRoles={['tenant_admin']}>
                     <AppLayout><TenantSettingsLayout><WebhookSettings /></TenantSettingsLayout></AppLayout>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/settings/affiliate"
-                element={
-                  <ProtectedRoute requiredRoles={['tenant_admin']}>
-                    <AppLayout><TenantSettingsLayout><AffiliateSettings /></TenantSettingsLayout></AppLayout>
                   </ProtectedRoute>
                 }
               />

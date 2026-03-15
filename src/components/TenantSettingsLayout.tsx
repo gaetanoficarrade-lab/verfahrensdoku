@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Settings, Palette, Mail, Users, FileText, Globe, ScrollText, Link2, CreditCard, KeyRound, HelpCircle } from 'lucide-react';
+import { Settings, Palette, Mail, Users, FileText, Globe, ScrollText, CreditCard, KeyRound, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTenantPlan } from '@/hooks/useTenantPlan';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -20,7 +20,7 @@ const allTabs: TabItem[] = [
   { label: 'Vorlagen', url: '/settings/templates', icon: FileText, requiresFn: 'canUseTemplates' },
   { label: 'Webhooks', url: '/settings/webhook', icon: Globe, requiresFn: 'canUseWebhooks' },
   { label: 'Aktivitäts-Log', url: '/settings/activity-log', icon: ScrollText, requiresFn: 'canUseActivityLog' },
-  { label: 'Affiliate', url: '/settings/affiliate', icon: Link2, requiresFn: 'canUseAffiliate' },
+  
   { label: 'Sicherheit', url: '/settings/security', icon: KeyRound },
   { label: 'Hilfe', url: '/help', icon: HelpCircle },
 ];

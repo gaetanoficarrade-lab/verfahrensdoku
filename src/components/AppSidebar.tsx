@@ -10,7 +10,7 @@ import {
   ChevronRight,
   Settings,
   Globe,
-  Link2,
+  
   HelpCircle,
   Eye,
 } from 'lucide-react';
@@ -38,7 +38,7 @@ const adminItems = [
   { title: 'Dashboard', url: '/admin', icon: LayoutDashboard },
   { title: 'Unterkonten', url: '/admin/tenants', icon: Building2 },
   { title: 'Webhook-Protokoll', url: '/admin/webhook-logs', icon: ScrollText },
-  { title: 'Affiliates', url: '/admin/affiliates', icon: Link2 },
+  
   
   { title: 'Einstellungen', url: '/admin/settings/general', icon: Settings },
 ];

@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save, Loader2, Settings, Clock, Link2, Mail, Shield } from 'lucide-react';
+import { Save, Loader2, Settings, Clock, Mail, Shield } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { HelpTooltip } from '@/components/HelpTooltip';
@@ -35,8 +35,6 @@ export default function AdminSettingsGeneral() {
     trial_days: '14',
     session_timeout_minutes: '30',
     session_warning_minutes: '5',
-    affiliate_cookie_days: '30',
-    affiliate_default_commission: '20',
     invite_expiry_days: '7',
   });
 
@@ -48,7 +46,7 @@ export default function AdminSettingsGeneral() {
         supabase.from('plans').select('id, name').order('name'),
         supabase.from('platform_settings').select('key, value').in('key', [
           'trial_enabled', 'trial_days', 'session_timeout_minutes', 'session_warning_minutes',
-          'affiliate_cookie_days', 'affiliate_default_commission', 'invite_expiry_days',
+          'invite_expiry_days',
         ]),
       ]);
 
@@ -104,8 +102,6 @@ export default function AdminSettingsGeneral() {
       trial_days: 'Dauer der Testphase in Tagen',
       session_timeout_minutes: 'Inaktivitäts-Timeout in Minuten',
       session_warning_minutes: 'Warnung vor Logout in Minuten',
-      affiliate_cookie_days: 'Cookie-Laufzeit für Affiliate-Tracking',
-      affiliate_default_commission: 'Standard-Provision in Prozent',
       invite_expiry_days: 'Ablaufzeit für Einladungslinks in Tagen',
     };
     return map[key] || '';
@@ -231,37 +227,6 @@ export default function AdminSettingsGeneral() {
           </CardContent>
         </Card>
 
-        {/* Affiliate Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Link2 className="h-5 w-5" />
-              Affiliate
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label>Cookie-Laufzeit (Tage)</Label>
-              <Input
-                type="number"
-                min={1}
-                max={365}
-                value={platformSettings.affiliate_cookie_days}
-                onChange={(e) => setPlatformSettings(p => ({ ...p, affiliate_cookie_days: e.target.value }))}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Standard-Provision (%)</Label>
-              <Input
-                type="number"
-                min={0}
-                max={100}
-                value={platformSettings.affiliate_default_commission}
-                onChange={(e) => setPlatformSettings(p => ({ ...p, affiliate_default_commission: e.target.value }))}
-              />
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Invitation Settings */}
         <Card>
