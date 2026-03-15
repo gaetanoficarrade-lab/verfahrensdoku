@@ -599,9 +599,12 @@ export default function MarketingPage() {
               <Reveal delay={0.1}>
                 <div className="rounded-[18px] p-8 h-full text-left" style={{ background: C.bgLight }}>
                   <ShieldCheck size={28} style={{ color: C.yellow }} className="mb-4" aria-hidden="true" />
-                  <h3 className="text-xl font-bold mb-3" style={{ color: C.dark }}>GoBD-Konformität garantiert</h3>
-                  <p className="leading-relaxed" style={{ color: C.textGray }}>
-                    Jedes mit GoBD-Suite erstellte Dokument entspricht den aktuellen GoBD-Anforderungen Stand 2025. Wir aktualisieren das Tool automatisch bei Gesetzesänderungen.
+                  <h3 className="text-xl font-bold mb-3" style={{ color: C.dark }}>GoBD-konforme Struktur. Deine Verantwortung.</h3>
+                  <p className="leading-relaxed mb-4" style={{ color: C.textGray }}>
+                    GoBD-Suite erstellt dein Dokument nach der aktuellen GoBD-Struktur Stand 2025. Die inhaltliche Richtigkeit hängt von deinen Angaben ab. Prüfe den generierten Text und passe ihn an deine tatsächlichen Abläufe an – du bist als Unternehmer verantwortlich für den Inhalt deiner Verfahrensdokumentation.
+                  </p>
+                  <p className="text-xs leading-relaxed" style={{ color: C.textGray, opacity: 0.7 }}>
+                    GoBD-Suite übernimmt keine Haftung für die steuerliche Anerkennung deiner Verfahrensdokumentation. Das Tool ersetzt keine steuerliche Beratung.
                   </p>
                 </div>
               </Reveal>
