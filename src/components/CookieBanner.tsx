@@ -1,16 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { Settings2 } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Switch } from '@/components/ui/switch';
 
 export interface CookieConsent {
-  essential: boolean;    // always true
+  necessary: boolean;
   analytics: boolean;
   marketing: boolean;
+  timestamp: string;
 }
 
-const CONSENT_KEY = 'cookie-consent';
+const CONSENT_KEY = 'cookie_consent';
+const EXCLUDED_PATHS = ['/datenschutz', '/impressum', '/agb', '/avv'];
 
 export function getCookieConsent(): CookieConsent | null {
   try {
@@ -24,149 +24,144 @@ export function getCookieConsent(): CookieConsent | null {
 
 export function CookieBanner() {
   const [visible, setVisible] = useState(false);
-  const [showDetails, setShowDetails] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [analytics, setAnalytics] = useState(false);
   const [marketing, setMarketing] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
+    if (EXCLUDED_PATHS.includes(location.pathname)) {
+      setVisible(false);
+      return;
+    }
     const consent = getCookieConsent();
     if (!consent) setVisible(true);
-  }, []);
+  }, [location.pathname]);
 
   const save = useCallback((consent: CookieConsent) => {
     localStorage.setItem(CONSENT_KEY, JSON.stringify(consent));
     setVisible(false);
+    setShowModal(false);
   }, []);
 
-  const acceptAll = () => save({ essential: true, analytics: true, marketing: true });
-  const declineAll = () => save({ essential: true, analytics: false, marketing: false });
-  const saveSelection = () => save({ essential: true, analytics, marketing });
+  const acceptAll = () => save({ necessary: true, analytics: true, marketing: true, timestamp: new Date().toISOString() });
+  const acceptNecessary = () => save({ necessary: true, analytics: false, marketing: false, timestamp: new Date().toISOString() });
+  const saveSelection = () => save({ necessary: true, analytics, marketing, timestamp: new Date().toISOString() });
 
-  return (
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="fixed bottom-0 left-0 right-0 z-[100] p-4 sm:p-6"
-        >
-          <div className="max-w-3xl mx-auto rounded-2xl bg-[#1d1d1f] text-white shadow-2xl shadow-black/20 p-6 sm:p-8">
-            {/* Main text */}
-            <div className="text-sm leading-relaxed text-white/80 mb-4">
-              Wir verwenden Cookies und ähnliche Technologien. Essenzielle Cookies sind für den Betrieb der Website
-              erforderlich und können nicht deaktiviert werden. Optionale Cookies helfen uns, die Website zu
-              verbessern und Inhalte anzupassen. Du kannst deine Einstellungen jederzeit anpassen.{' '}
-              <Link to="/datenschutz" className="underline text-[#e8a91a] hover:text-[#f5c842]">
-                Datenschutzerklärung
-              </Link>
+  if (!visible && !showModal) return null;
+
+  /* ─── Settings Modal ─── */
+  if (showModal) {
+    return (
+      <div className="fixed inset-0 z-[110] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
+        <div className="w-full max-w-lg rounded-2xl p-8" style={{ background: '#44484E', color: '#FFFFFF' }}>
+          <h2 className="text-xl font-bold mb-6">Cookie-Einstellungen</h2>
+
+          <div className="space-y-6 mb-8">
+            {/* Necessary */}
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-semibold text-sm">Notwendige Cookies</span>
+                  <span className="text-[10px] uppercase tracking-wider opacity-50">Immer aktiv</span>
+                </div>
+                <p className="text-xs leading-relaxed opacity-70">
+                  Für Login, Session und grundlegende Funktionen der Website. Können nicht deaktiviert werden.
+                </p>
+              </div>
+              <Switch checked disabled className="opacity-50 data-[state=checked]:bg-[#FAC81E]" />
             </div>
 
-            {/* Details toggle */}
-            <AnimatePresence>
-              {showDetails && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className="overflow-hidden"
-                >
-                  <div className="border-t border-white/10 pt-4 mb-4 space-y-3 text-sm">
-                    {/* Essential */}
-                    <label className="flex items-start gap-3 cursor-not-allowed">
-                      <input type="checkbox" checked disabled className="mt-0.5 accent-[#e8a91a]" />
-                      <div>
-                        <span className="font-medium text-white">Essenziell</span>
-                        <span className="ml-2 text-[10px] text-white/40 uppercase tracking-wider">Immer aktiv</span>
-                        <p className="text-white/50 text-xs mt-0.5">
-                          Authentifizierung, Sitzungsverwaltung, Cookie-Einstellungen. Ohne diese Cookies
-                          kann die Website nicht funktionieren.
-                        </p>
-                      </div>
-                    </label>
+            {/* Analytics */}
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <span className="font-semibold text-sm block mb-1">Analyse-Cookies</span>
+                <p className="text-xs leading-relaxed opacity-70">
+                  Helfen uns zu verstehen wie Besucher die Website nutzen. Wir nutzen aktuell keine Analyse-Tools.
+                </p>
+              </div>
+              <Switch checked={analytics} onCheckedChange={setAnalytics} className="data-[state=checked]:bg-[#FAC81E]" />
+            </div>
 
-                    {/* Analytics */}
-                    <label className="flex items-start gap-3 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={analytics}
-                        onChange={(e) => setAnalytics(e.target.checked)}
-                        className="mt-0.5 accent-[#e8a91a]"
-                      />
-                      <div>
-                        <span className="font-medium text-white">Analyse</span>
-                        <p className="text-white/50 text-xs mt-0.5">
-                          Helfen uns zu verstehen, wie Besucher die Website nutzen (z.&nbsp;B. besuchte Seiten,
-                          Verweildauer). Alle Daten werden anonymisiert erhoben.
-                        </p>
-                      </div>
-                    </label>
-
-                    {/* Marketing */}
-                    <label className="flex items-start gap-3 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={marketing}
-                        onChange={(e) => setMarketing(e.target.checked)}
-                        className="mt-0.5 accent-[#e8a91a]"
-                      />
-                      <div>
-                        <span className="font-medium text-white">Marketing</span>
-                        <p className="text-white/50 text-xs mt-0.5">
-                          Werden verwendet, um Werbung relevanter zu gestalten und die Wirksamkeit von
-                          Kampagnen zu messen (z.&nbsp;B. HighLevel, externe Tracking-Pixel).
-                        </p>
-                      </div>
-                    </label>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <Button
-                onClick={() => setShowDetails(!showDetails)}
-                variant="ghost"
-                className="text-white/60 hover:text-white hover:bg-white/10 rounded-full px-5 h-10 text-sm gap-2"
-              >
-                <Settings2 className="h-4 w-4" />
-                {showDetails ? 'Weniger anzeigen' : 'Einstellungen'}
-              </Button>
-              <div className="flex-1" />
-              {showDetails ? (
-                <Button
-                  onClick={saveSelection}
-                  className="bg-white/10 hover:bg-white/20 text-white rounded-full px-6 h-10 text-sm font-semibold"
-                >
-                  Auswahl speichern
-                </Button>
-              ) : (
-                <Button
-                  onClick={declineAll}
-                  variant="ghost"
-                  className="text-white/60 hover:text-white hover:bg-white/10 rounded-full px-5 h-10 text-sm"
-                >
-                  Nur essenzielle
-                </Button>
-              )}
-              <Button
-                onClick={acceptAll}
-                className="bg-[#e8a91a] hover:bg-[#d49b15] text-white rounded-full px-6 h-10 text-sm font-semibold"
-              >
-                Alle akzeptieren
-              </Button>
+            {/* Marketing */}
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <span className="font-semibold text-sm block mb-1">Marketing-Cookies</span>
+                <p className="text-xs leading-relaxed opacity-70">
+                  Für personalisierte Werbung und Retargeting. Wir nutzen aktuell keine Marketing-Cookies.
+                </p>
+              </div>
+              <Switch checked={marketing} onCheckedChange={setMarketing} className="data-[state=checked]:bg-[#FAC81E]" />
             </div>
           </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={() => setShowModal(false)}
+              className="text-sm opacity-70 hover:opacity-100 transition-opacity"
+            >
+              Abbrechen
+            </button>
+            <div className="flex-1" />
+            <button
+              onClick={saveSelection}
+              className="inline-flex items-center justify-center font-semibold text-sm transition-all duration-200 rounded-full px-6 py-2.5"
+              style={{ background: '#FAC81E', color: '#44484E' }}
+            >
+              Auswahl speichern
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ─── Banner ─── */
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-[100]" style={{ background: '#44484E' }}>
+      <div className="max-w-6xl mx-auto px-6 sm:px-10 py-5 flex flex-col md:flex-row items-start md:items-center gap-5">
+        {/* Text */}
+        <div className="flex-1 text-white">
+          <p className="font-semibold text-sm mb-1">Wir verwenden Cookies</p>
+          <p className="text-xs leading-relaxed opacity-80">
+            Wir nutzen technisch notwendige Cookies für den Betrieb dieser Website. Analyse- oder
+            Tracking-Cookies setzen wir nur mit deiner ausdrücklichen Zustimmung ein.
+            {' '}
+            <Link to="/datenschutz" className="underline hover:opacity-100 opacity-80 transition-opacity">
+              Mehr Informationen in unserer Datenschutzerklärung
+            </Link>
+          </p>
+        </div>
+
+        {/* Buttons */}
+        <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <button
+            onClick={() => setShowModal(true)}
+            className="text-white text-sm underline opacity-70 hover:opacity-100 transition-opacity"
+          >
+            Einstellungen
+          </button>
+          <button
+            onClick={acceptNecessary}
+            className="inline-flex items-center justify-center font-semibold text-sm rounded-full px-5 py-2.5 transition-all duration-200"
+            style={{ border: '1px solid rgba(255,255,255,0.4)', color: '#FFFFFF', background: 'transparent' }}
+          >
+            Nur notwendige
+          </button>
+          <button
+            onClick={acceptAll}
+            className="inline-flex items-center justify-center font-semibold text-sm rounded-full px-5 py-2.5 transition-all duration-200"
+            style={{ background: '#FAC81E', color: '#44484E' }}
+          >
+            Alle akzeptieren
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
-/** Small button to re-open cookie settings – place in footer */
+/** Footer link to re-open cookie settings */
 export function CookieSettingsButton() {
   const reopen = () => {
     localStorage.removeItem(CONSENT_KEY);
@@ -176,7 +171,7 @@ export function CookieSettingsButton() {
   return (
     <button
       onClick={reopen}
-      className="hover:text-[#1d1d1f] transition-colors"
+      className="hover:text-white transition-colors"
     >
       Cookie-Einstellungen
     </button>

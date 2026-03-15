@@ -15,10 +15,10 @@ export default function Impressum() {
     <div className="min-h-screen bg-white text-[#1d1d1f] antialiased">
       <nav className="border-b border-[#e5e5e5]">
         <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/landing">
-            <img src={landingLogo} alt="gobdsuite" className="h-10 object-contain" />
+          <Link to="/">
+            <img src={landingLogo} alt="GoBD-Suite Logo" className="h-10 object-contain" />
           </Link>
-          <Link to="/landing" className="text-sm text-[#86868b] hover:text-[#1d1d1f] flex items-center gap-1">
+          <Link to="/" className="text-sm text-[#86868b] hover:text-[#1d1d1f] flex items-center gap-1">
             <ArrowLeft className="h-4 w-4" /> Zurück
           </Link>
         </div>
@@ -33,7 +33,8 @@ export default function Impressum() {
             <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Angaben gemäß § 5 TMG</h2>
             <p>
               Gaetano Ficarra<br />
-              Marketing-Systemberater für Selbstständige
+              Marketing-Systemberater für Selbstständige<br />
+              gaetanoficarra.de
             </p>
           </section>
 
@@ -49,8 +50,8 @@ export default function Impressum() {
           <section>
             <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Kontakt</h2>
             <p>
-              WhatsApp: 0152 23856537<br />
-              E-Mail: kontakt@gaetanoficarra.de
+              E-Mail: kontakt@gaetanoficarra.de<br />
+              WhatsApp: 0152 23856537
             </p>
           </section>
 
@@ -63,7 +64,17 @@ export default function Impressum() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Streitschlichtung</h2>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Verantwortlich für den Inhalt</h2>
+            <p>
+              Verantwortlich für den Inhalt gemäß § 55 Abs. 2 RStV:<br />
+              Gaetano Ficarra<br />
+              Elverdisser Str. 51<br />
+              33729 Bielefeld
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">EU-Streitschlichtung</h2>
             <p>
               Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{' '}
               <a
@@ -88,6 +99,33 @@ export default function Impressum() {
               allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht
               verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen
               zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Haftung für Links</h2>
+            <p>
+              Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben.
+              Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der
+              verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Urheberrecht</h2>
+            <p>
+              Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen
+              Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet. Die Vervielfältigung, Bearbeitung,
+              Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der
+              schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Hinweis zur Zielgruppe</h2>
+            <p>
+              Dieses Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB. 
+              Ein Widerrufsrecht für Verbraucher besteht nicht.
             </p>
           </section>
         </div>

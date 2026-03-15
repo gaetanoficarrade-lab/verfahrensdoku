@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo, type ReactNode } from 'react';
+import { CookieBanner, CookieSettingsButton } from '@/components/CookieBanner';
 import mockupDashboard from '@/assets/mockup-dashboard.png';
 import mockupEditor from '@/assets/mockup-editor.png';
 import mockupPdf from '@/assets/mockup-pdf.png';
@@ -694,6 +695,11 @@ export default function MarketingPage() {
                 </Reveal>
               ))}
             </div>
+            <Reveal delay={0.3}>
+              <p className="text-center text-xs mt-8" style={{ color: C.textGray, opacity: 0.7 }}>
+                * Die dargestellten Ergebnisse können variieren. Individuelle Ergebnisse hängen von verschiedenen Faktoren ab.
+              </p>
+            </Reveal>
           </div>
         </section>
 
@@ -728,6 +734,9 @@ export default function MarketingPage() {
             </div>
             <Reveal delay={0.3}>
               <p className="text-center mt-10 text-sm" style={{ color: C.textGray }}>Alle Pläne mit 7 Tagen kostenlosem Test · Keine Kreditkarte für den Test nötig</p>
+              <p className="text-center mt-2 text-xs" style={{ color: C.textGray, opacity: 0.7 }}>
+                Alle Preise zzgl. gesetzlich gültiger MwSt. · Dieses Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
+              </p>
               <p className="text-center mt-2">
                 <Link to="/test-starten" className="text-sm font-semibold hover:opacity-70 transition-opacity" style={{ color: C.dark }}>→ Kostenlos testen</Link>
               </p>
@@ -836,6 +845,7 @@ export default function MarketingPage() {
               <li><Link to="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link></li>
               <li><Link to="/agb" className="hover:text-white transition-colors">AGB</Link></li>
               <li><Link to="/avv" className="hover:text-white transition-colors">AVV</Link></li>
+              <li><CookieSettingsButton /></li>
             </ul>
           </div>
           <div>
@@ -847,6 +857,8 @@ export default function MarketingPage() {
           © {new Date().getFullYear()} GoBD-Suite · Alle Rechte vorbehalten
         </div>
       </footer>
+
+      <CookieBanner />
     </div>
   );
 }
