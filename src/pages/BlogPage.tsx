@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useSEO } from '@/hooks/useSEO';
 import MarketingNav from '@/components/MarketingNav';
-import { seedBlogArticleVD2025 } from '@/lib/seedBlogArticle';
+import { seedBlogArticleVD2025, SEEDED_BLOG_ARTICLES } from '@/lib/seedBlogArticle';
 
 const C = {
   yellow: '#FAC81E', dark: '#44484E', white: '#FFFFFF',

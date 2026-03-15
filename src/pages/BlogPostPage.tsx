@@ -4,7 +4,7 @@ import { Calendar, Clock, ArrowLeft, ArrowRight, User } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSEO } from '@/hooks/useSEO';
 import MarketingNav from '@/components/MarketingNav';
-import { CookieBanner } from '@/components/CookieBanner';
+import { seedBlogArticleVD2025, SEEDED_BLOG_ARTICLES } from '@/lib/seedBlogArticle';
 
 const C = {
   yellow: '#FAC81E', dark: '#44484E', white: '#FFFFFF',
