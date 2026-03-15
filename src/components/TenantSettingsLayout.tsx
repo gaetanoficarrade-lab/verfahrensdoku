@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Settings, Palette, Mail, Users, FileText, Globe, ScrollText, Link2, CreditCard, KeyRound, HelpCircle } from 'lucide-react';
+import { Settings, Palette, Mail, Users, FileText, Globe, ScrollText, CreditCard, KeyRound, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTenantPlan } from '@/hooks/useTenantPlan';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
