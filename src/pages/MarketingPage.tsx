@@ -101,7 +101,7 @@ function PriceCard({ name, price, unit, sub, features, highlighted = false }: {
 }) {
   return (
     <div
-      className={`rounded-[18px] p-8 flex flex-col h-full relative ${highlighted ? 'md:-mt-4 md:mb-4' : ''}`}
+      className="rounded-[18px] p-8 flex flex-col h-full relative"
       style={{
         background: C.white,
         boxShadow: highlighted ? '0 4px 32px rgba(0,0,0,0.10)' : '0 2px 16px rgba(0,0,0,0.06)',
@@ -545,7 +545,7 @@ export default function MarketingPage() {
             <Reveal>
               <h2 id="pricing-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>Transparent. Fair. Skalierbar.</h2>
             </Reveal>
-            <div className="grid md:grid-cols-3 gap-6 items-end">
+            <div className="grid md:grid-cols-3 gap-6 items-stretch">
               <Reveal>
                 <PriceCard name="Solo" price="980 €" unit="einmalig" sub="12 Monate Zugang · Renewal 199 €/Jahr" features={[
                   { text: '1 Mandant (du selbst)', ok: true }, { text: 'Alle 30 Kapitel', ok: true }, { text: 'KI-Unterstützung', ok: true },
