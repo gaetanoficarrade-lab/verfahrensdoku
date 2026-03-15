@@ -258,7 +258,7 @@ export default function MarketingPage() {
                   </SecondaryBtn>
                 </div>
                 <p className="mt-4 text-sm font-semibold" style={{ color: C.green }}>
-                  ✅ 30 Tage Zufriedenheitsgarantie – kein Risiko
+                  30 Tage Zufriedenheitsgarantie – kein Risiko
                 </p>
               </Reveal>
               <Reveal delay={0.3}>
