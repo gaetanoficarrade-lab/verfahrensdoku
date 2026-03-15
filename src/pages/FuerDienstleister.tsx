@@ -105,7 +105,7 @@ export default function FuerDienstleister() {
   useSEO({
     title: 'Verfahrensdokumentation als Dienstleistung anbieten – GoBD-Suite für Berater & Agenturen',
     description: 'Biete deinen Mandanten GoBD-konforme Verfahrensdokumentationen an. Mit GoBD-Suite als Berater oder Agentur neue Einnahmen generieren. Whitelabel inklusive.',
-    canonical: 'https://vd.gaetanoficarra.de/fuer-dienstleister',
+    canonical: 'https://gobd-suite.de/fuer-dienstleister',
     keywords: 'Verfahrensdokumentation Dienstleister, GoBD Berater, Verfahrensdokumentation Whitelabel, GoBD-Suite Agentur',
     author: 'Gaetano Ficarra', robots: 'index, follow',
     ogTitle: 'GoBD-Suite für Berater & Agenturen – Verfahrensdokumentation als Dienstleistung',
