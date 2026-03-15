@@ -59,6 +59,7 @@ import AGB from "./pages/AGB";
 import AVV from "./pages/AVV";
 import FuerSelbststaendige from "./pages/FuerSelbststaendige";
 import FuerDienstleister from "./pages/FuerDienstleister";
+import VerfahrensdokumentationErstellen from "./pages/VerfahrensdokumentationErstellen";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -87,6 +88,7 @@ const App = () => (
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/fuer-selbststaendige" element={<FuerSelbststaendige />} />
               <Route path="/fuer-dienstleister" element={<FuerDienstleister />} />
+              <Route path="/verfahrensdokumentation-erstellen" element={<VerfahrensdokumentationErstellen />} />
               <Route path="/blog/:slug" element={<BlogPostPage />} />
 
               {/* Protected routes with layout */}
