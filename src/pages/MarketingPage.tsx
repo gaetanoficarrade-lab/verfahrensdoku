@@ -336,7 +336,7 @@ export default function MarketingPage() {
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
       "description": "Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt und GoBD-konform.",
-      "url": "https://vd.gaetanoficarra.de",
+      "url": "https://gobd-suite.de",
       "offers": [
         { "@type": "Offer", "name": "Solo", "price": "980", "priceCurrency": "EUR", "priceSpecification": { "@type": "UnitPriceSpecification", "billingDuration": "P1Y" } },
         { "@type": "Offer", "name": "Berater", "price": "399", "priceCurrency": "EUR", "priceSpecification": { "@type": "UnitPriceSpecification", "billingDuration": "P1M" } },
