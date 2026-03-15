@@ -168,6 +168,7 @@ export default function VerfahrensdokumentationErstellen() {
 
   return (
     <div className="font-sans" style={{ color: C.dark }}>
+      <SocialProofNotification />
       <MarketingNav />
 
       <main>
