@@ -20,7 +20,7 @@ const allTabs: TabItem[] = [
   { label: 'Vorlagen', url: '/settings/templates', icon: FileText, requiresFn: 'canUseTemplates' },
   { label: 'Webhooks', url: '/settings/webhook', icon: Globe, requiresFn: 'canUseWebhooks' },
   { label: 'Aktivitäts-Log', url: '/settings/activity-log', icon: ScrollText, requiresFn: 'canUseActivityLog' },
-  { label: 'Affiliate', url: '/settings/affiliate', icon: Link2, requiresFn: 'canUseAffiliate' },
+  
   { label: 'Sicherheit', url: '/settings/security', icon: KeyRound },
   { label: 'Hilfe', url: '/help', icon: HelpCircle },
 ];

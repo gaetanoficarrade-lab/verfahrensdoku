@@ -10,7 +10,7 @@ import {
   ChevronRight,
   Settings,
   Globe,
-  Link2,
+  
   HelpCircle,
   Eye,
 } from 'lucide-react';

@@ -102,8 +102,6 @@ export default function AdminSettingsGeneral() {
       trial_days: 'Dauer der Testphase in Tagen',
       session_timeout_minutes: 'Inaktivitäts-Timeout in Minuten',
       session_warning_minutes: 'Warnung vor Logout in Minuten',
-      affiliate_cookie_days: 'Cookie-Laufzeit für Affiliate-Tracking',
-      affiliate_default_commission: 'Standard-Provision in Prozent',
       invite_expiry_days: 'Ablaufzeit für Einladungslinks in Tagen',
     };
     return map[key] || '';

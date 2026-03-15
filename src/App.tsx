@@ -303,14 +303,6 @@ const App = () => (
                 }
               />
               <Route
-                path="/settings/affiliate"
-                element={
-                  <ProtectedRoute requiredRoles={['tenant_admin']}>
-                    <AppLayout><TenantSettingsLayout><AffiliateSettings /></TenantSettingsLayout></AppLayout>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
                 path="/settings/security"
                 element={
                   <ProtectedRoute>

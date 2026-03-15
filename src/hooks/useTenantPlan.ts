@@ -89,7 +89,7 @@ export function useTenantPlan(): TenantPlanInfo & { loading: boolean } {
     canUseWebhooks: hasPlan && !isSolo,
     canUseTemplates: hasPlan && !isSolo,
     canUseEmailTemplates: hasPlan && !isSolo,
-    canUseAffiliate: hasPlan && !isSolo,
+    
     canUseActivityLog: hasPlan && !isSolo,
   };
 }
