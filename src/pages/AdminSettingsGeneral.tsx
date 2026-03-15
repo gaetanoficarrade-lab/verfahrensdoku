@@ -35,8 +35,6 @@ export default function AdminSettingsGeneral() {
     trial_days: '14',
     session_timeout_minutes: '30',
     session_warning_minutes: '5',
-    affiliate_cookie_days: '30',
-    affiliate_default_commission: '20',
     invite_expiry_days: '7',
   });
 
