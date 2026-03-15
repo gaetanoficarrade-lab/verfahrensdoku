@@ -311,6 +311,57 @@ function MarkdownRenderer({ content }: { content: string }) {
       continue;
     }
 
+    // Table (lines starting with |)
+    if (line.startsWith('|')) {
+      const tableLines: string[] = [];
+      while (i < lines.length && lines[i].startsWith('|')) {
+        tableLines.push(lines[i]);
+        i++;
+      }
+      // Parse: first line = header, second = separator, rest = body
+      const parseRow = (row: string) => row.split('|').slice(1, -1).map(c => c.trim());
+      const headerCells = parseRow(tableLines[0]);
+      const bodyRows = tableLines.slice(2).map(parseRow);
+      elements.push(
+        <div key={key++} className="overflow-x-auto my-8 rounded-[12px]" style={{ border: `1px solid ${C.border}` }}>
+          <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ background: C.bgLight }}>
+                {headerCells.map((c, j) => (
+                  <th key={j} className="text-left px-4 py-3 font-semibold" style={{ color: C.dark, borderBottom: `1px solid ${C.border}` }}>{formatInline(c)}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {bodyRows.map((row, ri) => (
+                <tr key={ri} style={{ borderBottom: ri < bodyRows.length - 1 ? `1px solid ${C.border}` : undefined }}>
+                  {row.map((c, ci) => (
+                    <td key={ci} className="px-4 py-3" style={{ color: ci === 0 ? C.dark : C.textGray, fontWeight: ci === 0 ? 500 : 400 }}>{formatInline(c)}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+      continue;
+    }
+
+    // Ordered list
+    if (/^\d+\.\s/.test(line)) {
+      const items: string[] = [];
+      while (i < lines.length && /^\d+\.\s/.test(lines[i])) {
+        items.push(lines[i].replace(/^\d+\.\s/, ''));
+        i++;
+      }
+      elements.push(
+        <ol key={key++} style={{ listStyleType: 'decimal', paddingLeft: 24, margin: '16px 0', color: C.textGray, fontSize: 18, lineHeight: 1.8 }}>
+          {items.map((item, j) => <li key={j} style={{ marginBottom: 4 }}>{formatInline(item)}</li>)}
+        </ol>
+      );
+      continue;
+    }
+
     // Unordered list
     if (line.startsWith('- ')) {
       const items: string[] = [];
