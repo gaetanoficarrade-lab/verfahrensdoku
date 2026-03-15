@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, type ReactNode } from 'react';
+import productSolution from '@/assets/product-solution.png';
 import { Link } from 'react-router-dom';
 import {
   AlertTriangle, Euro, Clock, Check, X, ChevronDown, ChevronUp,
@@ -180,8 +181,8 @@ export default function MarketingPage() {
         style={{ height: 64, background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderBottom: `1px solid ${C.border}` }}
         aria-label="Hauptnavigation"
       >
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl" style={{ color: C.dark }}>
-          <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-8" width={32} height={32} />
+        <Link to="/" className="flex items-center gap-2 font-bold text-xl shrink-0" style={{ color: C.dark }}>
+          <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-7 w-auto" />
         </Link>
         <div className="hidden md:flex items-center gap-8 text-[15px] font-medium" style={{ color: C.dark }}>
           <a href="#funktionen" className="hover:opacity-70 transition-opacity">Funktionen</a>
@@ -283,8 +284,8 @@ export default function MarketingPage() {
             <Reveal>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.1em] mb-4" style={{ color: C.yellow }}>Die Lösung</p>
-                <h2 id="solution-headline" className="text-3xl md:text-[52px] font-bold leading-[1.1] mb-6" style={{ color: C.dark }}>
-                  Deine Verfahrensdokumentation. Fertig. Rechtssicher. In deiner Sprache.
+                <h2 id="solution-headline" className="text-3xl md:text-[44px] lg:text-[52px] font-bold leading-[1.1] mb-6 break-words hyphens-auto" lang="de" style={{ color: C.dark }}>
+                  Deine Verfahrens&shy;dokumentation. Fertig. Rechtssicher. In deiner Sprache.
                 </h2>
                 <p className="leading-relaxed mb-8" style={{ color: C.textGray }}>
                   GoBD-Suite ist das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. Du beantwortest Fragen wie in einem Gespräch – die KI erstellt daraus das fertige, GoBD-konforme Dokument. Kein Juristendeutsch. Kein Steuerberater nötig.
@@ -304,8 +305,8 @@ export default function MarketingPage() {
               </div>
             </Reveal>
             <Reveal delay={0.2}>
-              <div className="rounded-2xl flex items-center justify-center aspect-[4/3]" style={{ background: '#E8E8ED', border: `1px solid ${C.border}` }}>
-                <span className="text-lg font-medium" style={{ color: C.textGray }}>App Screenshot</span>
+              <div className="rounded-2xl overflow-hidden" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.12)' }}>
+                <img src={productSolution} alt="GoBD-Suite Kapitel-Editor mit Sidebar und KI-gestütztem Texteditor" className="w-full h-auto" loading="lazy" />
               </div>
             </Reveal>
           </div>
@@ -438,15 +439,15 @@ export default function MarketingPage() {
                 ]} />
               </Reveal>
               <Reveal delay={0.1}>
-                <PriceCard name="Berater" price="399 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" highlighted features={[
-                  { text: 'Bis zu 5 Mandanten', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
-                  { text: 'Mandanten-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
+                <PriceCard name="Agentur" price="799 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" highlighted features={[
+                  { text: 'Unbegrenzte Mandanten', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
+                  { text: 'Alle Berater-Features', ok: true }, { text: 'Prioritäts-Support', ok: true }, { text: 'Upgrade ohne erneute Setup Fee', ok: true },
                 ]} />
               </Reveal>
               <Reveal delay={0.2}>
-                <PriceCard name="Agentur" price="799 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" features={[
-                  { text: 'Unbegrenzte Mandanten', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
-                  { text: 'Alle Berater-Features', ok: true }, { text: 'Prioritäts-Support', ok: true }, { text: 'Upgrade ohne erneute Setup Fee', ok: true },
+                <PriceCard name="Berater" price="399 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" features={[
+                  { text: 'Bis zu 5 Mandanten', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
+                  { text: 'Mandanten-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
                 ]} />
               </Reveal>
             </div>
@@ -475,7 +476,7 @@ export default function MarketingPage() {
       <footer className="py-16 px-6" style={{ background: C.dark, color: 'rgba(255,255,255,0.7)' }}>
         <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-8 mb-4 brightness-0 invert" width={32} height={32} loading="lazy" />
+            <img src="/images/logo.png" alt="GoBD-Suite Logo" className="h-7 w-auto mb-4" style={{ filter: 'brightness(0) invert(1)' }} loading="lazy" />
             <p className="text-sm leading-relaxed">Die erste vollständige Verfahrensdokumentations-Lösung für Selbstständige und Dienstleister im DACH-Raum.</p>
           </div>
           <div>
@@ -502,7 +503,7 @@ export default function MarketingPage() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto mt-12 pt-8 text-center text-xs" style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>
-          © 2025 GoBD-Suite · Alle Rechte vorbehalten
+          © {new Date().getFullYear()} GoBD-Suite · Alle Rechte vorbehalten
         </div>
       </footer>
     </div>
