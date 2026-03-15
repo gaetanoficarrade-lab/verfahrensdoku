@@ -958,7 +958,7 @@ export const SEEDED_BLOG_ARTICLES: SeededBlogArticle[] = [
     content: ARTICLE_3_CONTENT,
     published: true,
     published_at: '2026-03-13T09:00:00.000Z',
-    cover_image_url: null,
+    cover_image_url: '/images/blog-betriebspruefung.png',
   },
   {
     slug: 'verfahrensdokumentation-als-dienstleistung-anbieten',
