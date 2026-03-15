@@ -82,6 +82,8 @@ const App = () => (
               <Route path="/set-password" element={<SetPassword />} />
               <Route path="/client-register" element={<ClientRegister />} />
               <Route path="/test-starten" element={<TestStarten />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogPostPage />} />
 
               {/* Protected routes with layout */}
               <Route
