@@ -734,6 +734,9 @@ export default function MarketingPage() {
             </div>
             <Reveal delay={0.3}>
               <p className="text-center mt-10 text-sm" style={{ color: C.textGray }}>Alle Pläne mit 7 Tagen kostenlosem Test · Keine Kreditkarte für den Test nötig</p>
+              <p className="text-center mt-2 text-xs" style={{ color: C.textGray, opacity: 0.7 }}>
+                Alle Preise zzgl. gesetzlich gültiger MwSt. · Dieses Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
+              </p>
               <p className="text-center mt-2">
                 <Link to="/test-starten" className="text-sm font-semibold hover:opacity-70 transition-opacity" style={{ color: C.dark }}>→ Kostenlos testen</Link>
               </p>
