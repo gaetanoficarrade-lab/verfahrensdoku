@@ -786,36 +786,10 @@ export default function MarketingPage() {
         <section id="preise" style={{ background: `linear-gradient(180deg, ${C.bgLight} 0%, ${C.white} 50%, ${C.bgLight} 100%)` }} className="py-20 md:py-28 px-6" aria-labelledby="pricing-headline">
           <div className="max-w-6xl mx-auto">
             <Reveal>
-              <h2 id="pricing-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>Transparent. Fair. Skalierbar.</h2>
+              <h2 id="pricing-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-10" style={{ color: C.dark }}>Transparent. Fair. Skalierbar.</h2>
             </Reveal>
-            <div className="grid md:grid-cols-3 gap-6 items-stretch">
-              <Reveal>
-                <PriceCard name="Solo" price="980 €" unit="einmalig" sub="12 Monate Zugang · Renewal 199 €/Jahr" features={[
-                  { text: '1 Mandant (du selbst)', ok: true }, { text: 'Alle 30 Kapitel', ok: true }, { text: 'KI-Unterstützung', ok: true },
-                  { text: 'Unbegrenzte Revisionen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false }, { text: 'Kein Berater-Portal', ok: false },
-                ]} />
-              </Reveal>
-              <Reveal delay={0.1}>
-                <PriceCard name="Agentur" price="799 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" highlighted features={[
-                  { text: 'Unbegrenzte Mandanten', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
-                  { text: 'Alle Berater-Features', ok: true }, { text: 'Prioritäts-Support', ok: true }, { text: 'Upgrade ohne erneute Setup Fee', ok: true },
-                ]} />
-              </Reveal>
-              <Reveal delay={0.2}>
-                <PriceCard name="Berater" price="399 €" unit="/Monat" sub="zzgl. 590 € Setup Fee · Jederzeit kündbar" features={[
-                  { text: 'Bis zu 5 Mandanten', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
-                  { text: 'Mandanten-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
-                ]} />
-              </Reveal>
-            </div>
-            <Reveal delay={0.3}>
-              <p className="text-center mt-10 text-sm" style={{ color: C.textGray }}>Alle Pläne mit 7 Tagen kostenlosem Test · Keine Kreditkarte für den Test nötig</p>
-              <p className="text-center mt-2 text-xs" style={{ color: C.textGray, opacity: 0.7 }}>
-                Alle Preise zzgl. gesetzlich gültiger MwSt. · Dieses Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
-              </p>
-              <p className="text-center mt-2">
-                <Link to="/test-starten" className="text-sm font-semibold hover:opacity-70 transition-opacity" style={{ color: C.dark }}>→ Kostenlos testen</Link>
-              </p>
+            <Reveal delay={0.1}>
+              <PricingToggleSection />
             </Reveal>
           </div>
         </section>
