@@ -449,7 +449,7 @@ Das bedeutet: Wenn der Prüfer jetzt kommt und du keine Verfahrensdokumentation 
 
 Die Mängel für den Prüfungszeitraum bestehen – unabhängig davon was du danach tust.
 
-Eine VD schützt dich nur wenn sie vor der Prüfung existiert und aktuell ist.
+Eine Verfahrensdokumentation schützt dich nur wenn sie vor der Prüfung existiert und aktuell ist.
 
 **Rechtsgrundlage:** [§ 193 AO – Zulässigkeit der Außenprüfung](https://www.gesetze-im-internet.de/ao_1977/__193.html)
 
