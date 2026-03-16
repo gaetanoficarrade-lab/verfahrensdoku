@@ -22,10 +22,9 @@ interface PlanCardProps {
   checkoutUrl: string;
   currentPlan?: string | null;
   isAnnual?: boolean;
-  isDowngrade?: boolean;
 }
 
-function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, highlighted, checkoutUrl, currentPlan, isAnnual, isDowngrade }: PlanCardProps) {
+function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, highlighted, checkoutUrl, currentPlan, isAnnual }: PlanCardProps) {
   const isCurrent = currentPlan?.toLowerCase() === name.toLowerCase();
 
   return (
@@ -65,10 +64,6 @@ function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, h
             <Crown className="h-4 w-4 mr-2" />
             Aktueller Plan
           </Button>
-        ) : isDowngrade ? (
-          <Button variant="outline" disabled className="w-full opacity-50">
-            Downgrade nicht möglich
-          </Button>
         ) : checkoutUrl ? (
           <Button
             className="w-full"
@@ -101,6 +96,7 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
   ]);
 
   const currentLevel = currentPlan ? (PLAN_HIERARCHY[currentPlan.toLowerCase()] || 0) : 0;
+  const visibleCount = [PLAN_HIERARCHY.solo, PLAN_HIERARCHY.berater, PLAN_HIERARCHY.agentur].filter(level => currentLevel <= level).length;
 
   const checkoutUrls = {
     solo: settings['funnelpay_checkout_solo'] || 'https://funnelpay.de/checkout/GoBD-Suite Solo Plan',
@@ -133,43 +129,45 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <PlanCard
-          name="Solo"
-          price="980€"
-          priceNote="einmalig"
-          features={[
-            '1 Mandant',
-            'Unbegrenzte Revisionen',
-            'KI-Textgenerierung',
-            'PDF-Export',
-            '12 Monate Laufzeit',
-            'Renewal: 199€/Jahr',
-          ]}
-          checkoutUrl={checkoutUrls.solo}
-          currentPlan={currentPlan}
-          isDowngrade={currentLevel > PLAN_HIERARCHY.solo}
-        />
-        <PlanCard
-          name="Berater"
-          price={annual ? '332€' : '399€'}
-          originalPrice={annual ? '399€' : undefined}
-          priceNote="/Monat"
-          setupFee="590€"
-          highlighted
-          isAnnual={annual}
-          features={[
-            'Bis zu 5 Mandanten',
-            'Berater-Portal',
-            'Team-Verwaltung',
-            'Webhooks & Vorlagen',
-            'E-Mail-Vorlagen',
-            'Aktivitäts-Log',
-          ]}
-          checkoutUrl={checkoutUrls.berater}
-          currentPlan={currentPlan}
-          isDowngrade={currentLevel > PLAN_HIERARCHY.berater}
-        />
+      <div className={`grid gap-6 ${visibleCount === 1 ? 'max-w-md mx-auto' : visibleCount === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : 'md:grid-cols-3'}`}>
+        {currentLevel <= PLAN_HIERARCHY.solo && (
+          <PlanCard
+            name="Solo"
+            price="980€"
+            priceNote="einmalig"
+            features={[
+              '1 Mandant',
+              'Unbegrenzte Revisionen',
+              'KI-Textgenerierung',
+              'PDF-Export',
+              '12 Monate Laufzeit',
+              'Renewal: 199€/Jahr',
+            ]}
+            checkoutUrl={checkoutUrls.solo}
+            currentPlan={currentPlan}
+          />
+        )}
+        {currentLevel <= PLAN_HIERARCHY.berater && (
+          <PlanCard
+            name="Berater"
+            price={annual ? '332€' : '399€'}
+            originalPrice={annual ? '399€' : undefined}
+            priceNote="/Monat"
+            setupFee="590€"
+            highlighted
+            isAnnual={annual}
+            features={[
+              'Bis zu 5 Mandanten',
+              'Berater-Portal',
+              'Team-Verwaltung',
+              'Webhooks & Vorlagen',
+              'E-Mail-Vorlagen',
+              'Aktivitäts-Log',
+            ]}
+            checkoutUrl={checkoutUrls.berater}
+            currentPlan={currentPlan}
+          />
+        )}
         <PlanCard
           name="Agentur"
           price={annual ? '665€' : '799€'}
