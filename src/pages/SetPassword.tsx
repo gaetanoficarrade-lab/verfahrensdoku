@@ -129,7 +129,7 @@ const SetPassword = () => {
     setIsLoading(false);
   };
 
-  if (loading || (!sessionReady && window.location.hash.includes('access_token'))) {
+  if (initialLoading || (!sessionReady && window.location.hash.includes('access_token'))) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center space-y-3">
