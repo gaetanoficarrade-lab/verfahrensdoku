@@ -126,15 +126,15 @@ Das nennt sich Änderungshistorie – und ohne sie ist auch eine vorhandene Verf
 
 Drei Szenarien:
 
-**Du hast noch keine VD:**
+**Du hast noch keine Verfahrensdokumentation:**
 
 Erstell sie. Jetzt. Nicht nächsten Monat. Mit GoBD-Suite dauert das unter einer Stunde.
 
-**Du hast eine VD aber sie ist veraltet:**
+**Du hast eine Verfahrensdokumentation aber sie ist veraltet:**
 
 Prüf sie. Wann wurde sie zuletzt aktualisiert? Hast du seitdem neue Software eingeführt? Prozesse geändert? Dann muss sie aktualisiert werden.
 
-**Du hast eine aktuelle VD:**
+**Du hast eine aktuelle Verfahrensdokumentation:**
 
 Gut gemacht. Stell eine Erinnerung für die jährliche Überprüfung ein.
 
