@@ -3,7 +3,8 @@ Funnelpay Checkout URLs für die drei Pläne.
 ## Checkout URLs
 - Solo: https://funnelpay.de/checkout/GoBD-Suite Solo Plan
 - Berater: https://funnelpay.de/checkout/GoBD-Suite Berater Plan
-- Agentur: https://funnelpay.de/checkout/GoBD-Suite Agentur Plan
+- Agentur (monatlich): https://funnelpay.de/checkout/GoBD-Suite Agentur Plan
+- Agentur (jährlich): https://funnelpay.de/checkout/GoBD-Suite Agentur Plan-Jährl.
 
 ## Verwendung
 - PlanSelection.tsx: Fallback-URLs wenn platform_settings leer
