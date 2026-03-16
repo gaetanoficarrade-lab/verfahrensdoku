@@ -30,7 +30,7 @@ export const defaultTemplates: EmailTemplateMap = {
   notification_chapter_submitted: {
     subject: 'Kapitel eingereicht – {{brand_name}}',
     heading: 'Kapitel eingereicht',
-    body: 'Mandant "<strong>{{client_name}}</strong>" hat Kapitel "<strong>{{chapter_name}}</strong>" eingereicht.',
+    body: 'Kunde "<strong>{{client_name}}</strong>" hat Kapitel "<strong>{{chapter_name}}</strong>" eingereicht.',
     buttonText: 'Jetzt ansehen',
   },
   notification_chapter_approved: {
