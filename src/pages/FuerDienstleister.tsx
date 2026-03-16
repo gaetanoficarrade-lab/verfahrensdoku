@@ -373,7 +373,7 @@ export default function FuerDienstleister() {
             <Reveal><h2 className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>Was andere Dienstleister sagen</h2></Reveal>
             <div className="grid md:grid-cols-2 gap-6">
               {[
-                { quote: 'Ich biete die VD-Erstellung jetzt als feste Leistung an. Mit GoBD-Suite dauert ein Mandat keine 2 Stunden – ich berechne 1.500 € und bin ab dem zweiten Mandanten im Plus.', name: 'Sandra K.', role: 'Steuerberaterin, München' },
+                { quote: 'Ich biete die Erstellung der Verfahrensdokumentation jetzt als feste Leistung an. Mit GoBD-Suite dauert ein Mandat keine 2 Stunden – ich berechne 1.500 € und bin ab dem zweiten Mandanten im Plus.', name: 'Sandra K.', role: 'Steuerberaterin, München' },
                 { quote: 'Der Agentur-Plan mit Whitelabel ist genau was ich gesucht habe. Meine Kunden sehen nur mein Brand, der Aufwand ist minimal und die Marge ist hervorragend.', name: 'Thomas R.', role: 'Unternehmensberater, Hamburg' },
               ].map((t, i) => (
                 <Reveal key={i} delay={i * 0.1}>
