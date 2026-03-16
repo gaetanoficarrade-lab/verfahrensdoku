@@ -5,11 +5,19 @@ export type AuditAction =
   | 'client_updated'
   | 'client_deleted'
   | 'client_user_created'
+  | 'client_invite_sent'
   | 'project_created'
+  | 'project_deleted'
   | 'chapter_submitted'
+  | 'chapter_approved'
   | 'text_generated'
   | 'pdf_created'
-  | 'settings_updated';
+  | 'pdf_downloaded'
+  | 'settings_updated'
+  | 'team_member_invited'
+  | 'team_member_removed'
+  | 'user_login'
+  | 'user_logout';
 
 /**
  * Fire-and-forget audit log entry.

@@ -113,11 +113,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { error, data } = await supabase.auth.signInWithPassword({ email, password });
     // Log login on success
     if (!error && data?.user) {
-      supabase.from('login_logs').insert({
-        user_id: data.user.id,
-        user_agent: navigator.userAgent,
-        ip_hash: null,
-      }).then(() => {});
+      Promise.all([
+        supabase.from('login_logs').insert({
+          user_id: data.user.id,
+          user_agent: navigator.userAgent,
+          ip_hash: null,
+        }),
+        supabase.from('audit_log').insert({
+          user_id: data.user.id,
+          tenant_id: null, // will be filled by profile lookup if needed
+          action: 'user_login',
+          entity_type: 'auth',
+          entity_id: data.user.id,
+          details: { email },
+        }),
+      ]).catch(() => {});
     }
     return { error };
   }, []);
@@ -131,6 +141,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signOut = useCallback(async () => {
+    // Log logout before signing out
+    const { data: { user: currentUser } } = await supabase.auth.getUser();
+    if (currentUser) {
+      await supabase.from('audit_log').insert({
+        user_id: currentUser.id,
+        tenant_id: null,
+        action: 'user_logout',
+        entity_type: 'auth',
+        entity_id: currentUser.id,
+        details: {},
+      });
+    }
     await supabase.auth.signOut();
   }, []);
 
