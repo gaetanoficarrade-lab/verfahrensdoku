@@ -14,6 +14,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { toast } from 'sonner';
 import { logAudit } from '@/lib/auditLog';
 import { triggerWebhook } from '@/lib/webhookTrigger';
+import { useTrialRestrictions } from '@/hooks/useTrialRestrictions';
 
 interface Client {
   id: string;
@@ -40,6 +41,7 @@ interface Project {
 export default function ClientDetail() {
   const { id } = useParams<{ id: string }>();
   const { effectiveTenantId, isSuperAdmin } = useAuthContext();
+  const { isTrialing } = useTrialRestrictions();
   const navigate = useNavigate();
   const [client, setClient] = useState<Client | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -235,7 +237,7 @@ export default function ClientDetail() {
           <p className="text-sm text-muted-foreground mt-1">Mandantendetails und Projekte</p>
         </div>
         <Badge variant="secondary">{client.onboarding_status || 'pending'}</Badge>
-        {!client.user_id && (
+        {!client.user_id && !isTrialing && (
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="gap-1" onClick={() => {
               setInviteEmail(client.contact_email || '');
