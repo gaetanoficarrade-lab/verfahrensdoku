@@ -195,7 +195,7 @@ export default function FuerDienstleister() {
                   <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FEBC2E' }} />
                   <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
                 </div>
-                <img src={mockupClients} alt="GoBD-Suite Mandantenübersicht – Berater-Portal mit Kundenliste" className="w-full h-auto" />
+                <img src={mockupClients} alt="GoBD-Suite Kundenübersicht – Berater-Portal mit Kundenliste" className="w-full h-auto" />
               </div>
             </Reveal>
           </div>
