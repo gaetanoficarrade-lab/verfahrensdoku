@@ -133,43 +133,45 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <PlanCard
-          name="Solo"
-          price="980€"
-          priceNote="einmalig"
-          features={[
-            '1 Mandant',
-            'Unbegrenzte Revisionen',
-            'KI-Textgenerierung',
-            'PDF-Export',
-            '12 Monate Laufzeit',
-            'Renewal: 199€/Jahr',
-          ]}
-          checkoutUrl={checkoutUrls.solo}
-          currentPlan={currentPlan}
-          isDowngrade={currentLevel > PLAN_HIERARCHY.solo}
-        />
-        <PlanCard
-          name="Berater"
-          price={annual ? '332€' : '399€'}
-          originalPrice={annual ? '399€' : undefined}
-          priceNote="/Monat"
-          setupFee="590€"
-          highlighted
-          isAnnual={annual}
-          features={[
-            'Bis zu 5 Mandanten',
-            'Berater-Portal',
-            'Team-Verwaltung',
-            'Webhooks & Vorlagen',
-            'E-Mail-Vorlagen',
-            'Aktivitäts-Log',
-          ]}
-          checkoutUrl={checkoutUrls.berater}
-          currentPlan={currentPlan}
-          isDowngrade={currentLevel > PLAN_HIERARCHY.berater}
-        />
+      <div className={`grid gap-6 ${visibleCount === 1 ? 'max-w-md mx-auto' : visibleCount === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : 'md:grid-cols-3'}`}>
+        {currentLevel <= PLAN_HIERARCHY.solo && (
+          <PlanCard
+            name="Solo"
+            price="980€"
+            priceNote="einmalig"
+            features={[
+              '1 Mandant',
+              'Unbegrenzte Revisionen',
+              'KI-Textgenerierung',
+              'PDF-Export',
+              '12 Monate Laufzeit',
+              'Renewal: 199€/Jahr',
+            ]}
+            checkoutUrl={checkoutUrls.solo}
+            currentPlan={currentPlan}
+          />
+        )}
+        {currentLevel <= PLAN_HIERARCHY.berater && (
+          <PlanCard
+            name="Berater"
+            price={annual ? '332€' : '399€'}
+            originalPrice={annual ? '399€' : undefined}
+            priceNote="/Monat"
+            setupFee="590€"
+            highlighted
+            isAnnual={annual}
+            features={[
+              'Bis zu 5 Mandanten',
+              'Berater-Portal',
+              'Team-Verwaltung',
+              'Webhooks & Vorlagen',
+              'E-Mail-Vorlagen',
+              'Aktivitäts-Log',
+            ]}
+            checkoutUrl={checkoutUrls.berater}
+            currentPlan={currentPlan}
+          />
+        )}
         <PlanCard
           name="Agentur"
           price={annual ? '665€' : '799€'}
