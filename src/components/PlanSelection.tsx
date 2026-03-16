@@ -82,7 +82,7 @@ interface PlanSelectionProps {
 }
 
 export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
-  const [annual, setAnnual] = useState(false);
+  const [annual, setAnnual] = useState(true);
   const { settings, loading } = usePlatformSettings([
     'funnelpay_checkout_solo',
     'funnelpay_checkout_berater',

@@ -179,7 +179,7 @@ function Stars() {
 
 /* ─── Pricing Toggle Section ─── */
 function PricingToggleSection() {
-  const [annual, setAnnual] = useState(false);
+  const [annual, setAnnual] = useState(true);
 
   return (
     <>

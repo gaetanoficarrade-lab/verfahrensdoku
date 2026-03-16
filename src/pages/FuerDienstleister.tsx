@@ -71,7 +71,7 @@ const glass: React.CSSProperties = {
 export default function FuerDienstleister() {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [annual, setAnnual] = useState(false);
+  const [annual, setAnnual] = useState(true);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
