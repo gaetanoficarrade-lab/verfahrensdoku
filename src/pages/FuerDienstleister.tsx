@@ -270,7 +270,7 @@ export default function FuerDienstleister() {
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <Reveal>
               <div>
-                <h2 className="text-3xl md:text-[44px] font-bold leading-[1.1] mb-8" style={{ color: C.dark }}>Dein Brand. Dein Dokument.<br className="hidden md:inline" /> Dein Mandant.</h2>
+                <h2 className="text-3xl md:text-[44px] font-bold leading-[1.1] mb-8" style={{ color: C.dark }}>Dein Brand. Dein Dokument.<br className="hidden md:inline" /> Dein Kunde.</h2>
                 <p className="leading-relaxed mb-6" style={{ color: C.textGray }}>
                   Mit dem Agentur-Plan läuft alles unter deinem Namen:
                 </p>
