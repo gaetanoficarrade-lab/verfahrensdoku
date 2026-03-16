@@ -446,6 +446,14 @@ export default function MarketingPage() {
     return () => { document.getElementById(id)?.remove(); };
   }, []);
 
+  // Redirect logged-in users to dashboard – show nothing while auth loads
+  if (loading) {
+    return <div className="min-h-screen bg-background" />;
+  }
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return (
     <div className="font-sans" style={{ color: C.dark }}>
       <SocialProofNotification />
