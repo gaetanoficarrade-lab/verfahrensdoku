@@ -195,6 +195,8 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
             ]}
             checkoutUrl={checkoutUrls.berater}
             currentPlan={currentPlan}
+            switchBillingUrl={currentPlan?.toLowerCase() === 'berater' ? switchBillingUrls.berater : undefined}
+            switchBillingLabel={getSwitchLabel('berater')}
           />
         )}
         <PlanCard
