@@ -241,7 +241,7 @@ export default function AdminSettingsPlans() {
                   <TableHead>Name</TableHead>
                   <TableHead>Preis</TableHead>
                   <TableHead>Setup Fee</TableHead>
-                  <TableHead>Mandanten</TableHead>
+                  <TableHead>Kunden</TableHead>
                   <TableHead>Testmodus</TableHead>
                   <TableHead>Features</TableHead>
                   <TableHead>Status</TableHead>
