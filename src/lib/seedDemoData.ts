@@ -120,7 +120,7 @@ export async function seedDemoData() {
     .eq('id', clientId)
     .single();
   if (verifyErr || !verifyClient) {
-    throw new Error(`Client-Verifizierung fehlgeschlagen: ${verifyErr?.message || 'Nicht gefunden'}. Der Mandant wurde möglicherweise durch RLS blockiert.`);
+    throw new Error(`Client-Verifizierung fehlgeschlagen: ${verifyErr?.message || 'Nicht gefunden'}. Der Kunde wurde möglicherweise durch RLS blockiert.`);
   }
   console.log('[SEED] Client verified:', verifyClient);
 
