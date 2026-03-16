@@ -464,7 +464,7 @@ export default function FuerDienstleister() {
             </div>
 
             <Reveal delay={0.2}>
-              <p className="text-center mt-10 text-sm" style={{ color: C.textGray }}>Alle Pläne mit 7 Tagen kostenlosem Test · Keine Kreditkarte nötig</p>
+              <p className="text-center mt-10 text-sm" style={{ color: C.textGray }}>Kostenloser Testaccount verfügbar · Keine Kreditkarte nötig</p>
               <p className="text-center mt-2 text-xs" style={{ color: C.textGray, opacity: 0.7 }}>Alle Preise zzgl. gesetzlich gültiger MwSt. · Dieses Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.</p>
             </Reveal>
           </div>
@@ -490,7 +490,7 @@ export default function FuerDienstleister() {
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="text-lg mb-8" style={{ color: 'rgba(255,255,255,0.8)' }}>Starte heute mit 7 Tagen kostenlosem Test. Kein Risiko. Keine Kreditkarte.</p>
+              <p className="text-lg mb-8" style={{ color: 'rgba(255,255,255,0.8)' }}>Starte heute mit einem kostenlosen Testaccount. Kein Risiko. Keine Kreditkarte.</p>
             </Reveal>
             <Reveal delay={0.2}><PrimaryBtn to="/test-starten">Jetzt kostenlos testen</PrimaryBtn></Reveal>
             <Reveal delay={0.3}>

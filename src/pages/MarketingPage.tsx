@@ -243,7 +243,7 @@ function PricingToggleSection() {
         />
       </div>
 
-      <p className="text-center mt-10 text-sm" style={{ color: C.textGray }}>Alle Pläne mit 7 Tagen kostenlosem Test · Keine Kreditkarte für den Test nötig</p>
+      <p className="text-center mt-10 text-sm" style={{ color: C.textGray }}>Kostenloser Testaccount verfügbar · Keine Kreditkarte nötig</p>
       <p className="text-center mt-2 text-xs" style={{ color: C.textGray, opacity: 0.7 }}>
         Alle Preise zzgl. gesetzlich gültiger MwSt. · Dieses Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
       </p>
