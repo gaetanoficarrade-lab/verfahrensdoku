@@ -58,7 +58,7 @@ Wer 2024 oder 2025 auf neue Buchhaltungssoftware umgestiegen ist, muss seine Ver
 
 Lass uns konkret werden.
 
-Wenn der Betriebsprüfer kommt und keine VD vorliegt, kann er deine Buchführung als formell mangelhaft einstufen.
+Wenn der Betriebsprüfer kommt und keine Verfahrensdokumentation vorliegt, kann er deine Buchführung als formell mangelhaft einstufen.
 
 Was das bedeutet: Er muss ihr nicht mehr vertrauen.
 
