@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Building2, Plus, Pencil, Trash2, Power, PowerOff, Eye, Send, Loader2, X, RefreshCw, Mail,
+  Building2, Plus, Pencil, Trash2, Power, PowerOff, Eye, Send, Loader2, X, RefreshCw, Mail, Lock, Unlock,
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
