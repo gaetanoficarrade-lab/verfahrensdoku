@@ -116,22 +116,14 @@ export default function AdminSettingsIntegrations() {
     setCustomEntries((prev) => prev.filter((e) => e.id !== id));
   };
 
-  const SecretInput = ({
-    field,
-    label,
-    placeholder,
-  }: {
-    field: keyof IntegrationSettings;
-    label: string;
-    placeholder?: string;
-  }) => (
+  const renderSecretInput = (field: keyof IntegrationSettings, label: string, placeholder?: string) => (
     <div className="space-y-2">
       <Label className="text-sm font-medium text-foreground">{label}</Label>
       <div className="relative">
         <Input
           type={showSecrets[field] ? 'text' : 'password'}
           value={form[field]}
-          onChange={(e) => setForm({ ...form, [field]: e.target.value })}
+          onChange={(e) => setForm((prev) => ({ ...prev, [field]: e.target.value }))}
           placeholder={placeholder || '•••••••••'}
           className="pr-10 font-mono text-sm"
         />
@@ -181,7 +173,7 @@ export default function AdminSettingsIntegrations() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <SecretInput field="funnelpay_webhook_secret" label="Webhook-Secret" placeholder="whsec_..." />
+            {renderSecretInput('funnelpay_webhook_secret', 'Webhook-Secret', 'whsec_...')}
             <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-2">
                 <Label className="text-sm font-medium text-foreground">Produkt-ID Solo</Label>
@@ -226,7 +218,7 @@ export default function AdminSettingsIntegrations() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <SecretInput field="resend_api_key" label="Resend API-Key" placeholder="re_..." />
+            {renderSecretInput('resend_api_key', 'Resend API-Key', 're_...')}
           </CardContent>
         </Card>
 
