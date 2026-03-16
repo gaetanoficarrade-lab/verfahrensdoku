@@ -726,7 +726,7 @@ export default function MarketingPage() {
                   role: 'Steuerberaterin, München',
                 },
                 {
-                  quote: 'Der Agentur-Plan ist perfekt für mein Business. Ich erstelle jetzt VDs für meine Kunden unter meinem eigenen Brand. Neue Einnahmequelle mit minimalem Aufwand.',
+                  quote: 'Der Agentur-Plan ist perfekt für mein Business. Ich erstelle jetzt Verfahrensdokumentationen für meine Kunden unter meinem eigenen Brand. Neue Einnahmequelle mit minimalem Aufwand.',
                   name: 'Thomas R.',
                   role: 'Marketing-Consultant, Hamburg',
                 },

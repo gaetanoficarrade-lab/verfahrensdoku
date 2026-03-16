@@ -185,7 +185,7 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="text-sm sm:text-base font-semibold text-[#e8a91a] uppercase tracking-[0.2em] mb-4"
           >
-            Das erste vollumfängliche VD-Tool im DACH-Raum
+            Das erste vollumfängliche Verfahrensdokumentations-Tool im DACH-Raum
           </motion.p>
 
           <motion.p
