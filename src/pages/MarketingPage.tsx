@@ -233,7 +233,7 @@ function PricingToggleSection() {
         {/* Berater */}
         <PriceCard
           name="Berater"
-          checkoutUrl="https://funnelpay.de/checkout/GoBD-Suite Berater Plan"
+          checkoutUrl={annual ? "https://funnelpay.de/checkout/GoBD-Suite Berater Plan Jährl." : "https://funnelpay.de/checkout/GoBD-Suite Berater Plan"}
           price={annual ? '332 €' : '399 €'}
           unit="/Monat"
           sub={annual ? '3.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
