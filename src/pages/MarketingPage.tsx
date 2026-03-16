@@ -686,7 +686,7 @@ export default function MarketingPage() {
                   <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-4" style={{ background: C.yellow, color: C.dark }}>Berater & Agentur</span>
                   <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>Du willst Verfahrensdokumentationen als Dienstleistung anbieten</h3>
                   <ul className="space-y-2 mb-8">
-                    {['Mehrere Mandanten verwalten', 'Whitelabel unter deinem Brand (Agentur)', 'Neue Einnahmequelle für dein Business', 'Mandanten füllen selbst aus – du prüfst und finalisierst'].map(t => (
+                    {['Mehrere Kunden verwalten', 'Whitelabel unter deinem Brand (Agentur)', 'Neue Einnahmequelle für dein Business', 'Kunden füllen selbst aus – du prüfst und finalisierst'].map(t => (
                       <li key={t} className="flex items-center gap-2 text-[15px]" style={{ color: C.textGray }}><Check size={16} style={{ color: C.green }} /> {t}</li>
                     ))}
                   </ul>
