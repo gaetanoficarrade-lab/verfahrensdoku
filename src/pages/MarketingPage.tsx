@@ -355,14 +355,6 @@ export default function MarketingPage() {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Redirect logged-in users to dashboard – show nothing while auth loads
-  if (loading) {
-    return <div className="min-h-screen bg-background" />;
-  }
-  if (user) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
   /* 6. Nav scroll effect */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
