@@ -38,9 +38,11 @@ export function AppLayout({ children }: AppLayoutProps) {
           >
             <SidebarTrigger className="mr-4" />
             <div className="flex items-center gap-3 ml-auto">
-              <Badge variant="outline" className="text-xs font-medium text-muted-foreground">
-                {roleLabel}
-              </Badge>
+              {showAdmin && (
+                <Badge variant="outline" className="text-xs font-medium text-muted-foreground">
+                  {roleLabel}
+                </Badge>
+              )}
               <NotificationBell />
             </div>
           </header>
