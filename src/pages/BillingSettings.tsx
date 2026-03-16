@@ -136,10 +136,12 @@ export default function BillingSettings() {
         </div>
       )}
 
-      {/* Upgrade from active plan */}
-      {!showUpgrade && tenantPlan?.planName?.toLowerCase() !== 'agentur' && (
+      {/* Upgrade / billing cycle switch */}
+      {!showUpgrade && (
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-foreground">Upgrade</h2>
+          <h2 className="text-lg font-semibold text-foreground">
+            {tenantPlan?.planName?.toLowerCase() === 'agentur' ? 'Abrechnungszeitraum wechseln' : 'Upgrade'}
+          </h2>
           <PlanSelection currentPlan={tenantPlan?.planName} />
         </div>
       )}
