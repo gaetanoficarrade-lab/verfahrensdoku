@@ -221,6 +221,8 @@ function PricingToggleSection() {
           name="Agentur"
           checkoutUrl={annual ? "https://funnelpay.de/checkout/GoBD-Suite Agentur Plan-Jährl." : "https://funnelpay.de/checkout/GoBD-Suite Agentur Plan"}
           price={annual ? '665 €' : '799 €'}
+          originalPrice={annual ? '799 €' : undefined}
+          isAnnual={annual}
           unit="/Monat"
           sub={annual ? '7.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
           highlighted
@@ -235,6 +237,8 @@ function PricingToggleSection() {
           name="Berater"
           checkoutUrl={annual ? "https://funnelpay.de/checkout/GoBD-Suite Berater Plan Jährl." : "https://funnelpay.de/checkout/GoBD-Suite Berater Plan"}
           price={annual ? '332 €' : '399 €'}
+          originalPrice={annual ? '399 €' : undefined}
+          isAnnual={annual}
           unit="/Monat"
           sub={annual ? '3.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
           features={[
