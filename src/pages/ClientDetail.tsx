@@ -248,7 +248,7 @@ export default function ClientDetail() {
         </Button>
         <div className="flex-1">
           <h1 className="text-2xl font-bold text-foreground">{client.company}</h1>
-          <p className="text-sm text-muted-foreground mt-1">Mandantendetails und Projekte</p>
+          <p className="text-sm text-muted-foreground mt-1">Kundendetails und Projekte</p>
         </div>
         <Badge variant="secondary">{client.onboarding_status || 'pending'}</Badge>
         {!client.user_id && !isTrialing && (
