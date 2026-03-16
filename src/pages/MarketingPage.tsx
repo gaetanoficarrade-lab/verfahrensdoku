@@ -257,12 +257,13 @@ function PricingToggleSection() {
 }
 
 /* ─── Price Card ─── */
-function PriceCard({ name, price, unit, sub, features, highlighted = false, annualNote, checkoutUrl }: {
-  name: string; price: string; unit: string; sub: string;
+function PriceCard({ name, price, originalPrice, unit, sub, features, highlighted = false, annualNote, checkoutUrl, isAnnual }: {
+  name: string; price: string; originalPrice?: string; unit: string; sub: string;
   features: { text: string; ok: boolean }[];
   highlighted?: boolean;
   annualNote?: string;
   checkoutUrl?: string;
+  isAnnual?: boolean;
 }) {
   return (
     <div
@@ -277,10 +278,16 @@ function PriceCard({ name, price, unit, sub, features, highlighted = false, annu
         <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full" style={{ background: C.yellow, color: C.dark }}>Beliebt</span>
       )}
       <h3 className="text-xl font-bold mb-2" style={{ color: C.dark }}>{name}</h3>
-      <div className="flex items-baseline gap-1 mb-1">
-        <span className="text-4xl font-bold transition-all duration-300" style={{ color: C.dark }}>{price}</span>
+      <div className="flex items-baseline gap-2 mb-1">
+        {isAnnual && originalPrice && (
+          <span className="text-2xl font-bold line-through" style={{ color: '#E53E3E' }}>{originalPrice}</span>
+        )}
+        <span className="text-4xl font-bold transition-all duration-300" style={{ color: isAnnual && originalPrice ? '#38A169' : C.dark }}>{price}</span>
         <span className="text-sm" style={{ color: C.textGray }}>{unit}</span>
       </div>
+      {isAnnual && originalPrice && (
+        <p className="text-xs font-semibold mb-1" style={{ color: '#38A169' }}>17 % gespart</p>
+      )}
       <p className="text-xs mb-1" style={{ color: C.textGray }}>{sub}</p>
       {annualNote && <p className="text-xs mb-4" style={{ color: C.textGray, opacity: 0.7 }}>{annualNote}</p>}
       {!annualNote && <div className="mb-5" />}
