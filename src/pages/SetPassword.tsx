@@ -149,10 +149,7 @@ const SetPassword = () => {
         className="w-full max-w-md"
       >
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary">
-            <Shield className="h-7 w-7 text-primary-foreground" />
-          </div>
-          <h1 className="text-2xl font-bold text-foreground">GoBD-Suite</h1>
+          <img src="/images/logo.png" alt="Logo" className="mx-auto mb-4 h-12 object-contain" />
         </div>
 
         <Card>
