@@ -79,6 +79,7 @@ export function FirstStepsGuide() {
   const [checked, setChecked] = useState(false);
   /** The pattern we're currently waiting for (null = not waiting) */
   const [waitingPattern, setWaitingPattern] = useState<RegExp | null>(null);
+  const [previewMode, setPreviewMode] = useState(false);
 
   const isTenantAdmin = roles.includes('tenant_admin');
 
@@ -87,6 +88,18 @@ export function FirstStepsGuide() {
     ...(isBerater ? BERATER_STEPS : []),
     ...(isAgentur ? AGENTUR_STEPS : []),
   ];
+
+  // Allow super admins to open the wizard via a global event
+  useEffect(() => {
+    const handler = () => {
+      setPreviewMode(true);
+      setStep(0);
+      setOpen(true);
+      setMinimized(false);
+    };
+    window.addEventListener('open-onboarding-preview', handler);
+    return () => window.removeEventListener('open-onboarding-preview', handler);
+  }, []);
 
   useEffect(() => {
     if (!user || planLoading || checked) return;
@@ -122,7 +135,7 @@ export function FirstStepsGuide() {
   }, [location.pathname, waitingPattern, minimized, steps.length]);
 
   const handleComplete = async () => {
-    if (user) {
+    if (!previewMode && user) {
       await supabase
         .from('profiles')
         .update({ onboarding_completed: true })
@@ -131,6 +144,7 @@ export function FirstStepsGuide() {
     setOpen(false);
     setMinimized(false);
     setWaitingPattern(null);
+    setPreviewMode(false);
   };
 
   const handleNext = () => {

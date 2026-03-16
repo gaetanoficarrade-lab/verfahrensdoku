@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Building2, Users, FolderOpen, Eye, Loader2, Database } from 'lucide-react';
+import { Building2, Users, FolderOpen, Eye, Loader2, Database, Presentation } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -129,6 +129,14 @@ const AdminDashboard = () => {
           
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="gap-2"
+            onClick={() => window.dispatchEvent(new Event('open-onboarding-preview'))}
+          >
+            <Presentation className="h-4 w-4" />
+            Onboarding-Vorschau
+          </Button>
           {/* Demo-Daten laden Button */}
           <AlertDialog>
             <AlertDialogTrigger asChild>
