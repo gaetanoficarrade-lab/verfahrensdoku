@@ -148,22 +148,22 @@ export default function VerfahrensdokumentationErstellen() {
   ];
 
   const mistakes = [
-    { bad: 'Die VD einmal erstellen und nie aktualisieren', good: 'Die VD muss bei jeder wesentlichen Änderung aktualisiert werden. GoBD-Suite versioniert alle Änderungen automatisch.' },
+    { bad: 'Die Verfahrensdokumentation einmal erstellen und nie aktualisieren', good: 'Die Verfahrensdokumentation muss bei jeder wesentlichen Änderung aktualisiert werden. GoBD-Suite versioniert alle Änderungen automatisch.' },
     { bad: 'Zu allgemein und oberflächlich beschreiben', good: 'Ein sachkundiger Dritter muss deinen Ablauf nachvollziehen können. GoBD-Suite prüft die Vollständigkeit mit KI.' },
     { bad: 'Nur die Buchhaltungssoftware beschreiben', good: 'Alle relevanten Systeme müssen rein: Zahlungsanbieter, Cloud-Dienste, E-Mail-Archivierung, Backups.' },
     { bad: 'Keine Versionierung und Änderungshistorie', good: 'Jede Änderung muss dokumentiert werden. GoBD-Suite macht das automatisch bei jeder Speicherung.' },
-    { bad: 'Die VD dem Steuerberater überlassen', good: 'Der Steuerberater kennt deine internen Abläufe nicht. Die VD muss das Unternehmen selbst erstellen.' },
+    { bad: 'Die Verfahrensdokumentation dem Steuerberater überlassen', good: 'Der Steuerberater kennt deine internen Abläufe nicht. Die Verfahrensdokumentation muss das Unternehmen selbst erstellen.' },
   ];
 
   const faqs = [
     { q: 'Was ist eine Verfahrensdokumentation?', a: 'Eine Verfahrensdokumentation ist ein Dokument das beschreibt wie ein Unternehmen seine digitale Buchführung organisiert. Sie ist Bestandteil der GoBD und seit 2015 für alle Unternehmen Pflicht die digital buchen. Sie beschreibt Abläufe, Systeme, Verantwortlichkeiten und Kontrollmechanismen.' },
-    { q: 'Wer muss eine Verfahrensdokumentation erstellen?', a: 'Jedes Unternehmen das digital bucht – unabhängig von Größe oder Rechtsform. Freelancer, Einzelunternehmer, GmbH, UG – alle sind gleichermaßen verpflichtet. Wer Buchhaltungssoftware, Zahlungsanbieter oder digitale Belege nutzt, braucht eine VD.' },
+    { q: 'Wer muss eine Verfahrensdokumentation erstellen?', a: 'Jedes Unternehmen das digital bucht – unabhängig von Größe oder Rechtsform. Freelancer, Einzelunternehmer, GmbH, UG – alle sind gleichermaßen verpflichtet. Wer Buchhaltungssoftware, Zahlungsanbieter oder digitale Belege nutzt, braucht eine Verfahrensdokumentation.' },
     { q: 'Was passiert ohne Verfahrensdokumentation?', a: 'Bei einer Betriebsprüfung kann das Finanzamt die Buchführung als nicht ordnungsgemäß einstufen und die Beweiskraft verwerfen. Das bedeutet: Das Finanzamt schätzt deine Einnahmen – und Schätzungen liegen fast immer über den tatsächlichen Werten. Das Ergebnis sind Steuernachzahlungen.' },
     { q: 'Wie oft muss die Verfahrensdokumentation aktualisiert werden?', a: 'Bei jeder wesentlichen Änderung deiner IT-Systeme oder Geschäftsprozesse. Also zum Beispiel wenn du eine neue Software einführst, deinen Zahlungsanbieter wechselst oder Prozesse änderst. Eine jährliche Überprüfung ist empfehlenswert.' },
-    { q: 'Muss der Steuerberater die VD erstellen?', a: 'Nein – und er kann es auch gar nicht. Die Verfahrensdokumentation beschreibt deine internen Abläufe die nur du kennst. Dein Steuerberater weiß nicht wie du intern arbeitest. Du bist als Unternehmer verantwortlich für die Erstellung.' },
-    { q: 'Wie lang muss eine Verfahrensdokumentation sein?', a: 'Es gibt keine Mindestlänge – aber sie muss vollständig sein. Ein sachkundiger Dritter muss anhand der VD deine gesamten buchhalterischen Abläufe nachvollziehen können. GoBD-Suite-Dokumente umfassen typischerweise 20 bis 50 Seiten je nach Komplexität.' },
+    { q: 'Muss der Steuerberater die Verfahrensdokumentation erstellen?', a: 'Nein – und er kann es auch gar nicht. Die Verfahrensdokumentation beschreibt deine internen Abläufe die nur du kennst. Dein Steuerberater weiß nicht wie du intern arbeitest. Du bist als Unternehmer verantwortlich für die Erstellung.' },
+    { q: 'Wie lang muss eine Verfahrensdokumentation sein?', a: 'Es gibt keine Mindestlänge – aber sie muss vollständig sein. Ein sachkundiger Dritter muss anhand der Verfahrensdokumentation deine gesamten buchhalterischen Abläufe nachvollziehen können. GoBD-Suite-Dokumente umfassen typischerweise 20 bis 50 Seiten je nach Komplexität.' },
     { q: 'Wie lange muss die Verfahrensdokumentation aufbewahrt werden?', a: '10 Jahre – genauso wie alle anderen steuerrelevanten Unterlagen gemäß § 147 AO. GoBD-Suite archiviert alle Versionen revisionssicher und dauerhaft.' },
-    { q: 'Kann ich eine Vorlage verwenden?', a: 'Vorlagen sind problematisch weil sie nicht auf dein spezifisches Business zugeschnitten sind. Das Finanzamt erkennt generische Vorlagen. GoBD-Suite erstellt kein generisches Dokument sondern eine individuelle VD auf Basis deiner tatsächlichen Abläufe.' },
+    { q: 'Kann ich eine Vorlage verwenden?', a: 'Vorlagen sind problematisch weil sie nicht auf dein spezifisches Business zugeschnitten sind. Das Finanzamt erkennt generische Vorlagen. GoBD-Suite erstellt kein generisches Dokument sondern eine individuelle Verfahrensdokumentation auf Basis deiner tatsächlichen Abläufe.' },
   ];
 
   return (
@@ -214,7 +214,7 @@ export default function VerfahrensdokumentationErstellen() {
             <Reveal><h2 className="text-3xl md:text-[48px] font-bold leading-tight mb-10" style={{ color: C.dark }}>Was ist eine Verfahrensdokumentation?</h2></Reveal>
             <Reveal delay={0.1}>
               <div className="text-left text-lg leading-relaxed space-y-4" style={{ color: C.textGray }}>
-                <p>Eine Verfahrensdokumentation – auch VD oder Verfahrensbeschreibung genannt – ist ein Dokument das beschreibt wie ein Unternehmen seine digitale Buchführung organisiert und durchführt.</p>
+                <p>Eine Verfahrensdokumentation – auch Verfahrensbeschreibung genannt – ist ein Dokument das beschreibt wie ein Unternehmen seine digitale Buchführung organisiert und durchführt.</p>
                 <p>Sie ist Bestandteil der GoBD (Grundsätze zur ordnungsmäßigen Führung und Aufbewahrung von Büchern, Aufzeichnungen und Unterlagen in elektronischer Form sowie zum Datenzugriff) und seit 2014 für alle Unternehmen Pflicht die digital buchen.</p>
                 <p>Das Finanzamt will damit sicherstellen dass deine digitale Buchführung nachvollziehbar, vollständig und unveränderbar ist.</p>
               </div>
@@ -224,7 +224,7 @@ export default function VerfahrensdokumentationErstellen() {
             {[
               { Icon: Scale, title: 'Rechtsgrundlage', text: 'GoBD, Randziffer 151 ff. In Kraft seit 01.01.2015, aktualisiert zum 01.01.2020' },
               { Icon: Calendar, title: 'Seit wann Pflicht?', text: 'Seit 01.01.2015 für alle Unternehmen die DV-gestützte Buchführungssysteme nutzen' },
-              { Icon: AlertTriangle, title: 'Was droht ohne VD?', text: 'Verwerfung der Buchführung, Schätzung durch das Finanzamt, Nachzahlungen' },
+              { Icon: AlertTriangle, title: 'Was droht ohne Verfahrensdokumentation?', text: 'Verwerfung der Buchführung, Schätzung durch das Finanzamt, Nachzahlungen' },
             ].map((b, i) => (
               <Reveal key={i} delay={i * 0.1}>
                 <div className="rounded-[16px] p-6 text-center h-full" style={{ ...glass }}>
@@ -237,7 +237,7 @@ export default function VerfahrensdokumentationErstellen() {
           </div>
         </section>
 
-        {/* ═══ 3. WER BRAUCHT EINE VD ═══ */}
+        {/* ═══ 3. WER BRAUCHT EINE VERFAHRENSDOKUMENTATION ═══ */}
         <WaveDivider from={C.white} to={C.bgLight} />
         <section className="py-20 md:py-28 px-6" style={{ background: C.bgLight }}>
           <div className="max-w-5xl mx-auto">
@@ -452,7 +452,7 @@ export default function VerfahrensdokumentationErstellen() {
             <ul className="space-y-2 text-sm">
               <li><Link to="/fuer-selbststaendige" className="hover:text-white transition-colors">Für Selbstständige</Link></li>
               <li><Link to="/fuer-dienstleister" className="hover:text-white transition-colors">Für Dienstleister</Link></li>
-              <li><Link to="/verfahrensdokumentation-erstellen" className="hover:text-white transition-colors text-white font-semibold">VD erstellen – Anleitung</Link></li>
+              <li><Link to="/verfahrensdokumentation-erstellen" className="hover:text-white transition-colors text-white font-semibold">Verfahrensdokumentation erstellen – Anleitung</Link></li>
               <li><p className="text-sm mt-3">info@gobd-suite.de</p></li>
             </ul>
           </div>

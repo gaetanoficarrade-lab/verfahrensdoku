@@ -136,11 +136,11 @@ export default function FuerDienstleister() {
   ];
 
   const faqs = [
-    { q: 'Wie viel kann ich pro VD verdienen?', a: 'Das liegt bei dir. Die meisten Dienstleister berechnen zwischen 800 € und 2.500 € pro Verfahrensdokumentation je nach Komplexität des Mandanten. Mit dem Berater-Plan (399 €/Monat) bist du bereits mit einem einzigen Mandanten im Plus.' },
+    { q: 'Wie viel kann ich pro Verfahrensdokumentation verdienen?', a: 'Das liegt bei dir. Die meisten Dienstleister berechnen zwischen 800 € und 2.500 € pro Verfahrensdokumentation je nach Komplexität des Mandanten. Mit dem Berater-Plan (399 €/Monat) bist du bereits mit einem einzigen Mandanten im Plus.' },
     { q: 'Sehen meine Mandanten dass ich GoBD-Suite nutze?', a: 'Nein – beim Agentur-Plan sehen deine Mandanten ausschließlich dein Brand. Dein Logo, deine Kontaktdaten, deine Domain. GoBD-Suite ist dein unsichtbares Werkzeug.' },
     { q: 'Wie viel Aufwand habe ich pro Mandant?', a: 'Minimal. Dein Mandant füllt die Leitfragen selbst aus. Du prüfst die Kapitel, gibst bei Bedarf Hinweise und finalisierst das Dokument. Pro Mandant rechne mit 1 bis 3 Stunden Aufwand insgesamt.' },
     { q: 'Kann ich unbegrenzt viele Mandanten anlegen?', a: 'Mit dem Agentur-Plan ja. Der Berater-Plan ist auf 5 Mandanten begrenzt. Ein Upgrade von Berater auf Agentur ist jederzeit möglich.' },
-    { q: 'Was passiert wenn ein Mandant seine VD aktualisieren muss?', a: 'Du öffnest das entsprechende Kapitel, passt den Text an und finalisierst eine neue Version. Alle Änderungen werden automatisch in der Änderungshistorie dokumentiert. Das dauert meist nur wenige Minuten.' },
+    { q: 'Was passiert wenn ein Mandant seine Verfahrensdokumentation aktualisieren muss?', a: 'Du öffnest das entsprechende Kapitel, passt den Text an und finalisierst eine neue Version. Alle Änderungen werden automatisch in der Änderungshistorie dokumentiert. Das dauert meist nur wenige Minuten.' },
   ];
 
   const CellVal = ({ val }: { val: boolean | string }) => {
@@ -221,7 +221,7 @@ export default function FuerDienstleister() {
                 <div className="rounded-[18px] p-8" style={{ ...glass }}>
                   <p className="text-sm font-semibold mb-4" style={{ color: C.dark }}>Beispielrechnung Berater-Plan:</p>
                   <ul className="space-y-3 text-[15px]" style={{ color: C.dark }}>
-                    <li className="flex justify-between"><span>5 Mandanten × 1.500 € VD-Erstellung</span><span className="font-semibold">7.500 €</span></li>
+                    <li className="flex justify-between"><span>5 Mandanten × 1.500 € Verfahrensdokumentation</span><span className="font-semibold">7.500 €</span></li>
                     <li className="flex justify-between"><span>Laufende Aktualisierungen × 5</span><span className="font-semibold">500 €/Jahr</span></li>
                     <li className="flex justify-between" style={{ color: C.textGray }}><span>Dein Aufwand: Tool-Kosten</span><span>399 €/Monat</span></li>
                   </ul>
@@ -316,7 +316,7 @@ export default function FuerDienstleister() {
                 '...als Unternehmensberater oder Consultant eine neue Dienstleistung aufbauen willst',
                 '...Marketing-Berater bist und Kunden bei der Digitalisierung begleitest',
                 '...eine Agentur führst und skalierbare Zusatzleistungen suchst',
-                '...Freelancer bist der VDs als Nebenleistung anbieten will',
+                '...Freelancer bist der Verfahrensdokumentationen als Nebenleistung anbieten will',
                 '...bereits Mandanten betreust und diese absichern willst',
               ].map((t, i) => (
                 <Reveal key={i} delay={i * 0.08}>
@@ -373,7 +373,7 @@ export default function FuerDienstleister() {
             <Reveal><h2 className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>Was andere Dienstleister sagen</h2></Reveal>
             <div className="grid md:grid-cols-2 gap-6">
               {[
-                { quote: 'Ich biete die VD-Erstellung jetzt als feste Leistung an. Mit GoBD-Suite dauert ein Mandat keine 2 Stunden – ich berechne 1.500 € und bin ab dem zweiten Mandanten im Plus.', name: 'Sandra K.', role: 'Steuerberaterin, München' },
+                { quote: 'Ich biete die Erstellung der Verfahrensdokumentation jetzt als feste Leistung an. Mit GoBD-Suite dauert ein Mandat keine 2 Stunden – ich berechne 1.500 € und bin ab dem zweiten Mandanten im Plus.', name: 'Sandra K.', role: 'Steuerberaterin, München' },
                 { quote: 'Der Agentur-Plan mit Whitelabel ist genau was ich gesucht habe. Meine Kunden sehen nur mein Brand, der Aufwand ist minimal und die Marge ist hervorragend.', name: 'Thomas R.', role: 'Unternehmensberater, Hamburg' },
               ].map((t, i) => (
                 <Reveal key={i} delay={i * 0.1}>
@@ -536,7 +536,7 @@ export default function FuerDienstleister() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto mt-12 pt-8 text-center text-xs" style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>
-          <p className="mb-3"><Link to="/fuer-selbststaendige" className="hover:text-white transition-colors">Du willst deine eigene VD erstellen? Hier entlang →</Link></p>
+          <p className="mb-3"><Link to="/fuer-selbststaendige" className="hover:text-white transition-colors">Du willst deine eigene Verfahrensdokumentation erstellen? Hier entlang →</Link></p>
           © {new Date().getFullYear()} GoBD-Suite · Alle Rechte vorbehalten
         </div>
       </footer>

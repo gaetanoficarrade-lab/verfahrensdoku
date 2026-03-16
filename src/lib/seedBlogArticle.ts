@@ -46,11 +46,11 @@ Betriebsprüfer fragen heute standardmäßig nach der Verfahrensdokumentation. E
 
 **2. Digitale Betriebsprüfungen nehmen zu**
 
-Das Finanzamt prüft immer öfter digital. Das bedeutet: Deine gesamte digitale Buchführung steht auf dem Prüfstand. Und ohne VD fehlt die Grundlage um sie als ordnungsgemäß anzuerkennen.
+Das Finanzamt prüft immer öfter digital. Das bedeutet: Deine gesamte digitale Buchführung steht auf dem Prüfstand. Und ohne Verfahrensdokumentation fehlt die Grundlage um sie als ordnungsgemäß anzuerkennen.
 
 **3. Neue Software bedeutet neue Dokumentationspflicht**
 
-Wer 2024 oder 2025 auf neue Buchhaltungssoftware umgestiegen ist, muss seine VD aktualisieren. Punkt. Das gilt auch für neue Zahlungsanbieter, neue Cloud-Dienste oder neue interne Prozesse.
+Wer 2024 oder 2025 auf neue Buchhaltungssoftware umgestiegen ist, muss seine Verfahrensdokumentation aktualisieren. Punkt. Das gilt auch für neue Zahlungsanbieter, neue Cloud-Dienste oder neue interne Prozesse.
 
 ---
 
@@ -58,7 +58,7 @@ Wer 2024 oder 2025 auf neue Buchhaltungssoftware umgestiegen ist, muss seine VD 
 
 Lass uns konkret werden.
 
-Wenn der Betriebsprüfer kommt und keine VD vorliegt, kann er deine Buchführung als formell mangelhaft einstufen.
+Wenn der Betriebsprüfer kommt und keine Verfahrensdokumentation vorliegt, kann er deine Buchführung als formell mangelhaft einstufen.
 
 Was das bedeutet: Er muss ihr nicht mehr vertrauen.
 
@@ -74,7 +74,7 @@ Das Ergebnis: Steuernachzahlungen die vermeidbar gewesen wären.
 
 Alle. Wirklich alle.
 
-Die GoBD machen keinen Unterschied zwischen Großkonzern und Freelancer. Wer digital bucht, braucht eine VD.
+Die GoBD machen keinen Unterschied zwischen Großkonzern und Freelancer. Wer digital bucht, braucht eine Verfahrensdokumentation.
 
 Das bedeutet konkret: Wenn du Lexoffice, sevDesk, DATEV, Stripe, Funnelpay oder irgendeine andere digitale Lösung für deine Buchhaltung nutzt – bist du dabei.
 
@@ -112,13 +112,13 @@ Das klingt nach viel. Ist es auch – wenn du es manuell machst.
 
 ## Der wichtigste Punkt den die meisten übersehen
 
-Die VD ist kein Einmaldokument.
+Die Verfahrensdokumentation ist kein Einmaldokument.
 
-Sie muss aktuell sein. Das bedeutet: Jedes Mal wenn du eine neue Software einführst, deinen Prozess änderst oder einen neuen Zahlungsanbieter nutzt – muss die VD aktualisiert werden.
+Sie muss aktuell sein. Das bedeutet: Jedes Mal wenn du eine neue Software einführst, deinen Prozess änderst oder einen neuen Zahlungsanbieter nutzt – muss die Verfahrensdokumentation aktualisiert werden.
 
 Und diese Änderungen müssen dokumentiert werden. Mit Datum, Versionsnummer und Beschreibung was sich geändert hat.
 
-Das nennt sich Änderungshistorie – und ohne sie ist auch eine vorhandene VD angreifbar.
+Das nennt sich Änderungshistorie – und ohne sie ist auch eine vorhandene Verfahrensdokumentation angreifbar.
 
 ---
 
@@ -126,15 +126,15 @@ Das nennt sich Änderungshistorie – und ohne sie ist auch eine vorhandene VD a
 
 Drei Szenarien:
 
-**Du hast noch keine VD:**
+**Du hast noch keine Verfahrensdokumentation:**
 
 Erstell sie. Jetzt. Nicht nächsten Monat. Mit GoBD-Suite dauert das unter einer Stunde.
 
-**Du hast eine VD aber sie ist veraltet:**
+**Du hast eine Verfahrensdokumentation aber sie ist veraltet:**
 
 Prüf sie. Wann wurde sie zuletzt aktualisiert? Hast du seitdem neue Software eingeführt? Prozesse geändert? Dann muss sie aktualisiert werden.
 
-**Du hast eine aktuelle VD:**
+**Du hast eine aktuelle Verfahrensdokumentation:**
 
 Gut gemacht. Stell eine Erinnerung für die jährliche Überprüfung ein.
 
@@ -187,7 +187,7 @@ Eine generische Word-Datei mit Platzhaltern. Irgendwas wie "[Firmenname einfüge
 
 **Das Problem:**
 
-Erstens: Vorlagen sind generisch. Das Finanzamt erkennt das. Eine VD die für jeden passt, passt eigentlich für niemanden richtig.
+Erstens: Vorlagen sind generisch. Das Finanzamt erkennt das. Eine Verfahrensdokumentation die für jeden passt, passt eigentlich für niemanden richtig.
 
 Die GoBD verlangen eine individuelle Beschreibung deiner tatsächlichen Abläufe – nicht eine Vorlage die du minimal angepasst hast.
 
@@ -209,7 +209,7 @@ Der klassische Reflex: "Das ist doch Aufgabe meines Steuerberaters."
 
 Hier kommt die unbequeme Wahrheit.
 
-**Die VD ist nicht Aufgabe des Steuerberaters.**
+**Die Verfahrensdokumentation ist nicht Aufgabe des Steuerberaters.**
 
 Das ist keine Meinung – das steht explizit in den GoBD. Die Verfahrensdokumentation muss vom Unternehmen selbst erstellt werden, weil sie die internen Abläufe des Unternehmens beschreibt.
 
@@ -225,7 +225,7 @@ Er kennt deine Steuererklärung. Er kennt nicht deinen Alltag.
 
 **Was passiert in der Praxis:**
 
-Manche Steuerberater bieten die VD-Erstellung trotzdem an – aber sie müssen dich dafür ausführlich befragen. Stundenlang.
+Manche Steuerberater bieten die Erstellung der Verfahrensdokumentation trotzdem an – aber sie müssen dich dafür ausführlich befragen. Stundenlang.
 
 Das kostet. Zwischen 500 € und 3.000 € je nach Komplexität und Stundensatz.
 
@@ -295,7 +295,7 @@ Du ein komplexes Business hast, keine Zeit investieren willst und bereit bist 1.
 
 **Nutze ein Tool wenn:**
 
-Du eine individuelle, vollständige VD willst, in unter einer Stunde fertig sein möchtest und nicht mehr als nötig bezahlen willst. Das ist für die meisten Selbstständigen der sinnvollste Weg.
+Du eine individuelle, vollständige Verfahrensdokumentation willst, in unter einer Stunde fertig sein möchtest und nicht mehr als nötig bezahlen willst. Das ist für die meisten Selbstständigen der sinnvollste Weg.
 
 ---
 
@@ -351,17 +351,17 @@ Sie beantwortet ihm Fragen wie:
 - Wer hat Zugriff auf was?
 - Wie stellst du sicher dass nichts verändert wird?
 
-Ohne VD hat er keine Grundlage diese Fragen zu beurteilen. Und das ist das Problem.
+Ohne Verfahrensdokumentation hat er keine Grundlage diese Fragen zu beurteilen. Und das ist das Problem.
 
 **Quelle:** [GoBD Randziffer 151 ff. – BMF-Schreiben 28.11.2019](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/2019-11-28-GoBD.html)
 
 ---
 
-## Was passiert konkret wenn du keine VD hast?
+## Was passiert konkret wenn du keine Verfahrensdokumentation hast?
 
 Lass uns das Schritt für Schritt durchgehen.
 
-**Schritt 1: Der Prüfer stellt fest dass keine VD vorliegt**
+**Schritt 1: Der Prüfer stellt fest dass keine Verfahrensdokumentation vorliegt**
 
 Das ist ein formeller Mangel. Kein Kavaliersdelikt – ein echter Mangel der dokumentiert wird.
 
@@ -369,7 +369,7 @@ Das ist ein formeller Mangel. Kein Kavaliersdelikt – ein echter Mangel der dok
 
 Das ist der entscheidende Punkt den die meisten nicht kennen.
 
-Deine Buchführung muss nicht nur inhaltlich stimmen – sie muss auch formal ordnungsgemäß sein. Eine fehlende VD ist ein formeller Mangel der die Ordnungsmäßigkeit deiner gesamten digitalen Buchführung in Frage stellt.
+Deine Buchführung muss nicht nur inhaltlich stimmen – sie muss auch formal ordnungsgemäß sein. Eine fehlende Verfahrensdokumentation ist ein formeller Mangel der die Ordnungsmäßigkeit deiner gesamten digitalen Buchführung in Frage stellt.
 
 Das bedeutet: Der Prüfer muss ihr nicht mehr vertrauen. Auch wenn inhaltlich alles stimmt.
 
@@ -397,21 +397,21 @@ Lass uns realistisch sein.
 
 **Szenario 1: Kleiner Einzelunternehmer, einfaches Business**
 
-Du arbeitest als Freelancer, nutzt eine Buchhaltungssoftware, alles ist ordentlich. Keine VD.
+Du arbeitest als Freelancer, nutzt eine Buchhaltungssoftware, alles ist ordentlich. Keine Verfahrensdokumentation.
 
-In diesem Fall wird der Prüfer den Mangel notieren. Er wird dir möglicherweise eine Frist setzen um die VD nachzureichen. Wenn deine Zahlen stimmen und du kooperativ bist, bleibt es oft bei einer Beanstandung ohne große finanzielle Folgen.
+In diesem Fall wird der Prüfer den Mangel notieren. Er wird dir möglicherweise eine Frist setzen um die Verfahrensdokumentation nachzureichen. Wenn deine Zahlen stimmen und du kooperativ bist, bleibt es oft bei einer Beanstandung ohne große finanzielle Folgen.
 
 Aber: Es gibt keine Garantie dafür.
 
 **Szenario 2: Mehrere Systeme, komplexere Buchführung**
 
-Du nutzt verschiedene Tools – Buchhaltungssoftware, Zahlungsanbieter, Cloud-Dienste. Keine VD.
+Du nutzt verschiedene Tools – Buchhaltungssoftware, Zahlungsanbieter, Cloud-Dienste. Keine Verfahrensdokumentation.
 
 Hier wird es schwieriger. Der Prüfer kann nicht nachvollziehen wie die Daten zwischen den Systemen fließen. Das ist ein erheblicher Mangel.
 
 Die Wahrscheinlichkeit einer Schätzung steigt deutlich.
 
-**Szenario 3: Keine VD plus andere Mängel**
+**Szenario 3: Keine Verfahrensdokumentation plus andere Mängel**
 
 Fehlende VD plus unvollständige Belege plus nicht nachvollziehbare Buchungen – das ist eine Kombination die teuer werden kann.
 
@@ -429,7 +429,7 @@ Nein. Die Verfahrensdokumentation muss das Unternehmen selbst erstellen. Das ste
 
 Das Finanzamt zweifelt nicht an deiner Ehrlichkeit. Es zweifelt an der Nachvollziehbarkeit deiner Buchführung. Das ist ein Unterschied.
 
-Eine fehlende VD bedeutet nicht dass du Steuern hinterziehst. Es bedeutet dass deine Buchführung formal nicht ordnungsgemäß ist.
+Eine fehlende Verfahrensdokumentation bedeutet nicht dass du Steuern hinterziehst. Es bedeutet dass deine Buchführung formal nicht ordnungsgemäß ist.
 
 **Missverständnis 3: "Das wird schon nicht so schlimm."**
 
@@ -445,11 +445,11 @@ Das ist der Punkt der wirklich wichtig ist.
 
 Eine Betriebsprüfung läuft rückwirkend. Meistens für die letzten drei bis vier Jahre.
 
-Das bedeutet: Wenn der Prüfer jetzt kommt und du keine VD hast, hilft es nicht wenn du sie nächste Woche erstellst.
+Das bedeutet: Wenn der Prüfer jetzt kommt und du keine Verfahrensdokumentation hast, hilft es nicht wenn du sie nächste Woche erstellst.
 
 Die Mängel für den Prüfungszeitraum bestehen – unabhängig davon was du danach tust.
 
-Eine VD schützt dich nur wenn sie vor der Prüfung existiert und aktuell ist.
+Eine Verfahrensdokumentation schützt dich nur wenn sie vor der Prüfung existiert und aktuell ist.
 
 **Rechtsgrundlage:** [§ 193 AO – Zulässigkeit der Außenprüfung](https://www.gesetze-im-internet.de/ao_1977/__193.html)
 
@@ -459,9 +459,9 @@ Eine VD schützt dich nur wenn sie vor der Prüfung existiert und aktuell ist.
 
 Wenn du noch keine Verfahrensdokumentation hast: Erstell sie jetzt. Heute. Nicht nach der nächsten Prüfungsankündigung.
 
-Wenn du eine veraltete VD hast: Aktualisiere sie. Jede wesentliche Änderung deiner Systeme oder Prozesse seit der letzten Version muss dokumentiert sein.
+Wenn du eine veraltete Verfahrensdokumentation hast: Aktualisiere sie. Jede wesentliche Änderung deiner Systeme oder Prozesse seit der letzten Version muss dokumentiert sein.
 
-Wenn du eine aktuelle VD hast: Gut. Bewahre sie griffbereit auf und plane eine jährliche Überprüfung ein.
+Wenn du eine aktuelle Verfahrensdokumentation hast: Gut. Bewahre sie griffbereit auf und plane eine jährliche Überprüfung ein.
 
 Die Betriebsprüfung kommt irgendwann. Die Frage ist nur ob du dann sagen kannst: "Hier ist meine Verfahrensdokumentation" – oder nicht.
 
@@ -477,7 +477,7 @@ Das muss nicht in einer Katastrophe enden. Aber es kann. Und das Risiko ist komp
 
 Mit GoBD-Suite dauert die Erstellung unter einer Stunde.
 
-Das Risiko einer Betriebsprüfung ohne VD dauert potenziell Jahre.
+Das Risiko einer Betriebsprüfung ohne Verfahrensdokumentation dauert potenziell Jahre.
 
 **Quellen und weiterführende Links:**
 
@@ -511,19 +511,19 @@ Kurze Antwort: Fast jeder der bereits mit Unternehmen arbeitet.
 
 **Steuerberater und Buchhalter:**
 
-Du hast ohnehin Einblick in die Buchhaltung deiner Mandanten. Die VD ist eine logische Ergänzung deines Leistungsportfolios. Du hilfst deinen Mandanten bei der Compliance – und verdienst dabei.
+Du hast ohnehin Einblick in die Buchhaltung deiner Mandanten. Die Verfahrensdokumentation ist eine logische Ergänzung deines Leistungsportfolios. Du hilfst deinen Mandanten bei der Compliance – und verdienst dabei.
 
 **Unternehmensberater und Consultants:**
 
-Du begleitest Unternehmen bei der Digitalisierung und Prozessoptimierung. Die VD passt perfekt in dieses Bild – du dokumentierst was du ohnehin aufbaust.
+Du begleitest Unternehmen bei der Digitalisierung und Prozessoptimierung. Die Verfahrensdokumentation passt perfekt in dieses Bild – du dokumentierst was du ohnehin aufbaust.
 
 **Marketing-Agenturen und IT-Dienstleister:**
 
-Du richtest digitale Tools und Systeme ein. Wer neue Software implementiert braucht auch eine aktualisierte VD. Das ist ein natürliches Upsell.
+Du richtest digitale Tools und Systeme ein. Wer neue Software implementiert braucht auch eine aktualisierte Verfahrensdokumentation. Das ist ein natürliches Upsell.
 
 **Freelancer mit Beratungsfokus:**
 
-Du hast Kunden die Unterstützung bei Compliance-Themen suchen. Die VD ist ein konkretes, abgrenzbares Produkt das du anbieten kannst.
+Du hast Kunden die Unterstützung bei Compliance-Themen suchen. Die Verfahrensdokumentation ist ein konkretes, abgrenzbares Produkt das du anbieten kannst.
 
 **Quelle:** [GoBD – Verantwortlichkeit des Unternehmens](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/2019-11-28-GoBD.html)
 
@@ -537,7 +537,7 @@ Aber wie du es verkaufst macht den Unterschied.
 
 **Falsch:** "Ich erstelle Ihnen eine Verfahrensdokumentation nach GoBD."
 
-**Richtig:** "Ich schütze Sie vor den finanziellen Folgen einer Betriebsprüfung ohne VD – und das in unter zwei Wochen."
+**Richtig:** "Ich schütze Sie vor den finanziellen Folgen einer Betriebsprüfung ohne Verfahrensdokumentation – und das in unter zwei Wochen."
 
 Der Unterschied: Einer beschreibt was du tust. Der andere beschreibt was der Mandant bekommt.
 
@@ -577,15 +577,15 @@ Gesamtaufwand deinerseits: 1,5 bis 3 Stunden pro Mandant.
 
 Lass uns konkret werden.
 
-Der Markt für VD-Erstellung ist noch wenig gesättigt. Das bedeutet: Du kannst faire Preise durchsetzen.
+Der Markt für die Erstellung von Verfahrensdokumentationen ist noch wenig gesättigt. Das bedeutet: Du kannst faire Preise durchsetzen.
 
 **Typische Marktpreise:**
 
-Einfache VD (Einzelunternehmer, 1-2 Systeme): 800 € bis 1.200 €
+Einfache Verfahrensdokumentation (Einzelunternehmer, 1-2 Systeme): 800 € bis 1.200 €
 
-Standard VD (KMU, mehrere Systeme): 1.200 € bis 2.000 €
+Standard Verfahrensdokumentation (KMU, mehrere Systeme): 1.200 € bis 2.000 €
 
-Komplexe VD (mehrere Standorte, viele Schnittstellen): 2.000 € bis 3.500 €
+Komplexe Verfahrensdokumentation (mehrere Standorte, viele Schnittstellen): 2.000 € bis 3.500 €
 
 Jährliche Aktualisierung: 200 € bis 500 €
 
@@ -593,7 +593,7 @@ Jährliche Aktualisierung: 200 € bis 500 €
 
 Du hast 5 Mandanten pro Monat:
 
-- Durchschnittspreis pro VD: 1.500 €
+- Durchschnittspreis pro Verfahrensdokumentation: 1.500 €
 - Monatlicher Umsatz: 7.500 €
 - Tool-Kosten: 399 €/Monat
 - Dein Aufwand: ca. 10-15 Stunden/Monat
@@ -609,7 +609,7 @@ Drei Positionierungsstrategien die funktionieren:
 
 **Strategie 1: Compliance-Paket**
 
-Du bündelst die VD mit anderen Compliance-Leistungen. "Jahresabschluss + Verfahrensdokumentation + steuerliche Beratung" als Paketpreis.
+Du bündelst die Verfahrensdokumentation mit anderen Compliance-Leistungen. "Jahresabschluss + Verfahrensdokumentation + steuerliche Beratung" als Paketpreis.
 
 Das erhöht den Gesamtumsatz pro Mandant ohne dass du viel mehr Zeit investierst.
 
@@ -623,7 +623,7 @@ Das ist ein konkreter Nutzen den Unternehmer verstehen.
 
 **Strategie 3: Digitalisierungsbegleitung**
 
-Jedes Unternehmen das neue Software einführt braucht eine aktualisierte VD. Du bietest die VD-Aktualisierung als selbstverständlichen Teil der Implementierung an.
+Jedes Unternehmen das neue Software einführt braucht eine aktualisierte Verfahrensdokumentation. Du bietest die Aktualisierung als selbstverständlichen Teil der Implementierung an.
 
 ---
 
@@ -709,7 +709,7 @@ Wenn ja – brauchst du eine Verfahrensdokumentation. Punkt.
 
 Das gilt für den Konzern mit 500 Mitarbeitern genauso wie für den Freelancer der alleine von seinem Homeoffice aus arbeitet.
 
-Die gute Nachricht: Als Freelancer ist deine VD deutlich überschaubarer als die eines großen Unternehmens. Du brauchst kein 50-seitiges Dokument.
+Die gute Nachricht: Als Freelancer ist deine Verfahrensdokumentation deutlich überschaubarer als die eines großen Unternehmens. Du brauchst kein 50-seitiges Dokument.
 
 Aber du brauchst ein vollständiges.
 
@@ -727,7 +727,7 @@ Das bedeutet: Wenn du Lexoffice, sevDesk, FastBill, Stripe, Funnelpay oder ähnl
 
 ---
 
-## Was in deine Freelancer-VD muss
+## Was in deine Freelancer-Verfahrensdokumentation muss
 
 Lass uns das konkret machen. Hier ist was ein typischer Freelancer dokumentieren muss:
 
@@ -810,7 +810,7 @@ Ein gutes Tool erkennt das automatisch durch das Onboarding und blendet irreleva
 
 ---
 
-## Der häufigste Fehler bei Freelancer-VDs
+## Der häufigste Fehler bei Freelancer-Verfahrensdokumentationen
 
 Du weißt jetzt was reinmuss. Hier ist was am häufigsten schiefläuft.
 
@@ -824,7 +824,7 @@ Du weißt jetzt was reinmuss. Hier ist was am häufigsten schiefläuft.
 
 Du wechselst von Lexoffice zu sevDesk. Du meldest dich bei Stripe an. Du nutzt jetzt Google Drive für die Belegablage.
 
-Jede dieser Änderungen muss in der VD aktualisiert werden. Mit Datum.
+Jede dieser Änderungen muss in der Verfahrensdokumentation aktualisiert werden. Mit Datum.
 
 **Fehler 3: Denken es reicht eine Vorlage**
 
@@ -874,7 +874,7 @@ Das ist einmalig. Danach pflegst du nur noch was sich ändert.
 
 Kurze Erinnerung.
 
-Bei einer Betriebsprüfung kann das Finanzamt deine Buchführung als nicht ordnungsgemäß einstufen wenn keine VD vorliegt.
+Bei einer Betriebsprüfung kann das Finanzamt deine Buchführung als nicht ordnungsgemäß einstufen wenn keine Verfahrensdokumentation vorliegt.
 
 Das gibt ihm das Recht zu schätzen statt deine tatsächlichen Zahlen zu prüfen.
 
@@ -890,7 +890,7 @@ Für eine Stunde Aufwand ist das ein vermeidbares Risiko.
 
 ## Fazit
 
-Als Freelancer brauchst du keine komplizierte VD. Aber du brauchst eine vollständige.
+Als Freelancer brauchst du keine komplizierte Verfahrensdokumentation. Aber du brauchst eine vollständige.
 
 Die gute Nachricht: Deine Situation ist überschaubarer als die der meisten Unternehmen. Weniger Systeme, keine Mitarbeiter, klare Prozesse.
 
@@ -1170,7 +1170,7 @@ Wie genau können Daten für eine Betriebsprüfung bereitgestellt werden? Z1, Z2
 
 **5. Versionierung fehlt**
 
-Jede Änderung an der Verfahrensdokumentation muss mit Datum und Beschreibung dokumentiert werden. Ohne Änderungshistorie ist die VD nicht GoBD-konform.
+Jede Änderung an der Verfahrensdokumentation muss mit Datum und Beschreibung dokumentiert werden. Ohne Änderungshistorie ist die Verfahrensdokumentation nicht GoBD-konform.
 
 ---
 
@@ -1180,10 +1180,10 @@ Bei jeder wesentlichen Änderung.
 
 Das bedeutet konkret:
 
-- Neue Software eingeführt → VD aktualisieren
-- Zahlungsanbieter gewechselt → VD aktualisieren
-- Prozess geändert → VD aktualisieren
-- Neuer Mitarbeiter mit Buchungszugang → VD aktualisieren
+- Neue Software eingeführt → Verfahrensdokumentation aktualisieren
+- Zahlungsanbieter gewechselt → Verfahrensdokumentation aktualisieren
+- Prozess geändert → Verfahrensdokumentation aktualisieren
+- Neuer Mitarbeiter mit Buchungszugang → Verfahrensdokumentation aktualisieren
 
 Eine jährliche Überprüfung ist empfehlenswert auch wenn sich nichts geändert hat – einfach um zu bestätigen dass alles noch aktuell ist.
 
@@ -1214,7 +1214,7 @@ Eine vollständige Verfahrensdokumentation ist kein Hexenwerk – aber es brauch
 
 Die häufigsten Fehler entstehen nicht aus Unwissenheit sondern aus Lückenhaftigkeit. Ein Block vergessen, eine Schnittstelle nicht beschrieben, das IKS zu oberflächlich – und der Prüfer findet eine Angriffsfläche.
 
-Mit dieser Checkliste hast du alles was du brauchst um deine VD vollständig und GoBD-konform zu erstellen.
+Mit dieser Checkliste hast du alles was du brauchst um deine Verfahrensdokumentation vollständig und GoBD-konform zu erstellen.
 
 Und mit GoBD-Suite erledigst du das in unter einer Stunde – die KI führt dich durch jeden Block und stellt sicher dass nichts fehlt.
 

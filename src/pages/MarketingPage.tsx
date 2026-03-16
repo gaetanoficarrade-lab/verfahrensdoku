@@ -389,13 +389,13 @@ export default function MarketingPage() {
     author: 'Gaetano Ficarra',
     robots: 'index, follow',
     ogTitle: 'GoBD-Suite – Verfahrensdokumentation erstellen',
-    ogDescription: 'Das erste vollständige VD-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde.',
+    ogDescription: 'Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde.',
     ogType: 'website',
     ogLocale: 'de_DE',
     ogImage: 'https://gobd-suite.de/images/logo.png',
     twitterCard: 'summary_large_image',
     twitterTitle: 'GoBD-Suite',
-    twitterDescription: 'Das erste vollständige VD-Tool im DACH-Raum.',
+    twitterDescription: 'Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum.',
     jsonLd: jsonLdSchemas,
   });
 
@@ -438,7 +438,7 @@ export default function MarketingPage() {
             <div style={{ animation: 'heroSlideUp 0.8s ease-out both' }}>
               <Reveal>
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full mb-6" style={{ background: C.yellow, color: C.dark }}>
-                  Das erste VD-Tool im DACH-Raum
+                  Das erste Verfahrensdokumentations-Tool im DACH-Raum
                 </span>
               </Reveal>
               <Reveal delay={0.1}>
@@ -629,7 +629,7 @@ export default function MarketingPage() {
               <Reveal>
                 <article className="rounded-[18px] p-8 h-full flex flex-col" style={{ background: C.white, border: `1px solid ${C.border}` }}>
                   <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-4" style={{ background: C.bgLight, color: C.dark }}>Solo-Plan</span>
-                  <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>Du willst deine VD selbst erstellen</h3>
+                  <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>Du willst deine Verfahrensdokumentation selbst erstellen</h3>
                   <ul className="space-y-2 mb-8">
                     {['Kein Steuerberater nötig', 'Einmalig zahlen, 12 Monate nutzen', 'Unbegrenzte Revisionen', 'Fertig in unter einer Stunde'].map(t => (
                       <li key={t} className="flex items-center gap-2 text-[15px]" style={{ color: C.textGray }}><Check size={16} style={{ color: C.green }} /> {t}</li>
@@ -649,7 +649,7 @@ export default function MarketingPage() {
               <Reveal delay={0.1}>
                 <article className="rounded-[18px] p-8 h-full flex flex-col" style={{ background: C.white, border: `1px solid ${C.border}`, borderTopWidth: 3, borderTopColor: C.yellow }}>
                   <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-4" style={{ background: C.yellow, color: C.dark }}>Berater & Agentur</span>
-                  <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>Du willst VDs als Dienstleistung anbieten</h3>
+                  <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>Du willst Verfahrensdokumentationen als Dienstleistung anbieten</h3>
                   <ul className="space-y-2 mb-8">
                     {['Mehrere Mandanten verwalten', 'Whitelabel unter deinem Brand (Agentur)', 'Neue Einnahmequelle für dein Business', 'Mandanten füllen selbst aus – du prüfst und finalisierst'].map(t => (
                       <li key={t} className="flex items-center gap-2 text-[15px]" style={{ color: C.textGray }}><Check size={16} style={{ color: C.green }} /> {t}</li>
@@ -726,7 +726,7 @@ export default function MarketingPage() {
                   role: 'Steuerberaterin, München',
                 },
                 {
-                  quote: 'Der Agentur-Plan ist perfekt für mein Business. Ich erstelle jetzt VDs für meine Kunden unter meinem eigenen Brand. Neue Einnahmequelle mit minimalem Aufwand.',
+                  quote: 'Der Agentur-Plan ist perfekt für mein Business. Ich erstelle jetzt Verfahrensdokumentationen für meine Kunden unter meinem eigenen Brand. Neue Einnahmequelle mit minimalem Aufwand.',
                   name: 'Thomas R.',
                   role: 'Marketing-Consultant, Hamburg',
                 },

@@ -152,7 +152,7 @@ export default function FuerSelbststaendige() {
   const problemPoints = [
     { Icon: AlertTriangle, title: 'Die Verfahrensdokumentation ist deine Pflicht', text: 'Nicht die deines Steuerberaters. Du als Unternehmer bist verantwortlich – weil nur du weißt wie dein Business wirklich läuft.' },
     { Icon: Clock, title: 'Seit 2025 wird es aktiv geprüft', text: 'Betriebsprüfer fragen gezielt nach der Verfahrensdokumentation. Wer keine hat, riskiert die Anerkennung seiner gesamten digitalen Buchführung.' },
-    { Icon: Euro, title: 'Ohne VD kann das Finanzamt schätzen', text: 'Und Schätzungen liegen fast immer über deinen tatsächlichen Einnahmen. Das bedeutet Nachzahlungen die weh tun.' },
+    { Icon: Euro, title: 'Ohne Verfahrensdokumentation kann das Finanzamt schätzen', text: 'Und Schätzungen liegen fast immer über deinen tatsächlichen Einnahmen. Das bedeutet Nachzahlungen die weh tun.' },
   ];
 
   const timelineSteps = [
@@ -173,8 +173,8 @@ export default function FuerSelbststaendige() {
   const [openChapter, setOpenChapter] = useState<number | null>(0);
 
   const faqs = [
-    { q: 'Brauche ich das wirklich als Freelancer?', a: 'Ja. Die GoBD gelten für jeden der digital bucht – egal ob GmbH, UG oder Einzelunternehmer. Als Freelancer bist du genauso verpflichtet wie ein großes Unternehmen. Der Unterschied: Bei dir ist die VD meist einfacher weil weniger Systeme im Einsatz sind. GoBD-Suite passt das Dokument automatisch an deine Situation an.' },
-    { q: 'Kann ich die VD wirklich selbst erstellen ohne Steuerberater?', a: 'Ja – und das ist sogar der richtige Weg. Die Verfahrensdokumentation muss das Unternehmen selbst erstellen weil nur du weißt wie dein Business wirklich läuft. Dein Steuerberater kennt deine internen Abläufe nicht. GoBD-Suite führt dich durch den gesamten Prozess.' },
+    { q: 'Brauche ich das wirklich als Freelancer?', a: 'Ja. Die GoBD gelten für jeden der digital bucht – egal ob GmbH, UG oder Einzelunternehmer. Als Freelancer bist du genauso verpflichtet wie ein großes Unternehmen. Der Unterschied: Bei dir ist die Verfahrensdokumentation meist einfacher weil weniger Systeme im Einsatz sind. GoBD-Suite passt das Dokument automatisch an deine Situation an.' },
+    { q: 'Kann ich die Verfahrensdokumentation wirklich selbst erstellen ohne Steuerberater?', a: 'Ja – und das ist sogar der richtige Weg. Die Verfahrensdokumentation muss das Unternehmen selbst erstellen weil nur du weißt wie dein Business wirklich läuft. Dein Steuerberater kennt deine internen Abläufe nicht. GoBD-Suite führt dich durch den gesamten Prozess.' },
     { q: 'Was wenn sich mein Business ändert?', a: 'Einfach das betreffende Kapitel aktualisieren. Du hast 12 Monate Zugang und kannst unbegrenzt Revisionen machen. Alle Änderungen werden automatisch mit Datum dokumentiert – genau wie es die GoBD verlangen.' },
     { q: 'Wie lange dauert die Erstellung wirklich?', a: 'Die meisten Selbstständigen sind in 45 bis 90 Minuten fertig. Das hängt davon ab wie komplex deine Systeme sind. Das Onboarding dauert 5 Minuten, dann bearbeitest du die Kapitel in deinem Tempo.' },
     { q: 'Was passiert nach 12 Monaten?', a: 'Du kannst deinen Zugang für 199 €/Jahr verlängern. So hast du immer Zugriff auf deine Verfahrensdokumentation und kannst sie bei Bedarf aktualisieren. Wenn du nicht verlängerst, kannst du dein PDF vorher herunterladen und lokal speichern.' },
@@ -247,7 +247,7 @@ export default function FuerSelbststaendige() {
               {[
                 '...als Freelancer oder Solopreneur arbeitest',
                 '...deine Buchhaltung digital führst',
-                '...keinen Steuerberater für die VD beauftragen willst',
+                '...keinen Steuerberater für die Verfahrensdokumentation beauftragen willst',
                 '...bei der nächsten Betriebsprüfung vorbereitet sein willst',
                 '...keine Zeit für Bürokratie verschwenden willst',
                 '...eine einmalige Lösung ohne Abo suchst',
@@ -291,7 +291,7 @@ export default function FuerSelbststaendige() {
         <section className="py-20 md:py-28 px-6" style={{ background: C.bgLight }}>
           <div className="max-w-4xl mx-auto">
             <Reveal>
-              <h2 className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>So erstellst du deine VD mit GoBD-Suite</h2>
+              <h2 className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>So erstellst du deine Verfahrensdokumentation mit GoBD-Suite</h2>
             </Reveal>
             <div className="grid md:grid-cols-4 gap-8">
               {timelineSteps.map((s, i) => (
