@@ -237,7 +237,7 @@ export default function VerfahrensdokumentationErstellen() {
           </div>
         </section>
 
-        {/* ═══ 3. WER BRAUCHT EINE VD ═══ */}
+        {/* ═══ 3. WER BRAUCHT EINE VERFAHRENSDOKUMENTATION ═══ */}
         <WaveDivider from={C.white} to={C.bgLight} />
         <section className="py-20 md:py-28 px-6" style={{ background: C.bgLight }}>
           <div className="max-w-5xl mx-auto">
