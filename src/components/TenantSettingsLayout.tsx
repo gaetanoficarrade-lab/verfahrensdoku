@@ -92,7 +92,7 @@ export function TenantSettingsLayout({ children }: TenantSettingsLayoutProps) {
 
       {/* Desktop: Horizontal tab bar */}
       <div className="hidden md:block rounded-xl bg-card border border-border p-1.5 shadow-sm">
-        <nav className="flex gap-1 overflow-x-auto" aria-label="Einstellungen">
+        <nav className="flex flex-wrap gap-1" aria-label="Einstellungen">
           {tabs.map((tab) => {
             const isActive = location.pathname === tab.url;
             const Icon = tab.icon;
@@ -102,7 +102,7 @@ export function TenantSettingsLayout({ children }: TenantSettingsLayoutProps) {
                 key={tab.url}
                 onClick={() => navigate(tab.url)}
                 className={cn(
-                  'flex items-center gap-1.5 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200',
+                  'flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200',
                   isActive
                     ? 'bg-accent text-accent-foreground shadow-md'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
