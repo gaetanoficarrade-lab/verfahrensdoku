@@ -148,7 +148,7 @@ const AdminDashboard = () => {
                   <p>Folgende Daten werden neu angelegt:</p>
                   <ul className="list-disc pl-5 space-y-1 text-sm">
                     <li><strong>Unterkonto:</strong> Musterkanzlei Müller & Partner (Plan: Professional)</li>
-                    <li><strong>Mandant:</strong> Beispiel GmbH (IT-Dienstleistungen, 3 Mitarbeiter)</li>
+                    <li><strong>Kunde:</strong> Beispiel GmbH (IT-Dienstleistungen, 3 Mitarbeiter)</li>
                     <li><strong>Projekt:</strong> Verfahrensdokumentation 2024 mit vollständigem Onboarding</li>
                     <li><strong>Kapitel:</strong> Alle 30 Unterkapitel mit realistischen Texten, vollständig freigegeben und PDF-bereit</li>
                     <li><strong>Dokumentversion:</strong> Finalisierte Version 1</li>

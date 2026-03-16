@@ -118,7 +118,7 @@ export default function TestStarten() {
           <CardHeader>
             <CardTitle>Kostenlosen Test starten</CardTitle>
             <CardDescription>
-              Erstellen Sie Ihr Testkonto und erkunden Sie alle Funktionen mit einem Muster-Mandanten.
+              Erstellen Sie Ihr Testkonto und erkunden Sie alle Funktionen mit einem Muster-Kunden.
             </CardDescription>
           </CardHeader>
           <CardContent>

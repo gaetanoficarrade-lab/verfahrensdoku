@@ -756,7 +756,7 @@ export default function MarketingPage() {
                   role: 'Freelance Designer, Berlin',
                 },
                 {
-                  quote: 'Als Steuerberaterin empfehle ich meinen Mandanten jetzt GoBD-Suite. Die Qualität der generierten Dokumente ist beeindruckend – und ich spare enorm viel Zeit.',
+                  quote: 'Als Steuerberaterin empfehle ich meinen Kunden jetzt GoBD-Suite. Die Qualität der generierten Dokumente ist beeindruckend – und ich spare enorm viel Zeit.',
                   name: 'Sandra K.',
                   role: 'Steuerberaterin, München',
                 },
