@@ -476,7 +476,7 @@ export default function AdminSettingsPlans() {
                       value={form.max_clients}
                       onChange={(e) => setForm((p) => ({ ...p, max_clients: Number(e.target.value) }))}
                       min={1}
-                      placeholder="Max. Mandanten"
+                      placeholder="Max. Kunden"
                     />
                   )}
                 </div>

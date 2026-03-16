@@ -81,7 +81,7 @@ export default function Projects() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Projekt</TableHead>
-                  <TableHead>Mandant</TableHead>
+                  <TableHead>Kunde</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Erstellt</TableHead>
                 </TableRow>

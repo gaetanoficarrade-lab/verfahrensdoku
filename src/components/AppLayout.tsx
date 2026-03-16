@@ -22,7 +22,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   const isClient = roles.includes('client');
   const showAdmin = isSuperAdmin && !impersonation.isImpersonating;
-  const roleLabel = showAdmin ? 'Super-Admin' : isClient ? 'Mandant' : 'Berater';
+  const roleLabel = showAdmin ? 'Super-Admin' : isClient ? 'Kunde' : 'Berater';
 
   return (
     <SidebarProvider>

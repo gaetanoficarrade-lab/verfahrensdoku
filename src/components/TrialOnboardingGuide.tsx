@@ -71,7 +71,7 @@ export function TrialOnboardingGuide() {
         <div className="space-y-4 py-2">
           <p className="text-sm text-muted-foreground">
             Sie haben <strong>{daysLeft} Tag{daysLeft !== 1 ? 'e' : ''}</strong> um die GoBD-Suite kennenzulernen.
-            Erkunden Sie die wichtigsten Funktionen mit dem Beispiel-Mandanten.
+            Erkunden Sie die wichtigsten Funktionen mit dem Beispiel-Kunden.
           </p>
 
           {/* Available */}

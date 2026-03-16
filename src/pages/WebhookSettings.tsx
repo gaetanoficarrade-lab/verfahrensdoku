@@ -20,7 +20,7 @@ const EVENT_OPTIONS = [
   { value: 'projekt_erstellt', label: 'Projekt erstellt' },
   { value: 'kapitel_eingereicht', label: 'Kapitel eingereicht' },
   { value: 'dokument_finalisiert', label: 'Dokument finalisiert' },
-  { value: 'mandant_eingeladen', label: 'Mandant eingeladen' },
+  { value: 'mandant_eingeladen', label: 'Kunde eingeladen' },
 ];
 
 interface Webhook {
