@@ -244,8 +244,16 @@ export function FirstStepsGuide() {
   return (
     <Dialog open={true} onOpenChange={(v) => { if (!v) handleComplete(); }}>
       <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-border bg-card">
+        {/* Preview mode plan badge */}
+        {previewMode && previewPlan && (
+          <div className="flex justify-center pt-4 px-6">
+            <span className="text-xs font-medium text-muted-foreground bg-muted px-2.5 py-1 rounded-full">
+              Vorschau: {previewPlan.charAt(0).toUpperCase() + previewPlan.slice(1)}-Plan ({steps.length} Schritte)
+            </span>
+          </div>
+        )}
         {/* Progress dots */}
-        <div className="flex justify-center gap-1.5 pt-6 px-6">
+        <div className={`flex justify-center gap-1.5 ${previewMode ? 'pt-2' : 'pt-6'} px-6`}>
           {steps.map((_, i) => (
             <div
               key={i}
