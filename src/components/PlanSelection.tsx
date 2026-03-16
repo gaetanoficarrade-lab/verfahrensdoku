@@ -22,9 +22,11 @@ interface PlanCardProps {
   checkoutUrl: string;
   currentPlan?: string | null;
   isAnnual?: boolean;
+  switchBillingUrl?: string;
+  switchBillingLabel?: string;
 }
 
-function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, highlighted, checkoutUrl, currentPlan, isAnnual }: PlanCardProps) {
+function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, highlighted, checkoutUrl, currentPlan, isAnnual, switchBillingUrl, switchBillingLabel }: PlanCardProps) {
   const isCurrent = currentPlan?.toLowerCase() === name.toLowerCase();
 
   return (
@@ -60,10 +62,22 @@ function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, h
           ))}
         </ul>
         {isCurrent ? (
-          <Button variant="outline" disabled className="w-full">
-            <Crown className="h-4 w-4 mr-2" />
-            Aktueller Plan
-          </Button>
+          <div className="space-y-2">
+            <Button variant="outline" disabled className="w-full">
+              <Crown className="h-4 w-4 mr-2" />
+              Aktueller Plan
+            </Button>
+            {switchBillingUrl && switchBillingLabel && (
+              <Button
+                variant="default"
+                className="w-full"
+                onClick={() => window.open(switchBillingUrl, '_blank')}
+              >
+                <ArrowRight className="h-4 w-4 mr-2" />
+                {switchBillingLabel}
+              </Button>
+            )}
+          </div>
         ) : checkoutUrl ? (
           <Button
             className="w-full"
@@ -106,6 +120,21 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
     agentur: annual
       ? 'https://funnelpay.de/checkout/GoBD-Suite Agentur Plan-Jährl.'
       : (settings['funnelpay_checkout_agentur'] || 'https://funnelpay.de/checkout/GoBD-Suite Agentur Plan'),
+  };
+
+  // URLs for switching billing cycle (opposite of current toggle)
+  const switchBillingUrls = {
+    berater: annual
+      ? (settings['funnelpay_checkout_berater'] || 'https://funnelpay.de/checkout/GoBD-Suite Berater Plan')
+      : 'https://funnelpay.de/checkout/GoBD-Suite Berater Plan Jährl.',
+    agentur: annual
+      ? (settings['funnelpay_checkout_agentur'] || 'https://funnelpay.de/checkout/GoBD-Suite Agentur Plan')
+      : 'https://funnelpay.de/checkout/GoBD-Suite Agentur Plan-Jährl.',
+  };
+
+  const getSwitchLabel = (planName: string) => {
+    if (currentPlan?.toLowerCase() !== planName.toLowerCase()) return undefined;
+    return annual ? 'Zu monatlich wechseln' : 'Zu jährlich wechseln';
   };
 
   return (
@@ -166,6 +195,8 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
             ]}
             checkoutUrl={checkoutUrls.berater}
             currentPlan={currentPlan}
+            switchBillingUrl={currentPlan?.toLowerCase() === 'berater' ? switchBillingUrls.berater : undefined}
+            switchBillingLabel={getSwitchLabel('berater')}
           />
         )}
         <PlanCard
@@ -185,6 +216,8 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
           ]}
           checkoutUrl={checkoutUrls.agentur}
           currentPlan={currentPlan}
+          switchBillingUrl={currentPlan?.toLowerCase() === 'agentur' ? switchBillingUrls.agentur : undefined}
+          switchBillingLabel={getSwitchLabel('agentur')}
         />
       </div>
     </div>
