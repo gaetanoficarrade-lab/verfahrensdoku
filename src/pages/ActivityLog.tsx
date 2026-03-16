@@ -95,7 +95,7 @@ export default function ActivityLog() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    if (!effectiveTenantId) return;
+    if (!effectiveTenantId) { setLoading(false); return; }
     const fetchData = async () => {
       setLoading(true);
       const [logRes, profileRes] = await Promise.all([

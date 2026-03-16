@@ -28,7 +28,7 @@ export default function BillingSettings() {
   const [tenantPlan, setTenantPlan] = useState<TenantPlanInfo | null>(null);
 
   useEffect(() => {
-    if (!effectiveTenantId) return;
+    if (!effectiveTenantId) { setLoading(false); return; }
     const load = async () => {
       setLoading(true);
       const [tenantRes, clientsRes, projectsRes] = await Promise.all([
