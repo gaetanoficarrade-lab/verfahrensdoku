@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Building2, Plus, Pencil, Trash2, Power, PowerOff, Eye, Send, Loader2, X, RefreshCw, Mail,
+  Building2, Plus, Pencil, Trash2, Power, PowerOff, Eye, Send, Loader2, X, RefreshCw, Mail, Lock, Unlock,
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,6 +36,7 @@ interface Tenant {
   contact_name: string | null;
   contact_email: string | null;
   is_active: boolean;
+  is_locked: boolean;
   plan_id: string | null;
   is_free: boolean;
   trial_active: boolean;
@@ -243,6 +244,12 @@ const AdminTenants = () => {
 
   const handleDelete = async () => {
     if (!deletingTenant) return;
+    if (deletingTenant.is_locked) {
+      toast({ variant: 'destructive', title: 'Gesperrt', description: 'Dieses Unterkonto ist geschützt und kann nicht gelöscht werden.' });
+      setDeleteDialogOpen(false);
+      setDeletingTenant(null);
+      return;
+    }
     const { error } = await supabase.from('tenants').delete().eq('id', deletingTenant.id);
     if (error) {
       toast({ variant: 'destructive', title: 'Fehler', description: error.message });
@@ -252,6 +259,19 @@ const AdminTenants = () => {
     }
     setDeleteDialogOpen(false);
     setDeletingTenant(null);
+  };
+
+  const handleToggleLock = async (t: Tenant) => {
+    const { error } = await supabase
+      .from('tenants')
+      .update({ is_locked: !t.is_locked } as any)
+      .eq('id', t.id);
+    if (error) {
+      toast({ variant: 'destructive', title: 'Fehler', description: error.message });
+    } else {
+      toast({ title: t.is_locked ? 'Löschschutz aufgehoben.' : 'Löschschutz aktiviert.' });
+      fetchData();
+    }
   };
 
   const handleImpersonate = (t: Tenant) => {
@@ -391,9 +411,18 @@ const AdminTenants = () => {
                   <Button
                     variant="ghost"
                     size="icon"
+                    onClick={() => handleToggleLock(tenant)}
+                    title={tenant.is_locked ? 'Löschschutz aufheben' : 'Löschschutz aktivieren'}
+                  >
+                    {tenant.is_locked ? <Lock className="h-4 w-4 text-amber-500" /> : <Unlock className="h-4 w-4" />}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => { setDeletingTenant(tenant); setDeleteDialogOpen(true); }}
-                    title="Löschen"
-                    className="text-destructive hover:text-destructive"
+                    title={tenant.is_locked ? 'Geschützt – Löschschutz zuerst aufheben' : 'Löschen'}
+                    disabled={tenant.is_locked}
+                    className="text-destructive hover:text-destructive disabled:opacity-30"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
