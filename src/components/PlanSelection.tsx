@@ -100,6 +100,8 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
     'funnelpay_checkout_agentur',
   ]);
 
+  const currentLevel = currentPlan ? (PLAN_HIERARCHY[currentPlan.toLowerCase()] || 0) : 0;
+
   const checkoutUrls = {
     solo: settings['funnelpay_checkout_solo'] || 'https://funnelpay.de/checkout/GoBD-Suite Solo Plan',
     berater: annual
