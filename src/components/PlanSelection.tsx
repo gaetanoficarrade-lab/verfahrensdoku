@@ -216,6 +216,8 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
           ]}
           checkoutUrl={checkoutUrls.agentur}
           currentPlan={currentPlan}
+          switchBillingUrl={currentPlan?.toLowerCase() === 'agentur' ? switchBillingUrls.agentur : undefined}
+          switchBillingLabel={getSwitchLabel('agentur')}
         />
       </div>
     </div>
