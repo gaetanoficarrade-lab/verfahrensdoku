@@ -88,6 +88,18 @@ export function FirstStepsGuide() {
     ...(isAgentur ? AGENTUR_STEPS : []),
   ];
 
+  // Allow super admins to open the wizard via a global event
+  useEffect(() => {
+    const handler = () => {
+      setPreviewMode(true);
+      setStep(0);
+      setOpen(true);
+      setMinimized(false);
+    };
+    window.addEventListener('open-onboarding-preview', handler);
+    return () => window.removeEventListener('open-onboarding-preview', handler);
+  }, []);
+
   useEffect(() => {
     if (!user || planLoading || checked) return;
     if (!isTenantAdmin || isSuperAdmin || roles.includes('client')) {
