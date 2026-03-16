@@ -173,7 +173,7 @@ export default function AdminSettingsIntegrations() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <SecretInput field="funnelpay_webhook_secret" label="Webhook-Secret" placeholder="whsec_..." />
+            {renderSecretInput('funnelpay_webhook_secret', 'Webhook-Secret', 'whsec_...')}
             <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-2">
                 <Label className="text-sm font-medium text-foreground">Produkt-ID Solo</Label>
