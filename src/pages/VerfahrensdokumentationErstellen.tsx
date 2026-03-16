@@ -214,7 +214,7 @@ export default function VerfahrensdokumentationErstellen() {
             <Reveal><h2 className="text-3xl md:text-[48px] font-bold leading-tight mb-10" style={{ color: C.dark }}>Was ist eine Verfahrensdokumentation?</h2></Reveal>
             <Reveal delay={0.1}>
               <div className="text-left text-lg leading-relaxed space-y-4" style={{ color: C.textGray }}>
-                <p>Eine Verfahrensdokumentation – auch VD oder Verfahrensbeschreibung genannt – ist ein Dokument das beschreibt wie ein Unternehmen seine digitale Buchführung organisiert und durchführt.</p>
+                <p>Eine Verfahrensdokumentation – auch Verfahrensbeschreibung genannt – ist ein Dokument das beschreibt wie ein Unternehmen seine digitale Buchführung organisiert und durchführt.</p>
                 <p>Sie ist Bestandteil der GoBD (Grundsätze zur ordnungsmäßigen Führung und Aufbewahrung von Büchern, Aufzeichnungen und Unterlagen in elektronischer Form sowie zum Datenzugriff) und seit 2014 für alle Unternehmen Pflicht die digital buchen.</p>
                 <p>Das Finanzamt will damit sicherstellen dass deine digitale Buchführung nachvollziehbar, vollständig und unveränderbar ist.</p>
               </div>
