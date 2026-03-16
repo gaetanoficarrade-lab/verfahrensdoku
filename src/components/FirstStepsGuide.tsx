@@ -79,6 +79,7 @@ export function FirstStepsGuide() {
   const [checked, setChecked] = useState(false);
   /** The pattern we're currently waiting for (null = not waiting) */
   const [waitingPattern, setWaitingPattern] = useState<RegExp | null>(null);
+  const [previewMode, setPreviewMode] = useState(false);
 
   const isTenantAdmin = roles.includes('tenant_admin');
 
