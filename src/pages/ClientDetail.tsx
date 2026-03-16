@@ -498,7 +498,7 @@ export default function ClientDetail() {
                   value={userEmail}
                   onChange={(e) => setUserEmail(e.target.value)}
                   className="pl-10"
-                  placeholder="mandant@beispiel.de"
+                  placeholder="kunde@beispiel.de"
                 />
               </div>
             </div>
