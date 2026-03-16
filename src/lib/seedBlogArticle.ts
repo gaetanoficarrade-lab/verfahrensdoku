@@ -357,7 +357,7 @@ Ohne Verfahrensdokumentation hat er keine Grundlage diese Fragen zu beurteilen. 
 
 ---
 
-## Was passiert konkret wenn du keine VD hast?
+## Was passiert konkret wenn du keine Verfahrensdokumentation hast?
 
 Lass uns das Schritt für Schritt durchgehen.
 
