@@ -1,217 +1,334 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { useAuthContext } from '@/contexts/AuthContext';
-import { useTenantPlan } from '@/hooks/useTenantPlan';
-import { supabase } from '@/integrations/supabase/client';
+import { ArrowLeft, ArrowRight, Check, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, UserPlus, FileText, Mail, Palette, Globe, ArrowRight, ArrowLeft, Rocket } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
+import {
+  OnboardingAnswers,
+  ONBOARDING_SECTIONS,
+  LEGAL_FORMS,
+  getActiveModulesFromVariables,
+} from '@/lib/onboarding-variables';
 
-interface Step {
-  icon: React.ElementType;
-  title: string;
-  description: string;
-  buttonLabel?: string;
-  buttonRoute?: string;
+interface OnboardingWizardProps {
+  projectId: string;
+  onboardingId: string;
+  initialAnswers: OnboardingAnswers;
+  onComplete: () => void;
 }
 
-const BASE_STEPS: Step[] = [
-  {
-    icon: Sparkles,
-    title: 'Willkommen bei GoBD-Suite!',
-    description: 'Mit GoBD-Suite erstellen Sie GoBD-konforme Verfahrensdokumentationen – einfach, digital und revisionssicher. Wir führen Sie in wenigen Schritten durch die wichtigsten Funktionen.',
-  },
-  {
-    icon: UserPlus,
-    title: 'Ersten Mandanten anlegen',
-    description: 'Mandanten sind Ihre Kunden oder Unternehmen, für die Sie eine Verfahrensdokumentation erstellen. Legen Sie jetzt Ihren ersten Mandanten an.',
-    buttonLabel: 'Mandant anlegen',
-    buttonRoute: '/clients/new',
-  },
-  {
-    icon: FileText,
-    title: 'Verfahrensdokumentation starten',
-    description: 'Nachdem Sie einen Mandanten angelegt haben, erstellen Sie ein Projekt und durchlaufen das Onboarding. Dort legen Sie die Kapitelstruktur fest und können Texte per KI generieren.',
-  },
-];
+const SECTION_FIELDS: Record<string, { key: string; label: string; type: 'text' | 'select' | 'switch'; options?: readonly string[] | string[] }[]> = {
+  company: [
+    { key: 'company_name', label: 'Firmenname', type: 'text' },
+    { key: 'legal_form', label: 'Rechtsform', type: 'select', options: LEGAL_FORMS },
+    { key: 'industry', label: 'Branche', type: 'text' },
+    { key: 'founding_year', label: 'Gründungsjahr', type: 'text' },
+  ],
+  people: [
+    { key: 'HAS_EMPLOYEES', label: 'Hat das Unternehmen Mitarbeiter?', type: 'switch' },
+    { key: 'HAS_TAX_ADVISOR', label: 'Wird ein Steuerberater eingesetzt?', type: 'switch' },
+    { key: 'ACCOUNTING_CONTACT', label: 'Ansprechpartner Buchhaltung', type: 'text' },
+  ],
+  accounting: [
+    { key: 'BOOKKEEPING_BY', label: 'Buchhaltung wird geführt von', type: 'select', options: ['self', 'tax_advisor', 'shared'] },
+    { key: 'document_transfer_method', label: 'Belegübergabe-Methode', type: 'text' },
+  ],
+  revenue: [
+    { key: 'INVOICE_CREATION_TYPE', label: 'Art der Rechnungserstellung', type: 'text' },
+    { key: 'HAS_CASH', label: 'Bargeschäfte vorhanden?', type: 'switch' },
+    { key: 'USES_PAYMENT_PROVIDER', label: 'Zahlungsdienstleister (z.B. PayPal)?', type: 'switch' },
+    { key: 'USES_MARKETPLACE', label: 'Marktplätze (z.B. Amazon)?', type: 'switch' },
+    { key: 'HAS_E_INVOICING', label: 'E-Rechnungen?', type: 'select', options: ['yes', 'no', 'unknown'] },
+  ],
+  software: [
+    { key: 'SOFTWARE_LIST', label: 'Eingesetzte Software', type: 'text' },
+    { key: 'USES_CLOUD', label: 'Cloud-Dienste genutzt?', type: 'select', options: ['yes', 'no', 'partial', 'unknown'] },
+  ],
+  banking: [
+    { key: 'HAS_BUSINESS_ACCOUNT', label: 'Geschäftskonto vorhanden?', type: 'switch' },
+    { key: 'USES_ONLINE_BANKING', label: 'Online-Banking genutzt?', type: 'switch' },
+    { key: 'HAS_AUTO_BANK_IMPORT', label: 'Automatischer Bankimport?', type: 'select', options: ['yes', 'no', 'unknown'] },
+  ],
+  documents: [
+    { key: 'DOCUMENT_TYPE', label: 'Belegform', type: 'select', options: ['digital', 'paper', 'mixed'] },
+    { key: 'HAS_SCAN_PROCESS', label: 'Scanprozess vorhanden?', type: 'switch' },
+  ],
+};
 
-const BERATER_STEPS: Step[] = [
-  {
-    icon: Mail,
-    title: 'System-E-Mails konfigurieren',
-    description: 'Einladungsmails an Mandanten werden von noreply@gobd-suite.de versendet. Unter den E-Mail-Einstellungen können Sie eine Reply-To-Adresse hinterlegen, damit Antworten bei Ihnen ankommen.',
-    buttonLabel: 'E-Mail-Einstellungen',
-    buttonRoute: '/settings/email',
-  },
-];
+const BOOKKEEPING_LABELS: Record<string, string> = {
+  self: 'Selbst',
+  tax_advisor: 'Steuerberater',
+  shared: 'Gemeinsam',
+};
 
-const AGENTUR_STEPS: Step[] = [
-  {
-    icon: Palette,
-    title: 'Whitelabel einrichten',
-    description: 'Als Agentur können Sie GoBD-Suite unter Ihrer eigenen Marke betreiben – mit eigenem Logo, Farben und Firmennamen. Ihre Mandanten sehen nur Ihr Branding.',
-    buttonLabel: 'Branding einrichten',
-    buttonRoute: '/settings/branding',
-  },
-  {
-    icon: Globe,
-    title: 'Eigene Absender-Domain',
-    description: 'Versenden Sie alle E-Mails von Ihrer eigenen Domain statt von gobd-suite.de. So wirkt Ihre Kommunikation professionell und vertrauenswürdig.',
-    buttonLabel: 'E-Mail-Einstellungen',
-    buttonRoute: '/settings/email',
-  },
-];
+const E_INVOICE_LABELS: Record<string, string> = {
+  yes: 'Ja',
+  no: 'Nein',
+  unknown: 'Unbekannt',
+};
 
-export function OnboardingWizard() {
-  const { user, roles, isSuperAdmin } = useAuthContext();
-  const { isBerater, isAgentur, loading: planLoading } = useTenantPlan();
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+const CLOUD_LABELS: Record<string, string> = {
+  yes: 'Ja',
+  no: 'Nein',
+  partial: 'Teilweise',
+  unknown: 'Unbekannt',
+};
+
+const BANK_IMPORT_LABELS: Record<string, string> = {
+  yes: 'Ja',
+  no: 'Nein',
+  unknown: 'Unbekannt',
+};
+
+const DOC_TYPE_LABELS: Record<string, string> = {
+  digital: 'Digital',
+  paper: 'Papier',
+  mixed: 'Gemischt',
+};
+
+function getOptionLabel(key: string, value: string): string {
+  if (key === 'BOOKKEEPING_BY') return BOOKKEEPING_LABELS[value] || value;
+  if (key === 'HAS_E_INVOICING') return E_INVOICE_LABELS[value] || value;
+  if (key === 'USES_CLOUD') return CLOUD_LABELS[value] || value;
+  if (key === 'HAS_AUTO_BANK_IMPORT') return BANK_IMPORT_LABELS[value] || value;
+  if (key === 'DOCUMENT_TYPE') return DOC_TYPE_LABELS[value] || value;
+  return value;
+}
+
+export default function OnboardingWizard({ projectId, onboardingId, initialAnswers, onComplete }: OnboardingWizardProps) {
   const [step, setStep] = useState(0);
-  const [checked, setChecked] = useState(false);
+  const [answers, setAnswers] = useState<OnboardingAnswers>(initialAnswers);
+  const [saving, setSaving] = useState(false);
+  const { toast } = useToast();
 
-  const steps = [
-    ...BASE_STEPS,
-    ...(isBerater ? BERATER_STEPS : []),
-    ...(isAgentur ? AGENTUR_STEPS : []),
-  ];
+  const sections = ONBOARDING_SECTIONS;
+  const totalSteps = sections.length + 1; // sections + summary
+  const isLastSection = step === sections.length - 1;
+  const isSummary = step === sections.length;
 
-  useEffect(() => {
-    if (!user || planLoading || checked) return;
-    if (isSuperAdmin || roles.includes('client')) { setChecked(true); return; }
+  const updateAnswer = useCallback((key: string, value: unknown) => {
+    setAnswers((prev) => ({ ...prev, [key]: value }));
+  }, []);
 
-    const checkOnboarding = async () => {
-      const { data } = await supabase
-        .from('profiles')
-        .select('onboarding_completed')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      if (data && !data.onboarding_completed) {
-        setOpen(true);
-      }
-      setChecked(true);
-    };
-    checkOnboarding();
-  }, [user, planLoading, checked, isSuperAdmin, roles]);
-
-  const handleComplete = async () => {
-    if (user) {
-      await supabase
-        .from('profiles')
-        .update({ onboarding_completed: true })
-        .eq('user_id', user.id);
-    }
-    setOpen(false);
-  };
-
-  const handleNext = () => {
-    if (step < steps.length - 1) {
-      setStep(step + 1);
+  const saveProgress = useCallback(async (a: OnboardingAnswers) => {
+    if (!onboardingId) {
+      // Create onboarding record
+      await supabase.from('project_onboardings').insert({
+        project_id: projectId,
+        answers: a as any,
+      });
     } else {
-      handleComplete();
+      await supabase
+        .from('project_onboardings')
+        .update({ answers: a as any })
+        .eq('id', onboardingId);
     }
+  }, [onboardingId, projectId]);
+
+  const handleNext = async () => {
+    if (isSummary) {
+      await handleComplete();
+      return;
+    }
+    await saveProgress(answers);
+    setStep((s) => s + 1);
   };
 
   const handleBack = () => {
-    if (step > 0) setStep(step - 1);
+    if (step > 0) setStep((s) => s - 1);
   };
 
-  const handleActionButton = (route: string) => {
-    handleComplete();
-    navigate(route);
+  const handleComplete = async () => {
+    setSaving(true);
+    try {
+      const activeModules = getActiveModulesFromVariables(answers);
+
+      if (onboardingId) {
+        await supabase
+          .from('project_onboardings')
+          .update({
+            answers: answers as any,
+            active_modules: activeModules,
+            completed_at: new Date().toISOString(),
+          })
+          .eq('id', onboardingId);
+      } else {
+        await supabase.from('project_onboardings').insert({
+          project_id: projectId,
+          answers: answers as any,
+          active_modules: activeModules,
+          completed_at: new Date().toISOString(),
+        });
+      }
+
+      // Create chapter entries for active modules
+      const { data: existing } = await supabase
+        .from('chapters')
+        .select('chapter_key')
+        .eq('project_id', projectId);
+
+      const existingKeys = new Set((existing || []).map((c: any) => c.chapter_key));
+      const newChapters = activeModules
+        .filter((m) => !existingKeys.has(m))
+        .map((m, i) => ({
+          project_id: projectId,
+          chapter_key: m,
+          sort_order: (existing?.length || 0) + i,
+          status: 'empty',
+        }));
+
+      if (newChapters.length > 0) {
+        await supabase.from('chapters').insert(newChapters);
+      }
+
+      toast({ title: 'Onboarding abgeschlossen', description: `${activeModules.length} Kapitel wurden aktiviert.` });
+      onComplete();
+    } catch (err: any) {
+      toast({ title: 'Fehler', description: err.message, variant: 'destructive' });
+    } finally {
+      setSaving(false);
+    }
   };
 
-  if (!open) return null;
-
-  const current = steps[step];
-  const Icon = current.icon;
-  const isLast = step === steps.length - 1;
+  const currentSection = !isSummary ? sections[step] : null;
+  const fields = currentSection ? SECTION_FIELDS[currentSection.key] || [] : [];
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) handleComplete(); }}>
-      <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-border bg-card">
-        {/* Progress dots */}
-        <div className="flex justify-center gap-1.5 pt-6 px-6">
-          {steps.map((_, i) => (
+    <Card className="border-border">
+      <CardContent className="pt-6">
+        {/* Progress */}
+        <div className="flex gap-1 mb-6">
+          {Array.from({ length: totalSteps }).map((_, i) => (
             <div
               key={i}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === step ? 'w-8 bg-primary' : i < step ? 'w-4 bg-primary/40' : 'w-4 bg-muted'
+              className={`h-1.5 flex-1 rounded-full transition-colors ${
+                i === step ? 'bg-primary' : i < step ? 'bg-primary/40' : 'bg-muted'
               }`}
             />
           ))}
         </div>
 
-        {/* Content */}
-        <div className="px-8 pb-8 pt-4">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={step}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2 }}
-              className="flex flex-col items-center text-center space-y-5"
-            >
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
-                <Icon className="h-8 w-8 text-primary" />
-              </div>
-
-              <div className="space-y-2">
-                <h2 className="text-xl font-semibold text-foreground">
-                  {step === 0 && user?.user_metadata?.full_name
-                    ? `Hallo ${user.user_metadata.full_name}!`
-                    : current.title}
-                </h2>
-                <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mx-auto">
-                  {current.description}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.2 }}
+          >
+            {isSummary ? (
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold text-foreground">Zusammenfassung</h2>
+                <p className="text-sm text-muted-foreground">
+                  Basierend auf Ihren Angaben werden <strong>{getActiveModulesFromVariables(answers).length} Kapitel</strong> für die Verfahrensdokumentation erstellt.
                 </p>
+                <div className="grid gap-2 text-sm">
+                  {answers.company_name && (
+                    <div className="flex justify-between border-b border-border pb-1">
+                      <span className="text-muted-foreground">Firma</span>
+                      <span className="text-foreground font-medium">{answers.company_name}</span>
+                    </div>
+                  )}
+                  {answers.legal_form && (
+                    <div className="flex justify-between border-b border-border pb-1">
+                      <span className="text-muted-foreground">Rechtsform</span>
+                      <span className="text-foreground font-medium">{answers.legal_form}</span>
+                    </div>
+                  )}
+                  {answers.industry && (
+                    <div className="flex justify-between border-b border-border pb-1">
+                      <span className="text-muted-foreground">Branche</span>
+                      <span className="text-foreground font-medium">{answers.industry}</span>
+                    </div>
+                  )}
+                </div>
               </div>
+            ) : (
+              <div className="space-y-5">
+                <div>
+                  <h2 className="text-xl font-semibold text-foreground">{currentSection?.title}</h2>
+                  <p className="text-sm text-muted-foreground mt-1">{currentSection?.description}</p>
+                </div>
+                <div className="space-y-4">
+                  {fields.map((field) => (
+                    <div key={field.key} className="space-y-2">
+                      {field.type === 'switch' ? (
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor={field.key} className="text-sm">{field.label}</Label>
+                          <Switch
+                            id={field.key}
+                            checked={!!answers[field.key]}
+                            onCheckedChange={(val) => updateAnswer(field.key, val)}
+                          />
+                        </div>
+                      ) : field.type === 'select' ? (
+                        <>
+                          <Label htmlFor={field.key}>{field.label}</Label>
+                          <Select
+                            value={(answers[field.key] as string) || ''}
+                            onValueChange={(val) => updateAnswer(field.key, val)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Bitte wählen..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {(field.options || []).map((opt) => (
+                                <SelectItem key={opt} value={opt}>
+                                  {field.key === 'legal_form' ? opt : getOptionLabel(field.key, opt)}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </>
+                      ) : (
+                        <>
+                          <Label htmlFor={field.key}>{field.label}</Label>
+                          <Input
+                            id={field.key}
+                            value={(answers[field.key] as string) || ''}
+                            onChange={(e) => updateAnswer(field.key, e.target.value)}
+                            placeholder={field.label}
+                          />
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
 
-              {current.buttonRoute && (
-                <Button
-                  variant="outline"
-                  className="gap-2"
-                  onClick={() => handleActionButton(current.buttonRoute!)}
-                >
-                  {current.buttonLabel}
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              )}
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Navigation */}
-          <div className="flex items-center justify-between mt-8">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleBack}
-              disabled={step === 0}
-              className={step === 0 ? 'invisible' : ''}
-            >
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              Zurück
-            </Button>
-
-            <Button onClick={handleNext} className="gap-2">
-              {isLast ? (
-                <>
-                  Loslegen
-                  <Rocket className="h-4 w-4" />
-                </>
-              ) : (
-                <>
-                  Weiter
-                  <ArrowRight className="h-4 w-4" />
-                </>
-              )}
-            </Button>
-          </div>
+        {/* Navigation */}
+        <div className="flex items-center justify-between mt-8">
+          <Button variant="ghost" size="sm" onClick={handleBack} disabled={step === 0} className={step === 0 ? 'invisible' : ''}>
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            Zurück
+          </Button>
+          <Button onClick={handleNext} disabled={saving} className="gap-2">
+            {saving ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : isSummary ? (
+              <>
+                Onboarding abschließen
+                <Check className="h-4 w-4" />
+              </>
+            ) : (
+              <>
+                Weiter
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
+          </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </CardContent>
+    </Card>
   );
 }
