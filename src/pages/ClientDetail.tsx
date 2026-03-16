@@ -126,7 +126,7 @@ export default function ClientDetail() {
   const handleSoftDelete = async () => {
     if (!client || !id) return;
     if (hasFinalizedDocs) {
-      toast.error('Dieser Mandant kann nicht gelöscht werden, da bereits eine Verfahrensdokumentation erstellt wurde.');
+      toast.error('Dieser Kunde kann nicht gelöscht werden, da bereits eine Verfahrensdokumentation erstellt wurde.');
       return;
     }
     setDeleting(true);
