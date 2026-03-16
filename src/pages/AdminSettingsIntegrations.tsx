@@ -218,7 +218,7 @@ export default function AdminSettingsIntegrations() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <SecretInput field="resend_api_key" label="Resend API-Key" placeholder="re_..." />
+            {renderSecretInput('resend_api_key', 'Resend API-Key', 're_...')}
           </CardContent>
         </Card>
 
