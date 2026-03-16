@@ -874,7 +874,7 @@ Das ist einmalig. Danach pflegst du nur noch was sich ändert.
 
 Kurze Erinnerung.
 
-Bei einer Betriebsprüfung kann das Finanzamt deine Buchführung als nicht ordnungsgemäß einstufen wenn keine VD vorliegt.
+Bei einer Betriebsprüfung kann das Finanzamt deine Buchführung als nicht ordnungsgemäß einstufen wenn keine Verfahrensdokumentation vorliegt.
 
 Das gibt ihm das Recht zu schätzen statt deine tatsächlichen Zahlen zu prüfen.
 
