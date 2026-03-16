@@ -519,7 +519,7 @@ export default function MarketingPage() {
                   <span className="w-3 h-3 rounded-full" style={{ background: '#FEBC2E' }} />
                   <span className="w-3 h-3 rounded-full" style={{ background: '#28C840' }} />
                 </div>
-                <img src={mockupDashboard} alt="GoBD-Suite Dashboard mit Mandanten- und Projektübersicht" className="w-full h-auto" />
+                <img src={mockupDashboard} alt="GoBD-Suite Dashboard mit Kunden- und Projektübersicht" className="w-full h-auto" />
               </div>
             </Reveal>
           </div>
