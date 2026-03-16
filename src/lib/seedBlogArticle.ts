@@ -609,7 +609,7 @@ Drei Positionierungsstrategien die funktionieren:
 
 **Strategie 1: Compliance-Paket**
 
-Du bündelst die VD mit anderen Compliance-Leistungen. "Jahresabschluss + Verfahrensdokumentation + steuerliche Beratung" als Paketpreis.
+Du bündelst die Verfahrensdokumentation mit anderen Compliance-Leistungen. "Jahresabschluss + Verfahrensdokumentation + steuerliche Beratung" als Paketpreis.
 
 Das erhöht den Gesamtumsatz pro Mandant ohne dass du viel mehr Zeit investierst.
 
