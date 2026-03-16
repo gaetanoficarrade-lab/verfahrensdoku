@@ -752,7 +752,7 @@ export default function ChapterEditor() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base">
-            {isAdvisor ? 'Mandanten-Angaben' : 'Ihre Angaben'}
+            {isAdvisor ? 'Kunden-Angaben' : 'Ihre Angaben'}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
