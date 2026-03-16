@@ -244,8 +244,8 @@ function PricingToggleSection() {
           unit="/Monat"
           sub={annual ? '3.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
           features={[
-            { text: 'Bis zu 5 Mandanten', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
-            { text: 'Mandanten-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
+            { text: 'Bis zu 5 Kunden', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
+            { text: 'Kunden-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
           ]}
           annualNote={annual ? 'Jährliche Laufzeit · danach jährlich kündbar' : undefined}
         />
