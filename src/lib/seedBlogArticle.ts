@@ -351,7 +351,7 @@ Sie beantwortet ihm Fragen wie:
 - Wer hat Zugriff auf was?
 - Wie stellst du sicher dass nichts verändert wird?
 
-Ohne VD hat er keine Grundlage diese Fragen zu beurteilen. Und das ist das Problem.
+Ohne Verfahrensdokumentation hat er keine Grundlage diese Fragen zu beurteilen. Und das ist das Problem.
 
 **Quelle:** [GoBD Randziffer 151 ff. – BMF-Schreiben 28.11.2019](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/2019-11-28-GoBD.html)
 
