@@ -171,7 +171,7 @@ export default function FuerDienstleister() {
               </Reveal>
               <Reveal delay={0.2}>
                 <p className="text-lg leading-relaxed mb-8 max-w-xl" style={{ color: C.textGray }}>
-                  GoBD-Suite gibt dir die Infrastruktur um Verfahrensdokumentationen als professionelle Dienstleistung anzubieten. Deine Mandanten füllen aus, du prüfst und finalisierst – fertig ist ein Dokument das einer Betriebsprüfung standhält.
+                  GoBD-Suite gibt dir die Infrastruktur um Verfahrensdokumentationen als professionelle Dienstleistung anzubieten. Deine Kunden füllen aus, du prüfst und finalisierst – fertig ist ein Dokument das einer Betriebsprüfung standhält.
                 </p>
               </Reveal>
               <Reveal delay={0.3}>
