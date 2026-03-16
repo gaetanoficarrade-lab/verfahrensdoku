@@ -412,7 +412,12 @@ export default function FuerSelbststaendige() {
                     </li>
                   ))}
                 </ul>
-                <PrimaryBtn to="/test-starten" className="w-full text-center justify-center">Jetzt kostenlos testen</PrimaryBtn>
+                <a href="https://funnelpay.de/checkout/GoBD-Suite Solo Plan" target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200 w-full text-center"
+                  style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#e5b71a'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = C.yellow; }}
+                >Jetzt kaufen</a>
                 <p className="text-center text-xs mt-4" style={{ color: C.textGray }}>
                   Keine Kreditkarte nötig · Kein Abo · Einmalig zahlen
                 </p>
