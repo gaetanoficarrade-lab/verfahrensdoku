@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Check, ArrowRight, Crown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,17 +8,17 @@ import { usePlatformSettings } from '@/hooks/usePlatformSettings';
 interface PlanCardProps {
   name: string;
   price: string;
+  originalPrice?: string;
   priceNote?: string;
   setupFee?: string;
   features: string[];
   highlighted?: boolean;
-  checkoutUrlKey: string;
-  checkoutUrls: Record<string, string>;
+  checkoutUrl: string;
   currentPlan?: string | null;
+  isAnnual?: boolean;
 }
 
-function PlanCard({ name, price, priceNote, setupFee, features, highlighted, checkoutUrlKey, checkoutUrls, currentPlan }: PlanCardProps) {
-  const checkoutUrl = checkoutUrls[checkoutUrlKey];
+function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, highlighted, checkoutUrl, currentPlan, isAnnual }: PlanCardProps) {
   const isCurrent = currentPlan?.toLowerCase() === name.toLowerCase();
 
   return (
@@ -30,9 +31,15 @@ function PlanCard({ name, price, priceNote, setupFee, features, highlighted, che
       <CardHeader className="text-center pb-2">
         <CardTitle className="text-lg">{name}</CardTitle>
         <div className="mt-2">
-          <span className="text-3xl font-bold text-foreground">{price}</span>
+          {isAnnual && originalPrice && (
+            <span className="text-lg font-bold line-through mr-2" style={{ color: '#E53E3E' }}>{originalPrice}</span>
+          )}
+          <span className="text-3xl font-bold" style={{ color: isAnnual && originalPrice ? '#38A169' : undefined }}>{price}</span>
           {priceNote && <span className="text-sm text-muted-foreground ml-1">{priceNote}</span>}
         </div>
+        {isAnnual && originalPrice && (
+          <p className="text-xs font-semibold mt-1" style={{ color: '#38A169' }}>17 % gespart</p>
+        )}
         {setupFee && (
           <p className="text-xs text-muted-foreground mt-1">+ {setupFee} einmalige Setup-Gebühr</p>
         )}
@@ -75,6 +82,7 @@ interface PlanSelectionProps {
 }
 
 export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
+  const [annual, setAnnual] = useState(false);
   const { settings, loading } = usePlatformSettings([
     'funnelpay_checkout_solo',
     'funnelpay_checkout_berater',
@@ -83,64 +91,89 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
 
   const checkoutUrls = {
     solo: settings['funnelpay_checkout_solo'] || 'https://funnelpay.de/checkout/GoBD-Suite Solo Plan',
-    berater: settings['funnelpay_checkout_berater'] || 'https://funnelpay.de/checkout/GoBD-Suite Berater Plan',
-    agentur: settings['funnelpay_checkout_agentur'] || 'https://funnelpay.de/checkout/GoBD-Suite Agentur Plan',
+    berater: annual
+      ? 'https://funnelpay.de/checkout/GoBD-Suite Berater Plan Jährl.'
+      : (settings['funnelpay_checkout_berater'] || 'https://funnelpay.de/checkout/GoBD-Suite Berater Plan'),
+    agentur: annual
+      ? 'https://funnelpay.de/checkout/GoBD-Suite Agentur Plan-Jährl.'
+      : (settings['funnelpay_checkout_agentur'] || 'https://funnelpay.de/checkout/GoBD-Suite Agentur Plan'),
   };
 
   return (
-    <div className="grid gap-6 md:grid-cols-3">
-      <PlanCard
-        name="Solo"
-        price="980€"
-        priceNote="einmalig"
-        features={[
-          '1 Mandant',
-          'Unbegrenzte Revisionen',
-          'KI-Textgenerierung',
-          'PDF-Export',
-          '12 Monate Laufzeit',
-          'Renewal: 199€/Jahr',
-        ]}
-        checkoutUrlKey="solo"
-        checkoutUrls={checkoutUrls}
-        currentPlan={currentPlan}
-      />
-      <PlanCard
-        name="Berater"
-        price="399€"
-        priceNote="/Monat"
-        setupFee="590€"
-        highlighted
-        features={[
-          'Bis zu 5 Mandanten',
-          'Berater-Portal',
-          'Team-Verwaltung',
-          'Webhooks & Vorlagen',
-          'E-Mail-Vorlagen',
-          'Aktivitäts-Log',
-          
-        ]}
-        checkoutUrlKey="berater"
-        checkoutUrls={checkoutUrls}
-        currentPlan={currentPlan}
-      />
-      <PlanCard
-        name="Agentur"
-        price="799€"
-        priceNote="/Monat"
-        setupFee="590€"
-        features={[
-          'Unbegrenzte Mandanten',
-          'Alles aus Berater',
-          'Whitelabel-Branding',
-          'Eigenes Logo & Farben',
-          'Custom Domain (bald)',
-          'Prioritäts-Support',
-        ]}
-        checkoutUrlKey="agentur"
-        checkoutUrls={checkoutUrls}
-        currentPlan={currentPlan}
-      />
+    <div>
+      {/* Annual/Monthly Toggle */}
+      <div className="flex items-center justify-center gap-3 mb-8">
+        <div className="inline-flex rounded-full p-1 border border-border bg-muted/50">
+          <button
+            onClick={() => setAnnual(false)}
+            className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${!annual ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
+          >
+            Monatlich
+          </button>
+          <button
+            onClick={() => setAnnual(true)}
+            className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${annual ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
+          >
+            Jährlich
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-500 text-white">–17 %</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-3">
+        <PlanCard
+          name="Solo"
+          price="980€"
+          priceNote="einmalig"
+          features={[
+            '1 Mandant',
+            'Unbegrenzte Revisionen',
+            'KI-Textgenerierung',
+            'PDF-Export',
+            '12 Monate Laufzeit',
+            'Renewal: 199€/Jahr',
+          ]}
+          checkoutUrl={checkoutUrls.solo}
+          currentPlan={currentPlan}
+        />
+        <PlanCard
+          name="Berater"
+          price={annual ? '332€' : '399€'}
+          originalPrice={annual ? '399€' : undefined}
+          priceNote="/Monat"
+          setupFee="590€"
+          highlighted
+          isAnnual={annual}
+          features={[
+            'Bis zu 5 Mandanten',
+            'Berater-Portal',
+            'Team-Verwaltung',
+            'Webhooks & Vorlagen',
+            'E-Mail-Vorlagen',
+            'Aktivitäts-Log',
+          ]}
+          checkoutUrl={checkoutUrls.berater}
+          currentPlan={currentPlan}
+        />
+        <PlanCard
+          name="Agentur"
+          price={annual ? '665€' : '799€'}
+          originalPrice={annual ? '799€' : undefined}
+          priceNote="/Monat"
+          setupFee="590€"
+          isAnnual={annual}
+          features={[
+            'Unbegrenzte Mandanten',
+            'Alles aus Berater',
+            'Whitelabel-Branding',
+            'Eigenes Logo & Farben',
+            'Custom Domain (bald)',
+            'Prioritäts-Support',
+          ]}
+          checkoutUrl={checkoutUrls.agentur}
+          currentPlan={currentPlan}
+        />
+      </div>
     </div>
   );
 }
