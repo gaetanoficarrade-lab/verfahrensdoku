@@ -168,6 +168,7 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
           ]}
           checkoutUrl={checkoutUrls.berater}
           currentPlan={currentPlan}
+          isDowngrade={currentLevel > PLAN_HIERARCHY.berater}
         />
         <PlanCard
           name="Agentur"
