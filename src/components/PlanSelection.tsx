@@ -101,6 +101,7 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
   ]);
 
   const currentLevel = currentPlan ? (PLAN_HIERARCHY[currentPlan.toLowerCase()] || 0) : 0;
+  const visibleCount = [PLAN_HIERARCHY.solo, PLAN_HIERARCHY.berater, PLAN_HIERARCHY.agentur].filter(level => currentLevel <= level).length;
 
   const checkoutUrls = {
     solo: settings['funnelpay_checkout_solo'] || 'https://funnelpay.de/checkout/GoBD-Suite Solo Plan',
