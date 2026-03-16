@@ -727,7 +727,7 @@ Das bedeutet: Wenn du Lexoffice, sevDesk, FastBill, Stripe, Funnelpay oder ähnl
 
 ---
 
-## Was in deine Freelancer-VD muss
+## Was in deine Freelancer-Verfahrensdokumentation muss
 
 Lass uns das konkret machen. Hier ist was ein typischer Freelancer dokumentieren muss:
 
