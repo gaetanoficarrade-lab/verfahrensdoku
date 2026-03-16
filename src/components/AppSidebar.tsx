@@ -10,15 +10,16 @@ import {
   ChevronRight,
   Settings,
   Globe,
-  
   HelpCircle,
   Eye,
+  Lock,
 } from 'lucide-react';
 import sidebarLogo from '@/assets/sidebar-logo.png';
 import { NavLink } from '@/components/NavLink';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useTenantSettings } from '@/hooks/useTenantSettings';
+import { useTrialRestrictions } from '@/hooks/useTrialRestrictions';
 import { Button } from '@/components/ui/button';
 import {
   Sidebar,
@@ -33,19 +34,26 @@ import {
   SidebarHeader,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const adminItems = [
   { title: 'Dashboard', url: '/admin', icon: LayoutDashboard },
   { title: 'Unterkonten', url: '/admin/tenants', icon: Building2 },
   { title: 'Webhook-Protokoll', url: '/admin/webhook-logs', icon: ScrollText },
-  
-  
   { title: 'Einstellungen', url: '/admin/settings/general', icon: Settings },
 ];
 
-const tenantItems = [
+interface MenuItem {
+  title: string;
+  url: string;
+  icon: React.ElementType;
+  trialLocked?: boolean;
+}
+
+const tenantItemsFull: MenuItem[] = [
   { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
   { title: 'Mandanten', url: '/clients', icon: Users },
+  { title: 'Übersicht', url: '/overview', icon: Eye, trialLocked: true },
 ];
 
 const clientItems = [
@@ -59,14 +67,13 @@ export function AppSidebar() {
   const navigate = useNavigate();
   const { signOut, isSuperAdmin, impersonation, roles } = useAuthContext();
   const { data: tenantSettings } = useTenantSettings();
-  
+  const { isTrialing } = useTrialRestrictions();
 
   const currentPath = location.pathname;
   const isActive = (path: string) => {
     if (path === '/admin' && currentPath === '/admin') return true;
     if (path === '/' && currentPath === '/') return true;
     if (path === '/client' && currentPath === '/client') return true;
-    // Settings: highlight if any /settings/* is active
     if (path.startsWith('/settings/') && currentPath.startsWith('/settings/')) return true;
     if (path !== '/' && path !== '/admin' && path !== '/client' && !path.startsWith('/settings/') && currentPath.startsWith(path)) return true;
     return false;
@@ -74,8 +81,11 @@ export function AppSidebar() {
 
   const showAdmin = isSuperAdmin && !impersonation.isImpersonating;
   const isClient = roles.includes('client');
-  const isTenantAdmin = roles.includes('tenant_admin');
-  const items = showAdmin ? adminItems : isClient ? clientItems : tenantItems;
+  const items: MenuItem[] = showAdmin
+    ? adminItems
+    : isClient
+      ? clientItems
+      : tenantItemsFull;
 
   const logoUrl = tenantSettings?.logo_url;
 
@@ -84,27 +94,56 @@ export function AppSidebar() {
     navigate('/auth');
   };
 
-  const renderMenuItems = (menuItems: typeof adminItems) => (
+  const renderMenuItems = (menuItems: MenuItem[]) => (
     <SidebarMenu>
-      {menuItems.map((item) => (
-        <SidebarMenuItem key={item.title}>
-          <SidebarMenuButton
-            asChild
-            isActive={isActive(item.url)}
-            tooltip={item.title}
-          >
-            <NavLink
-              to={item.url}
-              end={item.url === '/' || item.url === '/admin' || item.url === '/client'}
-              className="hover:bg-sidebar-accent/50"
-              activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+      {menuItems.map((item) => {
+        const locked = isTrialing && item.trialLocked;
+
+        return (
+          <SidebarMenuItem key={item.title}>
+            <SidebarMenuButton
+              asChild={!locked}
+              isActive={isActive(item.url)}
+              tooltip={item.title}
+              className={locked ? 'opacity-50 cursor-default' : ''}
             >
-              <item.icon className="h-4 w-4" />
-              {!collapsed && <span>{item.title}</span>}
-            </NavLink>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      ))}
+              {locked ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <NavLink
+                      to={item.url}
+                      end={item.url === '/' || item.url === '/admin' || item.url === '/client'}
+                      className="hover:bg-sidebar-accent/50 flex items-center gap-2"
+                      activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                    >
+                      <item.icon className="h-4 w-4" />
+                      {!collapsed && (
+                        <>
+                          <span className="flex-1">{item.title}</span>
+                          <Lock className="h-3 w-3 text-muted-foreground" />
+                        </>
+                      )}
+                    </NavLink>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    <p className="text-xs">Im Testmodus nur Ansicht</p>
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <NavLink
+                  to={item.url}
+                  end={item.url === '/' || item.url === '/admin' || item.url === '/client'}
+                  className="hover:bg-sidebar-accent/50"
+                  activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                >
+                  <item.icon className="h-4 w-4" />
+                  {!collapsed && <span>{item.title}</span>}
+                </NavLink>
+              )}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        );
+      })}
     </SidebarMenu>
   );
 
@@ -138,12 +177,10 @@ export function AppSidebar() {
             {renderMenuItems(items)}
           </SidebarGroupContent>
         </SidebarGroup>
-
       </SidebarContent>
 
       <SidebarFooter className="p-2">
         <SidebarMenu>
-          {/* Einstellungen above the divider */}
           {!showAdmin && (
             <SidebarMenuItem>
               <SidebarMenuButton

@@ -1,28 +1,31 @@
 import { ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Settings, Palette, Mail, Users, FileText, Globe, ScrollText, CreditCard, KeyRound, HelpCircle } from 'lucide-react';
+import { Settings, Palette, Mail, Users, FileText, Globe, ScrollText, CreditCard, KeyRound, HelpCircle, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTenantPlan } from '@/hooks/useTenantPlan';
+import { useTrialRestrictions } from '@/hooks/useTrialRestrictions';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { TrialReadOnlyOverlay } from '@/components/TrialReadOnlyOverlay';
 
 interface TabItem {
   label: string;
   url: string;
   icon: React.ElementType;
   requiresFn?: keyof ReturnType<typeof useTenantPlan>;
+  /** Pages that are always accessible even during trial (e.g. billing, security, help) */
+  alwaysAccessible?: boolean;
 }
 
 const allTabs: TabItem[] = [
-  { label: 'Abrechnung', url: '/settings/billing', icon: CreditCard },
+  { label: 'Abrechnung', url: '/settings/billing', icon: CreditCard, alwaysAccessible: true },
   { label: 'Branding', url: '/settings/branding', icon: Palette, requiresFn: 'canBrand' },
   { label: 'Team', url: '/settings/team', icon: Users, requiresFn: 'canManageTeam' },
   { label: 'E-Mail-Vorlagen', url: '/settings/email', icon: Mail, requiresFn: 'canUseEmailTemplates' },
   { label: 'Vorlagen', url: '/settings/templates', icon: FileText, requiresFn: 'canUseTemplates' },
   { label: 'Webhooks', url: '/settings/webhook', icon: Globe, requiresFn: 'canUseWebhooks' },
   { label: 'Aktivitäts-Log', url: '/settings/activity-log', icon: ScrollText, requiresFn: 'canUseActivityLog' },
-  
-  { label: 'Sicherheit', url: '/settings/security', icon: KeyRound },
-  { label: 'Hilfe', url: '/help', icon: HelpCircle },
+  { label: 'Sicherheit', url: '/settings/security', icon: KeyRound, alwaysAccessible: true },
+  { label: 'Hilfe', url: '/help', icon: HelpCircle, alwaysAccessible: true },
 ];
 
 interface TenantSettingsLayoutProps {
@@ -33,13 +36,22 @@ export function TenantSettingsLayout({ children }: TenantSettingsLayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const tenantPlan = useTenantPlan();
+  const { isTrialing } = useTrialRestrictions();
 
-  const tabs = allTabs.filter(tab => {
-    if (!tab.requiresFn) return true;
-    return tenantPlan[tab.requiresFn];
-  });
+  // During trial: show ALL tabs (so user can see what's available).
+  // When not trialing: filter based on plan features as before.
+  const tabs = isTrialing
+    ? allTabs
+    : allTabs.filter(tab => {
+        if (!tab.requiresFn) return true;
+        return tenantPlan[tab.requiresFn];
+      });
 
   const activeTab = tabs.find(tab => tab.url === location.pathname);
+
+  // Determine if current page should be read-only during trial
+  const currentTab = allTabs.find(tab => tab.url === location.pathname);
+  const isLockedDuringTrial = isTrialing && currentTab && !currentTab.alwaysAccessible;
 
   return (
     <div className="space-y-6">
@@ -63,11 +75,13 @@ export function TenantSettingsLayout({ children }: TenantSettingsLayoutProps) {
           <SelectContent>
             {tabs.map((tab) => {
               const Icon = tab.icon;
+              const locked = isTrialing && !tab.alwaysAccessible;
               return (
                 <SelectItem key={tab.url} value={tab.url}>
                   <div className="flex items-center gap-2">
                     <Icon className="h-4 w-4" />
                     {tab.label}
+                    {locked && <Lock className="h-3 w-3 text-muted-foreground" />}
                   </div>
                 </SelectItem>
               );
@@ -82,6 +96,7 @@ export function TenantSettingsLayout({ children }: TenantSettingsLayoutProps) {
           {tabs.map((tab) => {
             const isActive = location.pathname === tab.url;
             const Icon = tab.icon;
+            const locked = isTrialing && !tab.alwaysAccessible;
             return (
               <button
                 key={tab.url}
@@ -95,14 +110,21 @@ export function TenantSettingsLayout({ children }: TenantSettingsLayoutProps) {
               >
                 <Icon className={cn('h-4 w-4', isActive && 'text-accent-foreground')} />
                 {tab.label}
+                {locked && <Lock className={cn('h-3 w-3', isActive ? 'text-accent-foreground/60' : 'text-muted-foreground/50')} />}
               </button>
             );
           })}
         </nav>
       </div>
 
-      {/* Content */}
-      <div>{children}</div>
+      {/* Content — wrapped in read-only overlay when trial-locked */}
+      <div>
+        {isLockedDuringTrial ? (
+          <TrialReadOnlyOverlay>{children}</TrialReadOnlyOverlay>
+        ) : (
+          children
+        )}
+      </div>
     </div>
   );
 }

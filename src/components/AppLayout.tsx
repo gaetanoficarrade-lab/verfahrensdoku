@@ -7,6 +7,7 @@ import { NotificationBell } from '@/components/NotificationBell';
 import { SessionTimeoutWarning } from '@/components/SessionTimeoutWarning';
 import { TrialBanner } from '@/components/TrialBanner';
 import { FirstStepsGuide } from '@/components/FirstStepsGuide';
+import { TrialOnboardingGuide } from '@/components/TrialOnboardingGuide';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useSessionTimeout } from '@/hooks/useSessionTimeout';
 import { Badge } from '@/components/ui/badge';
@@ -49,6 +50,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       </div>
       <SessionTimeoutWarning open={showWarning} remainingSeconds={remainingSeconds} onDismiss={dismissWarning} />
       <FirstStepsGuide />
+      <TrialOnboardingGuide />
     </SidebarProvider>
   );
 }
