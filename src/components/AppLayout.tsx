@@ -50,6 +50,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       </div>
       <SessionTimeoutWarning open={showWarning} remainingSeconds={remainingSeconds} onDismiss={dismissWarning} />
       <FirstStepsGuide />
+      <TrialOnboardingGuide />
     </SidebarProvider>
   );
 }
