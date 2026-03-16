@@ -569,7 +569,7 @@ export default function ClientDetail() {
             <>
               <div className="space-y-4 py-2">
                 <div className="space-y-2">
-                  <Label>E-Mail des Mandanten</Label>
+                  <Label>E-Mail des Kunden</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
