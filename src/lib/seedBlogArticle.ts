@@ -187,7 +187,7 @@ Eine generische Word-Datei mit Platzhaltern. Irgendwas wie "[Firmenname einfüge
 
 **Das Problem:**
 
-Erstens: Vorlagen sind generisch. Das Finanzamt erkennt das. Eine VD die für jeden passt, passt eigentlich für niemanden richtig.
+Erstens: Vorlagen sind generisch. Das Finanzamt erkennt das. Eine Verfahrensdokumentation die für jeden passt, passt eigentlich für niemanden richtig.
 
 Die GoBD verlangen eine individuelle Beschreibung deiner tatsächlichen Abläufe – nicht eine Vorlage die du minimal angepasst hast.
 
