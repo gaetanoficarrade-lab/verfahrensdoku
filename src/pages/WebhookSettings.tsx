@@ -72,7 +72,7 @@ export default function WebhookSettings() {
   const [showForm, setShowForm] = useState(false);
 
   const fetchData = async () => {
-    if (!effectiveTenantId) return;
+    if (!effectiveTenantId) { setLoading(false); return; }
     setLoading(true);
 
     const [whRes, logRes, keyRes] = await Promise.all([

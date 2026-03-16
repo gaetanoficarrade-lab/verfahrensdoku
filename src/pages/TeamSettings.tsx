@@ -50,7 +50,7 @@ export default function TeamSettings() {
   const [resendingInvite, setResendingInvite] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
-    if (!effectiveTenantId) return;
+    if (!effectiveTenantId) { setLoading(false); return; }
     setLoading(true);
 
     const [profilesRes, invitesRes] = await Promise.all([
