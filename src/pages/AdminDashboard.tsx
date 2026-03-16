@@ -57,20 +57,28 @@ const AdminDashboard = () => {
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [loading, setLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
+  const [planFilter, setPlanFilter] = useState<PlanFilter>('all');
   const { startImpersonation } = useAuthContext();
   const navigate = useNavigate();
 
   const fetchData = async () => {
     setLoading(true);
-    const [tenantsRes, clientsRes, projectsRes] = await Promise.all([
+    const [tenantsRes, clientsRes, projectsRes, plansRes] = await Promise.all([
       supabase.from('tenants').select('*').order('created_at', { ascending: false }),
       supabase.from('clients').select('id', { count: 'exact', head: true }),
       supabase.from('projects').select('id', { count: 'exact', head: true }),
+      supabase.from('plans').select('id, name'),
     ]);
 
-    setTenants(tenantsRes.data || []);
+    const plansMap = new Map((plansRes.data || []).map((p: Plan) => [p.id, p.name]));
+    const enrichedTenants: Tenant[] = (tenantsRes.data || []).map((t: any) => ({
+      ...t,
+      plan_name: t.plan_id ? (plansMap.get(t.plan_id) || null) : null,
+    }));
+
+    setTenants(enrichedTenants);
     setStats({
-      tenants: tenantsRes.data?.length || 0,
+      tenants: enrichedTenants.length,
       clients: clientsRes.count || 0,
       projects: projectsRes.count || 0,
     });
@@ -80,6 +88,12 @@ const AdminDashboard = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const filteredTenants = tenants.filter((t) => {
+    if (planFilter === 'all') return true;
+    if (planFilter === 'none') return !t.plan_name;
+    return t.plan_name?.toLowerCase() === planFilter;
+  });
 
   const handleImpersonate = (tenant: Tenant) => {
     startImpersonation(tenant.id, tenant.name);
