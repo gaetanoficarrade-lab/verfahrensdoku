@@ -264,6 +264,16 @@ const AdminTenants = () => {
   };
 
   const handleToggleLock = async (t: Tenant) => {
+    // When removing protection, ask for confirmation first
+    if (t.is_locked) {
+      setUnlockingTenant(t);
+      setUnlockDialogOpen(true);
+      return;
+    }
+    await performToggleLock(t);
+  };
+
+  const performToggleLock = async (t: Tenant) => {
     const { error } = await supabase
       .from('tenants')
       .update({ is_locked: !t.is_locked } as any)
@@ -274,6 +284,14 @@ const AdminTenants = () => {
       toast({ title: t.is_locked ? 'Löschschutz aufgehoben.' : 'Löschschutz aktiviert.' });
       fetchData();
     }
+  };
+
+  const handleConfirmUnlock = async () => {
+    if (unlockingTenant) {
+      await performToggleLock(unlockingTenant);
+    }
+    setUnlockDialogOpen(false);
+    setUnlockingTenant(null);
   };
 
   const handleImpersonate = (t: Tenant) => {
