@@ -88,12 +88,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const fetchUserData = async () => {
       setProfileLoading(true);
+      const timeout = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 10000)
+      );
       try {
-        const [rolesRes, profileRes] = await Promise.all([
-          supabase.from('user_roles').select('role').eq('user_id', user.id),
-          supabase.from('profiles').select('tenant_id').eq('user_id', user.id).maybeSingle(),
-        ]);
+        const result = await Promise.race([
+          Promise.all([
+            supabase.from('user_roles').select('role').eq('user_id', user.id),
+            supabase.from('profiles').select('tenant_id').eq('user_id', user.id).maybeSingle(),
+          ]),
+          timeout,
+        ]) as [any, any];
 
+        const [rolesRes, profileRes] = result;
         setRoles((rolesRes.data || []).map((r: UserRole) => r.role));
         setTenantId(profileRes.data?.tenant_id || null);
       } catch (err) {
