@@ -154,8 +154,8 @@ export default function AdvisorOverview() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Mandanten-Übersicht</h1>
-          <p className="text-sm text-muted-foreground mt-1">Ampel-Status aller Mandanten</p>
+          <h1 className="text-2xl font-bold text-foreground">Kunden-Übersicht</h1>
+          <p className="text-sm text-muted-foreground mt-1">Ampel-Status aller Kunden</p>
         </div>
         <Select value={filter} onValueChange={setFilter}>
           <SelectTrigger className="w-48">
