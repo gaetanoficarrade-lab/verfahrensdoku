@@ -468,7 +468,7 @@ export default function AdminSettingsPlans() {
                       checked={form.max_clients_unlimited}
                       onCheckedChange={(v) => setForm((p) => ({ ...p, max_clients_unlimited: v }))}
                     />
-                    <Label>Unbegrenzte Mandanten</Label>
+                    <Label>Unbegrenzte Kunden</Label>
                   </div>
                   {!form.max_clients_unlimited && (
                     <Input
