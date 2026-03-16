@@ -163,7 +163,7 @@ export default function VerfahrensdokumentationErstellen() {
     { q: 'Muss der Steuerberater die Verfahrensdokumentation erstellen?', a: 'Nein – und er kann es auch gar nicht. Die Verfahrensdokumentation beschreibt deine internen Abläufe die nur du kennst. Dein Steuerberater weiß nicht wie du intern arbeitest. Du bist als Unternehmer verantwortlich für die Erstellung.' },
     { q: 'Wie lang muss eine Verfahrensdokumentation sein?', a: 'Es gibt keine Mindestlänge – aber sie muss vollständig sein. Ein sachkundiger Dritter muss anhand der Verfahrensdokumentation deine gesamten buchhalterischen Abläufe nachvollziehen können. GoBD-Suite-Dokumente umfassen typischerweise 20 bis 50 Seiten je nach Komplexität.' },
     { q: 'Wie lange muss die Verfahrensdokumentation aufbewahrt werden?', a: '10 Jahre – genauso wie alle anderen steuerrelevanten Unterlagen gemäß § 147 AO. GoBD-Suite archiviert alle Versionen revisionssicher und dauerhaft.' },
-    { q: 'Kann ich eine Vorlage verwenden?', a: 'Vorlagen sind problematisch weil sie nicht auf dein spezifisches Business zugeschnitten sind. Das Finanzamt erkennt generische Vorlagen. GoBD-Suite erstellt kein generisches Dokument sondern eine individuelle VD auf Basis deiner tatsächlichen Abläufe.' },
+    { q: 'Kann ich eine Vorlage verwenden?', a: 'Vorlagen sind problematisch weil sie nicht auf dein spezifisches Business zugeschnitten sind. Das Finanzamt erkennt generische Vorlagen. GoBD-Suite erstellt kein generisches Dokument sondern eine individuelle Verfahrensdokumentation auf Basis deiner tatsächlichen Abläufe.' },
   ];
 
   return (
