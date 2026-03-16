@@ -629,7 +629,7 @@ export default function MarketingPage() {
               <Reveal>
                 <article className="rounded-[18px] p-8 h-full flex flex-col" style={{ background: C.white, border: `1px solid ${C.border}` }}>
                   <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-4" style={{ background: C.bgLight, color: C.dark }}>Solo-Plan</span>
-                  <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>Du willst deine VD selbst erstellen</h3>
+                  <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>Du willst deine Verfahrensdokumentation selbst erstellen</h3>
                   <ul className="space-y-2 mb-8">
                     {['Kein Steuerberater nötig', 'Einmalig zahlen, 12 Monate nutzen', 'Unbegrenzte Revisionen', 'Fertig in unter einer Stunde'].map(t => (
                       <li key={t} className="flex items-center gap-2 text-[15px]" style={{ color: C.textGray }}><Check size={16} style={{ color: C.green }} /> {t}</li>
