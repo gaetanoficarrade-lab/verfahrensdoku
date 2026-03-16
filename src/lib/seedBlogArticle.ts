@@ -397,9 +397,9 @@ Lass uns realistisch sein.
 
 **Szenario 1: Kleiner Einzelunternehmer, einfaches Business**
 
-Du arbeitest als Freelancer, nutzt eine Buchhaltungssoftware, alles ist ordentlich. Keine VD.
+Du arbeitest als Freelancer, nutzt eine Buchhaltungssoftware, alles ist ordentlich. Keine Verfahrensdokumentation.
 
-In diesem Fall wird der Prüfer den Mangel notieren. Er wird dir möglicherweise eine Frist setzen um die VD nachzureichen. Wenn deine Zahlen stimmen und du kooperativ bist, bleibt es oft bei einer Beanstandung ohne große finanzielle Folgen.
+In diesem Fall wird der Prüfer den Mangel notieren. Er wird dir möglicherweise eine Frist setzen um die Verfahrensdokumentation nachzureichen. Wenn deine Zahlen stimmen und du kooperativ bist, bleibt es oft bei einer Beanstandung ohne große finanzielle Folgen.
 
 Aber: Es gibt keine Garantie dafür.
 
