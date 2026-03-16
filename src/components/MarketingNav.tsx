@@ -109,10 +109,6 @@ export default function MarketingNav() {
 
       {mobileMenu && (
         <div className="fixed inset-0 z-40 flex flex-col pt-20 px-8 gap-4 text-lg font-medium md:hidden" style={{ background: C.white, color: C.dark }}>
-          {isHome
-            ? <a href="#funktionen" onClick={() => setMobileMenu(false)}>Funktionen</a>
-            : <Link to="/#funktionen" onClick={() => setMobileMenu(false)}>Funktionen</Link>
-          }
           <p className="text-xs font-semibold mt-2 uppercase tracking-wider" style={{ color: '#6E6E73' }}>Für wen?</p>
           <Link to="/fuer-selbststaendige" onClick={() => setMobileMenu(false)} className="pl-3">Für Selbstständige</Link>
           <Link to="/fuer-dienstleister" onClick={() => setMobileMenu(false)} className="pl-3">Für Dienstleister</Link>
