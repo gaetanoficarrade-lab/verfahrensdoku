@@ -78,7 +78,7 @@ export async function seedDemoData() {
   });
   if (tsErr) errors.push(`Tenant-Settings: ${tsErr.message}`);
 
-  // ─── 3. Client (Mandant) – Muster GmbH ───
+  // ─── 3. Client (Kunde) – Muster GmbH ───
   const { data: client, error: clientErr } = await supabase
     .from('clients')
     .insert({
