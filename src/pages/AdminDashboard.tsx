@@ -116,7 +116,7 @@ const AdminDashboard = () => {
 
   const statCards = [
     { label: 'Unterkonten', value: stats.tenants, icon: Building2 },
-    { label: 'Mandanten', value: stats.clients, icon: Users },
+    { label: 'Kunden', value: stats.clients, icon: Users },
     { label: 'Projekte', value: stats.projects, icon: FolderOpen },
   ];
 
