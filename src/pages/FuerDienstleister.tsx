@@ -312,7 +312,7 @@ export default function FuerDienstleister() {
             <Reveal><h2 className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>Perfekt für dich wenn du...</h2></Reveal>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {[
-                '...Steuerberater oder Buchhalter bist und deinen Mandanten einen Mehrwert bieten willst',
+                '...Steuerberater oder Buchhalter bist und deinen Kunden einen Mehrwert bieten willst',
                 '...als Unternehmensberater oder Consultant eine neue Dienstleistung aufbauen willst',
                 '...Marketing-Berater bist und Kunden bei der Digitalisierung begleitest',
                 '...eine Agentur führst und skalierbare Zusatzleistungen suchst',
