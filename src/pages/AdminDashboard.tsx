@@ -252,17 +252,41 @@ const AdminDashboard = () => {
       </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Unterkonten</CardTitle>
+          <div className="flex gap-1">
+            {([
+              ['all', 'Alle'],
+              ['solo', 'Solo'],
+              ['berater', 'Berater'],
+              ['agentur', 'Agentur'],
+              ['none', 'Kein Plan'],
+            ] as [PlanFilter, string][]).map(([key, label]) => {
+              const count = key === 'all' ? tenants.length
+                : key === 'none' ? tenants.filter(t => !t.plan_name).length
+                : tenants.filter(t => t.plan_name?.toLowerCase() === key).length;
+              return (
+                <Button
+                  key={key}
+                  variant={planFilter === key ? 'default' : 'outline'}
+                  size="sm"
+                  className="text-xs h-7 px-2.5"
+                  onClick={() => setPlanFilter(key)}
+                >
+                  {label} ({count})
+                </Button>
+              );
+            })}
+          </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {tenants.length === 0 && (
+            {filteredTenants.length === 0 && (
               <p className="text-sm text-muted-foreground py-4 text-center">
-                Noch keine Unterkonten vorhanden.
+                Keine Unterkonten in dieser Kategorie.
               </p>
             )}
-            {tenants.map((tenant) => (
+            {filteredTenants.map((tenant) => (
               <motion.div
                 key={tenant.id}
                 initial={{ opacity: 0 }}
@@ -279,6 +303,11 @@ const AdminDashboard = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
+                  {tenant.plan_name && (
+                    <Badge variant="outline" className="text-xs">
+                      {tenant.plan_name}
+                    </Badge>
+                  )}
                   <Badge variant={tenant.is_active ? 'default' : 'secondary'}>
                     {tenant.is_active ? 'Aktiv' : 'Inaktiv'}
                   </Badge>
