@@ -62,10 +62,22 @@ function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, h
           ))}
         </ul>
         {isCurrent ? (
-          <Button variant="outline" disabled className="w-full">
-            <Crown className="h-4 w-4 mr-2" />
-            Aktueller Plan
-          </Button>
+          <div className="space-y-2">
+            <Button variant="outline" disabled className="w-full">
+              <Crown className="h-4 w-4 mr-2" />
+              Aktueller Plan
+            </Button>
+            {switchBillingUrl && switchBillingLabel && (
+              <Button
+                variant="default"
+                className="w-full"
+                onClick={() => window.open(switchBillingUrl, '_blank')}
+              >
+                <ArrowRight className="h-4 w-4 mr-2" />
+                {switchBillingLabel}
+              </Button>
+            )}
+          </div>
         ) : checkoutUrl ? (
           <Button
             className="w-full"
