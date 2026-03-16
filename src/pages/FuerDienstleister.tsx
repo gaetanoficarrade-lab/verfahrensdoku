@@ -419,10 +419,12 @@ export default function FuerDienstleister() {
               <Reveal>
                 <div className="rounded-[18px] p-8 flex flex-col h-full" style={{ background: C.white, boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
                   <h3 className="text-xl font-bold mb-2" style={{ color: C.dark }}>Berater</h3>
-                  <div className="flex items-baseline gap-1 mb-1">
-                    <span className="text-4xl font-bold transition-all duration-300" style={{ color: C.dark }}>{annual ? '332 €' : '399 €'}</span>
+                  <div className="flex items-baseline gap-2 mb-1">
+                    {annual && <span className="text-2xl font-bold line-through" style={{ color: '#E53E3E' }}>399 €</span>}
+                    <span className="text-4xl font-bold transition-all duration-300" style={{ color: annual ? '#38A169' : C.dark }}>{annual ? '332 €' : '399 €'}</span>
                     <span className="text-sm" style={{ color: C.textGray }}>/Monat</span>
                   </div>
+                  {annual && <p className="text-xs font-semibold mb-1" style={{ color: '#38A169' }}>17 % gespart</p>}
                   <p className="text-xs mb-6" style={{ color: C.textGray }}>{annual ? '3.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}</p>
                   <ul className="space-y-2 mb-8 flex-1">
                     {[
