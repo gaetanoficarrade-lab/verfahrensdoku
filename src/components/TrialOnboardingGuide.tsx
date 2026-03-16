@@ -18,7 +18,7 @@ import {
 const STORAGE_KEY = 'gobd_trial_onboarding_seen';
 
 const availableFeatures = [
-  { icon: FolderOpen, text: 'Beispiel-Mandant „Muster GmbH" erkunden' },
+  { icon: FolderOpen, text: 'Beispiel-Kunde „Muster GmbH" erkunden' },
   { icon: FileText, text: 'Bis zu 2 Kapitel bearbeiten & testen' },
   { icon: Sparkles, text: 'KI-Textgenerierung ausprobieren' },
   { icon: Eye, text: 'PDF-Vorschau ansehen (mit Wasserzeichen)' },
