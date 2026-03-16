@@ -184,7 +184,7 @@ export default function ClientDetail() {
     if (!inviteLink || !inviteEmail) return;
     const subject = encodeURIComponent(`Einladung zur Verfahrensdokumentation – ${client?.company || ''}`);
     const body = encodeURIComponent(
-      `Sehr geehrte(r) ${client?.contact_name || 'Mandant'},\n\nSie wurden zur GoBD-Suite eingeladen. Bitte klicken Sie auf folgenden Link, um Ihr Konto zu erstellen:\n\n${inviteLink}\n\nDer Link ist 7 Tage gültig.\n\nMit freundlichen Grüßen`
+      `Sehr geehrte(r) ${client?.contact_name || 'Kunde'},\n\nSie wurden zur GoBD-Suite eingeladen. Bitte klicken Sie auf folgenden Link, um Ihr Konto zu erstellen:\n\n${inviteLink}\n\nDer Link ist 7 Tage gültig.\n\nMit freundlichen Grüßen`
     );
     window.open(`mailto:${inviteEmail}?subject=${subject}&body=${body}`, '_blank');
   };
