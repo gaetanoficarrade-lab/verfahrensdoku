@@ -1,4 +1,4 @@
-Funnelpay Checkout URLs für die drei Pläne.
+Funnelpay Checkout URLs für die drei Pläne (Stand: aktuell).
 
 ## Checkout URLs
 - Solo: https://funnelpay.de/checkout/GoBD-Suite Solo Plan
