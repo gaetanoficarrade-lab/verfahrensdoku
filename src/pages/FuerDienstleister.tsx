@@ -221,7 +221,7 @@ export default function FuerDienstleister() {
                 <div className="rounded-[18px] p-8" style={{ ...glass }}>
                   <p className="text-sm font-semibold mb-4" style={{ color: C.dark }}>Beispielrechnung Berater-Plan:</p>
                   <ul className="space-y-3 text-[15px]" style={{ color: C.dark }}>
-                    <li className="flex justify-between"><span>5 Mandanten × 1.500 € Verfahrensdokumentation</span><span className="font-semibold">7.500 €</span></li>
+                    <li className="flex justify-between"><span>5 Kunden × 1.500 € Verfahrensdokumentation</span><span className="font-semibold">7.500 €</span></li>
                     <li className="flex justify-between"><span>Laufende Aktualisierungen × 5</span><span className="font-semibold">500 €/Jahr</span></li>
                     <li className="flex justify-between" style={{ color: C.textGray }}><span>Dein Aufwand: Tool-Kosten</span><span>399 €/Monat</span></li>
                   </ul>
