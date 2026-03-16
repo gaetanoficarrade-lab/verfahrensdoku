@@ -452,7 +452,7 @@ export default function VerfahrensdokumentationErstellen() {
             <ul className="space-y-2 text-sm">
               <li><Link to="/fuer-selbststaendige" className="hover:text-white transition-colors">Für Selbstständige</Link></li>
               <li><Link to="/fuer-dienstleister" className="hover:text-white transition-colors">Für Dienstleister</Link></li>
-              <li><Link to="/verfahrensdokumentation-erstellen" className="hover:text-white transition-colors text-white font-semibold">VD erstellen – Anleitung</Link></li>
+              <li><Link to="/verfahrensdokumentation-erstellen" className="hover:text-white transition-colors text-white font-semibold">Verfahrensdokumentation erstellen – Anleitung</Link></li>
               <li><p className="text-sm mt-3">info@gobd-suite.de</p></li>
             </ul>
           </div>
