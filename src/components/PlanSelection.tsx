@@ -102,7 +102,7 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
     solo: settings['funnelpay_checkout_solo'] || 'https://funnelpay.de/checkout/GoBD-Suite Solo Plan',
     berater: annual
       ? 'https://funnelpay.de/checkout/GoBD-Suite Berater Plan Jährl.'
-      : (settings['funnelpay_checkout_berater'] || 'https://funnelpay.de/checkout/test--GoBD-Suite Berater Plan'),
+      : (settings['funnelpay_checkout_berater'] || 'https://funnelpay.de/checkout/GoBD-Suite Berater Plan'),
     agentur: annual
       ? 'https://funnelpay.de/checkout/GoBD-Suite Agentur Plan-Jährl.'
       : (settings['funnelpay_checkout_agentur'] || 'https://funnelpay.de/checkout/GoBD-Suite Agentur Plan'),
