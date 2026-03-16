@@ -224,7 +224,7 @@ export default function VerfahrensdokumentationErstellen() {
             {[
               { Icon: Scale, title: 'Rechtsgrundlage', text: 'GoBD, Randziffer 151 ff. In Kraft seit 01.01.2015, aktualisiert zum 01.01.2020' },
               { Icon: Calendar, title: 'Seit wann Pflicht?', text: 'Seit 01.01.2015 für alle Unternehmen die DV-gestützte Buchführungssysteme nutzen' },
-              { Icon: AlertTriangle, title: 'Was droht ohne VD?', text: 'Verwerfung der Buchführung, Schätzung durch das Finanzamt, Nachzahlungen' },
+              { Icon: AlertTriangle, title: 'Was droht ohne Verfahrensdokumentation?', text: 'Verwerfung der Buchführung, Schätzung durch das Finanzamt, Nachzahlungen' },
             ].map((b, i) => (
               <Reveal key={i} delay={i * 0.1}>
                 <div className="rounded-[16px] p-6 text-center h-full" style={{ ...glass }}>
