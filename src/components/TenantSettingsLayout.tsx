@@ -92,7 +92,7 @@ export function TenantSettingsLayout({ children }: TenantSettingsLayoutProps) {
 
       {/* Desktop: Horizontal tab bar */}
       <div className="hidden md:block rounded-xl bg-card border border-border p-1.5 shadow-sm">
-        <nav className="flex gap-1 overflow-x-auto" aria-label="Einstellungen">
+        <nav className="flex flex-wrap gap-1" aria-label="Einstellungen">
           {tabs.map((tab) => {
             const isActive = location.pathname === tab.url;
             const Icon = tab.icon;
