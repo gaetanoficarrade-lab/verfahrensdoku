@@ -824,7 +824,7 @@ Du weißt jetzt was reinmuss. Hier ist was am häufigsten schiefläuft.
 
 Du wechselst von Lexoffice zu sevDesk. Du meldest dich bei Stripe an. Du nutzt jetzt Google Drive für die Belegablage.
 
-Jede dieser Änderungen muss in der VD aktualisiert werden. Mit Datum.
+Jede dieser Änderungen muss in der Verfahrensdokumentation aktualisiert werden. Mit Datum.
 
 **Fehler 3: Denken es reicht eine Vorlage**
 
