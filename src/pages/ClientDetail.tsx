@@ -260,7 +260,7 @@ export default function ClientDetail() {
               setShowInvite(true);
             }}>
               <Send className="h-4 w-4" />
-              Mandant einladen
+              Kunde einladen
             </Button>
             <Button variant="outline" size="sm" className="gap-1" onClick={() => {
               setUserEmail(client.contact_email || '');
