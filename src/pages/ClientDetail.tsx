@@ -626,7 +626,7 @@ export default function ClientDetail() {
           <DialogHeader>
             <DialogTitle>Einladung erneut senden</DialogTitle>
             <DialogDescription>
-              Senden Sie die Einladung erneut per E-Mail an den Mandanten.
+              Senden Sie die Einladung erneut per E-Mail an den Kunden.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
