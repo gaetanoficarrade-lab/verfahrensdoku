@@ -21,6 +21,7 @@ import AdminSettingsLegal from "./pages/AdminSettingsLegal";
 import AdminSettingsEmail from "./pages/AdminSettingsEmail";
 import AdminSettingsPlans from "./pages/AdminSettingsPlans";
 import AdminSettingsSystem from "./pages/AdminSettingsSystem";
+import AdminSettingsIntegrations from "./pages/AdminSettingsIntegrations";
 import AdminPromoCodes from "./pages/AdminPromoCodes";
 import Clients from "./pages/Clients";
 import ClientNew from "./pages/ClientNew";
