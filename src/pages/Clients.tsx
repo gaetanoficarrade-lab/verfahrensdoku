@@ -72,12 +72,12 @@ export default function Clients() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Mandanten</h1>
-          <p className="text-sm text-muted-foreground mt-1">Verwalten Sie Ihre Mandanten</p>
+          <h1 className="text-2xl font-bold text-foreground">Kunden</h1>
+          <p className="text-sm text-muted-foreground mt-1">Verwalten Sie Ihre Kunden</p>
         </div>
         <Button onClick={() => navigate('/clients/new')} className="gap-2" disabled={!canCreateClients}>
           <Plus className="h-4 w-4" />
-          Neuer Mandant
+          Neuer Kunde
         </Button>
       </div>
 
