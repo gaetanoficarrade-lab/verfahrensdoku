@@ -295,7 +295,7 @@ Du ein komplexes Business hast, keine Zeit investieren willst und bereit bist 1.
 
 **Nutze ein Tool wenn:**
 
-Du eine individuelle, vollständige VD willst, in unter einer Stunde fertig sein möchtest und nicht mehr als nötig bezahlen willst. Das ist für die meisten Selbstständigen der sinnvollste Weg.
+Du eine individuelle, vollständige Verfahrensdokumentation willst, in unter einer Stunde fertig sein möchtest und nicht mehr als nötig bezahlen willst. Das ist für die meisten Selbstständigen der sinnvollste Weg.
 
 ---
 
