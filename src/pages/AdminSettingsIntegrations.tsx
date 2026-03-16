@@ -116,22 +116,14 @@ export default function AdminSettingsIntegrations() {
     setCustomEntries((prev) => prev.filter((e) => e.id !== id));
   };
 
-  const SecretInput = ({
-    field,
-    label,
-    placeholder,
-  }: {
-    field: keyof IntegrationSettings;
-    label: string;
-    placeholder?: string;
-  }) => (
+  const renderSecretInput = (field: keyof IntegrationSettings, label: string, placeholder?: string) => (
     <div className="space-y-2">
       <Label className="text-sm font-medium text-foreground">{label}</Label>
       <div className="relative">
         <Input
           type={showSecrets[field] ? 'text' : 'password'}
           value={form[field]}
-          onChange={(e) => setForm({ ...form, [field]: e.target.value })}
+          onChange={(e) => setForm((prev) => ({ ...prev, [field]: e.target.value }))}
           placeholder={placeholder || '•••••••••'}
           className="pr-10 font-mono text-sm"
         />
