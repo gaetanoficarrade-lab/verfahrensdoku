@@ -395,7 +395,7 @@ export default function MarketingPage() {
     ogImage: 'https://gobd-suite.de/images/logo.png',
     twitterCard: 'summary_large_image',
     twitterTitle: 'GoBD-Suite',
-    twitterDescription: 'Das erste vollständige VD-Tool im DACH-Raum.',
+    twitterDescription: 'Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum.',
     jsonLd: jsonLdSchemas,
   });
 
