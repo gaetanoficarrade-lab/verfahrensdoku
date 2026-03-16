@@ -477,7 +477,7 @@ Das muss nicht in einer Katastrophe enden. Aber es kann. Und das Risiko ist komp
 
 Mit GoBD-Suite dauert die Erstellung unter einer Stunde.
 
-Das Risiko einer Betriebsprüfung ohne VD dauert potenziell Jahre.
+Das Risiko einer Betriebsprüfung ohne Verfahrensdokumentation dauert potenziell Jahre.
 
 **Quellen und weiterführende Links:**
 
