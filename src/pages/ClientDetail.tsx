@@ -482,7 +482,7 @@ export default function ClientDetail() {
       <Dialog open={showCreateUser} onOpenChange={setShowCreateUser}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Mandanten-Zugang erstellen</DialogTitle>
+             <DialogTitle>Kunden-Zugang erstellen</DialogTitle>
             <DialogDescription>
               Erstellt einen Login-Account für {client.company} und verknüpft ihn automatisch.
             </DialogDescription>
