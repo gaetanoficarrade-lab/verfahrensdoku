@@ -41,6 +41,7 @@ interface Project {
 export default function ClientDetail() {
   const { id } = useParams<{ id: string }>();
   const { effectiveTenantId, isSuperAdmin } = useAuthContext();
+  const { isTrialing } = useTrialRestrictions();
   const navigate = useNavigate();
   const [client, setClient] = useState<Client | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
