@@ -83,7 +83,7 @@ const AdminDashboard = () => {
           <div className="space-y-1 text-xs mt-1">
             <div className="bg-muted/50 rounded p-2 font-mono space-y-0.5">
               <p>Unterkonto: {result.tenantId}</p>
-              <p>Mandant: {result.clientId} {v.clientExists ? '✅' : '❌ FEHLT!'}</p>
+              <p>Kunde: {result.clientId} {v.clientExists ? '✅' : '❌ FEHLT!'}</p>
               <p>Projekt: {result.projectId} {v.projectExists ? '✅' : '❌ FEHLT!'}</p>
               <p>Kapitel: {v.chapterCount} {v.chapterCount > 0 ? '✅' : '❌'}</p>
               <p>Onboarding: {v.onboardingExists ? '✅' : '❌'}</p>
