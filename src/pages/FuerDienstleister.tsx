@@ -226,7 +226,7 @@ export default function FuerDienstleister() {
                     <li className="flex justify-between" style={{ color: C.textGray }}><span>Dein Aufwand: Tool-Kosten</span><span>399 €/Monat</span></li>
                   </ul>
                   <div className="mt-5 pt-4" style={{ borderTop: `1px solid ${C.border}` }}>
-                    <p className="font-bold text-lg" style={{ color: C.dark }}>Ab dem ersten Mandanten rentabel.</p>
+                    <p className="font-bold text-lg" style={{ color: C.dark }}>Ab dem ersten Kunden rentabel.</p>
                   </div>
                 </div>
               </Reveal>
