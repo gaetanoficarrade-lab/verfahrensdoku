@@ -76,9 +76,9 @@ export default function AGB() {
             <P>4.1 Der Anbieter räumt dem Kunden für die Vertragslaufzeit ein nicht ausschließliches, nicht übertragbares Recht ein, den Dienst im Rahmen dieser AGB zu nutzen.</P>
             <P>4.2 Der Umfang der Nutzung richtet sich nach dem gebuchten Plan:</P>
             <List items={[
-              'Plan Solo: Nutzung für einen Mandanten, kein Whitelabel',
-              'Plan Berater: Nutzung für bis zu fünf Mandanten, kein Whitelabel',
-              'Plan Agentur: Nutzung für unbegrenzte Mandanten, Whitelabel inklusive',
+              'Plan Solo: Nutzung für einen Kunden, kein Whitelabel',
+              'Plan Berater: Nutzung für bis zu fünf Kunden, kein Whitelabel',
+              'Plan Agentur: Nutzung für unbegrenzte Kunden, Whitelabel inklusive',
             ]} />
             <P>4.3 Der Kunde darf den Dienst nicht an Dritte weiterverkaufen, vermieten oder in sonstiger Weise weiterübertragen, soweit dies nicht ausdrücklich durch den gebuchten Plan gestattet ist. Reverse Engineering, Dekompilierung oder die Nutzung für rechtswidrige Zwecke sind untersagt.</P>
           </S>
