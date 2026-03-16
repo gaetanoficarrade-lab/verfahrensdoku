@@ -244,6 +244,12 @@ const AdminTenants = () => {
 
   const handleDelete = async () => {
     if (!deletingTenant) return;
+    if (deletingTenant.is_locked) {
+      toast({ variant: 'destructive', title: 'Gesperrt', description: 'Dieses Unterkonto ist geschützt und kann nicht gelöscht werden.' });
+      setDeleteDialogOpen(false);
+      setDeletingTenant(null);
+      return;
+    }
     const { error } = await supabase.from('tenants').delete().eq('id', deletingTenant.id);
     if (error) {
       toast({ variant: 'destructive', title: 'Fehler', description: error.message });
@@ -253,6 +259,19 @@ const AdminTenants = () => {
     }
     setDeleteDialogOpen(false);
     setDeletingTenant(null);
+  };
+
+  const handleToggleLock = async (t: Tenant) => {
+    const { error } = await supabase
+      .from('tenants')
+      .update({ is_locked: !t.is_locked } as any)
+      .eq('id', t.id);
+    if (error) {
+      toast({ variant: 'destructive', title: 'Fehler', description: error.message });
+    } else {
+      toast({ title: t.is_locked ? 'Löschschutz aufgehoben.' : 'Löschschutz aktiviert.' });
+      fetchData();
+    }
   };
 
   const handleImpersonate = (t: Tenant) => {
