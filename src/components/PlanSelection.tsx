@@ -122,6 +122,21 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
       : (settings['funnelpay_checkout_agentur'] || 'https://funnelpay.de/checkout/GoBD-Suite Agentur Plan'),
   };
 
+  // URLs for switching billing cycle (opposite of current toggle)
+  const switchBillingUrls = {
+    berater: annual
+      ? (settings['funnelpay_checkout_berater'] || 'https://funnelpay.de/checkout/GoBD-Suite Berater Plan')
+      : 'https://funnelpay.de/checkout/GoBD-Suite Berater Plan Jährl.',
+    agentur: annual
+      ? (settings['funnelpay_checkout_agentur'] || 'https://funnelpay.de/checkout/GoBD-Suite Agentur Plan')
+      : 'https://funnelpay.de/checkout/GoBD-Suite Agentur Plan-Jährl.',
+  };
+
+  const getSwitchLabel = (planName: string) => {
+    if (currentPlan?.toLowerCase() !== planName.toLowerCase()) return undefined;
+    return annual ? 'Zu monatlich wechseln' : 'Zu jährlich wechseln';
+  };
+
   return (
     <div>
       {/* Annual/Monthly Toggle */}
