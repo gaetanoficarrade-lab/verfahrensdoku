@@ -27,6 +27,11 @@ import { useAuthContext } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
+interface Plan {
+  id: string;
+  name: string;
+}
+
 interface Tenant {
   id: string;
   name: string;
@@ -34,6 +39,7 @@ interface Tenant {
   contact_email: string | null;
   is_active: boolean;
   plan_id: string | null;
+  plan_name: string | null;
   created_at: string;
 }
 
@@ -42,6 +48,8 @@ interface Stats {
   clients: number;
   projects: number;
 }
+
+type PlanFilter = 'all' | 'solo' | 'berater' | 'agentur' | 'none';
 
 
 const AdminDashboard = () => {
