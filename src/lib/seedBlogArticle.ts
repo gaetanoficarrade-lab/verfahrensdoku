@@ -411,7 +411,7 @@ Hier wird es schwieriger. Der Prüfer kann nicht nachvollziehen wie die Daten zw
 
 Die Wahrscheinlichkeit einer Schätzung steigt deutlich.
 
-**Szenario 3: Keine VD plus andere Mängel**
+**Szenario 3: Keine Verfahrensdokumentation plus andere Mängel**
 
 Fehlende VD plus unvollständige Belege plus nicht nachvollziehbare Buchungen – das ist eine Kombination die teuer werden kann.
 
