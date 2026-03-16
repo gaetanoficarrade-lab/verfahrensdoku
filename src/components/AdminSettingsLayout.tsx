@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Settings, Scale, Mail, CreditCard, Activity, Tag, ScrollText, ChevronDown } from 'lucide-react';
+import { Settings, Scale, Mail, CreditCard, Activity, Tag, ScrollText, Webhook, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
