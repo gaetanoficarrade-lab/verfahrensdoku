@@ -39,10 +39,34 @@ serve(async (req) => {
     const PRODUCT_BERATER = integrationSettings.funnelpay_product_berater || Deno.env.get("FUNNELPAY_PRODUCT_BERATER") || "";
     const PRODUCT_AGENTUR = integrationSettings.funnelpay_product_agentur || Deno.env.get("FUNNELPAY_PRODUCT_AGENTUR") || "";
 
-    // Auth: check webhook secret
-    const secret = req.headers.get("x-webhook-secret") || req.headers.get("X-Webhook-Secret");
+    // Auth: check webhook secret (try multiple common header names)
+    const secret =
+      req.headers.get("x-webhook-secret") ||
+      req.headers.get("x-secret-token") ||
+      req.headers.get("x-hub-signature") ||
+      req.headers.get("secret") ||
+      req.headers.get("token") ||
+      (() => {
+        const auth = req.headers.get("authorization") || "";
+        if (auth.startsWith("Bearer ")) return auth.slice(7);
+        return auth;
+      })();
 
+    // Log all headers for debugging if auth fails
     if (!FUNNELPAY_WEBHOOK_SECRET || secret !== FUNNELPAY_WEBHOOK_SECRET) {
+      const headersObj: Record<string, string> = {};
+      req.headers.forEach((v, k) => { headersObj[k] = v; });
+
+      // Still log the attempt so admin can debug
+      await supabaseAdmin.from("webhook_logs").insert({
+        source: "funnelpay",
+        event_type: "auth_failed",
+        customer_email: null,
+        payload: { received_headers: headersObj, secret_configured: !!FUNNELPAY_WEBHOOK_SECRET, secret_received: !!secret },
+        status: "error",
+        error_message: "Webhook secret mismatch – check header names in Funnelmate",
+      });
+
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
