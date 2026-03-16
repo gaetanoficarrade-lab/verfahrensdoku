@@ -86,7 +86,7 @@ export default function TestStarten() {
           title: 'Willkommen!',
           description: '7 Tage kostenlos testen – viel Spaß beim Erkunden!',
         });
-        navigate('/');
+        navigate('/dashboard');
       }
     } catch (err: any) {
       toast({
