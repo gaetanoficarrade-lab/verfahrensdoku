@@ -135,7 +135,7 @@ export function FirstStepsGuide() {
   }, [location.pathname, waitingPattern, minimized, steps.length]);
 
   const handleComplete = async () => {
-    if (user) {
+    if (!previewMode && user) {
       await supabase
         .from('profiles')
         .update({ onboarding_completed: true })
@@ -144,6 +144,7 @@ export function FirstStepsGuide() {
     setOpen(false);
     setMinimized(false);
     setWaitingPattern(null);
+    setPreviewMode(false);
   };
 
   const handleNext = () => {

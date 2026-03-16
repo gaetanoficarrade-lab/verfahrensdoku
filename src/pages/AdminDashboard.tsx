@@ -129,6 +129,14 @@ const AdminDashboard = () => {
           
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="gap-2"
+            onClick={() => window.dispatchEvent(new Event('open-onboarding-preview'))}
+          >
+            <Presentation className="h-4 w-4" />
+            Onboarding-Vorschau
+          </Button>
           {/* Demo-Daten laden Button */}
           <AlertDialog>
             <AlertDialogTrigger asChild>
