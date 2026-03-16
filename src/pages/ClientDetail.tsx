@@ -601,7 +601,7 @@ export default function ClientDetail() {
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Der Link ist 7 Tage gültig. Der Mandant erstellt damit sein eigenes Konto.
+                  Der Link ist 7 Tage gültig. Der Kunde erstellt damit sein eigenes Konto.
                 </p>
               </div>
               <div className="flex gap-2">
