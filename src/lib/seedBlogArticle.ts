@@ -623,7 +623,7 @@ Das ist ein konkreter Nutzen den Unternehmer verstehen.
 
 **Strategie 3: Digitalisierungsbegleitung**
 
-Jedes Unternehmen das neue Software einführt braucht eine aktualisierte VD. Du bietest die VD-Aktualisierung als selbstverständlichen Teil der Implementierung an.
+Jedes Unternehmen das neue Software einführt braucht eine aktualisierte Verfahrensdokumentation. Du bietest die Aktualisierung als selbstverständlichen Teil der Implementierung an.
 
 ---
 
