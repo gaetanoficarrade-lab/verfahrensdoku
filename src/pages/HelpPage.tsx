@@ -250,8 +250,10 @@ export default function HelpPage() {
         {/* FAQ TAB */}
         <TabsContent value="faq" className="space-y-6">
           <div className="flex gap-3">
-            <Button variant="outline" size="sm" onClick={() => {
-              resetFirstStepsGuide();
+            <Button variant="outline" size="sm" onClick={async () => {
+              if (user) {
+                await supabase.from('profiles').update({ onboarding_completed: false }).eq('user_id', user.id);
+              }
               toast({ title: 'Erste-Schritte-Guide zurückgesetzt', description: 'Der Guide wird beim nächsten Seitenaufruf angezeigt.' });
             }}>
               Erste-Schritte-Guide erneut starten
