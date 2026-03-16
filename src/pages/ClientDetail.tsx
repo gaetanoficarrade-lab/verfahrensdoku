@@ -237,7 +237,7 @@ export default function ClientDetail() {
           <p className="text-sm text-muted-foreground mt-1">Mandantendetails und Projekte</p>
         </div>
         <Badge variant="secondary">{client.onboarding_status || 'pending'}</Badge>
-        {!client.user_id && (
+        {!client.user_id && !isTrialing && (
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="gap-1" onClick={() => {
               setInviteEmail(client.contact_email || '');
