@@ -369,7 +369,7 @@ Das ist ein formeller Mangel. Kein Kavaliersdelikt – ein echter Mangel der dok
 
 Das ist der entscheidende Punkt den die meisten nicht kennen.
 
-Deine Buchführung muss nicht nur inhaltlich stimmen – sie muss auch formal ordnungsgemäß sein. Eine fehlende VD ist ein formeller Mangel der die Ordnungsmäßigkeit deiner gesamten digitalen Buchführung in Frage stellt.
+Deine Buchführung muss nicht nur inhaltlich stimmen – sie muss auch formal ordnungsgemäß sein. Eine fehlende Verfahrensdokumentation ist ein formeller Mangel der die Ordnungsmäßigkeit deiner gesamten digitalen Buchführung in Frage stellt.
 
 Das bedeutet: Der Prüfer muss ihr nicht mehr vertrauen. Auch wenn inhaltlich alles stimmt.
 
