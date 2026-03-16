@@ -52,7 +52,7 @@ interface MenuItem {
 
 const tenantItemsFull: MenuItem[] = [
   { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
-  { title: 'Mandanten', url: '/clients', icon: Users },
+  { title: 'Kunden', url: '/clients', icon: Users },
   { title: 'Übersicht', url: '/overview', icon: Eye, trialLocked: true },
 ];
 

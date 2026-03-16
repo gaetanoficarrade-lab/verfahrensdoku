@@ -122,7 +122,7 @@ export default function TenantEmailSettings() {
           E-Mail-Vorlagen
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Passen Sie die E-Mail-Vorlagen für Ihre Mandanten und Ihr Team an.
+          Passen Sie die E-Mail-Vorlagen für Ihre Kunden und Ihr Team an.
         </p>
       </div>
 

@@ -113,7 +113,7 @@ export default function BillingSettings() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Mandanten</span>
+                <span className="text-muted-foreground">Kunden</span>
                 {tenantPlan.maxClients >= 999 || tenantPlan.maxClients === 0 ? (
                   <span className="font-medium">{tenantPlan.currentClients} <span className="text-muted-foreground font-normal">(unbegrenzt)</span></span>
                 ) : (
