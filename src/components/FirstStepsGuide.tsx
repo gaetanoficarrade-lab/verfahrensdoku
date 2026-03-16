@@ -1,97 +1,227 @@
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { useNavigate } from 'react-router-dom';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Users, FolderOpen, Send, FileText, CheckCircle2 } from 'lucide-react';
 import { useAuthContext } from '@/contexts/AuthContext';
+import { useTenantPlan } from '@/hooks/useTenantPlan';
+import { supabase } from '@/integrations/supabase/client';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, UserPlus, FileText, Mail, Palette, Globe, ArrowRight, ArrowLeft, Rocket } from 'lucide-react';
 
-const STEPS = [
+interface Step {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  buttonLabel?: string;
+  buttonRoute?: string;
+}
+
+const BASE_STEPS: Step[] = [
   {
-    icon: Users,
-    title: 'Mandanten anlegen',
-    description: 'Erstellen Sie Ihren ersten Mandanten unter "Mandanten → Neuer Mandant". Geben Sie Firmenname, Branche und Kontaktdaten an.',
+    icon: Sparkles,
+    title: 'Willkommen bei GoBD-Suite!',
+    description: 'Mit GoBD-Suite erstellen Sie GoBD-konforme Verfahrensdokumentationen – einfach, digital und revisionssicher. Wir führen Sie in wenigen Schritten durch die wichtigsten Funktionen.',
   },
   {
-    icon: Send,
-    title: 'Mandanten einladen',
-    description: 'Laden Sie Ihren Mandanten per E-Mail ein. Er erhält einen Link und kann seine Angaben direkt im Portal ausfüllen.',
-  },
-  {
-    icon: FolderOpen,
-    title: 'Projekt erstellen & Onboarding',
-    description: 'Erstellen Sie ein Projekt (Verfahrensdokumentation 2024). Durchlaufen Sie das Onboarding um die Kapitelstruktur festzulegen.',
+    icon: UserPlus,
+    title: 'Ersten Mandanten anlegen',
+    description: 'Mandanten sind Ihre Kunden oder Unternehmen, für die Sie eine Verfahrensdokumentation erstellen. Legen Sie jetzt Ihren ersten Mandanten an.',
+    buttonLabel: 'Mandant anlegen',
+    buttonRoute: '/clients/new',
   },
   {
     icon: FileText,
-    title: 'Kapitel bearbeiten & freigeben',
-    description: 'Prüfen Sie die Mandantenangaben, generieren Sie professionelle Texte per KI und geben Sie die Kapitel frei. Am Ende erstellen Sie die Verfahrensdokumentation als PDF.',
+    title: 'Verfahrensdokumentation starten',
+    description: 'Nachdem Sie einen Mandanten angelegt haben, erstellen Sie ein Projekt und durchlaufen das Onboarding. Dort legen Sie die Kapitelstruktur fest und können Texte per KI generieren.',
   },
 ];
 
-const STORAGE_KEY = 'gobd_first_steps_completed';
+const BERATER_STEPS: Step[] = [
+  {
+    icon: Mail,
+    title: 'System-E-Mails konfigurieren',
+    description: 'Einladungsmails an Mandanten werden von noreply@gobd-suite.de versendet. Unter den E-Mail-Einstellungen können Sie eine Reply-To-Adresse hinterlegen, damit Antworten bei Ihnen ankommen.',
+    buttonLabel: 'E-Mail-Einstellungen',
+    buttonRoute: '/settings/email',
+  },
+];
+
+const AGENTUR_STEPS: Step[] = [
+  {
+    icon: Palette,
+    title: 'Whitelabel einrichten',
+    description: 'Als Agentur können Sie GoBD-Suite unter Ihrer eigenen Marke betreiben – mit eigenem Logo, Farben und Firmennamen. Ihre Mandanten sehen nur Ihr Branding.',
+    buttonLabel: 'Branding einrichten',
+    buttonRoute: '/settings/branding',
+  },
+  {
+    icon: Globe,
+    title: 'Eigene Absender-Domain',
+    description: 'Versenden Sie alle E-Mails von Ihrer eigenen Domain statt von gobd-suite.de. So wirkt Ihre Kommunikation professionell und vertrauenswürdig.',
+    buttonLabel: 'E-Mail-Einstellungen',
+    buttonRoute: '/settings/email',
+  },
+];
 
 export function FirstStepsGuide() {
-  const { roles, isSuperAdmin } = useAuthContext();
+  const { user, roles, isSuperAdmin } = useAuthContext();
+  const { isBerater, isAgentur, loading: planLoading } = useTenantPlan();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
+  const [checked, setChecked] = useState(false);
 
   const isTenantAdmin = roles.includes('tenant_admin');
 
-  useEffect(() => {
-    if (!isTenantAdmin || isSuperAdmin) return;
-    const completed = localStorage.getItem(STORAGE_KEY);
-    if (!completed) {
-      setOpen(true);
-    }
-  }, [isTenantAdmin, isSuperAdmin]);
+  const steps = [
+    ...BASE_STEPS,
+    ...(isBerater ? BERATER_STEPS : []),
+    ...(isAgentur ? AGENTUR_STEPS : []),
+  ];
 
-  const handleComplete = () => {
-    localStorage.setItem(STORAGE_KEY, 'true');
+  useEffect(() => {
+    if (!user || planLoading || checked) return;
+    if (!isTenantAdmin || isSuperAdmin || roles.includes('client')) {
+      setChecked(true);
+      return;
+    }
+
+    const checkOnboarding = async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('onboarding_completed')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (data && !data.onboarding_completed) {
+        setOpen(true);
+      }
+      setChecked(true);
+    };
+    checkOnboarding();
+  }, [user, planLoading, checked, isTenantAdmin, isSuperAdmin, roles]);
+
+  const handleComplete = async () => {
+    if (user) {
+      await supabase
+        .from('profiles')
+        .update({ onboarding_completed: true })
+        .eq('user_id', user.id);
+    }
     setOpen(false);
   };
 
   const handleNext = () => {
-    if (step < STEPS.length - 1) {
+    if (step < steps.length - 1) {
       setStep(step + 1);
     } else {
       handleComplete();
     }
   };
 
-  const current = STEPS[step];
+  const handleBack = () => {
+    if (step > 0) setStep(step - 1);
+  };
+
+  const handleActionButton = (route: string) => {
+    handleComplete();
+    navigate(route);
+  };
+
+  if (!open) return null;
+
+  const current = steps[step];
   const Icon = current.icon;
+  const isLast = step === steps.length - 1;
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-primary" />
-            Erste Schritte ({step + 1}/{STEPS.length})
-          </DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col items-center py-6 space-y-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
-            <Icon className="h-8 w-8 text-primary" />
-          </div>
-          <h3 className="text-lg font-semibold text-foreground">{current.title}</h3>
-          <p className="text-sm text-muted-foreground text-center max-w-sm">{current.description}</p>
-        </div>
-        <div className="flex justify-center gap-1 mb-2">
-          {STEPS.map((_, i) => (
-            <div key={i} className={`h-1.5 w-8 rounded-full transition-colors ${i === step ? 'bg-primary' : 'bg-muted'}`} />
+    <Dialog open={open} onOpenChange={(v) => { if (!v) handleComplete(); }}>
+      <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-border bg-card">
+        {/* Progress dots */}
+        <div className="flex justify-center gap-1.5 pt-6 px-6">
+          {steps.map((_, i) => (
+            <div
+              key={i}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === step ? 'w-8 bg-primary' : i < step ? 'w-4 bg-primary/40' : 'w-4 bg-muted'
+              }`}
+            />
           ))}
         </div>
-        <DialogFooter className="flex gap-2">
-          <Button variant="ghost" onClick={handleComplete}>Überspringen</Button>
-          <Button onClick={handleNext}>
-            {step < STEPS.length - 1 ? 'Weiter' : 'Fertig'}
-          </Button>
-        </DialogFooter>
+
+        {/* Content */}
+        <div className="px-8 pb-8 pt-4">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={step}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col items-center text-center space-y-5"
+            >
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+                <Icon className="h-8 w-8 text-primary" />
+              </div>
+
+              <div className="space-y-2">
+                <h2 className="text-xl font-semibold text-foreground">
+                  {step === 0 && user?.user_metadata?.full_name
+                    ? `Hallo ${user.user_metadata.full_name}!`
+                    : current.title}
+                </h2>
+                <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mx-auto">
+                  {current.description}
+                </p>
+              </div>
+
+              {current.buttonRoute && (
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={() => handleActionButton(current.buttonRoute!)}
+                >
+                  {current.buttonLabel}
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              )}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Navigation */}
+          <div className="flex items-center justify-between mt-8">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleBack}
+              disabled={step === 0}
+              className={step === 0 ? 'invisible' : ''}
+            >
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              Zurück
+            </Button>
+
+            <Button onClick={handleNext} className="gap-2">
+              {isLast ? (
+                <>
+                  Loslegen
+                  <Rocket className="h-4 w-4" />
+                </>
+              ) : (
+                <>
+                  Weiter
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
 }
 
 export function resetFirstStepsGuide() {
-  localStorage.removeItem('gobd_first_steps_completed');
+  // Legacy: kept for HelpPage compatibility
+  // The new wizard uses DB field onboarding_completed
 }
