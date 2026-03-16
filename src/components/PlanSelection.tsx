@@ -5,6 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { usePlatformSettings } from '@/hooks/usePlatformSettings';
 
+const PLAN_HIERARCHY: Record<string, number> = {
+  solo: 1,
+  berater: 2,
+  agentur: 3,
+};
+
 interface PlanCardProps {
   name: string;
   price: string;
@@ -16,6 +22,7 @@ interface PlanCardProps {
   checkoutUrl: string;
   currentPlan?: string | null;
   isAnnual?: boolean;
+  isDowngrade?: boolean;
 }
 
 function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, highlighted, checkoutUrl, currentPlan, isAnnual }: PlanCardProps) {
