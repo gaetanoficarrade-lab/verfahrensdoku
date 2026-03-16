@@ -225,7 +225,7 @@ Er kennt deine Steuererklärung. Er kennt nicht deinen Alltag.
 
 **Was passiert in der Praxis:**
 
-Manche Steuerberater bieten die VD-Erstellung trotzdem an – aber sie müssen dich dafür ausführlich befragen. Stundenlang.
+Manche Steuerberater bieten die Erstellung der Verfahrensdokumentation trotzdem an – aber sie müssen dich dafür ausführlich befragen. Stundenlang.
 
 Das kostet. Zwischen 500 € und 3.000 € je nach Komplexität und Stundensatz.
 
