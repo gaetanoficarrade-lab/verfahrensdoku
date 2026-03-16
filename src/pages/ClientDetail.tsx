@@ -14,6 +14,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { toast } from 'sonner';
 import { logAudit } from '@/lib/auditLog';
 import { triggerWebhook } from '@/lib/webhookTrigger';
+import { useTrialRestrictions } from '@/hooks/useTrialRestrictions';
 
 interface Client {
   id: string;
