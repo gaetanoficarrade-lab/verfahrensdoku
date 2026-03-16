@@ -136,11 +136,11 @@ export default function FuerDienstleister() {
   ];
 
   const faqs = [
-    { q: 'Wie viel kann ich pro Verfahrensdokumentation verdienen?', a: 'Das liegt bei dir. Die meisten Dienstleister berechnen zwischen 800 € und 2.500 € pro Verfahrensdokumentation je nach Komplexität des Mandanten. Mit dem Berater-Plan (399 €/Monat) bist du bereits mit einem einzigen Mandanten im Plus.' },
-    { q: 'Sehen meine Mandanten dass ich GoBD-Suite nutze?', a: 'Nein – beim Agentur-Plan sehen deine Mandanten ausschließlich dein Brand. Dein Logo, deine Kontaktdaten, deine Domain. GoBD-Suite ist dein unsichtbares Werkzeug.' },
-    { q: 'Wie viel Aufwand habe ich pro Mandant?', a: 'Minimal. Dein Mandant füllt die Leitfragen selbst aus. Du prüfst die Kapitel, gibst bei Bedarf Hinweise und finalisierst das Dokument. Pro Mandant rechne mit 1 bis 3 Stunden Aufwand insgesamt.' },
-    { q: 'Kann ich unbegrenzt viele Mandanten anlegen?', a: 'Mit dem Agentur-Plan ja. Der Berater-Plan ist auf 5 Mandanten begrenzt. Ein Upgrade von Berater auf Agentur ist jederzeit möglich.' },
-    { q: 'Was passiert wenn ein Mandant seine Verfahrensdokumentation aktualisieren muss?', a: 'Du öffnest das entsprechende Kapitel, passt den Text an und finalisierst eine neue Version. Alle Änderungen werden automatisch in der Änderungshistorie dokumentiert. Das dauert meist nur wenige Minuten.' },
+    { q: 'Wie viel kann ich pro Verfahrensdokumentation verdienen?', a: 'Das liegt bei dir. Die meisten Dienstleister berechnen zwischen 800 € und 2.500 € pro Verfahrensdokumentation je nach Komplexität des Kunden. Mit dem Berater-Plan (399 €/Monat) bist du bereits mit einem einzigen Kunden im Plus.' },
+    { q: 'Sehen meine Kunden dass ich GoBD-Suite nutze?', a: 'Nein – beim Agentur-Plan sehen deine Kunden ausschließlich dein Brand. Dein Logo, deine Kontaktdaten, deine Domain. GoBD-Suite ist dein unsichtbares Werkzeug.' },
+    { q: 'Wie viel Aufwand habe ich pro Kunde?', a: 'Minimal. Dein Kunde füllt die Leitfragen selbst aus. Du prüfst die Kapitel, gibst bei Bedarf Hinweise und finalisierst das Dokument. Pro Kunde rechne mit 1 bis 3 Stunden Aufwand insgesamt.' },
+    { q: 'Kann ich unbegrenzt viele Kunden anlegen?', a: 'Mit dem Agentur-Plan ja. Der Berater-Plan ist auf 5 Kunden begrenzt. Ein Upgrade von Berater auf Agentur ist jederzeit möglich.' },
+    { q: 'Was passiert wenn ein Kunde seine Verfahrensdokumentation aktualisieren muss?', a: 'Du öffnest das entsprechende Kapitel, passt den Text an und finalisierst eine neue Version. Alle Änderungen werden automatisch in der Änderungshistorie dokumentiert. Das dauert meist nur wenige Minuten.' },
   ];
 
   const CellVal = ({ val }: { val: boolean | string }) => {
