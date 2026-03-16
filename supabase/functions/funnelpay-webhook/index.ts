@@ -24,11 +24,25 @@ serve(async (req) => {
   let logId: string | null = null;
 
   try {
+    // Load integration settings from DB
+    const { data: settingsRow } = await supabaseAdmin
+      .from("platform_settings")
+      .select("value")
+      .eq("key", "integrations")
+      .maybeSingle();
+
+    const integrationSettings = (settingsRow?.value || {}) as Record<string, string>;
+    const FUNNELPAY_WEBHOOK_SECRET = integrationSettings.funnelpay_webhook_secret || Deno.env.get("FUNNELPAY_WEBHOOK_SECRET") || "";
+    const RESEND_API_KEY_VAL = integrationSettings.resend_api_key || Deno.env.get("RESEND_API_KEY") || "";
+    const ADMIN_EMAIL_VAL = integrationSettings.admin_email || Deno.env.get("ADMIN_EMAIL") || "gaetanoficarra.de@gmail.com";
+    const PRODUCT_SOLO = integrationSettings.funnelpay_product_solo || Deno.env.get("FUNNELPAY_PRODUCT_SOLO") || "";
+    const PRODUCT_BERATER = integrationSettings.funnelpay_product_berater || Deno.env.get("FUNNELPAY_PRODUCT_BERATER") || "";
+    const PRODUCT_AGENTUR = integrationSettings.funnelpay_product_agentur || Deno.env.get("FUNNELPAY_PRODUCT_AGENTUR") || "";
+
     // Auth: check webhook secret
     const secret = req.headers.get("x-webhook-secret") || req.headers.get("X-Webhook-Secret");
-    const expectedSecret = Deno.env.get("FUNNELPAY_WEBHOOK_SECRET");
 
-    if (!expectedSecret || secret !== expectedSecret) {
+    if (!FUNNELPAY_WEBHOOK_SECRET || secret !== FUNNELPAY_WEBHOOK_SECRET) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -55,16 +69,12 @@ serve(async (req) => {
     logId = logEntry?.id || null;
 
     // Product → Plan mapping
-    const PRODUCT_SOLO = Deno.env.get("FUNNELPAY_PRODUCT_SOLO") || "";
-    const PRODUCT_BERATER = Deno.env.get("FUNNELPAY_PRODUCT_BERATER") || "";
-    const PRODUCT_AGENTUR = Deno.env.get("FUNNELPAY_PRODUCT_AGENTUR") || "";
-
     const detectPlan = (productId: string, productName?: string): string | null => {
       const val = (productId || "").toLowerCase();
       const name = (productName || "").toLowerCase();
-      if (val === PRODUCT_SOLO.toLowerCase() || name.includes("solo")) return "solo";
-      if (val === PRODUCT_BERATER.toLowerCase() || name.includes("berater")) return "berater";
-      if (val === PRODUCT_AGENTUR.toLowerCase() || name.includes("agentur")) return "agentur";
+      if (PRODUCT_SOLO && val === PRODUCT_SOLO.toLowerCase() || name.includes("solo")) return "solo";
+      if (PRODUCT_BERATER && val === PRODUCT_BERATER.toLowerCase() || name.includes("berater")) return "berater";
+      if (PRODUCT_AGENTUR && val === PRODUCT_AGENTUR.toLowerCase() || name.includes("agentur")) return "agentur";
       return null;
     };
 
