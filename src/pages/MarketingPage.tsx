@@ -389,7 +389,7 @@ export default function MarketingPage() {
     author: 'Gaetano Ficarra',
     robots: 'index, follow',
     ogTitle: 'GoBD-Suite – Verfahrensdokumentation erstellen',
-    ogDescription: 'Das erste vollständige VD-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde.',
+    ogDescription: 'Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde.',
     ogType: 'website',
     ogLocale: 'de_DE',
     ogImage: 'https://gobd-suite.de/images/logo.png',
