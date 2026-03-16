@@ -74,7 +74,7 @@ Das Ergebnis: Steuernachzahlungen die vermeidbar gewesen wären.
 
 Alle. Wirklich alle.
 
-Die GoBD machen keinen Unterschied zwischen Großkonzern und Freelancer. Wer digital bucht, braucht eine VD.
+Die GoBD machen keinen Unterschied zwischen Großkonzern und Freelancer. Wer digital bucht, braucht eine Verfahrensdokumentation.
 
 Das bedeutet konkret: Wenn du Lexoffice, sevDesk, DATEV, Stripe, Funnelpay oder irgendeine andere digitale Lösung für deine Buchhaltung nutzt – bist du dabei.
 
