@@ -224,7 +224,7 @@ export default function ClientDetail() {
   if (!client) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Mandant nicht gefunden.</p>
+        <p className="text-muted-foreground">Kunde nicht gefunden.</p>
         <Button variant="outline" className="mt-4" onClick={() => navigate('/clients')}>Zurück</Button>
       </div>
     );
