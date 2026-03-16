@@ -49,7 +49,7 @@ export default function ClientSettings() {
 
       // Create text file
       let content = '=== DATENEXPORT ===\n\n';
-      content += '--- Mandantendaten ---\n';
+      content += '--- Kundendaten ---\n';
       clientData.forEach(c => {
         content += `Firma: ${c.company}\nBranche: ${c.industry || '-'}\nKontakt: ${c.contact_name || '-'}\n\n`;
       });

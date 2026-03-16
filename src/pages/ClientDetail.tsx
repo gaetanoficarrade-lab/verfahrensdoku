@@ -126,7 +126,7 @@ export default function ClientDetail() {
   const handleSoftDelete = async () => {
     if (!client || !id) return;
     if (hasFinalizedDocs) {
-      toast.error('Dieser Mandant kann nicht gelöscht werden, da bereits eine Verfahrensdokumentation erstellt wurde.');
+      toast.error('Dieser Kunde kann nicht gelöscht werden, da bereits eine Verfahrensdokumentation erstellt wurde.');
       return;
     }
     setDeleting(true);
@@ -184,7 +184,7 @@ export default function ClientDetail() {
     if (!inviteLink || !inviteEmail) return;
     const subject = encodeURIComponent(`Einladung zur Verfahrensdokumentation – ${client?.company || ''}`);
     const body = encodeURIComponent(
-      `Sehr geehrte(r) ${client?.contact_name || 'Mandant'},\n\nSie wurden zur GoBD-Suite eingeladen. Bitte klicken Sie auf folgenden Link, um Ihr Konto zu erstellen:\n\n${inviteLink}\n\nDer Link ist 7 Tage gültig.\n\nMit freundlichen Grüßen`
+      `Sehr geehrte(r) ${client?.contact_name || 'Kunde'},\n\nSie wurden zur GoBD-Suite eingeladen. Bitte klicken Sie auf folgenden Link, um Ihr Konto zu erstellen:\n\n${inviteLink}\n\nDer Link ist 7 Tage gültig.\n\nMit freundlichen Grüßen`
     );
     window.open(`mailto:${inviteEmail}?subject=${subject}&body=${body}`, '_blank');
   };
@@ -224,7 +224,7 @@ export default function ClientDetail() {
   if (!client) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Mandant nicht gefunden.</p>
+        <p className="text-muted-foreground">Kunde nicht gefunden.</p>
         <Button variant="outline" className="mt-4" onClick={() => navigate('/clients')}>Zurück</Button>
       </div>
     );
@@ -248,7 +248,7 @@ export default function ClientDetail() {
         </Button>
         <div className="flex-1">
           <h1 className="text-2xl font-bold text-foreground">{client.company}</h1>
-          <p className="text-sm text-muted-foreground mt-1">Mandantendetails und Projekte</p>
+          <p className="text-sm text-muted-foreground mt-1">Kundendetails und Projekte</p>
         </div>
         <Badge variant="secondary">{client.onboarding_status || 'pending'}</Badge>
         {!client.user_id && !isTrialing && (
@@ -260,7 +260,7 @@ export default function ClientDetail() {
               setShowInvite(true);
             }}>
               <Send className="h-4 w-4" />
-              Mandant einladen
+              Kunde einladen
             </Button>
             <Button variant="outline" size="sm" className="gap-1" onClick={() => {
               setUserEmail(client.contact_email || '');
@@ -284,11 +284,11 @@ export default function ClientDetail() {
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Mandant löschen?</AlertDialogTitle>
+                <AlertDialogTitle>Kunde löschen?</AlertDialogTitle>
                 <AlertDialogDescription>
                   {hasFinalizedDocs
-                    ? 'Dieser Mandant kann nicht gelöscht werden, da bereits eine Verfahrensdokumentation erstellt wurde.'
-                    : `Möchten Sie "${client.company}" wirklich als gelöscht markieren? Der Mandant wird aus der Liste entfernt, belegt aber weiterhin einen Platz im Kontingent. Diese Aktion kann nicht rückgängig gemacht werden.`
+                    ? 'Dieser Kunde kann nicht gelöscht werden, da bereits eine Verfahrensdokumentation erstellt wurde.'
+                    : `Möchten Sie "${client.company}" wirklich als gelöscht markieren? Der Kunde wird aus der Liste entfernt, belegt aber weiterhin einen Platz im Kontingent. Diese Aktion kann nicht rückgängig gemacht werden.`
                   }
                 </AlertDialogDescription>
               </AlertDialogHeader>
@@ -482,7 +482,7 @@ export default function ClientDetail() {
       <Dialog open={showCreateUser} onOpenChange={setShowCreateUser}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Mandanten-Zugang erstellen</DialogTitle>
+             <DialogTitle>Kunden-Zugang erstellen</DialogTitle>
             <DialogDescription>
               Erstellt einen Login-Account für {client.company} und verknüpft ihn automatisch.
             </DialogDescription>
@@ -498,7 +498,7 @@ export default function ClientDetail() {
                   value={userEmail}
                   onChange={(e) => setUserEmail(e.target.value)}
                   className="pl-10"
-                  placeholder="mandant@beispiel.de"
+                  placeholder="kunde@beispiel.de"
                 />
               </div>
             </div>
@@ -559,9 +559,9 @@ export default function ClientDetail() {
       <Dialog open={showInvite} onOpenChange={setShowInvite}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Mandanten einladen</DialogTitle>
+            <DialogTitle>Kunde einladen</DialogTitle>
             <DialogDescription>
-              Generieren Sie einen Einladungslink für {client.company}. Der Mandant erstellt damit selbst sein Konto.
+              Generieren Sie einen Einladungslink für {client.company}. Der Kunde erstellt damit selbst sein Konto.
             </DialogDescription>
           </DialogHeader>
 
@@ -569,7 +569,7 @@ export default function ClientDetail() {
             <>
               <div className="space-y-4 py-2">
                 <div className="space-y-2">
-                  <Label>E-Mail des Mandanten</Label>
+                  <Label>E-Mail des Kunden</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
@@ -577,7 +577,7 @@ export default function ClientDetail() {
                       value={inviteEmail}
                       onChange={(e) => setInviteEmail(e.target.value)}
                       className="pl-10"
-                      placeholder="mandant@beispiel.de"
+                      placeholder="kunde@beispiel.de"
                     />
                   </div>
                 </div>
@@ -601,7 +601,7 @@ export default function ClientDetail() {
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Der Link ist 7 Tage gültig. Der Mandant erstellt damit sein eigenes Konto.
+                  Der Link ist 7 Tage gültig. Der Kunde erstellt damit sein eigenes Konto.
                 </p>
               </div>
               <div className="flex gap-2">
@@ -626,7 +626,7 @@ export default function ClientDetail() {
           <DialogHeader>
             <DialogTitle>Einladung erneut senden</DialogTitle>
             <DialogDescription>
-              Senden Sie die Einladung erneut per E-Mail an den Mandanten.
+              Senden Sie die Einladung erneut per E-Mail an den Kunden.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
@@ -639,7 +639,7 @@ export default function ClientDetail() {
                   value={resendEmail}
                   onChange={(e) => setResendEmail(e.target.value)}
                   className="pl-10"
-                  placeholder="mandant@beispiel.de"
+                  placeholder="kunde@beispiel.de"
                 />
               </div>
             </div>

@@ -21,7 +21,7 @@ export default function ClientNew() {
   // Block trial users from creating clients
   useEffect(() => {
     if (!canCreateClients && isTrialing) {
-      toast({ title: 'Testmodus', description: 'Im Testmodus können keine eigenen Mandanten angelegt werden.', variant: 'destructive' });
+      toast({ title: 'Testmodus', description: 'Im Testmodus können keine eigenen Kunden angelegt werden.', variant: 'destructive' });
       navigate('/clients');
     }
   }, [canCreateClients, isTrialing]);
@@ -66,7 +66,7 @@ export default function ClientNew() {
       return;
     }
     if (isLimitReached && !isSuperAdmin) {
-      toast({ title: 'Limit erreicht', description: 'Sie haben die maximale Anzahl an Mandanten für Ihren Plan erreicht. Bitte upgraden Sie Ihren Plan.', variant: 'destructive' });
+      toast({ title: 'Limit erreicht', description: 'Sie haben die maximale Anzahl an Kunden für Ihren Plan erreicht. Bitte upgraden Sie Ihren Plan.', variant: 'destructive' });
       return;
     }
 
@@ -86,13 +86,13 @@ export default function ClientNew() {
     setSaving(false);
     if (error) {
       if (error.message.includes('row-level security') || error.message.includes('check_client_limit')) {
-        toast({ title: 'Mandanten-Limit erreicht', description: 'Sie haben die maximale Anzahl an Mandanten für Ihren Plan erreicht.', variant: 'destructive' });
+        toast({ title: 'Kunden-Limit erreicht', description: 'Sie haben die maximale Anzahl an Kunden für Ihren Plan erreicht.', variant: 'destructive' });
       } else {
         toast({ title: 'Fehler', description: error.message, variant: 'destructive' });
       }
       return;
     }
-    toast({ title: 'Mandant erstellt', description: `${form.company} wurde erfolgreich angelegt.` });
+    toast({ title: 'Kunde erstellt', description: `${form.company} wurde erfolgreich angelegt.` });
     logAudit('client_created', 'client', data.id, { company: form.company });
     navigate(`/clients/${data.id}`);
   };
@@ -104,8 +104,8 @@ export default function ClientNew() {
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Neuer Mandant</h1>
-          <p className="text-sm text-muted-foreground mt-1">Mandant anlegen und später zum Onboarding einladen</p>
+          <h1 className="text-2xl font-bold text-foreground">Neuer Kunde</h1>
+          <p className="text-sm text-muted-foreground mt-1">Kunde anlegen und später zum Onboarding einladen</p>
         </div>
       </div>
 
@@ -114,7 +114,7 @@ export default function ClientNew() {
         <Card className={isLimitReached && !isSuperAdmin ? 'border-destructive' : ''}>
           <CardContent className="pt-4 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Mandanten-Kontingent</span>
+              <span className="text-muted-foreground">Kunden-Kontingent</span>
               <span className={`font-medium ${isLimitReached ? 'text-destructive' : 'text-foreground'}`}>
                 {limitInfo.current} / {limitInfo.max} genutzt
               </span>
@@ -163,7 +163,7 @@ export default function ClientNew() {
             <div className="flex gap-3 pt-2">
               <Button type="submit" disabled={saving || (isLimitReached && !isSuperAdmin)}>
                 {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                Mandant anlegen
+                Kunde anlegen
               </Button>
               <Button type="button" variant="outline" onClick={() => navigate('/clients')}>Abbrechen</Button>
             </div>

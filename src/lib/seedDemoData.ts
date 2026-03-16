@@ -78,7 +78,7 @@ export async function seedDemoData() {
   });
   if (tsErr) errors.push(`Tenant-Settings: ${tsErr.message}`);
 
-  // ─── 3. Client (Mandant) – Muster GmbH ───
+  // ─── 3. Client (Kunde) – Muster GmbH ───
   const { data: client, error: clientErr } = await supabase
     .from('clients')
     .insert({
@@ -120,7 +120,7 @@ export async function seedDemoData() {
     .eq('id', clientId)
     .single();
   if (verifyErr || !verifyClient) {
-    throw new Error(`Client-Verifizierung fehlgeschlagen: ${verifyErr?.message || 'Nicht gefunden'}. Der Mandant wurde möglicherweise durch RLS blockiert.`);
+    throw new Error(`Client-Verifizierung fehlgeschlagen: ${verifyErr?.message || 'Nicht gefunden'}. Der Kunde wurde möglicherweise durch RLS blockiert.`);
   }
   console.log('[SEED] Client verified:', verifyClient);
 

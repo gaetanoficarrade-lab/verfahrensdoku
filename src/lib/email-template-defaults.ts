@@ -30,7 +30,7 @@ export const defaultTemplates: EmailTemplateMap = {
   notification_chapter_submitted: {
     subject: 'Kapitel eingereicht – {{brand_name}}',
     heading: 'Kapitel eingereicht',
-    body: 'Mandant "<strong>{{client_name}}</strong>" hat Kapitel "<strong>{{chapter_name}}</strong>" eingereicht.',
+    body: 'Kunde "<strong>{{client_name}}</strong>" hat Kapitel "<strong>{{chapter_name}}</strong>" eingereicht.',
     buttonText: 'Jetzt ansehen',
   },
   notification_chapter_approved: {
@@ -58,7 +58,7 @@ export const adminCategories = [
     label: 'Einladungen',
     templates: [
       { key: 'tenant_invite', label: 'Lizenznehmer-Einladung', icon: '🏢' },
-      { key: 'client_invite', label: 'Mandanten-Einladung', icon: '👤' },
+      { key: 'client_invite', label: 'Kunden-Einladung', icon: '👤' },
       { key: 'team_invite', label: 'Team-Einladung', icon: '👥' },
     ],
   },
@@ -83,7 +83,7 @@ export const tenantCategories = [
   {
     label: 'Einladungen',
     templates: [
-      { key: 'client_invite', label: 'Mandanten-Einladung', icon: '👤' },
+      { key: 'client_invite', label: 'Kunden-Einladung', icon: '👤' },
       { key: 'team_invite', label: 'Team-Einladung', icon: '👥' },
     ],
   },
@@ -120,7 +120,7 @@ export const placeholdersByTemplate: Record<string, { key: string; desc: string;
     { key: '{{link}}', desc: 'Reset-Link', example: 'https://gobd-suite.de/set-password?token=abc' },
   ],
   notification_chapter_submitted: [
-    { key: '{{client_name}}', desc: 'Mandantenname', example: 'Firma XYZ' },
+    { key: '{{client_name}}', desc: 'Kundenname', example: 'Firma XYZ' },
     { key: '{{chapter_name}}', desc: 'Kapitelname', example: 'Kapitel 3: IT-Systeme' },
     { key: '{{brand_name}}', desc: 'Markenname', example: 'GoBD-Suite' },
     { key: '{{link}}', desc: 'Link zum Kapitel', example: 'https://gobd-suite.de/projects/1/chapters/3' },

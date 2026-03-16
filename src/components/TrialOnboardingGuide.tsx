@@ -18,14 +18,14 @@ import {
 const STORAGE_KEY = 'gobd_trial_onboarding_seen';
 
 const availableFeatures = [
-  { icon: FolderOpen, text: 'Beispiel-Mandant „Muster GmbH" erkunden' },
+  { icon: FolderOpen, text: 'Beispiel-Kunde „Muster GmbH" erkunden' },
   { icon: FileText, text: 'Bis zu 2 Kapitel bearbeiten & testen' },
   { icon: Sparkles, text: 'KI-Textgenerierung ausprobieren' },
   { icon: Eye, text: 'PDF-Vorschau ansehen (mit Wasserzeichen)' },
 ];
 
 const lockedFeatures = [
-  { icon: Users, text: 'Eigene Mandanten anlegen & einladen' },
+  { icon: Users, text: 'Eigene Kunden anlegen & einladen' },
   { icon: FileText, text: 'Alle Kapitel bearbeiten & freigeben' },
   { text: 'PDF ohne Wasserzeichen exportieren' },
   { text: 'Branding, Team, Webhooks & Vorlagen' },
@@ -71,7 +71,7 @@ export function TrialOnboardingGuide() {
         <div className="space-y-4 py-2">
           <p className="text-sm text-muted-foreground">
             Sie haben <strong>{daysLeft} Tag{daysLeft !== 1 ? 'e' : ''}</strong> um die GoBD-Suite kennenzulernen.
-            Erkunden Sie die wichtigsten Funktionen mit dem Beispiel-Mandanten.
+            Erkunden Sie die wichtigsten Funktionen mit dem Beispiel-Kunden.
           </p>
 
           {/* Available */}

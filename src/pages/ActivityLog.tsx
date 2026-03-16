@@ -31,11 +31,11 @@ interface UserProfile {
 }
 
 const ACTION_LABELS: Record<string, string> = {
-  client_created: 'Mandant erstellt',
-  client_updated: 'Mandant bearbeitet',
-  client_deleted: 'Mandant gelöscht',
-  client_user_created: 'Mandanten-Zugang erstellt',
-  client_invite_sent: 'Mandant eingeladen',
+  client_created: 'Kunde erstellt',
+  client_updated: 'Kunde bearbeitet',
+  client_deleted: 'Kunde gelöscht',
+  client_user_created: 'Kunden-Zugang erstellt',
+  client_invite_sent: 'Kunde eingeladen',
   project_created: 'Projekt erstellt',
   project_deleted: 'Projekt gelöscht',
   chapter_submitted: 'Kapitel eingereicht',

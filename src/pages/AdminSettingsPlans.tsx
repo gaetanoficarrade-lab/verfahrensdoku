@@ -241,7 +241,7 @@ export default function AdminSettingsPlans() {
                   <TableHead>Name</TableHead>
                   <TableHead>Preis</TableHead>
                   <TableHead>Setup Fee</TableHead>
-                  <TableHead>Mandanten</TableHead>
+                  <TableHead>Kunden</TableHead>
                   <TableHead>Testmodus</TableHead>
                   <TableHead>Features</TableHead>
                   <TableHead>Status</TableHead>
@@ -468,7 +468,7 @@ export default function AdminSettingsPlans() {
                       checked={form.max_clients_unlimited}
                       onCheckedChange={(v) => setForm((p) => ({ ...p, max_clients_unlimited: v }))}
                     />
-                    <Label>Unbegrenzte Mandanten</Label>
+                    <Label>Unbegrenzte Kunden</Label>
                   </div>
                   {!form.max_clients_unlimited && (
                     <Input
@@ -476,7 +476,7 @@ export default function AdminSettingsPlans() {
                       value={form.max_clients}
                       onChange={(e) => setForm((p) => ({ ...p, max_clients: Number(e.target.value) }))}
                       min={1}
-                      placeholder="Max. Mandanten"
+                      placeholder="Max. Kunden"
                     />
                   )}
                 </div>

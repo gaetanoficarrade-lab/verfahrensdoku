@@ -154,8 +154,8 @@ export default function AdvisorOverview() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Mandanten-Übersicht</h1>
-          <p className="text-sm text-muted-foreground mt-1">Ampel-Status aller Mandanten</p>
+          <h1 className="text-2xl font-bold text-foreground">Kunden-Übersicht</h1>
+          <p className="text-sm text-muted-foreground mt-1">Ampel-Status aller Kunden</p>
         </div>
         <Select value={filter} onValueChange={setFilter}>
           <SelectTrigger className="w-48">
@@ -189,7 +189,7 @@ export default function AdvisorOverview() {
 
       <div className="space-y-3">
         {filtered.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">Keine Mandanten in dieser Kategorie.</p>
+          <p className="text-sm text-muted-foreground text-center py-8">Keine Kunden in dieser Kategorie.</p>
         ) : (
           filtered.map(client => (
             <Card key={client.id} className="hover:bg-muted/30 transition-colors cursor-pointer" onClick={() => {

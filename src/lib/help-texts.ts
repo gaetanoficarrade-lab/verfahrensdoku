@@ -8,10 +8,10 @@ export const HELP_TEXTS = {
   client_notes: 'Beschreiben Sie hier die relevanten Informationen für dieses Kapitel. Orientieren Sie sich an den Leitfragen.',
   document_preview: 'Die Vorschau zeigt die Verfahrensdokumentation so, wie sie im finalen PDF aussehen wird.',
   document_create: 'Erstellt eine neue Version der Verfahrensdokumentation als PDF. Diese wird automatisch heruntergeladen.',
-  plan_limits: 'Das Mandanten-Limit zählt alle jemals angelegten Mandanten, auch gelöschte. Durch Löschen wird kein Kontingent frei.',
-  soft_delete: 'Mandanten mit finalisierten Dokumenten können nicht gelöscht werden. Gelöschte Mandanten werden nur deaktiviert, nicht entfernt.',
+  plan_limits: 'Das Kunden-Limit zählt alle jemals angelegten Kunden, auch gelöschte. Durch Löschen wird kein Kontingent frei.',
+  soft_delete: 'Kunden mit finalisierten Dokumenten können nicht gelöscht werden. Gelöschte Kunden werden nur deaktiviert, nicht entfernt.',
   webhook: 'Webhooks ermöglichen die automatische Benachrichtigung externer Systeme bei bestimmten Ereignissen.',
-  branding: 'Passen Sie das Erscheinungsbild für Ihre Mandanten an: Logo, Farben und Kontaktinformationen.',
+  branding: 'Passen Sie das Erscheinungsbild für Ihre Kunden an: Logo, Farben und Kontaktinformationen.',
   
   team: 'Laden Sie Teammitglieder ein und verwalten Sie deren Zugriffsrechte.',
   trial_period: 'Neue Lizenznehmer erhalten eine kostenlose Testphase. Nach Ablauf muss ein Plan gewählt werden.',

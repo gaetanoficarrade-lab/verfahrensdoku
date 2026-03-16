@@ -92,7 +92,7 @@ export default function FuerDienstleister() {
   const jsonLd = useMemo(() => ({
     "@context": "https://schema.org", "@type": "WebPage",
     "name": "GoBD-Suite für Berater und Agenturen",
-    "description": "Verfahrensdokumentation als Dienstleistung anbieten mit GoBD-Suite. Whitelabel, unbegrenzte Mandanten, neue Einnahmequelle.",
+    "description": "Verfahrensdokumentation als Dienstleistung anbieten mit GoBD-Suite. Whitelabel, unbegrenzte Kunden, neue Einnahmequelle.",
     "url": "https://gobd-suite.de/fuer-dienstleister",
     "mainEntity": {
       "@type": "SoftwareApplication", "name": "GoBD-Suite",
@@ -105,26 +105,26 @@ export default function FuerDienstleister() {
 
   useSEO({
     title: 'Verfahrensdokumentation als Dienstleistung anbieten – GoBD-Suite für Berater & Agenturen',
-    description: 'Biete deinen Mandanten GoBD-konforme Verfahrensdokumentationen an. Mit GoBD-Suite als Berater oder Agentur neue Einnahmen generieren. Whitelabel inklusive.',
+    description: 'Biete deinen Kunden GoBD-konforme Verfahrensdokumentationen an. Mit GoBD-Suite als Berater oder Agentur neue Einnahmen generieren. Whitelabel inklusive.',
     canonical: 'https://gobd-suite.de/fuer-dienstleister',
     keywords: 'Verfahrensdokumentation Dienstleister, GoBD Berater, Verfahrensdokumentation Whitelabel, GoBD-Suite Agentur',
     author: 'Gaetano Ficarra', robots: 'index, follow',
     ogTitle: 'GoBD-Suite für Berater & Agenturen – Verfahrensdokumentation als Dienstleistung',
-    ogDescription: 'Neue Einnahmequelle für Steuerberater, Buchhalter und Consultants. Whitelabel. Unbegrenzte Mandanten.',
+    ogDescription: 'Neue Einnahmequelle für Steuerberater, Buchhalter und Consultants. Whitelabel. Unbegrenzte Kunden.',
     ogType: 'website', ogLocale: 'de_DE', ogImage: 'https://gobd-suite.de/images/logo.png',
     jsonLd: [jsonLd],
   });
 
   const timelineSteps = [
-    { Icon: UserPlus, title: 'Mandant anlegen und einladen', text: 'Du legst den Mandanten in GoBD-Suite an und schickst ihm per Klick eine Einladung. Er bekommt sofort Zugang zu seinem Portal.' },
-    { Icon: FileText, title: 'Mandant füllt Leitfragen aus', text: 'Dein Mandant beschreibt in seinem Portal in eigenen Worten wie sein Business läuft. Die KI unterstützt und prüft dabei.' },
-    { Icon: Eye, title: 'Du prüfst und ergänzt', text: 'In deinem Berater-Portal siehst du alle Kapitel deiner Mandanten. Du kannst Hinweise geben, Texte bearbeiten und Kapitel freigeben.' },
+    { Icon: UserPlus, title: 'Kunde anlegen und einladen', text: 'Du legst den Kunden in GoBD-Suite an und schickst ihm per Klick eine Einladung. Er bekommt sofort Zugang zu seinem Portal.' },
+    { Icon: FileText, title: 'Kunde füllt Leitfragen aus', text: 'Dein Kunde beschreibt in seinem Portal in eigenen Worten wie sein Business läuft. Die KI unterstützt und prüft dabei.' },
+    { Icon: Eye, title: 'Du prüfst und ergänzt', text: 'In deinem Berater-Portal siehst du alle Kapitel deiner Kunden. Du kannst Hinweise geben, Texte bearbeiten und Kapitel freigeben.' },
     { Icon: CheckCircle2, title: 'Dokument finalisieren', text: 'Mit einem Klick finalisierst du das Dokument. Es bekommt eine Versionsnummer und ist revisionssicher archiviert.' },
-    { Icon: Download, title: 'Professionelles PDF unter deinem Brand', text: 'Das fertige PDF trägt dein Logo und deine Kontaktdaten – nicht GoBD-Suite. Dein Mandant sieht nur dein Brand.' },
+    { Icon: Download, title: 'Professionelles PDF unter deinem Brand', text: 'Das fertige PDF trägt dein Logo und deine Kontaktdaten – nicht GoBD-Suite. Dein Kunde sieht nur dein Brand.' },
   ];
 
   const comparisonRows = [
-    { feature: 'Mandanten', berater: 'Bis zu 5', agentur: 'Unbegrenzt' },
+    { feature: 'Kunden', berater: 'Bis zu 5', agentur: 'Unbegrenzt' },
     { feature: 'Whitelabel', berater: false, agentur: true },
     { feature: 'Eigenes Logo im PDF', berater: false, agentur: true },
     { feature: 'Berater-Portal', berater: true, agentur: true },
@@ -136,11 +136,11 @@ export default function FuerDienstleister() {
   ];
 
   const faqs = [
-    { q: 'Wie viel kann ich pro Verfahrensdokumentation verdienen?', a: 'Das liegt bei dir. Die meisten Dienstleister berechnen zwischen 800 € und 2.500 € pro Verfahrensdokumentation je nach Komplexität des Mandanten. Mit dem Berater-Plan (399 €/Monat) bist du bereits mit einem einzigen Mandanten im Plus.' },
-    { q: 'Sehen meine Mandanten dass ich GoBD-Suite nutze?', a: 'Nein – beim Agentur-Plan sehen deine Mandanten ausschließlich dein Brand. Dein Logo, deine Kontaktdaten, deine Domain. GoBD-Suite ist dein unsichtbares Werkzeug.' },
-    { q: 'Wie viel Aufwand habe ich pro Mandant?', a: 'Minimal. Dein Mandant füllt die Leitfragen selbst aus. Du prüfst die Kapitel, gibst bei Bedarf Hinweise und finalisierst das Dokument. Pro Mandant rechne mit 1 bis 3 Stunden Aufwand insgesamt.' },
-    { q: 'Kann ich unbegrenzt viele Mandanten anlegen?', a: 'Mit dem Agentur-Plan ja. Der Berater-Plan ist auf 5 Mandanten begrenzt. Ein Upgrade von Berater auf Agentur ist jederzeit möglich.' },
-    { q: 'Was passiert wenn ein Mandant seine Verfahrensdokumentation aktualisieren muss?', a: 'Du öffnest das entsprechende Kapitel, passt den Text an und finalisierst eine neue Version. Alle Änderungen werden automatisch in der Änderungshistorie dokumentiert. Das dauert meist nur wenige Minuten.' },
+    { q: 'Wie viel kann ich pro Verfahrensdokumentation verdienen?', a: 'Das liegt bei dir. Die meisten Dienstleister berechnen zwischen 800 € und 2.500 € pro Verfahrensdokumentation je nach Komplexität des Kunden. Mit dem Berater-Plan (399 €/Monat) bist du bereits mit einem einzigen Kunden im Plus.' },
+    { q: 'Sehen meine Kunden dass ich GoBD-Suite nutze?', a: 'Nein – beim Agentur-Plan sehen deine Kunden ausschließlich dein Brand. Dein Logo, deine Kontaktdaten, deine Domain. GoBD-Suite ist dein unsichtbares Werkzeug.' },
+    { q: 'Wie viel Aufwand habe ich pro Kunde?', a: 'Minimal. Dein Kunde füllt die Leitfragen selbst aus. Du prüfst die Kapitel, gibst bei Bedarf Hinweise und finalisierst das Dokument. Pro Kunde rechne mit 1 bis 3 Stunden Aufwand insgesamt.' },
+    { q: 'Kann ich unbegrenzt viele Kunden anlegen?', a: 'Mit dem Agentur-Plan ja. Der Berater-Plan ist auf 5 Kunden begrenzt. Ein Upgrade von Berater auf Agentur ist jederzeit möglich.' },
+    { q: 'Was passiert wenn ein Kunde seine Verfahrensdokumentation aktualisieren muss?', a: 'Du öffnest das entsprechende Kapitel, passt den Text an und finalisierst eine neue Version. Alle Änderungen werden automatisch in der Änderungshistorie dokumentiert. Das dauert meist nur wenige Minuten.' },
   ];
 
   const CellVal = ({ val }: { val: boolean | string }) => {
@@ -166,12 +166,12 @@ export default function FuerDienstleister() {
               </Reveal>
               <Reveal delay={0.1}>
                 <h1 className="text-4xl md:text-[52px] lg:text-[60px] font-bold leading-[1.08] tracking-tight mb-6" style={{ color: C.dark }}>
-                  Biete deinen Mandanten <span style={{ background: 'rgba(250,200,30,0.2)', borderRadius: 4, padding: '0 6px' }}>GoBD-konforme</span> Verfahrens&shy;dokumentationen an. Unter deinem Namen.
+                  Biete deinen Kunden <span style={{ background: 'rgba(250,200,30,0.2)', borderRadius: 4, padding: '0 6px' }}>GoBD-konforme</span> Verfahrens&shy;dokumentationen an. Unter deinem Namen.
                 </h1>
               </Reveal>
               <Reveal delay={0.2}>
                 <p className="text-lg leading-relaxed mb-8 max-w-xl" style={{ color: C.textGray }}>
-                  GoBD-Suite gibt dir die Infrastruktur um Verfahrensdokumentationen als professionelle Dienstleistung anzubieten. Deine Mandanten füllen aus, du prüfst und finalisierst – fertig ist ein Dokument das einer Betriebsprüfung standhält.
+                  GoBD-Suite gibt dir die Infrastruktur um Verfahrensdokumentationen als professionelle Dienstleistung anzubieten. Deine Kunden füllen aus, du prüfst und finalisierst – fertig ist ein Dokument das einer Betriebsprüfung standhält.
                 </p>
               </Reveal>
               <Reveal delay={0.3}>
@@ -182,7 +182,7 @@ export default function FuerDienstleister() {
               </Reveal>
               <Reveal delay={0.4}>
                 <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm" style={{ color: C.dark }}>
-                  {['Whitelabel unter deinem Brand', 'Unbegrenzte Mandanten (Agentur)', 'Mandanten laden und verwalten', 'PDF mit deinem Logo'].map(t => (
+                  {['Whitelabel unter deinem Brand', 'Unbegrenzte Kunden (Agentur)', 'Kunden laden und verwalten', 'PDF mit deinem Logo'].map(t => (
                     <span key={t} className="flex items-center gap-1.5"><Check size={14} style={{ color: C.green }} /> {t}</span>
                   ))}
                 </div>
@@ -195,7 +195,7 @@ export default function FuerDienstleister() {
                   <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FEBC2E' }} />
                   <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
                 </div>
-                <img src={mockupClients} alt="GoBD-Suite Mandantenübersicht – Berater-Portal mit Kundenliste" className="w-full h-auto" />
+                <img src={mockupClients} alt="GoBD-Suite Kundenübersicht – Berater-Portal mit Kundenliste" className="w-full h-auto" />
               </div>
             </Reveal>
           </div>
@@ -206,12 +206,12 @@ export default function FuerDienstleister() {
         <section className="py-20 md:py-28 px-6" style={{ background: C.bgLight }}>
           <div className="max-w-6xl mx-auto">
             <Reveal>
-              <h2 className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>Eine Pflicht deiner Mandanten.<br className="hidden md:inline" /> Deine neue Einnahmequelle.</h2>
+              <h2 className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>Eine Pflicht deiner Kunden.<br className="hidden md:inline" /> Deine neue Einnahmequelle.</h2>
             </Reveal>
             <div className="grid md:grid-cols-2 gap-12 items-start">
               <Reveal>
                 <p className="text-lg leading-relaxed" style={{ color: C.textGray }}>
-                  Seit 2025 prüft das Finanzamt aktiv ob Verfahrensdokumentationen vorliegen. Die meisten deiner Mandanten haben keine.
+                  Seit 2025 prüft das Finanzamt aktiv ob Verfahrensdokumentationen vorliegen. Die meisten deiner Kunden haben keine.
                 </p>
                 <p className="text-lg leading-relaxed mt-4" style={{ color: C.textGray }}>
                   Das ist deine Chance: Biete die Erstellung als Dienstleistung an. Der Markt ist riesig – und kaum ein Dienstleister ist bereits positioniert.
@@ -221,12 +221,12 @@ export default function FuerDienstleister() {
                 <div className="rounded-[18px] p-8" style={{ ...glass }}>
                   <p className="text-sm font-semibold mb-4" style={{ color: C.dark }}>Beispielrechnung Berater-Plan:</p>
                   <ul className="space-y-3 text-[15px]" style={{ color: C.dark }}>
-                    <li className="flex justify-between"><span>5 Mandanten × 1.500 € Verfahrensdokumentation</span><span className="font-semibold">7.500 €</span></li>
+                    <li className="flex justify-between"><span>5 Kunden × 1.500 € Verfahrensdokumentation</span><span className="font-semibold">7.500 €</span></li>
                     <li className="flex justify-between"><span>Laufende Aktualisierungen × 5</span><span className="font-semibold">500 €/Jahr</span></li>
                     <li className="flex justify-between" style={{ color: C.textGray }}><span>Dein Aufwand: Tool-Kosten</span><span>399 €/Monat</span></li>
                   </ul>
                   <div className="mt-5 pt-4" style={{ borderTop: `1px solid ${C.border}` }}>
-                    <p className="font-bold text-lg" style={{ color: C.dark }}>Ab dem ersten Mandanten rentabel.</p>
+                    <p className="font-bold text-lg" style={{ color: C.dark }}>Ab dem ersten Kunden rentabel.</p>
                   </div>
                 </div>
               </Reveal>
@@ -270,7 +270,7 @@ export default function FuerDienstleister() {
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <Reveal>
               <div>
-                <h2 className="text-3xl md:text-[44px] font-bold leading-[1.1] mb-8" style={{ color: C.dark }}>Dein Brand. Dein Dokument.<br className="hidden md:inline" /> Dein Mandant.</h2>
+                <h2 className="text-3xl md:text-[44px] font-bold leading-[1.1] mb-8" style={{ color: C.dark }}>Dein Brand. Dein Dokument.<br className="hidden md:inline" /> Dein Kunde.</h2>
                 <p className="leading-relaxed mb-6" style={{ color: C.textGray }}>
                   Mit dem Agentur-Plan läuft alles unter deinem Namen:
                 </p>
@@ -288,7 +288,7 @@ export default function FuerDienstleister() {
                   ))}
                 </ul>
                 <p className="leading-relaxed" style={{ color: C.textGray }}>
-                  Für deine Mandanten bist du der Anbieter – GoBD-Suite ist dein unsichtbares Werkzeug.
+                  Für deine Kunden bist du der Anbieter – GoBD-Suite ist dein unsichtbares Werkzeug.
                 </p>
               </div>
             </Reveal>
@@ -312,12 +312,12 @@ export default function FuerDienstleister() {
             <Reveal><h2 className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>Perfekt für dich wenn du...</h2></Reveal>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {[
-                '...Steuerberater oder Buchhalter bist und deinen Mandanten einen Mehrwert bieten willst',
+                '...Steuerberater oder Buchhalter bist und deinen Kunden einen Mehrwert bieten willst',
                 '...als Unternehmensberater oder Consultant eine neue Dienstleistung aufbauen willst',
                 '...Marketing-Berater bist und Kunden bei der Digitalisierung begleitest',
                 '...eine Agentur führst und skalierbare Zusatzleistungen suchst',
                 '...Freelancer bist der Verfahrensdokumentationen als Nebenleistung anbieten will',
-                '...bereits Mandanten betreust und diese absichern willst',
+                '...bereits Kunden betreust und diese absichern willst',
               ].map((t, i) => (
                 <Reveal key={i} delay={i * 0.08}>
                   <div className="rounded-[16px] p-6 h-full flex items-start gap-3" style={{ ...glass }}>

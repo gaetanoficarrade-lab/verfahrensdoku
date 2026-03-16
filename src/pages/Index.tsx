@@ -84,11 +84,11 @@ const Index = () => {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {/* Mandanten with limit */}
+        {/* Kunden with limit */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }}>
           <Card className={clientLimitReached ? 'border-destructive/50' : ''}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Mandanten</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Kunden</CardTitle>
               <Users className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent className="space-y-2">

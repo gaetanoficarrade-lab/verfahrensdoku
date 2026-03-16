@@ -752,7 +752,7 @@ export default function ChapterEditor() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base">
-            {isAdvisor ? 'Mandanten-Angaben' : 'Ihre Angaben'}
+            {isAdvisor ? 'Kunden-Angaben' : 'Ihre Angaben'}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -911,7 +911,7 @@ export default function ChapterEditor() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-              KI-Precheck-Hinweise (vom Mandanten)
+              KI-Precheck-Hinweise (vom Kunden)
             </CardTitle>
           </CardHeader>
           <CardContent>

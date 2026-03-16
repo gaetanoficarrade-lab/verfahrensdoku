@@ -57,7 +57,7 @@ export default function AGB() {
               'KI-gestützte Textgenerierung und Prüfung von Kapiteln',
               'Versionierung und revisionssichere Archivierung von Dokumenten',
               'PDF-Export der fertigen Verfahrensdokumentation',
-              'Mandantenverwaltung für Berater und Agenturen (je nach gebuchtem Plan)',
+              'Kundenverwaltung für Berater und Agenturen (je nach gebuchtem Plan)',
             ]} />
             <P>2.2 Der Anbieter stellt den Dienst als Software-as-a-Service über das Internet bereit. Der Kunde erhält kein Recht auf Herausgabe des Quellcodes.</P>
             <P>2.3 Die über GoBD-Suite erstellten Verfahrensdokumentationen dienen als Arbeitsgrundlage und technische Unterstützung. Die inhaltliche Richtigkeit der Dokumentation hängt ausschließlich von den Angaben des Kunden ab. Der Anbieter übernimmt keine Gewähr dafür, dass die erstellten Dokumente im Einzelfall den steuerrechtlichen Anforderungen der Finanzbehörden entsprechen oder bei einer Betriebsprüfung anerkannt werden. Die Nutzung des Dienstes ersetzt keine steuerliche oder rechtliche Beratung.</P>
@@ -76,9 +76,9 @@ export default function AGB() {
             <P>4.1 Der Anbieter räumt dem Kunden für die Vertragslaufzeit ein nicht ausschließliches, nicht übertragbares Recht ein, den Dienst im Rahmen dieser AGB zu nutzen.</P>
             <P>4.2 Der Umfang der Nutzung richtet sich nach dem gebuchten Plan:</P>
             <List items={[
-              'Plan Solo: Nutzung für einen Mandanten, kein Whitelabel',
-              'Plan Berater: Nutzung für bis zu fünf Mandanten, kein Whitelabel',
-              'Plan Agentur: Nutzung für unbegrenzte Mandanten, Whitelabel inklusive',
+              'Plan Solo: Nutzung für einen Kunden, kein Whitelabel',
+              'Plan Berater: Nutzung für bis zu fünf Kunden, kein Whitelabel',
+              'Plan Agentur: Nutzung für unbegrenzte Kunden, Whitelabel inklusive',
             ]} />
             <P>4.3 Der Kunde darf den Dienst nicht an Dritte weiterverkaufen, vermieten oder in sonstiger Weise weiterübertragen, soweit dies nicht ausdrücklich durch den gebuchten Plan gestattet ist. Reverse Engineering, Dekompilierung oder die Nutzung für rechtswidrige Zwecke sind untersagt.</P>
           </S>

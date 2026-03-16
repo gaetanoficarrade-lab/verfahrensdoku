@@ -214,7 +214,7 @@ function PricingToggleSection() {
           sub="12 Monate Zugang · Renewal 199 €/Jahr"
           checkoutUrl="https://funnelpay.de/checkout/GoBD-Suite Solo Plan"
           features={[
-            { text: '1 Mandant (du selbst)', ok: true }, { text: 'Alle 30 Kapitel', ok: true }, { text: 'KI-Unterstützung', ok: true },
+            { text: '1 Kunde (du selbst)', ok: true }, { text: 'Alle 30 Kapitel', ok: true }, { text: 'KI-Unterstützung', ok: true },
             { text: 'Unbegrenzte Revisionen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false }, { text: 'Kein Berater-Portal', ok: false },
           ]}
         />
@@ -229,7 +229,7 @@ function PricingToggleSection() {
           sub={annual ? '7.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
           highlighted
           features={[
-            { text: 'Unbegrenzte Mandanten', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
+            { text: 'Unbegrenzte Kunden', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
             { text: 'Alle Berater-Features', ok: true }, { text: 'Prioritäts-Support', ok: true },
           ]}
           annualNote={annual ? 'Jährliche Laufzeit · danach jährlich kündbar' : undefined}
@@ -244,8 +244,8 @@ function PricingToggleSection() {
           unit="/Monat"
           sub={annual ? '3.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
           features={[
-            { text: 'Bis zu 5 Mandanten', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
-            { text: 'Mandanten-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
+            { text: 'Bis zu 5 Kunden', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
+            { text: 'Kunden-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
           ]}
           annualNote={annual ? 'Jährliche Laufzeit · danach jährlich kündbar' : undefined}
         />
@@ -394,7 +394,7 @@ export default function MarketingPage() {
         { "@type": "Question", "name": "Das klingt kompliziert.", "acceptedAnswer": { "@type": "Answer", "text": "Genau dafür wurde GoBD-Suite entwickelt. Du beantwortest Fragen in normaler Sprache – so wie du einem Freund erklärst wie dein Business läuft. Die KI übernimmt die fachliche Aufbereitung. Die meisten Nutzer sind in unter einer Stunde fertig. Teste es 7 Tage kostenlos und überzeuge dich selbst." } },
         { "@type": "Question", "name": "Was wenn sich mein Prozess ändert?", "acceptedAnswer": { "@type": "Answer", "text": "Einfach das entsprechende Kapitel aktualisieren. Alle Änderungen werden automatisch mit Datum, Versionsnummer und Änderungsgrund dokumentiert. So bist du immer auf dem neuesten Stand – und kannst bei einer Prüfung lückenlos nachweisen was sich wann geändert hat." } },
         { "@type": "Question", "name": "Kann ich das Tool kostenlos testen?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Du kannst GoBD-Suite 7 Tage lang kostenlos und ohne Kreditkarte testen. Du siehst die vollständige Struktur und kannst zwei Kapitel mit KI-Unterstützung ausprobieren. Starte jetzt – es dauert 2 Minuten." } },
-        { "@type": "Question", "name": "Was ist der Unterschied zwischen Berater und Agentur?", "acceptedAnswer": { "@type": "Answer", "text": "Der Berater-Plan ist für bis zu 5 Mandanten ohne Whitelabel – ideal zum Einstieg als Dienstleister. Der Agentur-Plan bietet unbegrenzte Mandanten und vollständiges Whitelabel: dein Logo, dein Brand, deine Domain im PDF. Upgrade jederzeit möglich ohne erneute Setup Fee." } },
+        { "@type": "Question", "name": "Was ist der Unterschied zwischen Berater und Agentur?", "acceptedAnswer": { "@type": "Answer", "text": "Der Berater-Plan ist für bis zu 5 Kunden ohne Whitelabel – ideal zum Einstieg als Dienstleister. Der Agentur-Plan bietet unbegrenzte Kunden und vollständiges Whitelabel: dein Logo, dein Brand, deine Domain im PDF. Upgrade jederzeit möglich ohne erneute Setup Fee." } },
         { "@type": "Question", "name": "Wann gilt die Zufriedenheitsgarantie?", "acceptedAnswer": { "@type": "Answer", "text": "Wenn das Tool technische Probleme hat, nicht das tut was es soll oder zu kompliziert ist und wir das Problem nicht lösen können – bekommst du dein Geld zurück. Melde dich einfach bei uns. Die Garantie gilt nicht für bereits vollständig erstellte Verfahrensdokumentationen, da die Leistung dann erbracht wurde." } },
       ],
     },
@@ -519,7 +519,7 @@ export default function MarketingPage() {
                   <span className="w-3 h-3 rounded-full" style={{ background: '#FEBC2E' }} />
                   <span className="w-3 h-3 rounded-full" style={{ background: '#28C840' }} />
                 </div>
-                <img src={mockupDashboard} alt="GoBD-Suite Dashboard mit Mandanten- und Projektübersicht" className="w-full h-auto" />
+                <img src={mockupDashboard} alt="GoBD-Suite Dashboard mit Kunden- und Projektübersicht" className="w-full h-auto" />
               </div>
             </Reveal>
           </div>
@@ -686,7 +686,7 @@ export default function MarketingPage() {
                   <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-4" style={{ background: C.yellow, color: C.dark }}>Berater & Agentur</span>
                   <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>Du willst Verfahrensdokumentationen als Dienstleistung anbieten</h3>
                   <ul className="space-y-2 mb-8">
-                    {['Mehrere Mandanten verwalten', 'Whitelabel unter deinem Brand (Agentur)', 'Neue Einnahmequelle für dein Business', 'Mandanten füllen selbst aus – du prüfst und finalisierst'].map(t => (
+                    {['Mehrere Kunden verwalten', 'Whitelabel unter deinem Brand (Agentur)', 'Neue Einnahmequelle für dein Business', 'Kunden füllen selbst aus – du prüfst und finalisierst'].map(t => (
                       <li key={t} className="flex items-center gap-2 text-[15px]" style={{ color: C.textGray }}><Check size={16} style={{ color: C.green }} /> {t}</li>
                     ))}
                   </ul>
@@ -756,7 +756,7 @@ export default function MarketingPage() {
                   role: 'Freelance Designer, Berlin',
                 },
                 {
-                  quote: 'Als Steuerberaterin empfehle ich meinen Mandanten jetzt GoBD-Suite. Die Qualität der generierten Dokumente ist beeindruckend – und ich spare enorm viel Zeit.',
+                  quote: 'Als Steuerberaterin empfehle ich meinen Kunden jetzt GoBD-Suite. Die Qualität der generierten Dokumente ist beeindruckend – und ich spare enorm viel Zeit.',
                   name: 'Sandra K.',
                   role: 'Steuerberaterin, München',
                 },
@@ -871,7 +871,7 @@ export default function MarketingPage() {
                 <FaqItem q="Das klingt kompliziert." a="Genau dafür wurde GoBD-Suite entwickelt. Du beantwortest Fragen in normaler Sprache – so wie du einem Freund erklärst wie dein Business läuft. Die KI übernimmt die fachliche Aufbereitung. Die meisten Nutzer sind in unter einer Stunde fertig. Teste es 7 Tage kostenlos und überzeuge dich selbst." />
                 <FaqItem q="Was wenn sich mein Prozess ändert?" a="Einfach das entsprechende Kapitel aktualisieren. Alle Änderungen werden automatisch mit Datum, Versionsnummer und Änderungsgrund dokumentiert. So bist du immer auf dem neuesten Stand – und kannst bei einer Prüfung lückenlos nachweisen was sich wann geändert hat." />
                 <FaqItem q="Kann ich das Tool kostenlos testen?" a="Ja. Du kannst GoBD-Suite 7 Tage lang kostenlos und ohne Kreditkarte testen. Du siehst die vollständige Struktur und kannst zwei Kapitel mit KI-Unterstützung ausprobieren. Starte jetzt – es dauert 2 Minuten." />
-                <FaqItem q="Was ist der Unterschied zwischen Berater und Agentur?" a="Der Berater-Plan ist für bis zu 5 Mandanten ohne Whitelabel – ideal zum Einstieg als Dienstleister. Der Agentur-Plan bietet unbegrenzte Mandanten und vollständiges Whitelabel: dein Logo, dein Brand, deine Domain im PDF. Upgrade jederzeit möglich ohne erneute Setup Fee." />
+                <FaqItem q="Was ist der Unterschied zwischen Berater und Agentur?" a="Der Berater-Plan ist für bis zu 5 Kunden ohne Whitelabel – ideal zum Einstieg als Dienstleister. Der Agentur-Plan bietet unbegrenzte Kunden und vollständiges Whitelabel: dein Logo, dein Brand, deine Domain im PDF. Upgrade jederzeit möglich ohne erneute Setup Fee." />
                 <FaqItem q="Wann gilt die Zufriedenheitsgarantie?" a="Wenn das Tool technische Probleme hat, nicht das tut was es soll oder zu kompliziert ist und wir das Problem nicht lösen können – bekommst du dein Geld zurück. Melde dich einfach bei uns. Die Garantie gilt nicht für bereits vollständig erstellte Verfahrensdokumentationen, da die Leistung dann erbracht wurde." />
               </div>
             </Reveal>

@@ -16,13 +16,13 @@ import { supabase } from '@/integrations/supabase/client';
 
 const FAQ = [
   { q: 'Was ist eine Verfahrensdokumentation?', a: 'Eine Verfahrensdokumentation beschreibt die in einem Unternehmen eingesetzten IT-gestützten Geschäftsprozesse gemäß den GoBD (Grundsätze zur ordnungsmäßigen Führung und Aufbewahrung von Büchern, Aufzeichnungen und Unterlagen in elektronischer Form). Sie ist für alle buchführungspflichtigen Unternehmen verpflichtend.' },
-  { q: 'Wie funktioniert der Workflow?', a: 'Der Workflow besteht aus: 1) Onboarding (Stammdaten erfassen), 2) Mandant füllt Kapitel-Angaben aus, 3) KI-Precheck prüft auf Vollständigkeit, 4) Berater prüft und generiert professionelle Texte, 5) Freigabe der Kapitel, 6) Erstellung der finalen Verfahrensdokumentation als PDF.' },
-  { q: 'Kann der Mandant seine Angaben ändern?', a: 'Ja, solange das Kapitel noch nicht vom Berater freigegeben wurde. Auch nach dem Einreichen kann der Mandant über "Änderung einreichen" seine Angaben aktualisieren.' },
+  { q: 'Wie funktioniert der Workflow?', a: 'Der Workflow besteht aus: 1) Onboarding (Stammdaten erfassen), 2) Kunde füllt Kapitel-Angaben aus, 3) KI-Precheck prüft auf Vollständigkeit, 4) Berater prüft und generiert professionelle Texte, 5) Freigabe der Kapitel, 6) Erstellung der finalen Verfahrensdokumentation als PDF.' },
+  { q: 'Kann der Kunde seine Angaben ändern?', a: 'Ja, solange das Kapitel noch nicht vom Berater freigegeben wurde. Auch nach dem Einreichen kann der Kunde über "Änderung einreichen" seine Angaben aktualisieren.' },
   { q: 'Was passiert nach der Freigabe?', a: 'Nach der Freigabe aller Kapitel kann der Berater die vollständige Verfahrensdokumentation als PDF erstellen. Das PDF enthält alle freigegebenen Kapitel mit dem professionell formulierten Text.' },
-  { q: 'Wie funktioniert die KI-Textgenerierung?', a: 'Die KI analysiert die Mandantenangaben und die Onboarding-Daten und erstellt daraus einen professionellen, GoBD-konformen Text. Der Berater kann den Text anschließend im Editor bearbeiten.' },
-  { q: 'Was bedeuten die verschiedenen Status?', a: '"Offen" = noch keine Angaben, "Entwurf" = Mandant hat begonnen, "Eingereicht" = an Berater übermittelt, "Freigegeben" = vom Berater geprüft und genehmigt, "Nicht relevant" = Kapitel ist für diesen Mandanten nicht zutreffend.' },
-  { q: 'Wie lade ich Mandanten ein?', a: 'Gehen Sie zur Mandantendetailseite und klicken Sie auf "Mandant einladen". Der Mandant erhält eine E-Mail mit einem Einladungslink und kann sich dann selbst registrieren.' },
-  { q: 'Was ist der Unterschied zwischen Mandant und Teammitglied?', a: 'Mandanten sind Ihre Kunden, die ihre eigenen Angaben erfassen. Teammitglieder sind Ihre Kollegen, die gemeinsam an der Prüfung und Erstellung der Verfahrensdokumentation arbeiten.' },
+  { q: 'Wie funktioniert die KI-Textgenerierung?', a: 'Die KI analysiert die Kundenangaben und die Onboarding-Daten und erstellt daraus einen professionellen, GoBD-konformen Text. Der Berater kann den Text anschließend im Editor bearbeiten.' },
+  { q: 'Was bedeuten die verschiedenen Status?', a: '"Offen" = noch keine Angaben, "Entwurf" = Kunde hat begonnen, "Eingereicht" = an Berater übermittelt, "Freigegeben" = vom Berater geprüft und genehmigt, "Nicht relevant" = Kapitel ist für diesen Kunden nicht zutreffend.' },
+  { q: 'Wie lade ich Kunden ein?', a: 'Gehen Sie zur Kundendetailseite und klicken Sie auf "Kunde einladen". Der Kunde erhält eine E-Mail mit einem Einladungslink und kann sich dann selbst registrieren.' },
+  { q: 'Was ist der Unterschied zwischen Kunde und Teammitglied?', a: 'Kunden sind Ihre Auftraggeber, die ihre eigenen Angaben erfassen. Teammitglieder sind Ihre Kollegen, die gemeinsam an der Prüfung und Erstellung der Verfahrensdokumentation arbeiten.' },
 ];
 
 const categoryLabels: Record<string, string> = {

@@ -96,9 +96,9 @@ export default function Datenschutz() {
               <strong className="text-[#1d1d1f]">Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung).
             </p>
 
-            <h3 className="text-lg font-semibold text-[#1d1d1f] mt-6 mb-2">d) Mandantendaten (Berater/Agentur)</h3>
+            <h3 className="text-lg font-semibold text-[#1d1d1f] mt-6 mb-2">d) Kundendaten (Berater/Agentur)</h3>
             <p>
-              Berater und Agenturen verarbeiten über den Dienst personenbezogene Daten ihrer Mandanten
+              Berater und Agenturen verarbeiten über den Dienst personenbezogene Daten ihrer Kunden
               (Stammdaten, Onboarding-Informationen). In diesem Fall agieren wir als Auftragsverarbeiter
               gemäß Art. 28 DSGVO. Details regelt der gesonderte{' '}
               <Link to="/avv" className="text-[#e8a91a] hover:text-[#d49b15] underline">Auftragsverarbeitungsvertrag (AVV)</Link>.

@@ -72,12 +72,12 @@ export default function Clients() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Mandanten</h1>
-          <p className="text-sm text-muted-foreground mt-1">Verwalten Sie Ihre Mandanten</p>
+          <h1 className="text-2xl font-bold text-foreground">Kunden</h1>
+          <p className="text-sm text-muted-foreground mt-1">Verwalten Sie Ihre Kunden</p>
         </div>
         <Button onClick={() => navigate('/clients/new')} className="gap-2" disabled={!canCreateClients}>
           <Plus className="h-4 w-4" />
-          Neuer Mandant
+          Neuer Kunde
         </Button>
       </div>
 
@@ -93,7 +93,7 @@ export default function Clients() {
                 className="pl-9"
               />
             </div>
-            <span className="text-sm text-muted-foreground">{filtered.length} Mandant(en)</span>
+            <span className="text-sm text-muted-foreground">{filtered.length} Kunde(n)</span>
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -101,7 +101,7 @@ export default function Clients() {
             <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
-              {clients.length === 0 ? 'Noch keine Mandanten angelegt.' : 'Keine Treffer für Ihre Suche.'}
+              {clients.length === 0 ? 'Noch keine Kunden angelegt.' : 'Keine Treffer für Ihre Suche.'}
             </div>
           ) : (
             <Table>
