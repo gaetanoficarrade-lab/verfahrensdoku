@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo, type ReactNode } from 'react';
+import { useAuthContext } from '@/contexts/AuthContext';
+import { Navigate } from 'react-router-dom';
 import { CookieBanner, CookieSettingsButton } from '@/components/CookieBanner';
 import MarketingNav from '@/components/MarketingNav';
 import mockupDashboard from '@/assets/mockup-dashboard.png';
