@@ -83,7 +83,7 @@ export const tenantCategories = [
   {
     label: 'Einladungen',
     templates: [
-      { key: 'client_invite', label: 'Mandanten-Einladung', icon: '👤' },
+      { key: 'client_invite', label: 'Kunden-Einladung', icon: '👤' },
       { key: 'team_invite', label: 'Team-Einladung', icon: '👥' },
     ],
   },
