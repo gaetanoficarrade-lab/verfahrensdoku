@@ -581,11 +581,11 @@ Der Markt für die Erstellung von Verfahrensdokumentationen ist noch wenig gesä
 
 **Typische Marktpreise:**
 
-Einfache VD (Einzelunternehmer, 1-2 Systeme): 800 € bis 1.200 €
+Einfache Verfahrensdokumentation (Einzelunternehmer, 1-2 Systeme): 800 € bis 1.200 €
 
-Standard VD (KMU, mehrere Systeme): 1.200 € bis 2.000 €
+Standard Verfahrensdokumentation (KMU, mehrere Systeme): 1.200 € bis 2.000 €
 
-Komplexe VD (mehrere Standorte, viele Schnittstellen): 2.000 € bis 3.500 €
+Komplexe Verfahrensdokumentation (mehrere Standorte, viele Schnittstellen): 2.000 € bis 3.500 €
 
 Jährliche Aktualisierung: 200 € bis 500 €
 
