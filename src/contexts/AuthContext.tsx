@@ -151,7 +151,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         entity_type: 'auth',
         entity_id: currentUser.id,
         details: {},
-      }).catch(() => {});
+      });
     }
     await supabase.auth.signOut();
   }, []);
