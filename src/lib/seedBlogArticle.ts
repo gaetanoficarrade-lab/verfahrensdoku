@@ -429,7 +429,7 @@ Nein. Die Verfahrensdokumentation muss das Unternehmen selbst erstellen. Das ste
 
 Das Finanzamt zweifelt nicht an deiner Ehrlichkeit. Es zweifelt an der Nachvollziehbarkeit deiner Buchführung. Das ist ein Unterschied.
 
-Eine fehlende VD bedeutet nicht dass du Steuern hinterziehst. Es bedeutet dass deine Buchführung formal nicht ordnungsgemäß ist.
+Eine fehlende Verfahrensdokumentation bedeutet nicht dass du Steuern hinterziehst. Es bedeutet dass deine Buchführung formal nicht ordnungsgemäß ist.
 
 **Missverständnis 3: "Das wird schon nicht so schlimm."**
 
