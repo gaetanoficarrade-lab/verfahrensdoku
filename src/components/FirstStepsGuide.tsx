@@ -24,9 +24,9 @@ const BASE_STEPS: Step[] = [
   },
   {
     icon: UserPlus,
-    title: 'Ersten Mandanten anlegen',
-    description: 'Mandanten sind Ihre Kunden oder Unternehmen, für die Sie eine Verfahrensdokumentation erstellen. Legen Sie jetzt Ihren ersten Mandanten an.',
-    buttonLabel: 'Mandant anlegen',
+    title: 'Ersten Kunden anlegen',
+    description: 'Kunden sind Ihre Auftraggeber, für die Sie eine Verfahrensdokumentation erstellen. Legen Sie jetzt Ihren ersten Kunden an.',
+    buttonLabel: 'Kunde anlegen',
     buttonRoute: '/clients/new',
   },
   {
