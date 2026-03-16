@@ -209,17 +209,13 @@ serve(async (req) => {
       const firstName = nameParts[0] || "";
       const lastName = nameParts.slice(1).join(" ") || "";
 
-      // Check if user already exists
-      let userId: string | null = null;
-      let page = 1;
-      while (page <= 10) {
-        const { data: usersData } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 200 });
-        const users = usersData?.users || [];
-        const found = users.find((u: any) => (u.email || "").toLowerCase() === normalizedEmail);
-        if (found) { userId = found.id; break; }
-        if (users.length < 200) break;
-        page++;
-      }
+      // Check if user already exists (direct DB query instead of paginated auth loop)
+      const { data: existingUser } = await supabaseAdmin
+        .from("profiles")
+        .select("user_id")
+        .eq("email", normalizedEmail)
+        .maybeSingle();
+      let userId: string | null = existingUser?.user_id || null;
 
       if (!userId) {
         const { data: newUser, error: createErr } = await supabaseAdmin.auth.admin.createUser({
