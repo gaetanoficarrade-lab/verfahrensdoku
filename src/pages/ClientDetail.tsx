@@ -56,6 +56,10 @@ export default function ClientDetail() {
   const [deleting, setDeleting] = useState(false);
   const [hasFinalizedDocs, setHasFinalizedDocs] = useState(false);
 
+  // Client limit
+  const [clientLimitReached, setClientLimitReached] = useState(false);
+  const [clientLimitInfo, setClientLimitInfo] = useState<{ current: number; max: number } | null>(null);
+
   // Invite flow
   const [showInvite, setShowInvite] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
@@ -74,12 +78,22 @@ export default function ClientDetail() {
     if (!id || !effectiveTenantId) return;
     const fetch = async () => {
       setLoading(true);
-      const [clientRes, projRes] = await Promise.all([
+      const [clientRes, projRes, clientCountRes, tenantRes] = await Promise.all([
         supabase.from('clients').select('*').eq('id', id).eq('tenant_id', effectiveTenantId).single(),
         supabase.from('projects').select('id, name, status, workflow_status, created_at').eq('client_id', id).eq('tenant_id', effectiveTenantId).order('created_at', { ascending: false }),
+        supabase.from('clients').select('id', { count: 'exact', head: true }).eq('tenant_id', effectiveTenantId),
+        supabase.from('tenants').select('plan_id, plans(max_clients, max_clients_unlimited)').eq('id', effectiveTenantId).single(),
       ]);
       setClient(clientRes.data);
       setProjects(projRes.data || []);
+
+      // Check client limit
+      const plan = (tenantRes.data as any)?.plans;
+      const maxClients = plan?.max_clients ?? 999;
+      const isUnlimited = plan?.max_clients_unlimited === true || maxClients >= 999;
+      const currentClients = clientCountRes.count ?? 0;
+      setClientLimitInfo({ current: currentClients, max: maxClients });
+      setClientLimitReached(!isUnlimited && currentClients >= maxClients);
 
       // Fetch pending invites for this client
       const { data: invites } = await supabase
