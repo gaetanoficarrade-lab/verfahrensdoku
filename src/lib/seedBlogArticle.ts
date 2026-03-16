@@ -112,13 +112,13 @@ Das klingt nach viel. Ist es auch – wenn du es manuell machst.
 
 ## Der wichtigste Punkt den die meisten übersehen
 
-Die VD ist kein Einmaldokument.
+Die Verfahrensdokumentation ist kein Einmaldokument.
 
-Sie muss aktuell sein. Das bedeutet: Jedes Mal wenn du eine neue Software einführst, deinen Prozess änderst oder einen neuen Zahlungsanbieter nutzt – muss die VD aktualisiert werden.
+Sie muss aktuell sein. Das bedeutet: Jedes Mal wenn du eine neue Software einführst, deinen Prozess änderst oder einen neuen Zahlungsanbieter nutzt – muss die Verfahrensdokumentation aktualisiert werden.
 
 Und diese Änderungen müssen dokumentiert werden. Mit Datum, Versionsnummer und Beschreibung was sich geändert hat.
 
-Das nennt sich Änderungshistorie – und ohne sie ist auch eine vorhandene VD angreifbar.
+Das nennt sich Änderungshistorie – und ohne sie ist auch eine vorhandene Verfahrensdokumentation angreifbar.
 
 ---
 
