@@ -51,10 +51,6 @@ export default function MarketingNav() {
         </Link>
 
         <div className="hidden md:flex items-center gap-8 text-[15px] font-medium" ref={dropdownRef} style={{ color: C.dark }}>
-          {isHome
-            ? <a href="#funktionen" className="hover:opacity-70 transition-opacity">Funktionen</a>
-            : <Link to="/#funktionen" className="hover:opacity-70 transition-opacity">Funktionen</Link>
-          }
 
           {/* Für wen? Dropdown */}
           <div className="relative">
