@@ -177,14 +177,72 @@ serve(async (req) => {
       }
     }
 
-    // 5. Create tenant settings
+    // 7. Create tenant settings
     await supabaseAdmin.from("tenant_settings").insert({
       tenant_id: tenantId,
       brand_name: company_name,
     });
 
+    // 8. Send welcome email via Resend
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+    if (RESEND_API_KEY) {
+      try {
+        const welcomeHtml = `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <img src="https://gobd-suite.de/images/logo.png" alt="GoBD-Suite" style="height: 40px; margin-bottom: 24px;" />
+            <h1 style="font-size: 24px; color: #1a1a1a; margin-bottom: 16px;">Willkommen bei der GoBD-Suite!</h1>
+            <p style="font-size: 16px; color: #333; line-height: 1.6;">
+              Hallo ${(first_name || "").trim()},
+            </p>
+            <p style="font-size: 16px; color: #333; line-height: 1.6;">
+              Ihr kostenloser Testzugang ist aktiv! Sie haben <strong>7 Tage</strong>, um alle Funktionen der GoBD-Suite mit einem Muster-Mandanten zu testen.
+            </p>
+            <p style="font-size: 16px; color: #333; line-height: 1.6;">
+              <strong>So starten Sie:</strong>
+            </p>
+            <ol style="font-size: 16px; color: #333; line-height: 1.8;">
+              <li>Loggen Sie sich ein</li>
+              <li>Öffnen Sie den Muster-Mandanten "Muster GmbH"</li>
+              <li>Bearbeiten Sie die Kapitel der Verfahrensdokumentation</li>
+            </ol>
+            <div style="margin: 32px 0; text-align: center;">
+              <a href="https://gobd-suite.de/auth" style="background-color: #16a34a; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px;">
+                Jetzt einloggen
+              </a>
+            </div>
+            <p style="font-size: 14px; color: #666; line-height: 1.6;">
+              Sie haben Fragen? Antworten Sie einfach auf diese E-Mail.
+            </p>
+            <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;" />
+            <p style="font-size: 12px; color: #999;">
+              GoBD-Suite – Verfahrensdokumentation leicht gemacht
+            </p>
+          </div>
+        `;
+
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${RESEND_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "GoBD-Suite <noreply@gobd-suite.de>",
+            to: [email.toLowerCase()],
+            subject: "Willkommen bei der GoBD-Suite – Ihr Testzugang ist bereit!",
+            html: welcomeHtml,
+          }),
+        });
+      } catch (emailErr) {
+        console.error("Welcome email error:", emailErr);
+        // Non-fatal: account works even without welcome email
+      }
+    } else {
+      console.warn("RESEND_API_KEY not set — skipping welcome email");
+    }
+
     return new Response(
-      JSON.stringify({ success: true, tenant_id: tenantId }),
+      JSON.stringify({ success: true, user_id: userId, tenant_id: tenantId }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (e) {
