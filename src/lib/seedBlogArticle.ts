@@ -405,7 +405,7 @@ Aber: Es gibt keine Garantie dafür.
 
 **Szenario 2: Mehrere Systeme, komplexere Buchführung**
 
-Du nutzt verschiedene Tools – Buchhaltungssoftware, Zahlungsanbieter, Cloud-Dienste. Keine VD.
+Du nutzt verschiedene Tools – Buchhaltungssoftware, Zahlungsanbieter, Cloud-Dienste. Keine Verfahrensdokumentation.
 
 Hier wird es schwieriger. Der Prüfer kann nicht nachvollziehen wie die Daten zwischen den Systemen fließen. Das ist ein erheblicher Mangel.
 
