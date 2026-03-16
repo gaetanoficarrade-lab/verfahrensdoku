@@ -92,7 +92,7 @@ export default function FuerDienstleister() {
   const jsonLd = useMemo(() => ({
     "@context": "https://schema.org", "@type": "WebPage",
     "name": "GoBD-Suite für Berater und Agenturen",
-    "description": "Verfahrensdokumentation als Dienstleistung anbieten mit GoBD-Suite. Whitelabel, unbegrenzte Mandanten, neue Einnahmequelle.",
+    "description": "Verfahrensdokumentation als Dienstleistung anbieten mit GoBD-Suite. Whitelabel, unbegrenzte Kunden, neue Einnahmequelle.",
     "url": "https://gobd-suite.de/fuer-dienstleister",
     "mainEntity": {
       "@type": "SoftwareApplication", "name": "GoBD-Suite",
