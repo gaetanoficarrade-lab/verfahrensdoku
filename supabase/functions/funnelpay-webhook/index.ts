@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const APP_URL = "https://gobd-suite.de";
 
@@ -9,89 +9,38 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-webhook-secret",
 };
 
-serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+// ─── Background processing ───────────────────────────────────────────────────
 
-  const supabaseAdmin = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-  );
+async function processWebhook(
+  supabaseAdmin: SupabaseClient,
+  payload: any,
+  integrationSettings: Record<string, string>
+) {
+  const RESEND_API_KEY_VAL = integrationSettings.resend_api_key || Deno.env.get("RESEND_API_KEY") || "";
+  const ADMIN_EMAIL_VAL = integrationSettings.admin_email || Deno.env.get("ADMIN_EMAIL") || "gaetanoficarra.de@gmail.com";
+  const PRODUCT_SOLO = integrationSettings.funnelpay_product_solo || Deno.env.get("FUNNELPAY_PRODUCT_SOLO") || "";
+  const PRODUCT_BERATER = integrationSettings.funnelpay_product_berater || Deno.env.get("FUNNELPAY_PRODUCT_BERATER") || "";
+  const PRODUCT_AGENTUR = integrationSettings.funnelpay_product_agentur || Deno.env.get("FUNNELPAY_PRODUCT_AGENTUR") || "";
 
-  let eventType = "unknown";
-  let customerEmail = "";
-  let logId: string | null = null;
+  const eventType = payload.type || payload.event || "unknown";
+  const data = payload.data?.object || payload.data || payload;
+  const customerEmail = (data.customer_email || data.email || "").trim().toLowerCase();
+
+  // Log incoming webhook
+  const { data: logEntry } = await supabaseAdmin
+    .from("webhook_logs")
+    .insert({
+      source: "funnelpay",
+      event_type: eventType,
+      customer_email: customerEmail || null,
+      payload: payload,
+      status: "processing",
+    })
+    .select("id")
+    .single();
+  const logId = logEntry?.id || null;
 
   try {
-    // Load integration settings from DB
-    const { data: settingsRow } = await supabaseAdmin
-      .from("platform_settings")
-      .select("value")
-      .eq("key", "integrations")
-      .maybeSingle();
-
-    const integrationSettings = (settingsRow?.value || {}) as Record<string, string>;
-    const FUNNELPAY_WEBHOOK_SECRET = integrationSettings.funnelpay_webhook_secret || Deno.env.get("FUNNELPAY_WEBHOOK_SECRET") || "";
-    const RESEND_API_KEY_VAL = integrationSettings.resend_api_key || Deno.env.get("RESEND_API_KEY") || "";
-    const ADMIN_EMAIL_VAL = integrationSettings.admin_email || Deno.env.get("ADMIN_EMAIL") || "gaetanoficarra.de@gmail.com";
-    const PRODUCT_SOLO = integrationSettings.funnelpay_product_solo || Deno.env.get("FUNNELPAY_PRODUCT_SOLO") || "";
-    const PRODUCT_BERATER = integrationSettings.funnelpay_product_berater || Deno.env.get("FUNNELPAY_PRODUCT_BERATER") || "";
-    const PRODUCT_AGENTUR = integrationSettings.funnelpay_product_agentur || Deno.env.get("FUNNELPAY_PRODUCT_AGENTUR") || "";
-
-    // Auth: check webhook secret (try multiple common header names)
-    const secret =
-      req.headers.get("x-webhook-secret") ||
-      req.headers.get("x-secret-token") ||
-      req.headers.get("x-hub-signature") ||
-      req.headers.get("secret") ||
-      req.headers.get("token") ||
-      (() => {
-        const auth = req.headers.get("authorization") || "";
-        if (auth.startsWith("Bearer ")) return auth.slice(7);
-        return auth;
-      })();
-
-    // Log all headers for debugging if auth fails
-    if (!FUNNELPAY_WEBHOOK_SECRET || secret !== FUNNELPAY_WEBHOOK_SECRET) {
-      const headersObj: Record<string, string> = {};
-      req.headers.forEach((v, k) => { headersObj[k] = v; });
-
-      // Still log the attempt so admin can debug
-      await supabaseAdmin.from("webhook_logs").insert({
-        source: "funnelpay",
-        event_type: "auth_failed",
-        customer_email: null,
-        payload: { received_headers: headersObj, secret_configured: !!FUNNELPAY_WEBHOOK_SECRET, secret_received: !!secret },
-        status: "error",
-        error_message: "Webhook secret mismatch – check header names in Funnelmate",
-      });
-
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const payload = await req.json();
-    eventType = payload.type || payload.event || "unknown";
-    const data = payload.data?.object || payload.data || payload;
-    customerEmail = (data.customer_email || data.email || "").trim().toLowerCase();
-
-    // Log incoming webhook
-    const { data: logEntry } = await supabaseAdmin
-      .from("webhook_logs")
-      .insert({
-        source: "funnelpay",
-        event_type: eventType,
-        customer_email: customerEmail || null,
-        payload: payload,
-        status: "processing",
-      })
-      .select("id")
-      .single();
-    logId = logEntry?.id || null;
-
     // Product → Plan mapping
     const detectPlan = (productId: string, productName?: string): string | null => {
       const val = (productId || "").toLowerCase();
@@ -147,7 +96,6 @@ serve(async (req) => {
     const findOrCreateTenant = async (planName: string) => {
       if (!customerEmail) throw new Error("No customer email in webhook payload");
 
-      // Check existing
       const { data: existing } = await supabaseAdmin
         .from("tenants")
         .select("id, subscription_status")
@@ -160,7 +108,6 @@ serve(async (req) => {
       const companyName = data.customer_company_name || data.company || data.customer_details?.company || "";
 
       if (existing) {
-        // Existing tenant: activate (upgrade from trial or update plan)
         await supabaseAdmin
           .from("tenants")
           .update({
@@ -176,7 +123,6 @@ serve(async (req) => {
         return existing.id;
       }
 
-      // New tenant via direct purchase → immediately active, no trial
       const { data: newTenant, error: tErr } = await supabaseAdmin
         .from("tenants")
         .insert({
@@ -202,14 +148,11 @@ serve(async (req) => {
     // Helper: create user + invite token + send welcome email
     const createUserAndInvite = async (tenantId: string, planName: string) => {
       const customerName = data.customer_name || data.name || data.customer_details?.name || "";
-
-      // Create auth user
       const normalizedEmail = customerEmail;
       const nameParts = (customerName || "").trim().split(/\s+/);
       const firstName = nameParts[0] || "";
       const lastName = nameParts.slice(1).join(" ") || "";
 
-      // Check if user already exists (direct DB query instead of paginated auth loop)
       const { data: existingUser } = await supabaseAdmin
         .from("profiles")
         .select("user_id")
@@ -240,7 +183,6 @@ serve(async (req) => {
         ]);
       }
 
-      // Create invite token
       const token = crypto.randomUUID();
       await supabaseAdmin.from("invite_tokens").insert({
         token,
@@ -250,7 +192,6 @@ serve(async (req) => {
         expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       });
 
-      // Send welcome email
       const inviteLink = `${APP_URL}/register?token=${token}`;
       const planLabel = planName === "solo" ? "Solo" : planName === "berater" ? "Berater" : "Agentur";
       const greeting = firstName ? `Hallo ${firstName},` : "Sehr geehrte Damen und Herren,";
@@ -283,7 +224,6 @@ serve(async (req) => {
 
     switch (eventType) {
       case "checkout.session.completed": {
-        // Direct purchase (Solo or any plan) → immediately active
         const { productId, productName } = getProductInfo();
         const planName = detectPlan(productId, productName);
         if (!planName) {
@@ -300,7 +240,6 @@ serve(async (req) => {
       }
 
       case "customer.subscription.created": {
-        // Subscription started (Berater/Agentur) → immediately active
         const { productId, productName } = getProductInfo();
         const planName = detectPlan(productId, productName);
         if (!planName) {
@@ -357,7 +296,6 @@ serve(async (req) => {
 
       case "funnelpay.subscription.payment_failed": {
         if (customerEmail) {
-          // Count failed attempts
           const { count } = await supabaseAdmin
             .from("webhook_logs")
             .select("id", { count: "exact", head: true })
@@ -365,10 +303,9 @@ serve(async (req) => {
             .eq("event_type", "funnelpay.subscription.payment_failed")
             .eq("customer_email", customerEmail);
 
-          const failCount = (count || 0) + 1; // including this one
+          const failCount = (count || 0) + 1;
 
           if (failCount >= 3) {
-            // Suspend account
             await supabaseAdmin
               .from("tenants")
               .update({ subscription_status: "suspended", is_active: false })
@@ -414,7 +351,6 @@ serve(async (req) => {
       }
 
       default:
-        // Unknown event, ignore
         break;
     }
 
@@ -425,15 +361,9 @@ serve(async (req) => {
         .update({ status: "processed" })
         .eq("id", logId);
     }
-
-    return new Response(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
   } catch (e) {
-    console.error("funnelpay-webhook error:", e);
+    console.error("funnelpay-webhook background error:", e);
 
-    // Update log to error
     if (logId) {
       await supabaseAdmin
         .from("webhook_logs")
@@ -441,19 +371,10 @@ serve(async (req) => {
         .eq("id", logId);
     }
 
-    // Notify admin (fallback: read from env if DB settings not loaded)
+    // Notify admin
     try {
-      const fallbackResend = Deno.env.get("RESEND_API_KEY") || "";
-      const fallbackAdmin = Deno.env.get("ADMIN_EMAIL") || "gaetanoficarra.de@gmail.com";
-      // Try to load from DB if not already loaded
-      let resendKey = fallbackResend;
-      let adminMail = fallbackAdmin;
-      try {
-        const { data: sRow } = await supabaseAdmin.from("platform_settings").select("value").eq("key", "integrations").maybeSingle();
-        const s = (sRow?.value || {}) as Record<string, string>;
-        resendKey = s.resend_api_key || resendKey;
-        adminMail = s.admin_email || adminMail;
-      } catch { /* use fallbacks */ }
+      let resendKey = RESEND_API_KEY_VAL || Deno.env.get("RESEND_API_KEY") || "";
+      let adminMail = ADMIN_EMAIL_VAL || Deno.env.get("ADMIN_EMAIL") || "gaetanoficarra.de@gmail.com";
       if (resendKey) {
         await fetch("https://api.resend.com/emails", {
           method: "POST",
@@ -467,7 +388,81 @@ serve(async (req) => {
         });
       }
     } catch { /* ignore alert failure */ }
+  }
+}
 
+// ─── Main handler ────────────────────────────────────────────────────────────
+
+serve(async (req, ctx) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  const supabaseAdmin = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+  );
+
+  try {
+    // Load integration settings from DB
+    const { data: settingsRow } = await supabaseAdmin
+      .from("platform_settings")
+      .select("value")
+      .eq("key", "integrations")
+      .maybeSingle();
+
+    const integrationSettings = (settingsRow?.value || {}) as Record<string, string>;
+    const FUNNELPAY_WEBHOOK_SECRET = integrationSettings.funnelpay_webhook_secret || Deno.env.get("FUNNELPAY_WEBHOOK_SECRET") || "";
+
+    // Auth: check webhook secret (try multiple common header names)
+    const secret =
+      req.headers.get("x-webhook-secret") ||
+      req.headers.get("x-secret-token") ||
+      req.headers.get("x-hub-signature") ||
+      req.headers.get("secret") ||
+      req.headers.get("token") ||
+      (() => {
+        const auth = req.headers.get("authorization") || "";
+        if (auth.startsWith("Bearer ")) return auth.slice(7);
+        return auth;
+      })();
+
+    if (!FUNNELPAY_WEBHOOK_SECRET || secret !== FUNNELPAY_WEBHOOK_SECRET) {
+      const headersObj: Record<string, string> = {};
+      req.headers.forEach((v, k) => { headersObj[k] = v; });
+
+      await supabaseAdmin.from("webhook_logs").insert({
+        source: "funnelpay",
+        event_type: "auth_failed",
+        customer_email: null,
+        payload: { received_headers: headersObj, secret_configured: !!FUNNELPAY_WEBHOOK_SECRET, secret_received: !!secret },
+        status: "error",
+        error_message: "Webhook secret mismatch – check header names in Funnelmate",
+      });
+
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Parse payload and immediately return 200
+    const payload = await req.json();
+
+    const responsePromise = processWebhook(supabaseAdmin, payload, integrationSettings);
+
+    if (ctx && (ctx as any).waitUntil) {
+      (ctx as any).waitUntil(responsePromise);
+    } else {
+      responsePromise.catch(console.error);
+    }
+
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  } catch (e) {
+    console.error("funnelpay-webhook handler error:", e);
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
