@@ -511,7 +511,7 @@ Kurze Antwort: Fast jeder der bereits mit Unternehmen arbeitet.
 
 **Steuerberater und Buchhalter:**
 
-Du hast ohnehin Einblick in die Buchhaltung deiner Mandanten. Die VD ist eine logische Ergänzung deines Leistungsportfolios. Du hilfst deinen Mandanten bei der Compliance – und verdienst dabei.
+Du hast ohnehin Einblick in die Buchhaltung deiner Mandanten. Die Verfahrensdokumentation ist eine logische Ergänzung deines Leistungsportfolios. Du hilfst deinen Mandanten bei der Compliance – und verdienst dabei.
 
 **Unternehmensberater und Consultants:**
 
