@@ -56,6 +56,10 @@ export default function ClientDetail() {
   const [deleting, setDeleting] = useState(false);
   const [hasFinalizedDocs, setHasFinalizedDocs] = useState(false);
 
+  // Client limit
+  const [clientLimitReached, setClientLimitReached] = useState(false);
+  const [clientLimitInfo, setClientLimitInfo] = useState<{ current: number; max: number } | null>(null);
+
   // Invite flow
   const [showInvite, setShowInvite] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');

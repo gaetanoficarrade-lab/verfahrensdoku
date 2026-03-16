@@ -67,6 +67,29 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
+    // ── Check client limit before creating invite ──
+    const isSuperAdmin = roleNames.includes("super_admin");
+    if (!isSuperAdmin) {
+      const [tenantRes, clientCountRes] = await Promise.all([
+        supabaseAdmin.from("tenants").select("plan_id, plans(max_clients, max_clients_unlimited)").eq("id", tenant_id).single(),
+        supabaseAdmin.from("clients").select("id", { count: "exact", head: true }).eq("tenant_id", tenant_id),
+      ]);
+
+      const plan = (tenantRes.data as any)?.plans;
+      const maxClients = plan?.max_clients ?? 999;
+      const isUnlimited = plan?.max_clients_unlimited === true || maxClients >= 999;
+      const currentClients = clientCountRes.count ?? 0;
+
+      if (!isUnlimited && currentClients >= maxClients) {
+        return new Response(
+          JSON.stringify({
+            error: `Mandanten-Limit erreicht (${currentClients}/${maxClients}). Bitte upgraden Sie Ihren Plan.`,
+          }),
+          { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
     const { data: invite, error: inviteError } = await supabaseAdmin
       .from("invite_tokens")
       .insert({ tenant_id, client_id })
