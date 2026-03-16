@@ -174,6 +174,14 @@ const App = () => (
                 }
               />
               <Route
+                path="/admin/settings/integrations"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminSettingsIntegrations /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/settings/promo-codes"
                 element={
                   <ProtectedRoute requiredRoles={['super_admin']}>
