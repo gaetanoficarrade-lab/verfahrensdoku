@@ -148,11 +148,11 @@ export default function VerfahrensdokumentationErstellen() {
   ];
 
   const mistakes = [
-    { bad: 'Die VD einmal erstellen und nie aktualisieren', good: 'Die VD muss bei jeder wesentlichen Änderung aktualisiert werden. GoBD-Suite versioniert alle Änderungen automatisch.' },
+    { bad: 'Die Verfahrensdokumentation einmal erstellen und nie aktualisieren', good: 'Die Verfahrensdokumentation muss bei jeder wesentlichen Änderung aktualisiert werden. GoBD-Suite versioniert alle Änderungen automatisch.' },
     { bad: 'Zu allgemein und oberflächlich beschreiben', good: 'Ein sachkundiger Dritter muss deinen Ablauf nachvollziehen können. GoBD-Suite prüft die Vollständigkeit mit KI.' },
     { bad: 'Nur die Buchhaltungssoftware beschreiben', good: 'Alle relevanten Systeme müssen rein: Zahlungsanbieter, Cloud-Dienste, E-Mail-Archivierung, Backups.' },
     { bad: 'Keine Versionierung und Änderungshistorie', good: 'Jede Änderung muss dokumentiert werden. GoBD-Suite macht das automatisch bei jeder Speicherung.' },
-    { bad: 'Die VD dem Steuerberater überlassen', good: 'Der Steuerberater kennt deine internen Abläufe nicht. Die VD muss das Unternehmen selbst erstellen.' },
+    { bad: 'Die Verfahrensdokumentation dem Steuerberater überlassen', good: 'Der Steuerberater kennt deine internen Abläufe nicht. Die Verfahrensdokumentation muss das Unternehmen selbst erstellen.' },
   ];
 
   const faqs = [
