@@ -515,7 +515,7 @@ Du hast ohnehin Einblick in die Buchhaltung deiner Mandanten. Die Verfahrensdoku
 
 **Unternehmensberater und Consultants:**
 
-Du begleitest Unternehmen bei der Digitalisierung und Prozessoptimierung. Die VD passt perfekt in dieses Bild – du dokumentierst was du ohnehin aufbaust.
+Du begleitest Unternehmen bei der Digitalisierung und Prozessoptimierung. Die Verfahrensdokumentation passt perfekt in dieses Bild – du dokumentierst was du ohnehin aufbaust.
 
 **Marketing-Agenturen und IT-Dienstleister:**
 
