@@ -593,7 +593,7 @@ Jährliche Aktualisierung: 200 € bis 500 €
 
 Du hast 5 Mandanten pro Monat:
 
-- Durchschnittspreis pro VD: 1.500 €
+- Durchschnittspreis pro Verfahrensdokumentation: 1.500 €
 - Monatlicher Umsatz: 7.500 €
 - Tool-Kosten: 399 €/Monat
 - Dein Aufwand: ca. 10-15 Stunden/Monat
