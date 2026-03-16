@@ -890,7 +890,7 @@ Für eine Stunde Aufwand ist das ein vermeidbares Risiko.
 
 ## Fazit
 
-Als Freelancer brauchst du keine komplizierte VD. Aber du brauchst eine vollständige.
+Als Freelancer brauchst du keine komplizierte Verfahrensdokumentation. Aber du brauchst eine vollständige.
 
 Die gute Nachricht: Deine Situation ist überschaubarer als die der meisten Unternehmen. Weniger Systeme, keine Mitarbeiter, klare Prozesse.
 
