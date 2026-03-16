@@ -46,7 +46,7 @@ Betriebsprüfer fragen heute standardmäßig nach der Verfahrensdokumentation. E
 
 **2. Digitale Betriebsprüfungen nehmen zu**
 
-Das Finanzamt prüft immer öfter digital. Das bedeutet: Deine gesamte digitale Buchführung steht auf dem Prüfstand. Und ohne VD fehlt die Grundlage um sie als ordnungsgemäß anzuerkennen.
+Das Finanzamt prüft immer öfter digital. Das bedeutet: Deine gesamte digitale Buchführung steht auf dem Prüfstand. Und ohne Verfahrensdokumentation fehlt die Grundlage um sie als ordnungsgemäß anzuerkennen.
 
 **3. Neue Software bedeutet neue Dokumentationspflicht**
 
