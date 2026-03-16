@@ -104,7 +104,9 @@ const Auth = () => {
         className="w-full max-w-md"
       >
         <div className="mb-8 text-center">
-          <img src="/images/logo.png" alt="Logo" className="mx-auto mb-4 h-14 object-contain" />
+          <a href="/">
+            <img src="/images/logo.png" alt="Logo" className="mx-auto mb-4 h-14 object-contain cursor-pointer" />
+          </a>
           <p className="mt-1 text-sm text-muted-foreground">
             Verfahrensdokumentation nach GoBD
           </p>
