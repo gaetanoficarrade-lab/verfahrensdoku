@@ -49,16 +49,21 @@ export default function TestStarten() {
       });
 
       if (error) {
-        // Try to parse response body
+        console.error('Trial registration error:', error);
         let msg = 'Unbekannter Fehler';
         try {
-          const ctx = error?.context;
-          if (ctx && typeof ctx.text === 'function') {
-            const raw = await ctx.text();
-            const parsed = JSON.parse(raw);
-            msg = parsed?.error || msg;
+          // FunctionsHttpError has a context (Response) with json body
+          const ctx = (error as any)?.context;
+          if (ctx instanceof Response) {
+            const body = await ctx.json();
+            msg = body?.error || msg;
+          } else if (typeof error.message === 'string' && error.message !== 'Edge Function returned a non-2xx status code') {
+            msg = error.message;
           }
-        } catch {}
+        } catch {
+          // If context parsing fails, try the data object (some versions return error in data)
+          if (data?.error) msg = data.error;
+        }
         throw new Error(msg);
       }
 
