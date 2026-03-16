@@ -523,7 +523,7 @@ Du richtest digitale Tools und Systeme ein. Wer neue Software implementiert brau
 
 **Freelancer mit Beratungsfokus:**
 
-Du hast Kunden die Unterstützung bei Compliance-Themen suchen. Die VD ist ein konkretes, abgrenzbares Produkt das du anbieten kannst.
+Du hast Kunden die Unterstützung bei Compliance-Themen suchen. Die Verfahrensdokumentation ist ein konkretes, abgrenzbares Produkt das du anbieten kannst.
 
 **Quelle:** [GoBD – Verantwortlichkeit des Unternehmens](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/2019-11-28-GoBD.html)
 
