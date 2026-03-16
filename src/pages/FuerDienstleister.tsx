@@ -116,15 +116,15 @@ export default function FuerDienstleister() {
   });
 
   const timelineSteps = [
-    { Icon: UserPlus, title: 'Mandant anlegen und einladen', text: 'Du legst den Mandanten in GoBD-Suite an und schickst ihm per Klick eine Einladung. Er bekommt sofort Zugang zu seinem Portal.' },
-    { Icon: FileText, title: 'Mandant füllt Leitfragen aus', text: 'Dein Mandant beschreibt in seinem Portal in eigenen Worten wie sein Business läuft. Die KI unterstützt und prüft dabei.' },
-    { Icon: Eye, title: 'Du prüfst und ergänzt', text: 'In deinem Berater-Portal siehst du alle Kapitel deiner Mandanten. Du kannst Hinweise geben, Texte bearbeiten und Kapitel freigeben.' },
+    { Icon: UserPlus, title: 'Kunde anlegen und einladen', text: 'Du legst den Kunden in GoBD-Suite an und schickst ihm per Klick eine Einladung. Er bekommt sofort Zugang zu seinem Portal.' },
+    { Icon: FileText, title: 'Kunde füllt Leitfragen aus', text: 'Dein Kunde beschreibt in seinem Portal in eigenen Worten wie sein Business läuft. Die KI unterstützt und prüft dabei.' },
+    { Icon: Eye, title: 'Du prüfst und ergänzt', text: 'In deinem Berater-Portal siehst du alle Kapitel deiner Kunden. Du kannst Hinweise geben, Texte bearbeiten und Kapitel freigeben.' },
     { Icon: CheckCircle2, title: 'Dokument finalisieren', text: 'Mit einem Klick finalisierst du das Dokument. Es bekommt eine Versionsnummer und ist revisionssicher archiviert.' },
-    { Icon: Download, title: 'Professionelles PDF unter deinem Brand', text: 'Das fertige PDF trägt dein Logo und deine Kontaktdaten – nicht GoBD-Suite. Dein Mandant sieht nur dein Brand.' },
+    { Icon: Download, title: 'Professionelles PDF unter deinem Brand', text: 'Das fertige PDF trägt dein Logo und deine Kontaktdaten – nicht GoBD-Suite. Dein Kunde sieht nur dein Brand.' },
   ];
 
   const comparisonRows = [
-    { feature: 'Mandanten', berater: 'Bis zu 5', agentur: 'Unbegrenzt' },
+    { feature: 'Kunden', berater: 'Bis zu 5', agentur: 'Unbegrenzt' },
     { feature: 'Whitelabel', berater: false, agentur: true },
     { feature: 'Eigenes Logo im PDF', berater: false, agentur: true },
     { feature: 'Berater-Portal', berater: true, agentur: true },
