@@ -247,7 +247,7 @@ export default function FuerSelbststaendige() {
               {[
                 '...als Freelancer oder Solopreneur arbeitest',
                 '...deine Buchhaltung digital führst',
-                '...keinen Steuerberater für die VD beauftragen willst',
+                '...keinen Steuerberater für die Verfahrensdokumentation beauftragen willst',
                 '...bei der nächsten Betriebsprüfung vorbereitet sein willst',
                 '...keine Zeit für Bürokratie verschwenden willst',
                 '...eine einmalige Lösung ohne Abo suchst',
