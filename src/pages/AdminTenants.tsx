@@ -55,6 +55,8 @@ const AdminTenants = () => {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [unlockDialogOpen, setUnlockDialogOpen] = useState(false);
+  const [unlockingTenant, setUnlockingTenant] = useState<Tenant | null>(null);
   const [editingTenant, setEditingTenant] = useState<Tenant | null>(null);
   const [deletingTenant, setDeletingTenant] = useState<Tenant | null>(null);
   const [saving, setSaving] = useState(false);
