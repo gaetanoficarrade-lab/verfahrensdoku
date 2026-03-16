@@ -34,7 +34,7 @@ export default function AdvisorOverview() {
   const [filter, setFilter] = useState<string>('all');
 
   useEffect(() => {
-    if (!effectiveTenantId) return;
+    if (!effectiveTenantId) { setLoading(false); return; }
     const load = async () => {
       setLoading(true);
       const { data: clientsData, error: clientsError } = await supabase

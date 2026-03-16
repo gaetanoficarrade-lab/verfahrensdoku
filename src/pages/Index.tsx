@@ -25,7 +25,7 @@ const Index = () => {
   }, [user, loading, roles, profileLoading, isSuperAdmin, impersonation.isImpersonating, navigate]);
 
   useEffect(() => {
-    if (!effectiveTenantId) return;
+    if (!effectiveTenantId) { setDataLoading(false); return; }
     const fetchData = async () => {
       setDataLoading(true);
       try {

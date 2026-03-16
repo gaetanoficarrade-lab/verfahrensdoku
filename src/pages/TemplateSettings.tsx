@@ -43,7 +43,7 @@ export default function TemplateSettings() {
   const [saving, setSaving] = useState(false);
 
   const loadTemplates = async () => {
-    if (!effectiveTenantId) return;
+    if (!effectiveTenantId) { setLoading(false); return; }
     setLoading(true);
     const { data } = await supabase
       .from('chapter_templates')

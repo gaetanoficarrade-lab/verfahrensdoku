@@ -71,7 +71,7 @@ export default function HelpPage() {
   });
 
   const loadTickets = async () => {
-    if (!effectiveTenantId) return;
+    if (!effectiveTenantId) { setLoadingTickets(false); return; }
     setLoadingTickets(true);
     const { data } = await supabase
       .from('support_tickets')

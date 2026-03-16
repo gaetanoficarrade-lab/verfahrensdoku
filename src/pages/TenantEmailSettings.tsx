@@ -22,7 +22,7 @@ export default function TenantEmailSettings() {
   const tenantTemplateKeys = tenantCategories.flatMap((c) => c.templates.map((t) => t.key));
 
   useEffect(() => {
-    if (!effectiveTenantId) return;
+    if (!effectiveTenantId) { setLoading(false); return; }
     const fetchData = async () => {
       setLoading(true);
       const { data } = await supabase

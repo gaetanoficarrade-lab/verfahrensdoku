@@ -36,7 +36,7 @@ export default function ClientNew() {
   });
 
   useEffect(() => {
-    if (!effectiveTenantId) return;
+    if (!effectiveTenantId) { setLoadingLimit(false); return; }
     const checkLimit = async () => {
       setLoadingLimit(true);
       const [countRes, tenantRes] = await Promise.all([

@@ -25,7 +25,7 @@ export default function Projects() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    if (!effectiveTenantId) return;
+    if (!effectiveTenantId) { setLoading(false); return; }
     const fetch = async () => {
       setLoading(true);
       const { data } = await supabase
