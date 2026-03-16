@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Building2, Users, FolderOpen, Eye, Loader2, Database, Presentation } from 'lucide-react';
+import { Building2, Users, FolderOpen, Eye, Loader2, Database, Presentation, ChevronDown } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -129,14 +135,29 @@ const AdminDashboard = () => {
           
         </div>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            className="gap-2"
-            onClick={() => window.dispatchEvent(new Event('open-onboarding-preview'))}
-          >
-            <Presentation className="h-4 w-4" />
-            Onboarding-Vorschau
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <Presentation className="h-4 w-4" />
+                Onboarding-Vorschau
+                <ChevronDown className="h-3 w-3 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {['Solo', 'Berater', 'Agentur'].map((plan) => (
+                <DropdownMenuItem
+                  key={plan}
+                  onClick={() =>
+                    window.dispatchEvent(
+                      new CustomEvent('open-onboarding-preview', { detail: { plan: plan.toLowerCase() } })
+                    )
+                  }
+                >
+                  {plan}-Plan
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           {/* Demo-Daten laden Button */}
           <AlertDialog>
             <AlertDialogTrigger asChild>

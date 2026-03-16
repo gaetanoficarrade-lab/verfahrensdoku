@@ -77,21 +77,27 @@ export function FirstStepsGuide() {
   const [minimized, setMinimized] = useState(false);
   const [step, setStep] = useState(0);
   const [checked, setChecked] = useState(false);
-  /** The pattern we're currently waiting for (null = not waiting) */
   const [waitingPattern, setWaitingPattern] = useState<RegExp | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
+  const [previewPlan, setPreviewPlan] = useState<string | null>(null);
 
   const isTenantAdmin = roles.includes('tenant_admin');
 
+  // Determine effective plan (preview overrides real plan)
+  const effectiveBerater = previewMode && previewPlan ? previewPlan === 'berater' : isBerater;
+  const effectiveAgentur = previewMode && previewPlan ? previewPlan === 'agentur' : isAgentur;
+
   const steps = [
     ...BASE_STEPS,
-    ...(isBerater ? BERATER_STEPS : []),
-    ...(isAgentur ? AGENTUR_STEPS : []),
+    ...(effectiveBerater ? BERATER_STEPS : []),
+    ...(effectiveAgentur ? [...BERATER_STEPS, ...AGENTUR_STEPS] : []),
   ];
 
-  // Allow super admins to open the wizard via a global event
+  // Allow super admins to open the wizard via a global event with plan param
   useEffect(() => {
-    const handler = () => {
+    const handler = (e: Event) => {
+      const plan = (e as CustomEvent).detail?.plan || 'solo';
+      setPreviewPlan(plan);
       setPreviewMode(true);
       setStep(0);
       setOpen(true);
@@ -238,8 +244,16 @@ export function FirstStepsGuide() {
   return (
     <Dialog open={true} onOpenChange={(v) => { if (!v) handleComplete(); }}>
       <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-border bg-card">
+        {/* Preview mode plan badge */}
+        {previewMode && previewPlan && (
+          <div className="flex justify-center pt-4 px-6">
+            <span className="text-xs font-medium text-muted-foreground bg-muted px-2.5 py-1 rounded-full">
+              Vorschau: {previewPlan.charAt(0).toUpperCase() + previewPlan.slice(1)}-Plan ({steps.length} Schritte)
+            </span>
+          </div>
+        )}
         {/* Progress dots */}
-        <div className="flex justify-center gap-1.5 pt-6 px-6">
+        <div className={`flex justify-center gap-1.5 ${previewMode ? 'pt-2' : 'pt-6'} px-6`}>
           {steps.map((_, i) => (
             <div
               key={i}
