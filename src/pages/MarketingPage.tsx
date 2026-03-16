@@ -229,7 +229,7 @@ function PricingToggleSection() {
           sub={annual ? '7.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
           highlighted
           features={[
-            { text: 'Unbegrenzte Mandanten', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
+            { text: 'Unbegrenzte Kunden', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
             { text: 'Alle Berater-Features', ok: true }, { text: 'Prioritäts-Support', ok: true },
           ]}
           annualNote={annual ? 'Jährliche Laufzeit · danach jährlich kündbar' : undefined}
