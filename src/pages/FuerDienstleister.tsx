@@ -206,7 +206,7 @@ export default function FuerDienstleister() {
         <section className="py-20 md:py-28 px-6" style={{ background: C.bgLight }}>
           <div className="max-w-6xl mx-auto">
             <Reveal>
-              <h2 className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>Eine Pflicht deiner Mandanten.<br className="hidden md:inline" /> Deine neue Einnahmequelle.</h2>
+              <h2 className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>Eine Pflicht deiner Kunden.<br className="hidden md:inline" /> Deine neue Einnahmequelle.</h2>
             </Reveal>
             <div className="grid md:grid-cols-2 gap-12 items-start">
               <Reveal>
