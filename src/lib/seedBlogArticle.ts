@@ -1170,7 +1170,7 @@ Wie genau können Daten für eine Betriebsprüfung bereitgestellt werden? Z1, Z2
 
 **5. Versionierung fehlt**
 
-Jede Änderung an der Verfahrensdokumentation muss mit Datum und Beschreibung dokumentiert werden. Ohne Änderungshistorie ist die VD nicht GoBD-konform.
+Jede Änderung an der Verfahrensdokumentation muss mit Datum und Beschreibung dokumentiert werden. Ohne Änderungshistorie ist die Verfahrensdokumentation nicht GoBD-konform.
 
 ---
 
