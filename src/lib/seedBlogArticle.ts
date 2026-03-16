@@ -709,7 +709,7 @@ Wenn ja – brauchst du eine Verfahrensdokumentation. Punkt.
 
 Das gilt für den Konzern mit 500 Mitarbeitern genauso wie für den Freelancer der alleine von seinem Homeoffice aus arbeitet.
 
-Die gute Nachricht: Als Freelancer ist deine VD deutlich überschaubarer als die eines großen Unternehmens. Du brauchst kein 50-seitiges Dokument.
+Die gute Nachricht: Als Freelancer ist deine Verfahrensdokumentation deutlich überschaubarer als die eines großen Unternehmens. Du brauchst kein 50-seitiges Dokument.
 
 Aber du brauchst ein vollständiges.
 
