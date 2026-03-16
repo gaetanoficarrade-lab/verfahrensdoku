@@ -64,10 +64,6 @@ function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, h
             <Crown className="h-4 w-4 mr-2" />
             Aktueller Plan
           </Button>
-        ) : isDowngrade ? (
-          <Button variant="outline" disabled className="w-full opacity-50">
-            Downgrade nicht möglich
-          </Button>
         ) : checkoutUrl ? (
           <Button
             className="w-full"
