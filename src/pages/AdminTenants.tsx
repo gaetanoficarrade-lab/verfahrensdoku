@@ -411,9 +411,18 @@ const AdminTenants = () => {
                   <Button
                     variant="ghost"
                     size="icon"
+                    onClick={() => handleToggleLock(tenant)}
+                    title={tenant.is_locked ? 'Löschschutz aufheben' : 'Löschschutz aktivieren'}
+                  >
+                    {tenant.is_locked ? <Lock className="h-4 w-4 text-amber-500" /> : <Unlock className="h-4 w-4" />}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => { setDeletingTenant(tenant); setDeleteDialogOpen(true); }}
-                    title="Löschen"
-                    className="text-destructive hover:text-destructive"
+                    title={tenant.is_locked ? 'Geschützt – Löschschutz zuerst aufheben' : 'Löschen'}
+                    disabled={tenant.is_locked}
+                    className="text-destructive hover:text-destructive disabled:opacity-30"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
