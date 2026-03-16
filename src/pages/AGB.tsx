@@ -57,7 +57,7 @@ export default function AGB() {
               'KI-gestützte Textgenerierung und Prüfung von Kapiteln',
               'Versionierung und revisionssichere Archivierung von Dokumenten',
               'PDF-Export der fertigen Verfahrensdokumentation',
-              'Mandantenverwaltung für Berater und Agenturen (je nach gebuchtem Plan)',
+              'Kundenverwaltung für Berater und Agenturen (je nach gebuchtem Plan)',
             ]} />
             <P>2.2 Der Anbieter stellt den Dienst als Software-as-a-Service über das Internet bereit. Der Kunde erhält kein Recht auf Herausgabe des Quellcodes.</P>
             <P>2.3 Die über GoBD-Suite erstellten Verfahrensdokumentationen dienen als Arbeitsgrundlage und technische Unterstützung. Die inhaltliche Richtigkeit der Dokumentation hängt ausschließlich von den Angaben des Kunden ab. Der Anbieter übernimmt keine Gewähr dafür, dass die erstellten Dokumente im Einzelfall den steuerrechtlichen Anforderungen der Finanzbehörden entsprechen oder bei einer Betriebsprüfung anerkannt werden. Die Nutzung des Dienstes ersetzt keine steuerliche oder rechtliche Beratung.</P>
