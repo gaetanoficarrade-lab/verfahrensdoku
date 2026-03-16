@@ -421,17 +421,26 @@ serve(async (req) => {
         .eq("id", logId);
     }
 
-    // Notify admin
+    // Notify admin (fallback: read from env if DB settings not loaded)
     try {
-      const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-      const adminEmail = Deno.env.get("ADMIN_EMAIL") || "gaetanoficarra.de@gmail.com";
-      if (RESEND_API_KEY) {
+      const fallbackResend = Deno.env.get("RESEND_API_KEY") || "";
+      const fallbackAdmin = Deno.env.get("ADMIN_EMAIL") || "gaetanoficarra.de@gmail.com";
+      // Try to load from DB if not already loaded
+      let resendKey = fallbackResend;
+      let adminMail = fallbackAdmin;
+      try {
+        const { data: sRow } = await supabaseAdmin.from("platform_settings").select("value").eq("key", "integrations").maybeSingle();
+        const s = (sRow?.value || {}) as Record<string, string>;
+        resendKey = s.resend_api_key || resendKey;
+        adminMail = s.admin_email || adminMail;
+      } catch { /* use fallbacks */ }
+      if (resendKey) {
         await fetch("https://api.resend.com/emails", {
           method: "POST",
-          headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
+          headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
           body: JSON.stringify({
             from: "GoBD-Suite <noreply@gobd-suite.de>",
-            to: [adminEmail],
+            to: [adminMail],
             subject: "⚠ Funnelpay Webhook Fehler",
             html: `<p>Event: ${eventType}</p><p>Kunde: ${customerEmail}</p><p>Fehler: ${e instanceof Error ? e.message : String(e)}</p>`,
           }),
