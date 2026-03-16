@@ -519,7 +519,7 @@ Du begleitest Unternehmen bei der Digitalisierung und Prozessoptimierung. Die Ve
 
 **Marketing-Agenturen und IT-Dienstleister:**
 
-Du richtest digitale Tools und Systeme ein. Wer neue Software implementiert braucht auch eine aktualisierte VD. Das ist ein natürliches Upsell.
+Du richtest digitale Tools und Systeme ein. Wer neue Software implementiert braucht auch eine aktualisierte Verfahrensdokumentation. Das ist ein natürliches Upsell.
 
 **Freelancer mit Beratungsfokus:**
 
