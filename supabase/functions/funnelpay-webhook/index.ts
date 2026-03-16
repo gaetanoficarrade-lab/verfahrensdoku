@@ -24,11 +24,25 @@ serve(async (req) => {
   let logId: string | null = null;
 
   try {
+    // Load integration settings from DB
+    const { data: settingsRow } = await supabaseAdmin
+      .from("platform_settings")
+      .select("value")
+      .eq("key", "integrations")
+      .maybeSingle();
+
+    const integrationSettings = (settingsRow?.value || {}) as Record<string, string>;
+    const FUNNELPAY_WEBHOOK_SECRET = integrationSettings.funnelpay_webhook_secret || Deno.env.get("FUNNELPAY_WEBHOOK_SECRET") || "";
+    const RESEND_API_KEY_VAL = integrationSettings.resend_api_key || Deno.env.get("RESEND_API_KEY") || "";
+    const ADMIN_EMAIL_VAL = integrationSettings.admin_email || Deno.env.get("ADMIN_EMAIL") || "gaetanoficarra.de@gmail.com";
+    const PRODUCT_SOLO = integrationSettings.funnelpay_product_solo || Deno.env.get("FUNNELPAY_PRODUCT_SOLO") || "";
+    const PRODUCT_BERATER = integrationSettings.funnelpay_product_berater || Deno.env.get("FUNNELPAY_PRODUCT_BERATER") || "";
+    const PRODUCT_AGENTUR = integrationSettings.funnelpay_product_agentur || Deno.env.get("FUNNELPAY_PRODUCT_AGENTUR") || "";
+
     // Auth: check webhook secret
     const secret = req.headers.get("x-webhook-secret") || req.headers.get("X-Webhook-Secret");
-    const expectedSecret = Deno.env.get("FUNNELPAY_WEBHOOK_SECRET");
 
-    if (!expectedSecret || secret !== expectedSecret) {
+    if (!FUNNELPAY_WEBHOOK_SECRET || secret !== FUNNELPAY_WEBHOOK_SECRET) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -55,16 +69,12 @@ serve(async (req) => {
     logId = logEntry?.id || null;
 
     // Product → Plan mapping
-    const PRODUCT_SOLO = Deno.env.get("FUNNELPAY_PRODUCT_SOLO") || "";
-    const PRODUCT_BERATER = Deno.env.get("FUNNELPAY_PRODUCT_BERATER") || "";
-    const PRODUCT_AGENTUR = Deno.env.get("FUNNELPAY_PRODUCT_AGENTUR") || "";
-
     const detectPlan = (productId: string, productName?: string): string | null => {
       const val = (productId || "").toLowerCase();
       const name = (productName || "").toLowerCase();
-      if (val === PRODUCT_SOLO.toLowerCase() || name.includes("solo")) return "solo";
-      if (val === PRODUCT_BERATER.toLowerCase() || name.includes("berater")) return "berater";
-      if (val === PRODUCT_AGENTUR.toLowerCase() || name.includes("agentur")) return "agentur";
+      if (PRODUCT_SOLO && val === PRODUCT_SOLO.toLowerCase() || name.includes("solo")) return "solo";
+      if (PRODUCT_BERATER && val === PRODUCT_BERATER.toLowerCase() || name.includes("berater")) return "berater";
+      if (PRODUCT_AGENTUR && val === PRODUCT_AGENTUR.toLowerCase() || name.includes("agentur")) return "agentur";
       return null;
     };
 
@@ -74,17 +84,16 @@ serve(async (req) => {
       return { productId, productName };
     };
 
-    // Helper: send email via send-email function
+    // Helper: send email via Resend
     const sendEmail = async (to: string, subject: string, html: string) => {
-      const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-      if (!RESEND_API_KEY) {
-        console.error("RESEND_API_KEY not configured");
+      if (!RESEND_API_KEY_VAL) {
+        console.error("RESEND_API_KEY not configured (neither in DB nor env)");
         return;
       }
       await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${RESEND_API_KEY}`,
+          Authorization: `Bearer ${RESEND_API_KEY_VAL}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -97,8 +106,7 @@ serve(async (req) => {
     };
 
     const sendAdminAlert = async (subject: string, body: string) => {
-      const adminEmail = Deno.env.get("ADMIN_EMAIL") || "gaetanoficarra.de@gmail.com";
-      await sendEmail(adminEmail, subject, body);
+      await sendEmail(ADMIN_EMAIL_VAL, subject, body);
     };
 
     // Helper: find plan ID by name
@@ -413,17 +421,26 @@ serve(async (req) => {
         .eq("id", logId);
     }
 
-    // Notify admin
+    // Notify admin (fallback: read from env if DB settings not loaded)
     try {
-      const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-      const adminEmail = Deno.env.get("ADMIN_EMAIL") || "gaetanoficarra.de@gmail.com";
-      if (RESEND_API_KEY) {
+      const fallbackResend = Deno.env.get("RESEND_API_KEY") || "";
+      const fallbackAdmin = Deno.env.get("ADMIN_EMAIL") || "gaetanoficarra.de@gmail.com";
+      // Try to load from DB if not already loaded
+      let resendKey = fallbackResend;
+      let adminMail = fallbackAdmin;
+      try {
+        const { data: sRow } = await supabaseAdmin.from("platform_settings").select("value").eq("key", "integrations").maybeSingle();
+        const s = (sRow?.value || {}) as Record<string, string>;
+        resendKey = s.resend_api_key || resendKey;
+        adminMail = s.admin_email || adminMail;
+      } catch { /* use fallbacks */ }
+      if (resendKey) {
         await fetch("https://api.resend.com/emails", {
           method: "POST",
-          headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
+          headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
           body: JSON.stringify({
             from: "GoBD-Suite <noreply@gobd-suite.de>",
-            to: [adminEmail],
+            to: [adminMail],
             subject: "⚠ Funnelpay Webhook Fehler",
             html: `<p>Event: ${eventType}</p><p>Kunde: ${customerEmail}</p><p>Fehler: ${e instanceof Error ? e.message : String(e)}</p>`,
           }),

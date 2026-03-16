@@ -21,6 +21,7 @@ import AdminSettingsLegal from "./pages/AdminSettingsLegal";
 import AdminSettingsEmail from "./pages/AdminSettingsEmail";
 import AdminSettingsPlans from "./pages/AdminSettingsPlans";
 import AdminSettingsSystem from "./pages/AdminSettingsSystem";
+import AdminSettingsIntegrations from "./pages/AdminSettingsIntegrations";
 import AdminPromoCodes from "./pages/AdminPromoCodes";
 import Clients from "./pages/Clients";
 import ClientNew from "./pages/ClientNew";
@@ -169,6 +170,14 @@ const App = () => (
                 element={
                   <ProtectedRoute requiredRoles={['super_admin']}>
                     <AppLayout><AdminSettingsSystem /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/settings/integrations"
+                element={
+                  <ProtectedRoute requiredRoles={['super_admin']}>
+                    <AppLayout><AdminSettingsIntegrations /></AppLayout>
                   </ProtectedRoute>
                 }
               />
