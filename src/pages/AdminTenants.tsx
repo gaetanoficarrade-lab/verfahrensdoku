@@ -557,7 +557,24 @@ const AdminTenants = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Resend Invite Dialog */}
+      {/* Unlock Confirmation */}
+      <AlertDialog open={unlockDialogOpen} onOpenChange={setUnlockDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Löschschutz aufheben?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Möchten Sie den Löschschutz für <strong>{unlockingTenant?.name}</strong> wirklich aufheben? Das Unterkonto kann danach gelöscht werden.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setUnlockingTenant(null)}>Abbrechen</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmUnlock}>
+              Löschschutz aufheben
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Dialog open={showResendDialog} onOpenChange={setShowResendDialog}>
         <DialogContent>
           <DialogHeader>
