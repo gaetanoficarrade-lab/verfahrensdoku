@@ -209,7 +209,7 @@ Der klassische Reflex: "Das ist doch Aufgabe meines Steuerberaters."
 
 Hier kommt die unbequeme Wahrheit.
 
-**Die VD ist nicht Aufgabe des Steuerberaters.**
+**Die Verfahrensdokumentation ist nicht Aufgabe des Steuerberaters.**
 
 Das ist keine Meinung – das steht explizit in den GoBD. Die Verfahrensdokumentation muss vom Unternehmen selbst erstellt werden, weil sie die internen Abläufe des Unternehmens beschreibt.
 
