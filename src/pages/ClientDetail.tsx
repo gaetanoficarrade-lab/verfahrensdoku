@@ -284,11 +284,11 @@ export default function ClientDetail() {
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Mandant löschen?</AlertDialogTitle>
+                <AlertDialogTitle>Kunde löschen?</AlertDialogTitle>
                 <AlertDialogDescription>
                   {hasFinalizedDocs
-                    ? 'Dieser Mandant kann nicht gelöscht werden, da bereits eine Verfahrensdokumentation erstellt wurde.'
-                    : `Möchten Sie "${client.company}" wirklich als gelöscht markieren? Der Mandant wird aus der Liste entfernt, belegt aber weiterhin einen Platz im Kontingent. Diese Aktion kann nicht rückgängig gemacht werden.`
+                    ? 'Dieser Kunde kann nicht gelöscht werden, da bereits eine Verfahrensdokumentation erstellt wurde.'
+                    : `Möchten Sie "${client.company}" wirklich als gelöscht markieren? Der Kunde wird aus der Liste entfernt, belegt aber weiterhin einen Platz im Kontingent. Diese Aktion kann nicht rückgängig gemacht werden.`
                   }
                 </AlertDialogDescription>
               </AlertDialogHeader>
