@@ -11,6 +11,7 @@ const settingsNav = [
   { title: 'Pläne', url: '/admin/settings/plans', icon: CreditCard },
   { title: 'Rabatt-Codes', url: '/admin/settings/promo-codes', icon: Tag },
   { title: 'System', url: '/admin/settings/system', icon: Activity },
+  { title: 'API & Integrationen', url: '/admin/settings/integrations', icon: Webhook },
   { title: 'Audit-Log', url: '/admin/settings/audit-log', icon: ScrollText },
 ];
 
