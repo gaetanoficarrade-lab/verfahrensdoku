@@ -1214,7 +1214,7 @@ Eine vollständige Verfahrensdokumentation ist kein Hexenwerk – aber es brauch
 
 Die häufigsten Fehler entstehen nicht aus Unwissenheit sondern aus Lückenhaftigkeit. Ein Block vergessen, eine Schnittstelle nicht beschrieben, das IKS zu oberflächlich – und der Prüfer findet eine Angriffsfläche.
 
-Mit dieser Checkliste hast du alles was du brauchst um deine VD vollständig und GoBD-konform zu erstellen.
+Mit dieser Checkliste hast du alles was du brauchst um deine Verfahrensdokumentation vollständig und GoBD-konform zu erstellen.
 
 Und mit GoBD-Suite erledigst du das in unter einer Stunde – die KI führt dich durch jeden Block und stellt sicher dass nichts fehlt.
 

@@ -316,7 +316,7 @@ export default function FuerDienstleister() {
                 '...als Unternehmensberater oder Consultant eine neue Dienstleistung aufbauen willst',
                 '...Marketing-Berater bist und Kunden bei der Digitalisierung begleitest',
                 '...eine Agentur führst und skalierbare Zusatzleistungen suchst',
-                '...Freelancer bist der VDs als Nebenleistung anbieten will',
+                '...Freelancer bist der Verfahrensdokumentationen als Nebenleistung anbieten will',
                 '...bereits Mandanten betreust und diese absichern willst',
               ].map((t, i) => (
                 <Reveal key={i} delay={i * 0.08}>

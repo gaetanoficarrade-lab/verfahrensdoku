@@ -291,7 +291,7 @@ export default function FuerSelbststaendige() {
         <section className="py-20 md:py-28 px-6" style={{ background: C.bgLight }}>
           <div className="max-w-4xl mx-auto">
             <Reveal>
-              <h2 className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>So erstellst du deine VD mit GoBD-Suite</h2>
+              <h2 className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>So erstellst du deine Verfahrensdokumentation mit GoBD-Suite</h2>
             </Reveal>
             <div className="grid md:grid-cols-4 gap-8">
               {timelineSteps.map((s, i) => (
