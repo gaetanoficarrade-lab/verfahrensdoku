@@ -810,7 +810,7 @@ Ein gutes Tool erkennt das automatisch durch das Onboarding und blendet irreleva
 
 ---
 
-## Der häufigste Fehler bei Freelancer-VDs
+## Der häufigste Fehler bei Freelancer-Verfahrensdokumentationen
 
 Du weißt jetzt was reinmuss. Hier ist was am häufigsten schiefläuft.
 
