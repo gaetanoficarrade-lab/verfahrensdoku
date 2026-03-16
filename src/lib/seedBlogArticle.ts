@@ -459,9 +459,9 @@ Eine Verfahrensdokumentation schützt dich nur wenn sie vor der Prüfung existie
 
 Wenn du noch keine Verfahrensdokumentation hast: Erstell sie jetzt. Heute. Nicht nach der nächsten Prüfungsankündigung.
 
-Wenn du eine veraltete VD hast: Aktualisiere sie. Jede wesentliche Änderung deiner Systeme oder Prozesse seit der letzten Version muss dokumentiert sein.
+Wenn du eine veraltete Verfahrensdokumentation hast: Aktualisiere sie. Jede wesentliche Änderung deiner Systeme oder Prozesse seit der letzten Version muss dokumentiert sein.
 
-Wenn du eine aktuelle VD hast: Gut. Bewahre sie griffbereit auf und plane eine jährliche Überprüfung ein.
+Wenn du eine aktuelle Verfahrensdokumentation hast: Gut. Bewahre sie griffbereit auf und plane eine jährliche Überprüfung ein.
 
 Die Betriebsprüfung kommt irgendwann. Die Frage ist nur ob du dann sagen kannst: "Hier ist meine Verfahrensdokumentation" – oder nicht.
 
