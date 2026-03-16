@@ -256,7 +256,7 @@ const AdminTenants = () => {
 
   const handleImpersonate = (t: Tenant) => {
     startImpersonation(t.id, t.name);
-    navigate('/');
+    navigate('/dashboard');
   };
 
   const handleResendInvite = async () => {
