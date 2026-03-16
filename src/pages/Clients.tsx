@@ -101,7 +101,7 @@ export default function Clients() {
             <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
-              {clients.length === 0 ? 'Noch keine Mandanten angelegt.' : 'Keine Treffer für Ihre Suche.'}
+              {clients.length === 0 ? 'Noch keine Kunden angelegt.' : 'Keine Treffer für Ihre Suche.'}
             </div>
           ) : (
             <Table>

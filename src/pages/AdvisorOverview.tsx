@@ -189,7 +189,7 @@ export default function AdvisorOverview() {
 
       <div className="space-y-3">
         {filtered.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">Keine Mandanten in dieser Kategorie.</p>
+          <p className="text-sm text-muted-foreground text-center py-8">Keine Kunden in dieser Kategorie.</p>
         ) : (
           filtered.map(client => (
             <Card key={client.id} className="hover:bg-muted/30 transition-colors cursor-pointer" onClick={() => {
