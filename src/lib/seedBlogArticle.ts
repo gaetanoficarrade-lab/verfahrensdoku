@@ -1180,10 +1180,10 @@ Bei jeder wesentlichen Änderung.
 
 Das bedeutet konkret:
 
-- Neue Software eingeführt → VD aktualisieren
-- Zahlungsanbieter gewechselt → VD aktualisieren
-- Prozess geändert → VD aktualisieren
-- Neuer Mitarbeiter mit Buchungszugang → VD aktualisieren
+- Neue Software eingeführt → Verfahrensdokumentation aktualisieren
+- Zahlungsanbieter gewechselt → Verfahrensdokumentation aktualisieren
+- Prozess geändert → Verfahrensdokumentation aktualisieren
+- Neuer Mitarbeiter mit Buchungszugang → Verfahrensdokumentation aktualisieren
 
 Eine jährliche Überprüfung ist empfehlenswert auch wenn sich nichts geändert hat – einfach um zu bestätigen dass alles noch aktuell ist.
 
