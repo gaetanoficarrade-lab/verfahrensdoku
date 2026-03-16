@@ -288,7 +288,7 @@ export default function FuerDienstleister() {
                   ))}
                 </ul>
                 <p className="leading-relaxed" style={{ color: C.textGray }}>
-                  Für deine Mandanten bist du der Anbieter – GoBD-Suite ist dein unsichtbares Werkzeug.
+                  Für deine Kunden bist du der Anbieter – GoBD-Suite ist dein unsichtbares Werkzeug.
                 </p>
               </div>
             </Reveal>
