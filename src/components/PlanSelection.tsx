@@ -22,6 +22,8 @@ interface PlanCardProps {
   checkoutUrl: string;
   currentPlan?: string | null;
   isAnnual?: boolean;
+  switchBillingUrl?: string;
+  switchBillingLabel?: string;
 }
 
 function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, highlighted, checkoutUrl, currentPlan, isAnnual }: PlanCardProps) {
