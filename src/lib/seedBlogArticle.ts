@@ -50,7 +50,7 @@ Das Finanzamt prüft immer öfter digital. Das bedeutet: Deine gesamte digitale 
 
 **3. Neue Software bedeutet neue Dokumentationspflicht**
 
-Wer 2024 oder 2025 auf neue Buchhaltungssoftware umgestiegen ist, muss seine VD aktualisieren. Punkt. Das gilt auch für neue Zahlungsanbieter, neue Cloud-Dienste oder neue interne Prozesse.
+Wer 2024 oder 2025 auf neue Buchhaltungssoftware umgestiegen ist, muss seine Verfahrensdokumentation aktualisieren. Punkt. Das gilt auch für neue Zahlungsanbieter, neue Cloud-Dienste oder neue interne Prozesse.
 
 ---
 
