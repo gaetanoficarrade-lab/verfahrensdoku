@@ -25,7 +25,7 @@ const availableFeatures = [
 ];
 
 const lockedFeatures = [
-  { icon: Users, text: 'Eigene Mandanten anlegen & einladen' },
+  { icon: Users, text: 'Eigene Kunden anlegen & einladen' },
   { icon: FileText, text: 'Alle Kapitel bearbeiten & freigeben' },
   { text: 'PDF ohne Wasserzeichen exportieren' },
   { text: 'Branding, Team, Webhooks & Vorlagen' },

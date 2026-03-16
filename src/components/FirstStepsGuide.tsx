@@ -32,7 +32,7 @@ const BASE_STEPS: Step[] = [
   {
     icon: FileText,
     title: 'Verfahrensdokumentation starten',
-    description: 'Nachdem Sie einen Mandanten angelegt haben, erstellen Sie ein Projekt und durchlaufen das Onboarding. Dort legen Sie die Kapitelstruktur fest und können Texte per KI generieren.',
+    description: 'Nachdem Sie einen Kunden angelegt haben, erstellen Sie ein Projekt und durchlaufen das Onboarding. Dort legen Sie die Kapitelstruktur fest und können Texte per KI generieren.',
   },
 ];
 

@@ -120,7 +120,7 @@ export const placeholdersByTemplate: Record<string, { key: string; desc: string;
     { key: '{{link}}', desc: 'Reset-Link', example: 'https://gobd-suite.de/set-password?token=abc' },
   ],
   notification_chapter_submitted: [
-    { key: '{{client_name}}', desc: 'Mandantenname', example: 'Firma XYZ' },
+    { key: '{{client_name}}', desc: 'Kundenname', example: 'Firma XYZ' },
     { key: '{{chapter_name}}', desc: 'Kapitelname', example: 'Kapitel 3: IT-Systeme' },
     { key: '{{brand_name}}', desc: 'Markenname', example: 'GoBD-Suite' },
     { key: '{{link}}', desc: 'Link zum Kapitel', example: 'https://gobd-suite.de/projects/1/chapters/3' },
