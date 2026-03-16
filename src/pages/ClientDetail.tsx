@@ -639,7 +639,7 @@ export default function ClientDetail() {
                   value={resendEmail}
                   onChange={(e) => setResendEmail(e.target.value)}
                   className="pl-10"
-                  placeholder="mandant@beispiel.de"
+                  placeholder="kunde@beispiel.de"
                 />
               </div>
             </div>
