@@ -436,7 +436,7 @@ export default function FuerDienstleister() {
                       </li>
                     ))}
                   </ul>
-                  <a href={annual ? "https://funnelpay.de/checkout/GoBD-Suite Berater Plan Jährl." : "https://funnelpay.de/checkout/GoBD-Suite Berater Plan"} target="_blank" rel="noopener noreferrer"
+                  <a href={annual ? "https://funnelpay.de/checkout/test--GoBD-Suite Berater Plan Jährl." : "https://funnelpay.de/checkout/GoBD-Suite Berater Plan"} target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] rounded-full px-6 py-3 w-full text-center transition-all duration-200"
                     style={{ background: C.yellow, color: C.dark }}
                     onMouseEnter={e => { e.currentTarget.style.background = '#e5b71a'; }}
