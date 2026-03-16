@@ -182,7 +182,7 @@ export default function FuerDienstleister() {
               </Reveal>
               <Reveal delay={0.4}>
                 <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm" style={{ color: C.dark }}>
-                  {['Whitelabel unter deinem Brand', 'Unbegrenzte Mandanten (Agentur)', 'Mandanten laden und verwalten', 'PDF mit deinem Logo'].map(t => (
+                  {['Whitelabel unter deinem Brand', 'Unbegrenzte Kunden (Agentur)', 'Kunden laden und verwalten', 'PDF mit deinem Logo'].map(t => (
                     <span key={t} className="flex items-center gap-1.5"><Check size={14} style={{ color: C.green }} /> {t}</span>
                   ))}
                 </div>
