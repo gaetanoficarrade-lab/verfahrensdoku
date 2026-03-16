@@ -361,7 +361,7 @@ Ohne Verfahrensdokumentation hat er keine Grundlage diese Fragen zu beurteilen. 
 
 Lass uns das Schritt für Schritt durchgehen.
 
-**Schritt 1: Der Prüfer stellt fest dass keine VD vorliegt**
+**Schritt 1: Der Prüfer stellt fest dass keine Verfahrensdokumentation vorliegt**
 
 Das ist ein formeller Mangel. Kein Kavaliersdelikt – ein echter Mangel der dokumentiert wird.
 
