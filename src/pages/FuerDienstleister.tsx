@@ -419,9 +419,9 @@ export default function FuerDienstleister() {
               <Reveal>
                 <div className="rounded-[18px] p-8 flex flex-col h-full" style={{ background: C.white, boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
                   <h3 className="text-xl font-bold mb-2" style={{ color: C.dark }}>Berater</h3>
-                  <div className="flex items-baseline gap-2 mb-1">
-                    {annual && <span className="text-2xl font-bold line-through" style={{ color: '#E53E3E' }}>399 €</span>}
-                    <span className="text-4xl font-bold transition-all duration-300" style={{ color: annual ? '#38A169' : C.dark }}>{annual ? '332 €' : '399 €'}</span>
+                  <div className="flex items-baseline flex-wrap gap-x-2 gap-y-0 mb-1">
+                    {annual && <span className="text-xl sm:text-2xl font-bold line-through whitespace-nowrap" style={{ color: '#E53E3E' }}>399 €</span>}
+                    <span className="text-3xl sm:text-4xl font-bold transition-all duration-300 whitespace-nowrap" style={{ color: annual ? '#38A169' : C.dark }}>{annual ? '332 €' : '399 €'}</span>
                     <span className="text-sm" style={{ color: C.textGray }}>/Monat</span>
                   </div>
                   {annual && <p className="text-xs font-semibold mb-1" style={{ color: '#38A169' }}>17 % gespart</p>}
@@ -450,9 +450,9 @@ export default function FuerDienstleister() {
                 <div className="rounded-[18px] p-8 flex flex-col h-full relative" style={{ background: C.white, boxShadow: '0 4px 32px rgba(0,0,0,0.10)', borderTop: `4px solid ${C.yellow}` }}>
                   <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full" style={{ background: C.yellow, color: C.dark }}>Empfohlen</span>
                   <h3 className="text-xl font-bold mb-2" style={{ color: C.dark }}>Agentur</h3>
-                  <div className="flex items-baseline gap-2 mb-1">
-                    {annual && <span className="text-2xl font-bold line-through" style={{ color: '#E53E3E' }}>799 €</span>}
-                    <span className="text-4xl font-bold transition-all duration-300" style={{ color: annual ? '#38A169' : C.dark }}>{annual ? '665 €' : '799 €'}</span>
+                  <div className="flex items-baseline flex-wrap gap-x-2 gap-y-0 mb-1">
+                    {annual && <span className="text-xl sm:text-2xl font-bold line-through whitespace-nowrap" style={{ color: '#E53E3E' }}>799 €</span>}
+                    <span className="text-3xl sm:text-4xl font-bold transition-all duration-300 whitespace-nowrap" style={{ color: annual ? '#38A169' : C.dark }}>{annual ? '665 €' : '799 €'}</span>
                     <span className="text-sm" style={{ color: C.textGray }}>/Monat</span>
                   </div>
                   {annual && <p className="text-xs font-semibold mb-1" style={{ color: '#38A169' }}>17 % gespart</p>}
