@@ -93,7 +93,7 @@ export default function Clients() {
                 className="pl-9"
               />
             </div>
-            <span className="text-sm text-muted-foreground">{filtered.length} Mandant(en)</span>
+            <span className="text-sm text-muted-foreground">{filtered.length} Kunde(n)</span>
           </div>
         </CardHeader>
         <CardContent className="p-0">
