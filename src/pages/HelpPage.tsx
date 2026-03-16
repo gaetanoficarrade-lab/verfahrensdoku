@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { resetFirstStepsGuide } from '@/components/FirstStepsGuide';
+
 
 const FAQ = [
   { q: 'Was ist eine Verfahrensdokumentation?', a: 'Eine Verfahrensdokumentation beschreibt die in einem Unternehmen eingesetzten IT-gestützten Geschäftsprozesse gemäß den GoBD (Grundsätze zur ordnungsmäßigen Führung und Aufbewahrung von Büchern, Aufzeichnungen und Unterlagen in elektronischer Form). Sie ist für alle buchführungspflichtigen Unternehmen verpflichtend.' },
