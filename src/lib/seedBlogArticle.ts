@@ -445,7 +445,7 @@ Das ist der Punkt der wirklich wichtig ist.
 
 Eine Betriebsprüfung läuft rückwirkend. Meistens für die letzten drei bis vier Jahre.
 
-Das bedeutet: Wenn der Prüfer jetzt kommt und du keine VD hast, hilft es nicht wenn du sie nächste Woche erstellst.
+Das bedeutet: Wenn der Prüfer jetzt kommt und du keine Verfahrensdokumentation hast, hilft es nicht wenn du sie nächste Woche erstellst.
 
 Die Mängel für den Prüfungszeitraum bestehen – unabhängig davon was du danach tust.
 
