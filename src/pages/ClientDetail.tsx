@@ -559,9 +559,9 @@ export default function ClientDetail() {
       <Dialog open={showInvite} onOpenChange={setShowInvite}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Mandanten einladen</DialogTitle>
+            <DialogTitle>Kunde einladen</DialogTitle>
             <DialogDescription>
-              Generieren Sie einen Einladungslink für {client.company}. Der Mandant erstellt damit selbst sein Konto.
+              Generieren Sie einen Einladungslink für {client.company}. Der Kunde erstellt damit selbst sein Konto.
             </DialogDescription>
           </DialogHeader>
 
