@@ -84,17 +84,16 @@ serve(async (req) => {
       return { productId, productName };
     };
 
-    // Helper: send email via send-email function
+    // Helper: send email via Resend
     const sendEmail = async (to: string, subject: string, html: string) => {
-      const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-      if (!RESEND_API_KEY) {
-        console.error("RESEND_API_KEY not configured");
+      if (!RESEND_API_KEY_VAL) {
+        console.error("RESEND_API_KEY not configured (neither in DB nor env)");
         return;
       }
       await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${RESEND_API_KEY}`,
+          Authorization: `Bearer ${RESEND_API_KEY_VAL}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -107,8 +106,7 @@ serve(async (req) => {
     };
 
     const sendAdminAlert = async (subject: string, body: string) => {
-      const adminEmail = Deno.env.get("ADMIN_EMAIL") || "gaetanoficarra.de@gmail.com";
-      await sendEmail(adminEmail, subject, body);
+      await sendEmail(ADMIN_EMAIL_VAL, subject, body);
     };
 
     // Helper: find plan ID by name
