@@ -577,7 +577,7 @@ Gesamtaufwand deinerseits: 1,5 bis 3 Stunden pro Mandant.
 
 Lass uns konkret werden.
 
-Der Markt für VD-Erstellung ist noch wenig gesättigt. Das bedeutet: Du kannst faire Preise durchsetzen.
+Der Markt für die Erstellung von Verfahrensdokumentationen ist noch wenig gesättigt. Das bedeutet: Du kannst faire Preise durchsetzen.
 
 **Typische Marktpreise:**
 
