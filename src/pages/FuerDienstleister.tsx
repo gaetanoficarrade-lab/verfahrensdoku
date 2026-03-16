@@ -317,7 +317,7 @@ export default function FuerDienstleister() {
                 '...Marketing-Berater bist und Kunden bei der Digitalisierung begleitest',
                 '...eine Agentur führst und skalierbare Zusatzleistungen suchst',
                 '...Freelancer bist der Verfahrensdokumentationen als Nebenleistung anbieten will',
-                '...bereits Mandanten betreust und diese absichern willst',
+                '...bereits Kunden betreust und diese absichern willst',
               ].map((t, i) => (
                 <Reveal key={i} delay={i * 0.08}>
                   <div className="rounded-[16px] p-6 h-full flex items-start gap-3" style={{ ...glass }}>
