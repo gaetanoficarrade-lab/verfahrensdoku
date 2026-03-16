@@ -25,7 +25,7 @@ interface PlanCardProps {
   isDowngrade?: boolean;
 }
 
-function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, highlighted, checkoutUrl, currentPlan, isAnnual }: PlanCardProps) {
+function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, highlighted, checkoutUrl, currentPlan, isAnnual, isDowngrade }: PlanCardProps) {
   const isCurrent = currentPlan?.toLowerCase() === name.toLowerCase();
 
   return (
