@@ -211,7 +211,7 @@ export default function FuerDienstleister() {
             <div className="grid md:grid-cols-2 gap-12 items-start">
               <Reveal>
                 <p className="text-lg leading-relaxed" style={{ color: C.textGray }}>
-                  Seit 2025 prüft das Finanzamt aktiv ob Verfahrensdokumentationen vorliegen. Die meisten deiner Mandanten haben keine.
+                  Seit 2025 prüft das Finanzamt aktiv ob Verfahrensdokumentationen vorliegen. Die meisten deiner Kunden haben keine.
                 </p>
                 <p className="text-lg leading-relaxed mt-4" style={{ color: C.textGray }}>
                   Das ist deine Chance: Biete die Erstellung als Dienstleistung an. Der Markt ist riesig – und kaum ein Dienstleister ist bereits positioniert.
