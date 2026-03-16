@@ -58,7 +58,7 @@ export const adminCategories = [
     label: 'Einladungen',
     templates: [
       { key: 'tenant_invite', label: 'Lizenznehmer-Einladung', icon: '🏢' },
-      { key: 'client_invite', label: 'Mandanten-Einladung', icon: '👤' },
+      { key: 'client_invite', label: 'Kunden-Einladung', icon: '👤' },
       { key: 'team_invite', label: 'Team-Einladung', icon: '👥' },
     ],
   },
