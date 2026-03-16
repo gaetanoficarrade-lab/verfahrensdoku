@@ -82,7 +82,7 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
   ]);
 
   const checkoutUrls = {
-    solo: settings['funnelpay_checkout_solo'] || '',
+    solo: settings['funnelpay_checkout_solo'] || 'https://funnelpay.de/checkout/GoBD-Suite Solo Plan',
     berater: settings['funnelpay_checkout_berater'] || '',
     agentur: settings['funnelpay_checkout_agentur'] || '',
   };

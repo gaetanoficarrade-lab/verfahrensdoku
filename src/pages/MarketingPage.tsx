@@ -210,6 +210,7 @@ function PricingToggleSection() {
           price="980 €"
           unit="einmalig"
           sub="12 Monate Zugang · Renewal 199 €/Jahr"
+          checkoutUrl="https://funnelpay.de/checkout/GoBD-Suite Solo Plan"
           features={[
             { text: '1 Mandant (du selbst)', ok: true }, { text: 'Alle 30 Kapitel', ok: true }, { text: 'KI-Unterstützung', ok: true },
             { text: 'Unbegrenzte Revisionen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false }, { text: 'Kein Berater-Portal', ok: false },
@@ -254,11 +255,12 @@ function PricingToggleSection() {
 }
 
 /* ─── Price Card ─── */
-function PriceCard({ name, price, unit, sub, features, highlighted = false, annualNote }: {
+function PriceCard({ name, price, unit, sub, features, highlighted = false, annualNote, checkoutUrl }: {
   name: string; price: string; unit: string; sub: string;
   features: { text: string; ok: boolean }[];
   highlighted?: boolean;
   annualNote?: string;
+  checkoutUrl?: string;
 }) {
   return (
     <div
@@ -288,7 +290,16 @@ function PriceCard({ name, price, unit, sub, features, highlighted = false, annu
           </li>
         ))}
       </ul>
-      <PrimaryBtn to="/test-starten" className="w-full text-center">Jetzt starten</PrimaryBtn>
+      {checkoutUrl ? (
+        <a href={checkoutUrl} target="_blank" rel="noopener noreferrer"
+          className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200 w-full text-center"
+          style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#e5b71a'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = C.yellow; }}
+        >Jetzt kaufen</a>
+      ) : (
+        <PrimaryBtn to="/test-starten" className="w-full text-center">Jetzt starten</PrimaryBtn>
+      )}
     </div>
   );
 }
