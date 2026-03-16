@@ -5,6 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { usePlatformSettings } from '@/hooks/usePlatformSettings';
 
+const PLAN_HIERARCHY: Record<string, number> = {
+  solo: 1,
+  berater: 2,
+  agentur: 3,
+};
+
 interface PlanCardProps {
   name: string;
   price: string;
@@ -16,9 +22,10 @@ interface PlanCardProps {
   checkoutUrl: string;
   currentPlan?: string | null;
   isAnnual?: boolean;
+  isDowngrade?: boolean;
 }
 
-function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, highlighted, checkoutUrl, currentPlan, isAnnual }: PlanCardProps) {
+function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, highlighted, checkoutUrl, currentPlan, isAnnual, isDowngrade }: PlanCardProps) {
   const isCurrent = currentPlan?.toLowerCase() === name.toLowerCase();
 
   return (
@@ -58,6 +65,10 @@ function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, h
             <Crown className="h-4 w-4 mr-2" />
             Aktueller Plan
           </Button>
+        ) : isDowngrade ? (
+          <Button variant="outline" disabled className="w-full opacity-50">
+            Downgrade nicht möglich
+          </Button>
         ) : checkoutUrl ? (
           <Button
             className="w-full"
@@ -88,6 +99,8 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
     'funnelpay_checkout_berater',
     'funnelpay_checkout_agentur',
   ]);
+
+  const currentLevel = currentPlan ? (PLAN_HIERARCHY[currentPlan.toLowerCase()] || 0) : 0;
 
   const checkoutUrls = {
     solo: settings['funnelpay_checkout_solo'] || 'https://funnelpay.de/checkout/GoBD-Suite Solo Plan',
@@ -135,6 +148,7 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
           ]}
           checkoutUrl={checkoutUrls.solo}
           currentPlan={currentPlan}
+          isDowngrade={currentLevel > PLAN_HIERARCHY.solo}
         />
         <PlanCard
           name="Berater"
@@ -154,6 +168,7 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
           ]}
           checkoutUrl={checkoutUrls.berater}
           currentPlan={currentPlan}
+          isDowngrade={currentLevel > PLAN_HIERARCHY.berater}
         />
         <PlanCard
           name="Agentur"
