@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Shield, Lock, Loader2 } from 'lucide-react';
@@ -7,7 +7,7 @@ import { PasswordInput } from '@/components/PasswordInput';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { useAuthContext } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 const SetPassword = () => {
   const [password, setPassword] = useState('');
@@ -15,11 +15,13 @@ const SetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRecovery, setIsRecovery] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
-  const { updatePassword, session, loading } = useAuthContext();
+  const [initialLoading, setInitialLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Wait for Supabase to process the token from the URL and establish a session
+  // Store the initial session so it survives failed attempts
+  const capturedSessionRef = useRef<{ access_token: string; refresh_token: string } | null>(null);
+
   useEffect(() => {
     const hash = window.location.hash;
     const params = new URLSearchParams(window.location.search);
@@ -27,34 +29,55 @@ const SetPassword = () => {
       setIsRecovery(true);
     }
 
-    // If there's a hash with access_token, Supabase needs time to process it
-    if (hash.includes('access_token')) {
-      // onAuthStateChange in AuthContext will set the session
-      // We just need to wait for it
-      const checkSession = setInterval(() => {
-        if (session) {
-          setSessionReady(true);
-          clearInterval(checkSession);
-        }
-      }, 200);
-      // Timeout after 10s
-      const timeout = setTimeout(() => {
-        clearInterval(checkSession);
-        setSessionReady(true); // Allow form to show even if session failed
-      }, 10000);
-      return () => {
-        clearInterval(checkSession);
-        clearTimeout(timeout);
-      };
-    } else if (session) {
-      setSessionReady(true);
-    }
-  }, [session]);
+    // Listen for the session that Supabase establishes from the URL token
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, sess) => {
+      if (sess && !capturedSessionRef.current) {
+        capturedSessionRef.current = {
+          access_token: sess.access_token,
+          refresh_token: sess.refresh_token,
+        };
+        setSessionReady(true);
+        setInitialLoading(false);
+      }
+    });
 
-  // Also set ready when session arrives later
-  useEffect(() => {
-    if (session) setSessionReady(true);
-  }, [session]);
+    // Also check if there's already a session
+    supabase.auth.getSession().then(({ data: { session: sess } }) => {
+      if (sess) {
+        capturedSessionRef.current = {
+          access_token: sess.access_token,
+          refresh_token: sess.refresh_token,
+        };
+        setSessionReady(true);
+      }
+      setInitialLoading(false);
+    });
+
+    // Timeout after 10s
+    const timeout = setTimeout(() => {
+      setInitialLoading(false);
+      setSessionReady(true);
+    }, 10000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  // Restore session if it was lost (e.g. after a failed updateUser call)
+  const ensureSession = async (): Promise<boolean> => {
+    const { data: { session: currentSession } } = await supabase.auth.getSession();
+    if (currentSession) return true;
+
+    // Session lost – restore from captured tokens
+    if (capturedSessionRef.current) {
+      const { error } = await supabase.auth.setSession(capturedSessionRef.current);
+      if (!error) return true;
+      console.error('Failed to restore session:', error.message);
+    }
+    return false;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +99,20 @@ const SetPassword = () => {
     }
 
     setIsLoading(true);
-    const { error } = await updatePassword(password);
+
+    // Ensure we have a valid session before attempting
+    const hasSession = await ensureSession();
+    if (!hasSession) {
+      toast({
+        variant: 'destructive',
+        title: 'Sitzung abgelaufen',
+        description: 'Bitte nutzen Sie den Einladungslink erneut.',
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    const { error } = await supabase.auth.updateUser({ password });
     if (error) {
       toast({
         variant: 'destructive',
@@ -93,7 +129,7 @@ const SetPassword = () => {
     setIsLoading(false);
   };
 
-  if (loading || (!sessionReady && window.location.hash.includes('access_token'))) {
+  if (initialLoading || (!sessionReady && window.location.hash.includes('access_token'))) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center space-y-3">
