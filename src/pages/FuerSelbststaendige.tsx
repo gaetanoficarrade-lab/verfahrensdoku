@@ -152,7 +152,7 @@ export default function FuerSelbststaendige() {
   const problemPoints = [
     { Icon: AlertTriangle, title: 'Die Verfahrensdokumentation ist deine Pflicht', text: 'Nicht die deines Steuerberaters. Du als Unternehmer bist verantwortlich – weil nur du weißt wie dein Business wirklich läuft.' },
     { Icon: Clock, title: 'Seit 2025 wird es aktiv geprüft', text: 'Betriebsprüfer fragen gezielt nach der Verfahrensdokumentation. Wer keine hat, riskiert die Anerkennung seiner gesamten digitalen Buchführung.' },
-    { Icon: Euro, title: 'Ohne VD kann das Finanzamt schätzen', text: 'Und Schätzungen liegen fast immer über deinen tatsächlichen Einnahmen. Das bedeutet Nachzahlungen die weh tun.' },
+    { Icon: Euro, title: 'Ohne Verfahrensdokumentation kann das Finanzamt schätzen', text: 'Und Schätzungen liegen fast immer über deinen tatsächlichen Einnahmen. Das bedeutet Nachzahlungen die weh tun.' },
   ];
 
   const timelineSteps = [
