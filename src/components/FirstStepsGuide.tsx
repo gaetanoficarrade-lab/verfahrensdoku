@@ -77,21 +77,27 @@ export function FirstStepsGuide() {
   const [minimized, setMinimized] = useState(false);
   const [step, setStep] = useState(0);
   const [checked, setChecked] = useState(false);
-  /** The pattern we're currently waiting for (null = not waiting) */
   const [waitingPattern, setWaitingPattern] = useState<RegExp | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
+  const [previewPlan, setPreviewPlan] = useState<string | null>(null);
 
   const isTenantAdmin = roles.includes('tenant_admin');
 
+  // Determine effective plan (preview overrides real plan)
+  const effectiveBerater = previewMode && previewPlan ? previewPlan === 'berater' : isBerater;
+  const effectiveAgentur = previewMode && previewPlan ? previewPlan === 'agentur' : isAgentur;
+
   const steps = [
     ...BASE_STEPS,
-    ...(isBerater ? BERATER_STEPS : []),
-    ...(isAgentur ? AGENTUR_STEPS : []),
+    ...(effectiveBerater ? BERATER_STEPS : []),
+    ...(effectiveAgentur ? [...BERATER_STEPS, ...AGENTUR_STEPS] : []),
   ];
 
-  // Allow super admins to open the wizard via a global event
+  // Allow super admins to open the wizard via a global event with plan param
   useEffect(() => {
-    const handler = () => {
+    const handler = (e: Event) => {
+      const plan = (e as CustomEvent).detail?.plan || 'solo';
+      setPreviewPlan(plan);
       setPreviewMode(true);
       setStep(0);
       setOpen(true);
