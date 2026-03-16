@@ -537,7 +537,7 @@ Aber wie du es verkaufst macht den Unterschied.
 
 **Falsch:** "Ich erstelle Ihnen eine Verfahrensdokumentation nach GoBD."
 
-**Richtig:** "Ich schütze Sie vor den finanziellen Folgen einer Betriebsprüfung ohne VD – und das in unter zwei Wochen."
+**Richtig:** "Ich schütze Sie vor den finanziellen Folgen einer Betriebsprüfung ohne Verfahrensdokumentation – und das in unter zwei Wochen."
 
 Der Unterschied: Einer beschreibt was du tust. Der andere beschreibt was der Mandant bekommt.
 
