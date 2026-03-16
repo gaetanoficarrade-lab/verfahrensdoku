@@ -55,6 +55,8 @@ const AdminTenants = () => {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [unlockDialogOpen, setUnlockDialogOpen] = useState(false);
+  const [unlockingTenant, setUnlockingTenant] = useState<Tenant | null>(null);
   const [editingTenant, setEditingTenant] = useState<Tenant | null>(null);
   const [deletingTenant, setDeletingTenant] = useState<Tenant | null>(null);
   const [saving, setSaving] = useState(false);
@@ -262,6 +264,16 @@ const AdminTenants = () => {
   };
 
   const handleToggleLock = async (t: Tenant) => {
+    // When removing protection, ask for confirmation first
+    if (t.is_locked) {
+      setUnlockingTenant(t);
+      setUnlockDialogOpen(true);
+      return;
+    }
+    await performToggleLock(t);
+  };
+
+  const performToggleLock = async (t: Tenant) => {
     const { error } = await supabase
       .from('tenants')
       .update({ is_locked: !t.is_locked } as any)
@@ -272,6 +284,14 @@ const AdminTenants = () => {
       toast({ title: t.is_locked ? 'Löschschutz aufgehoben.' : 'Löschschutz aktiviert.' });
       fetchData();
     }
+  };
+
+  const handleConfirmUnlock = async () => {
+    if (unlockingTenant) {
+      await performToggleLock(unlockingTenant);
+    }
+    setUnlockDialogOpen(false);
+    setUnlockingTenant(null);
   };
 
   const handleImpersonate = (t: Tenant) => {
@@ -537,7 +557,24 @@ const AdminTenants = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Resend Invite Dialog */}
+      {/* Unlock Confirmation */}
+      <AlertDialog open={unlockDialogOpen} onOpenChange={setUnlockDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Löschschutz aufheben?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Möchten Sie den Löschschutz für <strong>{unlockingTenant?.name}</strong> wirklich aufheben? Das Unterkonto kann danach gelöscht werden.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setUnlockingTenant(null)}>Abbrechen</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmUnlock}>
+              Löschschutz aufheben
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Dialog open={showResendDialog} onOpenChange={setShowResendDialog}>
         <DialogContent>
           <DialogHeader>
