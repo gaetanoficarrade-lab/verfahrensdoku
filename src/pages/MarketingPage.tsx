@@ -214,7 +214,7 @@ function PricingToggleSection() {
           sub="12 Monate Zugang · Renewal 199 €/Jahr"
           checkoutUrl="https://funnelpay.de/checkout/GoBD-Suite Solo Plan"
           features={[
-            { text: '1 Mandant (du selbst)', ok: true }, { text: 'Alle 30 Kapitel', ok: true }, { text: 'KI-Unterstützung', ok: true },
+            { text: '1 Kunde (du selbst)', ok: true }, { text: 'Alle 30 Kapitel', ok: true }, { text: 'KI-Unterstützung', ok: true },
             { text: 'Unbegrenzte Revisionen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false }, { text: 'Kein Berater-Portal', ok: false },
           ]}
         />
