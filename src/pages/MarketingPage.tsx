@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo, type ReactNode } from 'react';
+import { useAuthContext } from '@/contexts/AuthContext';
+import { Navigate } from 'react-router-dom';
 import { CookieBanner, CookieSettingsButton } from '@/components/CookieBanner';
 import MarketingNav from '@/components/MarketingNav';
 import mockupDashboard from '@/assets/mockup-dashboard.png';
@@ -349,6 +351,7 @@ function useActiveStep(count: number) {
    MARKETING PAGE
    ═══════════════════════════════════════════════ */
 export default function MarketingPage() {
+  const { user, loading } = useAuthContext();
   const [mobileMenu, setMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -442,6 +445,14 @@ export default function MarketingPage() {
     document.head.appendChild(style);
     return () => { document.getElementById(id)?.remove(); };
   }, []);
+
+  // Redirect logged-in users to dashboard – show nothing while auth loads
+  if (loading) {
+    return <div className="min-h-screen bg-background" />;
+  }
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="font-sans" style={{ color: C.dark }}>
