@@ -460,7 +460,7 @@ export default function FuerSelbststaendige() {
             </Reveal>
             <Reveal delay={0.2}>
               <p className="text-sm mt-6" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                7 Tage kostenlos · Keine Kreditkarte · Solo-Plan ab 980 € einmalig
+                Kostenloser Testaccount verfügbar · Solo-Plan ab 980 € einmalig
               </p>
             </Reveal>
           </div>

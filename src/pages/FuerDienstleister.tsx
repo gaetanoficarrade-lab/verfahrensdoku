@@ -490,7 +490,7 @@ export default function FuerDienstleister() {
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="text-lg mb-8" style={{ color: 'rgba(255,255,255,0.8)' }}>Starte heute mit 7 Tagen kostenlosem Test. Kein Risiko. Keine Kreditkarte.</p>
+              <p className="text-lg mb-8" style={{ color: 'rgba(255,255,255,0.8)' }}>Starte heute mit einem kostenlosen Testaccount. Kein Risiko. Keine Kreditkarte.</p>
             </Reveal>
             <Reveal delay={0.2}><PrimaryBtn to="/test-starten">Jetzt kostenlos testen</PrimaryBtn></Reveal>
             <Reveal delay={0.3}>
