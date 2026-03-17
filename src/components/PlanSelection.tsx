@@ -179,7 +179,6 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
             price={annual ? '332€' : '399€'}
             originalPrice={annual ? '399€' : undefined}
             priceNote="/Monat"
-            setupFee="590€"
             highlighted
             isAnnual={annual}
             features={[
