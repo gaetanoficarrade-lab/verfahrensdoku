@@ -35,6 +35,14 @@ export function SalesChatWidget() {
   const [greeted, setGreeted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Auto-open after 10 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setOpen(true);
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
