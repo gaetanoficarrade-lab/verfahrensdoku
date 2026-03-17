@@ -43,6 +43,9 @@ export function CookieBanner() {
     localStorage.setItem(CONSENT_KEY, JSON.stringify(consent));
     setVisible(false);
     setShowModal(false);
+    if (consent.analytics) {
+      loadGtagIfConsented();
+    }
   }, []);
 
   const acceptAll = () => save({ necessary: true, analytics: true, marketing: true, timestamp: new Date().toISOString() });
