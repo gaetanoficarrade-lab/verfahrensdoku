@@ -917,6 +917,7 @@ export default function MarketingPage() {
       </footer>
 
       <CookieBanner />
+      <SalesChatWidget />
     </div>
   );
 }
