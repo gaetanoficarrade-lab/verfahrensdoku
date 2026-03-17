@@ -81,7 +81,7 @@ export function CookieBanner() {
               <div className="flex-1">
                 <span className="font-semibold text-sm block mb-1">Analyse-Cookies</span>
                 <p className="text-xs leading-relaxed opacity-70">
-                  Helfen uns zu verstehen wie Besucher die Website nutzen. Wir nutzen aktuell keine Analyse-Tools.
+                  Helfen uns zu verstehen wie Besucher die Website nutzen (Google Analytics).
                 </p>
               </div>
               <Switch checked={analytics} onCheckedChange={setAnalytics} className="data-[state=checked]:bg-[#FAC81E]" />
