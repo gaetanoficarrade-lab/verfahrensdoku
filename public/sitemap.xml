@@ -2,62 +2,67 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://gobd-suite.de/</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://gobd-suite.de/fuer-selbststaendige</loc>
+    <loc>https://gobd-suite.de/fuer-selbststaendige/</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gobd-suite.de/fuer-dienstleister</loc>
+    <loc>https://gobd-suite.de/fuer-dienstleister/</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gobd-suite.de/verfahrensdokumentation-erstellen</loc>
+    <loc>https://gobd-suite.de/verfahrensdokumentation-erstellen/</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gobd-suite.de/blog</loc>
+    <loc>https://gobd-suite.de/blog/</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gobd-suite.de/blog/verfahrensdokumentation-2025-was-sich-geaendert-hat</loc>
+    <loc>https://gobd-suite.de/blog/verfahrensdokumentation-2025-was-sich-geaendert-hat/</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <lastmod>2025-01-01</lastmod>
   </url>
   <url>
-    <loc>https://gobd-suite.de/blog/verfahrensdokumentation-vorlage-steuerberater-oder-tool</loc>
+    <loc>https://gobd-suite.de/blog/verfahrensdokumentation-vorlage-steuerberater-oder-tool/</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <lastmod>2025-01-01</lastmod>
   </url>
   <url>
-    <loc>https://gobd-suite.de/blog/betriebspruefung-ohne-verfahrensdokumentation</loc>
+    <loc>https://gobd-suite.de/blog/betriebspruefung-ohne-verfahrensdokumentation/</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <lastmod>2025-01-01</lastmod>
   </url>
   <url>
-    <loc>https://gobd-suite.de/blog/verfahrensdokumentation-als-dienstleistung-anbieten</loc>
+    <loc>https://gobd-suite.de/blog/verfahrensdokumentation-als-dienstleistung-anbieten/</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <lastmod>2025-01-01</lastmod>
   </url>
   <url>
-    <loc>https://gobd-suite.de/blog/verfahrensdokumentation-freelancer</loc>
+    <loc>https://gobd-suite.de/blog/verfahrensdokumentation-freelancer/</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <lastmod>2025-01-01</lastmod>
   </url>
   <url>
-    <loc>https://gobd-suite.de/blog/gobd-checkliste-verfahrensdokumentation</loc>
-    <lastmod>2026-03-15</lastmod>
+    <loc>https://gobd-suite.de/blog/gobd-checkliste-verfahrensdokumentation/</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
