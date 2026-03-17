@@ -16,7 +16,7 @@ interface PlanCardProps {
   price: string;
   originalPrice?: string;
   priceNote?: string;
-  setupFee?: string;
+  
   features: string[];
   highlighted?: boolean;
   checkoutUrl: string;
@@ -26,7 +26,7 @@ interface PlanCardProps {
   switchBillingLabel?: string;
 }
 
-function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, highlighted, checkoutUrl, currentPlan, isAnnual, switchBillingUrl, switchBillingLabel }: PlanCardProps) {
+function PlanCard({ name, price, originalPrice, priceNote, features, highlighted, checkoutUrl, currentPlan, isAnnual, switchBillingUrl, switchBillingLabel }: PlanCardProps) {
   const isCurrent = currentPlan?.toLowerCase() === name.toLowerCase();
 
   return (
@@ -47,9 +47,6 @@ function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, h
         </div>
         {isAnnual && originalPrice && (
           <p className="text-xs font-semibold mt-1" style={{ color: '#38A169' }}>17 % gespart</p>
-        )}
-        {setupFee && (
-          <p className="text-xs text-muted-foreground mt-1">+ {setupFee} einmalige Setup-Gebühr</p>
         )}
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
@@ -182,7 +179,6 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
             price={annual ? '332€' : '399€'}
             originalPrice={annual ? '399€' : undefined}
             priceNote="/Monat"
-            setupFee="590€"
             highlighted
             isAnnual={annual}
             features={[
@@ -204,7 +200,7 @@ export default function PlanSelection({ currentPlan }: PlanSelectionProps) {
           price={annual ? '665€' : '799€'}
           originalPrice={annual ? '799€' : undefined}
           priceNote="/Monat"
-          setupFee="590€"
+          
           isAnnual={annual}
           features={[
             'Unbegrenzte Mandanten',
