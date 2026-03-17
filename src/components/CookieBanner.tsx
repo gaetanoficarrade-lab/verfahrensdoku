@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { loadGtagIfConsented } from '@/lib/gtag';
 import { Switch } from '@/components/ui/switch';
 
 export interface CookieConsent {
