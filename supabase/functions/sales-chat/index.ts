@@ -67,7 +67,7 @@ Wollen unter eigenem Brand auftreten, brauchen unbegrenzte Kunden, Whitelabel.
 Bis zu 5 Kunden, 3 Monate Mindestlaufzeit, Berater-Portal, Kunden-Einladungen. Kein Whitelabel.
 
 ### Agentur-Plan – 799€/Monat (jährlich: 665€/Monat)
-Unbegrenzte Kunden, Whitelabel, eigene Domain, alle Berater-Features, Prioritäts-Support, Setup-Fee 590€. Upgrade von Berater ohne erneute Setup-Fee.
+Unbegrenzte Kunden, Whitelabel, eigene Domain, alle Berater-Features, Prioritäts-Support. Upgrade von Berater jederzeit möglich.
 
 ### Testphase
 7 Tage kostenlos, keine Kreditkarte. Nur Beispiel-Mandant, max 1 Kapitel, PDF mit Wasserzeichen.
