@@ -36,6 +36,10 @@ export function SalesChatWidget() {
   const [greeted, setGreeted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const { isListening, isSupported: micSupported, toggle: toggleMic } = useSpeechRecognition(
+    (transcript) => setInput((prev) => (prev ? prev + ' ' + transcript : transcript))
+  );
+
   // Auto-open after 10 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
