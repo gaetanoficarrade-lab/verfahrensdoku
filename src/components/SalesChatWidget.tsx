@@ -205,20 +205,32 @@ export function SalesChatWidget() {
           <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
             {messages.map((m, i) => (
               <div key={i} className={cn('flex', m.role === 'user' ? 'justify-end' : 'justify-start')}>
-                <div
-                  className={cn(
-                    'max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed',
-                    m.role === 'user'
-                      ? 'bg-[hsl(43,80%,48%)] text-white rounded-br-md'
-                      : 'bg-[hsl(220,12%,18%)] text-[hsl(40,10%,88%)] rounded-bl-md'
-                  )}
-                >
-                  {m.role === 'assistant' ? (
-                    <div className="prose prose-sm prose-invert max-w-none [&>p]:m-0 [&>p+p]:mt-1.5">
-                      <ReactMarkdown>{m.content}</ReactMarkdown>
-                    </div>
-                  ) : (
-                    m.content
+                <div className="flex flex-col gap-1 max-w-[85%]">
+                  <div
+                    className={cn(
+                      'rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed',
+                      m.role === 'user'
+                        ? 'bg-[hsl(43,80%,48%)] text-white rounded-br-md'
+                        : 'bg-[hsl(220,12%,18%)] text-[hsl(40,10%,88%)] rounded-bl-md'
+                    )}
+                  >
+                    {m.role === 'assistant' ? (
+                      <div className="prose prose-sm prose-invert max-w-none [&>p]:m-0 [&>p+p]:mt-1.5">
+                        <ReactMarkdown>{m.content}</ReactMarkdown>
+                      </div>
+                    ) : (
+                      m.content
+                    )}
+                  </div>
+                  {m.role === 'assistant' && ttsSupported && (
+                    <button
+                      onClick={() => speak(m.content, i)}
+                      className="self-start flex items-center gap-1 text-xs text-[hsl(40,6%,50%)] hover:text-[hsl(40,10%,75%)] transition-colors"
+                      aria-label={speakingIdx === i ? 'Vorlesen stoppen' : 'Vorlesen'}
+                    >
+                      {speakingIdx === i ? <VolumeX className="h-3 w-3" /> : <Volume2 className="h-3 w-3" />}
+                      {speakingIdx === i ? 'Stoppen' : 'Vorlesen'}
+                    </button>
                   )}
                 </div>
               </div>
