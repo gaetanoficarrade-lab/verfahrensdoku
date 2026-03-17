@@ -69,7 +69,7 @@ export function SalesChatWidget() {
           'apikey': SUPABASE_ANON_KEY,
           'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
         },
-        body: JSON.stringify({ text: stripped }),
+        body: JSON.stringify({ text: stripped, voiceId: 'QHYzYgUuCL3hIrlriaDm' }),
       });
 
       if (!response.ok) {
