@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, type ReactNode } from 'react';
+import { SalesChatWidget } from '@/components/SalesChatWidget';
 import SocialProofNotification from '@/components/SocialProofNotification';
 import { Link } from 'react-router-dom';
 import { CookieBanner, CookieSettingsButton } from '@/components/CookieBanner';
@@ -509,6 +510,7 @@ export default function FuerSelbststaendige() {
       </footer>
 
       <CookieBanner />
+      <SalesChatWidget />
     </div>
   );
 }
