@@ -27,6 +27,28 @@
     <!-- Preconnect -->
     <link rel="preconnect" href="https://supabase.gobd-suite.de" />
     <link rel="dns-prefetch" href="https://supabase.gobd-suite.de" />
+
+    <!-- Google Analytics -->
+    <script>
+      (function() {
+        var consent = localStorage.getItem('cookie_consent');
+        if (consent) {
+          try {
+            var c = JSON.parse(consent);
+            if (c.analytics) {
+              var s = document.createElement('script');
+              s.async = true;
+              s.src = 'https://www.googletagmanager.com/gtag/js?id=G-9NCV468NDF';
+              document.head.appendChild(s);
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-9NCV468NDF');
+            }
+          } catch(e) {}
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
