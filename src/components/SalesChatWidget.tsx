@@ -238,6 +238,22 @@ export function SalesChatWidget() {
                 disabled={loading}
                 className="flex-1 rounded-xl border border-[hsl(220,12%,24%)] bg-[hsl(220,15%,18%)] px-3.5 py-2.5 text-sm text-[hsl(40,10%,88%)] placeholder:text-[hsl(40,6%,40%)] focus:outline-none focus:ring-1 focus:ring-[hsl(43,80%,48%)] disabled:opacity-50"
               />
+              {micSupported && (
+                <Button
+                  type="button"
+                  size="icon"
+                  onClick={toggleMic}
+                  className={cn(
+                    'h-10 w-10 rounded-xl transition-colors',
+                    isListening
+                      ? 'bg-red-500 text-white hover:bg-red-600 animate-pulse'
+                      : 'bg-[hsl(220,12%,22%)] text-[hsl(40,10%,70%)] hover:bg-[hsl(220,12%,26%)]'
+                  )}
+                  aria-label={isListening ? 'Mikrofon stoppen' : 'Mikrofon starten'}
+                >
+                  {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                </Button>
+              )}
               <Button
                 type="submit"
                 size="icon"
