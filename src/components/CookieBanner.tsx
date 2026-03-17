@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { loadGtagIfConsented } from '@/lib/gtag';
 import { Switch } from '@/components/ui/switch';
 
 export interface CookieConsent {
@@ -42,6 +43,9 @@ export function CookieBanner() {
     localStorage.setItem(CONSENT_KEY, JSON.stringify(consent));
     setVisible(false);
     setShowModal(false);
+    if (consent.analytics) {
+      loadGtagIfConsented();
+    }
   }, []);
 
   const acceptAll = () => save({ necessary: true, analytics: true, marketing: true, timestamp: new Date().toISOString() });
@@ -77,7 +81,7 @@ export function CookieBanner() {
               <div className="flex-1">
                 <span className="font-semibold text-sm block mb-1">Analyse-Cookies</span>
                 <p className="text-xs leading-relaxed opacity-70">
-                  Helfen uns zu verstehen wie Besucher die Website nutzen. Wir nutzen aktuell keine Analyse-Tools.
+                  Helfen uns zu verstehen wie Besucher die Website nutzen (Google Analytics).
                 </p>
               </div>
               <Switch checked={analytics} onCheckedChange={setAnalytics} className="data-[state=checked]:bg-[#FAC81E]" />
