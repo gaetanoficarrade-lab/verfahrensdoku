@@ -34,6 +34,7 @@ export function SalesChatWidget() {
   const [loading, setLoading] = useState(false);
   const [cta, setCta] = useState<CtaAction>(null);
   const [greeted, setGreeted] = useState(false);
+  const [speakingIdx, setSpeakingIdx] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const { isListening, isSupported: micSupported, toggle: toggleMic } = useSpeechRecognition(
