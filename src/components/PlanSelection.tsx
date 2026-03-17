@@ -26,7 +26,7 @@ interface PlanCardProps {
   switchBillingLabel?: string;
 }
 
-function PlanCard({ name, price, originalPrice, priceNote, setupFee, features, highlighted, checkoutUrl, currentPlan, isAnnual, switchBillingUrl, switchBillingLabel }: PlanCardProps) {
+function PlanCard({ name, price, originalPrice, priceNote, features, highlighted, checkoutUrl, currentPlan, isAnnual, switchBillingUrl, switchBillingLabel }: PlanCardProps) {
   const isCurrent = currentPlan?.toLowerCase() === name.toLowerCase();
 
   return (
