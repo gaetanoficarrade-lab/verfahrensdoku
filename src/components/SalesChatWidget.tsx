@@ -61,6 +61,8 @@ export function SalesChatWidget() {
   useEffect(() => {
     return () => { window.speechSynthesis?.cancel(); };
   }, []);
+
+  const { isListening, isSupported: micSupported, toggle: toggleMic } = useSpeechRecognition(
     (transcript) => setInput((prev) => (prev ? prev + ' ' + transcript : transcript))
   );
 
