@@ -37,7 +37,30 @@ export function SalesChatWidget() {
   const [speakingIdx, setSpeakingIdx] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const { isListening, isSupported: micSupported, toggle: toggleMic } = useSpeechRecognition(
+  const ttsSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+
+  const speak = useCallback((text: string, idx: number) => {
+    if (!ttsSupported) return;
+    if (speakingIdx === idx) {
+      window.speechSynthesis.cancel();
+      setSpeakingIdx(null);
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const stripped = text.replace(/[#*_`>\[\]()!]/g, '').replace(/\n+/g, ' ').trim();
+    const utterance = new SpeechSynthesisUtterance(stripped);
+    utterance.lang = 'de-DE';
+    utterance.rate = 1;
+    utterance.onend = () => setSpeakingIdx(null);
+    utterance.onerror = () => setSpeakingIdx(null);
+    setSpeakingIdx(idx);
+    window.speechSynthesis.speak(utterance);
+  }, [speakingIdx, ttsSupported]);
+
+  // Cleanup TTS on unmount
+  useEffect(() => {
+    return () => { window.speechSynthesis?.cancel(); };
+  }, []);
     (transcript) => setInput((prev) => (prev ? prev + ' ' + transcript : transcript))
   );
 
