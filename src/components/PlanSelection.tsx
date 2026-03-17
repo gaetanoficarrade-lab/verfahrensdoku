@@ -48,9 +48,6 @@ function PlanCard({ name, price, originalPrice, priceNote, features, highlighted
         {isAnnual && originalPrice && (
           <p className="text-xs font-semibold mt-1" style={{ color: '#38A169' }}>17 % gespart</p>
         )}
-        {setupFee && (
-          <p className="text-xs text-muted-foreground mt-1">+ {setupFee} einmalige Setup-Gebühr</p>
-        )}
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
         <ul className="space-y-2 flex-1 mb-6">
