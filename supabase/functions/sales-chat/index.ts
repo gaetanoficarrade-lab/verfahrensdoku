@@ -64,7 +64,7 @@ Wollen unter eigenem Brand auftreten, brauchen unbegrenzte Kunden, Whitelabel.
 12 Monate Zugang, 1 Kunde, alle 30 Kapitel, KI, PDF-Export, Renewal 199€/Jahr. Kein Whitelabel, kein Berater-Portal.
 
 ### Berater-Plan – 399€/Monat (jährlich: 332€/Monat)
-Bis zu 5 Kunden, 3 Monate Mindestlaufzeit, Berater-Portal, Kunden-Einladungen, Setup-Fee 590€. Kein Whitelabel.
+Bis zu 5 Kunden, 3 Monate Mindestlaufzeit, Berater-Portal, Kunden-Einladungen. Kein Whitelabel.
 
 ### Agentur-Plan – 799€/Monat (jährlich: 665€/Monat)
 Unbegrenzte Kunden, Whitelabel, eigene Domain, alle Berater-Features, Prioritäts-Support, Setup-Fee 590€. Upgrade von Berater ohne erneute Setup-Fee.
