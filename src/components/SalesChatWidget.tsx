@@ -270,14 +270,15 @@ export function SalesChatWidget() {
                       m.content
                     )}
                   </div>
-                  {m.role === 'assistant' && ttsSupported && (
+                  {m.role === 'assistant' && (
                     <button
                       onClick={() => speak(m.content, i)}
-                      className="self-start flex items-center gap-1 text-xs text-[hsl(40,6%,50%)] hover:text-[hsl(40,10%,75%)] transition-colors"
+                      disabled={ttsLoading === i}
+                      className="self-start flex items-center gap-1 text-xs text-[hsl(40,6%,50%)] hover:text-[hsl(40,10%,75%)] transition-colors disabled:opacity-50"
                       aria-label={speakingIdx === i ? 'Vorlesen stoppen' : 'Vorlesen'}
                     >
-                      {speakingIdx === i ? <VolumeX className="h-3 w-3" /> : <Volume2 className="h-3 w-3" />}
-                      {speakingIdx === i ? 'Stoppen' : 'Vorlesen'}
+                      {ttsLoading === i ? <Loader2 className="h-3 w-3 animate-spin" /> : speakingIdx === i ? <VolumeX className="h-3 w-3" /> : <Volume2 className="h-3 w-3" />}
+                      {ttsLoading === i ? 'Lädt…' : speakingIdx === i ? 'Stoppen' : 'Vorlesen'}
                     </button>
                   )}
                 </div>
