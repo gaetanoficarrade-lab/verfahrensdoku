@@ -21,14 +21,14 @@ Plan-Struktur, Testmodus-Regeln und erlaubte Feature-Flags für Solo/Berater/Age
 
 ## Pläne
 
-| Plan | Preis | Setup Fee | Mandanten | Whitelabel | Portal |
-|------|-------|-----------|-----------|------------|--------|
-| Solo | 980€ einmalig | — | 1 | Nein | Nein |
-| Berater | 399€/Monat | 590€ | 5 | Nein | Ja |
-| Agentur | 799€/Monat | 590€ | Unbegrenzt | Ja | Ja |
+| Plan | Preis | Mandanten | Whitelabel | Portal |
+|------|-------|-----------|------------|--------|
+| Solo | 980€ einmalig | 1 | Nein | Nein |
+| Berater | 399€/Monat | 5 | Nein | Ja |
+| Agentur | 799€/Monat | Unbegrenzt | Ja | Ja |
 
 - Solo: 12 Monate Laufzeit, Renewal 199€/Jahr
-- Upgrade Berater→Agentur: keine erneute Setup Fee (customer.subscription.updated)
+- Keine Setup-Gebühren (entfernt)
 
 ## Feature-Einschränkungen nach Plan
 - **Solo**: Nur VD erstellen. KEIN Branding, Team, Webhooks, Vorlagen, Affiliate.
