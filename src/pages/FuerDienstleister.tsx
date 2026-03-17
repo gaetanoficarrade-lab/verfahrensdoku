@@ -557,6 +557,7 @@ export default function FuerDienstleister() {
       </footer>
 
       <CookieBanner />
+      <SalesChatWidget />
     </div>
   );
 }

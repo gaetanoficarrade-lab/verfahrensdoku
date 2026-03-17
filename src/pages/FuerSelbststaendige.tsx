@@ -510,6 +510,7 @@ export default function FuerSelbststaendige() {
       </footer>
 
       <CookieBanner />
+      <SalesChatWidget />
     </div>
   );
 }

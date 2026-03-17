@@ -511,6 +511,7 @@ export default function LandingPage() {
       </footer>
 
       <CookieBanner />
+      <SalesChatWidget />
     </div>
   );
 }
