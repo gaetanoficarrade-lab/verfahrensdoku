@@ -69,7 +69,7 @@ export function SalesChatWidget() {
           'apikey': SUPABASE_ANON_KEY,
           'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
         },
-        body: JSON.stringify({ text: stripped }),
+        body: JSON.stringify({ text: stripped, voiceId: 'QHYzYgUuCL3hIrlriaDm' }),
       });
 
       if (!response.ok) {
@@ -205,6 +205,14 @@ export function SalesChatWidget() {
         // Final CTA check
         const { cta: finalCta } = parseCtaFromText(assistantSoFar);
         if (finalCta) setCta(finalCta);
+
+        // Auto-play TTS for the new assistant message
+        const finalIdx = newMessages.length; // index of the assistant message
+        const { clean: finalClean } = parseCtaFromText(assistantSoFar);
+        if (finalClean) {
+          // Small delay to let state settle, then speak
+          setTimeout(() => speak(finalClean, finalIdx), 100);
+        }
       } catch (e) {
         console.error('Chat error:', e);
         setMessages((prev) => [
