@@ -69,7 +69,7 @@ export function SalesChatWidget() {
           'apikey': SUPABASE_ANON_KEY,
           'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
         },
-        body: JSON.stringify({ text: '... ' + stripped, voiceId: 'QHYzYgUuCL3hIrlriaDm' }),
+        body: JSON.stringify({ text: stripped, voiceId: 'QHYzYgUuCL3hIrlriaDm' }),
       });
 
       if (!response.ok) {
@@ -93,6 +93,8 @@ export function SalesChatWidget() {
 
       audioRef.current = audio;
       setSpeakingIdx(idx);
+      // Short delay before playback so the first word isn't clipped
+      await new Promise(r => setTimeout(r, 300));
       await audio.play();
     } catch (error) {
       console.error('ElevenLabs TTS error:', error);
