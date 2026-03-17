@@ -49,3 +49,6 @@ verify_jwt = false
 
 [functions.sales-chat]
 verify_jwt = false
+
+[functions.elevenlabs-tts]
+verify_jwt = false

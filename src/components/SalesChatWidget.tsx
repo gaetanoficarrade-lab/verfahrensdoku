@@ -9,7 +9,9 @@ type Msg = { role: 'user' | 'assistant'; content: string };
 type CtaAction = { url: string; label: string } | null;
 
 const SUPABASE_URL = 'https://supabase.gobd-suite.de';
+const SUPABASE_ANON_KEY = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc3MzQxNDQyMCwiZXhwIjo0OTI5MDg4MDIwLCJyb2xlIjoiYW5vbiJ9.6Vo3MBl7aXFVyFFRlMY_FFFjpZLZaoDbdp9tIdGdhko';
 const CHAT_URL = `${SUPABASE_URL}/functions/v1/sales-chat`;
+const TTS_URL = `${SUPABASE_URL}/functions/v1/elevenlabs-tts`;
 
 const CTA_REGEX = /\{"action"\s*:\s*"show_cta_button"[^}]*\}/g;
 
@@ -35,31 +37,77 @@ export function SalesChatWidget() {
   const [cta, setCta] = useState<CtaAction>(null);
   const [greeted, setGreeted] = useState(false);
   const [speakingIdx, setSpeakingIdx] = useState<number | null>(null);
+  const [ttsLoading, setTtsLoading] = useState<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const ttsSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
-
-  const speak = useCallback((text: string, idx: number) => {
-    if (!ttsSupported) return;
+  const speak = useCallback(async (text: string, idx: number) => {
+    // Toggle off if already playing this message
     if (speakingIdx === idx) {
-      window.speechSynthesis.cancel();
+      audioRef.current?.pause();
+      audioRef.current = null;
       setSpeakingIdx(null);
       return;
     }
-    window.speechSynthesis.cancel();
-    const stripped = text.replace(/[#*_`>\[\]()!]/g, '').replace(/\n+/g, ' ').trim();
-    const utterance = new SpeechSynthesisUtterance(stripped);
-    utterance.lang = 'de-DE';
-    utterance.rate = 1;
-    utterance.onend = () => setSpeakingIdx(null);
-    utterance.onerror = () => setSpeakingIdx(null);
-    setSpeakingIdx(idx);
-    window.speechSynthesis.speak(utterance);
-  }, [speakingIdx, ttsSupported]);
 
-  // Cleanup TTS on unmount
+    // Stop any current playback
+    audioRef.current?.pause();
+    audioRef.current = null;
+    setSpeakingIdx(null);
+
+    // Strip markdown for clean TTS input
+    const stripped = text.replace(/[#*_`>\[\]()!]/g, '').replace(/\n+/g, ' ').trim();
+    if (!stripped) return;
+
+    setTtsLoading(idx);
+
+    try {
+      const response = await fetch(TTS_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ text: stripped }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`TTS failed: ${response.status}`);
+      }
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+
+      audio.onended = () => {
+        setSpeakingIdx(null);
+        audioRef.current = null;
+        URL.revokeObjectURL(audioUrl);
+      };
+      audio.onerror = () => {
+        setSpeakingIdx(null);
+        audioRef.current = null;
+        URL.revokeObjectURL(audioUrl);
+      };
+
+      audioRef.current = audio;
+      setSpeakingIdx(idx);
+      await audio.play();
+    } catch (error) {
+      console.error('ElevenLabs TTS error:', error);
+      setSpeakingIdx(null);
+    } finally {
+      setTtsLoading(null);
+    }
+  }, [speakingIdx]);
+
+  // Cleanup audio on unmount
   useEffect(() => {
-    return () => { window.speechSynthesis?.cancel(); };
+    return () => {
+      audioRef.current?.pause();
+      audioRef.current = null;
+    };
   }, []);
 
   const { isListening, isSupported: micSupported, toggle: toggleMic } = useSpeechRecognition(
@@ -222,14 +270,15 @@ export function SalesChatWidget() {
                       m.content
                     )}
                   </div>
-                  {m.role === 'assistant' && ttsSupported && (
+                  {m.role === 'assistant' && (
                     <button
                       onClick={() => speak(m.content, i)}
-                      className="self-start flex items-center gap-1 text-xs text-[hsl(40,6%,50%)] hover:text-[hsl(40,10%,75%)] transition-colors"
+                      disabled={ttsLoading === i}
+                      className="self-start flex items-center gap-1 text-xs text-[hsl(40,6%,50%)] hover:text-[hsl(40,10%,75%)] transition-colors disabled:opacity-50"
                       aria-label={speakingIdx === i ? 'Vorlesen stoppen' : 'Vorlesen'}
                     >
-                      {speakingIdx === i ? <VolumeX className="h-3 w-3" /> : <Volume2 className="h-3 w-3" />}
-                      {speakingIdx === i ? 'Stoppen' : 'Vorlesen'}
+                      {ttsLoading === i ? <Loader2 className="h-3 w-3 animate-spin" /> : speakingIdx === i ? <VolumeX className="h-3 w-3" /> : <Volume2 className="h-3 w-3" />}
+                      {ttsLoading === i ? 'Lädt…' : speakingIdx === i ? 'Stoppen' : 'Vorlesen'}
                     </button>
                   )}
                 </div>
