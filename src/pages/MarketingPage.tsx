@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo, type ReactNode } from 'react';
+import { SalesChatWidget } from '@/components/SalesChatWidget';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { CookieBanner, CookieSettingsButton } from '@/components/CookieBanner';
