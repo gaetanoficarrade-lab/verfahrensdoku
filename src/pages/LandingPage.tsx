@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { CookieSettingsButton } from '@/components/CookieBanner';
+import { SalesChatWidget } from '@/components/SalesChatWidget';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import {
