@@ -16,7 +16,7 @@ interface PlanCardProps {
   price: string;
   originalPrice?: string;
   priceNote?: string;
-  setupFee?: string;
+  
   features: string[];
   highlighted?: boolean;
   checkoutUrl: string;
