@@ -561,19 +561,34 @@ export default function PartnerPage() {
         {/* ─── Wave ─── */}
         <WaveDivider from={C.white} to={C.bgLight} />
 
-        {/* ─── 8. BEWERBUNGSFORMULAR ─── */}
+        {/* ─── 8. REGISTRIERUNG ─── */}
         <section id="bewerben" className="py-20 md:py-28 px-6" style={{ background: C.bgLight }}>
           <div className="max-w-4xl mx-auto text-center">
             <Reveal>
               <h2 className="text-3xl md:text-[48px] font-bold leading-tight mb-4" style={{ color: C.dark }}>
                 Jetzt Partner werden
               </h2>
-              <p className="text-lg mb-12" style={{ color: C.textGray }}>
-                Fülle das Formular aus und wir melden uns innerhalb von 48 Stunden.
+              <p className="text-lg mb-10" style={{ color: C.textGray }}>
+                Registriere dich kostenlos im Affiliate-Portal und starte sofort. Keine Wartezeit, keine Genehmigung nötig.
               </p>
             </Reveal>
             <Reveal delay={0.1}>
-              <ApplicationForm />
+              <div className="flex flex-col items-center gap-6">
+                <a href="https://affiliatespot.de/gaetano/register" target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 font-semibold text-lg transition-all duration-200"
+                  style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '18px 40px' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#e5b71a'; e.currentTarget.style.boxShadow = '0 0 20px rgba(250,200,30,0.4)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = C.yellow; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+                  Jetzt als Partner registrieren <ArrowRight size={20} />
+                </a>
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
+                  {['Kostenlos', 'Keine Verpflichtung', 'Sofortige Freischaltung'].map((text, i) => (
+                    <span key={i} className="inline-flex items-center gap-2 text-sm" style={{ color: C.textGray }}>
+                      <Check size={16} style={{ color: C.green }} /> {text}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </Reveal>
           </div>
         </section>
