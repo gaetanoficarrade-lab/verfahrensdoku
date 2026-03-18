@@ -327,15 +327,20 @@ export default function PartnerPage() {
               </a>
             </div>
 
-            <div className="grid grid-cols-3 gap-6 max-w-lg mx-auto">
+            <div className="flex items-start justify-center gap-10 md:gap-16 max-w-2xl mx-auto">
               {[
-                { value: '15%', label: 'Provision auf alle Umsätze' },
+                { value: '15 %', label: 'Provision auf alle Umsätze' },
                 { value: 'Dauerhaft', label: 'Solange der Kunde zahlt' },
                 { value: 'Unbegrenzt', label: 'Keine Deckelung nach oben' },
-              ].map((s, i) => (
-                <div key={i} className="text-center">
-                  <p className="text-3xl md:text-4xl font-bold mb-1" style={{ color: C.yellow }}>{s.value}</p>
-                  <p className="text-xs md:text-sm" style={{ color: C.textGray }}>{s.label}</p>
+              ].map((s, i, arr) => (
+                <div key={i} className="flex items-center gap-10 md:gap-16">
+                  <div className="text-center">
+                    <p className="text-2xl md:text-3xl font-bold mb-1.5 tracking-tight" style={{ color: C.yellow }}>{s.value}</p>
+                    <p className="text-xs md:text-sm leading-snug" style={{ color: C.textGray }}>{s.label}</p>
+                  </div>
+                  {i < arr.length - 1 && (
+                    <div className="hidden sm:block w-px h-12 self-center" style={{ background: C.border }} />
+                  )}
                 </div>
               ))}
             </div>
