@@ -266,8 +266,6 @@ function ApplicationForm() {
 
 /* ═══════════════════════════════════════════════ */
 export default function PartnerPage() {
-  const [scrolled, setScrolled] = useState(false);
-
   useSEO({
     title: 'Partner werden – GoBD-Suite Affiliate-Programm | 15% Provision – dauerhaft und unbegrenzt',
     description: 'Werde GoBD-Suite Partner und verdiene dauerhaft Provision auf jeden Kunden den du vermittelst. 15% Provision – monatlich, solange der Kunde zahlt. Nach oben keine Grenze.',
