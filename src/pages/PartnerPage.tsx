@@ -292,7 +292,7 @@ export default function PartnerPage() {
   return (
     <div className="min-h-screen" style={{ background: C.white, color: C.dark }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <MarketingNav scrolled={scrolled} />
+      <MarketingNav />
       <SocialProofNotification />
 
       <main>
