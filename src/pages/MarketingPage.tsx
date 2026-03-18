@@ -893,6 +893,7 @@ export default function MarketingPage() {
               <li><a href="#funktionen" className="hover:text-white transition-colors">Funktionen</a></li>
               <li><a href="#preise" className="hover:text-white transition-colors">Preise</a></li>
               <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
+              <li><Link to="/partner" className="hover:text-white transition-colors">Partner werden</Link></li>
               <li><Link to="/test-starten" className="hover:text-white transition-colors">Kostenlos testen</Link></li>
             </ul>
           </div>
