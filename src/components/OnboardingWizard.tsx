@@ -120,13 +120,13 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
   const saveProgress = useCallback(async (a: OnboardingAnswers) => {
     if (!onboardingId) {
       // Create onboarding record
-      await supabase.from('project_onboardings').insert({
+      await supabase.from('project_onboarding').insert({
         project_id: projectId,
         answers: a as any,
       });
     } else {
       await supabase
-        .from('project_onboardings')
+        .from('project_onboarding')
         .update({ answers: a as any })
         .eq('id', onboardingId);
     }
