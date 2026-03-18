@@ -308,7 +308,7 @@ export default function PartnerPage() {
               <span style={{ color: C.yellow }}>GoBD-Suite</span> – solange dein Kunde zahlt.
             </h1>
             <p className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-10" style={{ color: C.textGray }}>
-              Empfiehl GoBD-Suite und erhalte 15% Provision auf jeden Kunden – monatlich, quartalsweise oder jährlich. Solange der Kunde Kunde ist, verdienst du mit. Nach oben gibt es keine Grenze.
+              Empfiehl GoBD-Suite und erhalte 15% Provision auf jeden Kunden – monatlich oder jährlich. Solange der Kunde Kunde ist, verdienst du mit. Nach oben gibt es keine Grenze.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <a href="#bewerben"
