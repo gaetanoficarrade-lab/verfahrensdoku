@@ -396,9 +396,9 @@ export default function PartnerPage() {
               ].map((card, i) => (
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="rounded-[18px] p-7 h-full text-center" style={{
-                    ...glass,
-                    border: card.highlight ? `2px solid ${C.yellow}` : (glass.border ?? undefined),
-                    background: card.highlight ? 'rgba(250,200,30,0.06)' : (glass.background ?? undefined),
+                    ...(card.highlight ? {
+                      ...glass, border: `2px solid ${C.yellow}`, background: 'rgba(250,200,30,0.06)',
+                    } : glass),
                   }}>
                     {card.highlight && (
                       <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3"
