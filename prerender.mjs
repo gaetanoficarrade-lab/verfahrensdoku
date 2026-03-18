@@ -55,7 +55,8 @@ async function prerender() {
   console.log('🌐 Launching Puppeteer...');
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
+    executablePath: '/usr/bin/chromium-browser',
+    pipe: true,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -64,7 +65,6 @@ async function prerender() {
       '--no-first-run',
       '--no-zygote',
       '--disable-extensions',
-      '--remote-debugging-port=0',
     ],
   });
 
