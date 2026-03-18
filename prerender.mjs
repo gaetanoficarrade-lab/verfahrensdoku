@@ -11,6 +11,7 @@ const ROUTES = [
   '/fuer-selbststaendige',
   '/fuer-dienstleister',
   '/verfahrensdokumentation-erstellen',
+  '/partner',
   '/blog',
   '/blog/verfahrensdokumentation-2025-was-sich-geaendert-hat',
   '/blog/verfahrensdokumentation-vorlage-steuerberater-oder-tool',
