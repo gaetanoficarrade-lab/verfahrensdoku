@@ -170,7 +170,7 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
 
       // Create chapter entries for active modules
       const { data: existing } = await supabase
-        .from('chapters')
+        .from('chapter_data')
         .select('chapter_key')
         .eq('project_id', projectId);
 
@@ -180,12 +180,11 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
         .map((m, i) => ({
           project_id: projectId,
           chapter_key: m,
-          sort_order: (existing?.length || 0) + i,
           status: 'empty',
         }));
 
       if (newChapters.length > 0) {
-        await supabase.from('chapters').insert(newChapters);
+        await supabase.from('chapter_data').insert(newChapters);
       }
 
       toast({ title: 'Onboarding abgeschlossen', description: `${activeModules.length} Kapitel wurden aktiviert.` });
