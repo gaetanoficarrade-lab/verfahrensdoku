@@ -574,7 +574,7 @@ export default function PartnerPage() {
             </Reveal>
             <Reveal delay={0.1}>
               <div className="flex flex-col items-center gap-6">
-                <a href="https://affiliatespot.de/gaetano/register" target="_blank" rel="noopener noreferrer"
+                <a href="https://affiliatespot.de/gobd-suite/register" target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 font-semibold text-lg transition-all duration-200"
                   style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '18px 40px' }}
                   onMouseEnter={e => { e.currentTarget.style.background = '#e5b71a'; e.currentTarget.style.boxShadow = '0 0 20px rgba(250,200,30,0.4)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
