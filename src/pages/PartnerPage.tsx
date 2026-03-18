@@ -433,7 +433,7 @@ export default function PartnerPage() {
             <div className="space-y-8">
               {[
                 { step: '1', title: 'Partner werden', desc: 'Bewirb dich über das Formular. Wir prüfen deine Anfrage und schalten dich innerhalb von 48 Stunden frei.' },
-                { step: '2', title: 'Deinen Link teilen', desc: 'Du bekommst deinen persönlichen Affiliate-Link. Teile ihn wo du willst – auf deiner Website, in E-Mails, in sozialen Medien.' },
+                { step: '2', title: 'Deinen Link teilen', desc: 'Du registrierst dich im Affiliate-Portal und bekommst sofort deinen persönlichen Tracking-Link. Teile ihn wo du willst – auf deiner Website, in E-Mails, in sozialen Medien.' },
                 { step: '3', title: 'Kunden gewinnen', desc: 'Jeder der über deinen Link kauft wird dir dauerhaft zugeordnet. Du siehst alle Klicks und Conversions in Echtzeit.' },
                 { step: '4', title: 'Provision erhalten', desc: 'Deine Provision wird automatisch berechnet und monatlich ausgezahlt. Solange dein Kunde zahlt, verdienst du.' },
               ].map((s, i) => (
