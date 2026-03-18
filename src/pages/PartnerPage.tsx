@@ -273,12 +273,6 @@ export default function PartnerPage() {
   });
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  useEffect(() => {
     const id = 'partner-keyframes';
     if (document.getElementById(id)) return;
     const style = document.createElement('style');
