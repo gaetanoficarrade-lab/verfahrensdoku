@@ -152,7 +152,7 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
 
       if (onboardingId) {
         await supabase
-          .from('project_onboardings')
+          .from('project_onboarding')
           .update({
             answers: answers as any,
             active_modules: activeModules,
@@ -160,7 +160,7 @@ export default function OnboardingWizard({ projectId, onboardingId, initialAnswe
           })
           .eq('id', onboardingId);
       } else {
-        await supabase.from('project_onboardings').insert({
+        await supabase.from('project_onboarding').insert({
           project_id: projectId,
           answers: answers as any,
           active_modules: activeModules,
