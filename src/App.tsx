@@ -61,6 +61,13 @@ import FuerDienstleister from "./pages/FuerDienstleister";
 import VerfahrensdokumentationErstellen from "./pages/VerfahrensdokumentationErstellen";
 import PartnerPage from "./pages/PartnerPage";
 import NotFound from "./pages/NotFound";
+import { useEffect } from "react";
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
 
 const queryClient = new QueryClient();
 
