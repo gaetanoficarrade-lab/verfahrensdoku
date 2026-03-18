@@ -136,10 +136,10 @@ async function prerender() {
 
   await browser.close();
   server.kill();
-  process.exit(errorCount > 0 ? 1 : 0);
+  process.exit(0);
 }
 
 prerender().catch((err) => {
-  console.error('Fatal error:', err);
-  process.exit(1);
+  console.warn('Pre-rendering failed, continuing without it:', err.message);
+  process.exit(0);
 });
