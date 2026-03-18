@@ -32,6 +32,7 @@ export default function MarketingNav() {
   const isSubpage = ['/fuer-selbststaendige', '/fuer-dienstleister'].includes(location.pathname);
   const isResource = ['/verfahrensdokumentation-erstellen'].includes(location.pathname);
   const isBlog = location.pathname.startsWith('/blog');
+  const isPartner = location.pathname === '/partner';
   const isHome = location.pathname === '/';
 
   const DropdownItem = ({ to, children }: { to: string; children: React.ReactNode }) => (
@@ -91,6 +92,7 @@ export default function MarketingNav() {
           </div>
 
           <Link to="/blog" className="hover:opacity-70 transition-opacity" style={{ color: isBlog ? C.yellow : C.dark, fontWeight: isBlog ? 700 : 500 }}>Blog</Link>
+          <Link to="/partner" className="hover:opacity-70 transition-opacity" style={{ color: isPartner ? C.yellow : C.dark, fontWeight: isPartner ? 700 : 500 }}>Partner</Link>
         </div>
 
         <div className="hidden md:flex items-center gap-4">
@@ -119,6 +121,7 @@ export default function MarketingNav() {
           <p className="text-xs font-semibold mt-2 uppercase tracking-wider" style={{ color: '#6E6E73' }}>Ressourcen</p>
           <Link to="/verfahrensdokumentation-erstellen" onClick={() => setMobileMenu(false)} className="pl-3">VD erstellen – Anleitung</Link>
           <Link to="/blog" onClick={() => setMobileMenu(false)}>Blog</Link>
+          <Link to="/partner" onClick={() => setMobileMenu(false)}>Partner</Link>
           <hr style={{ borderColor: C.border }} />
           <Link to="/auth" onClick={() => setMobileMenu(false)}>Anmelden</Link>
           <Link to="/test-starten" onClick={() => setMobileMenu(false)}
