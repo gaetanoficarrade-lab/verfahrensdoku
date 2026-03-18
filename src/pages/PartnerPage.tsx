@@ -604,7 +604,7 @@ export default function PartnerPage() {
             <p className="text-lg mb-10" style={{ color: 'rgba(255,255,255,0.8)' }}>
               Werde Teil des GoBD-Suite Partnerprogramms und baue dir eine skalierbare Einnahmequelle auf.
             </p>
-            <a href="#bewerben"
+            <a href="https://affiliatespot.de/gaetano/register" target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200"
               style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '14px 28px' }}
               onMouseEnter={e => { e.currentTarget.style.background = '#e5b71a'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
