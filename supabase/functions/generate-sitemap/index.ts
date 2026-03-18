@@ -31,6 +31,7 @@ serve(async (req) => {
       { url: '/fuer-selbststaendige', priority: '0.8', changefreq: 'weekly' },
       { url: '/fuer-dienstleister', priority: '0.8', changefreq: 'weekly' },
       { url: '/verfahrensdokumentation-erstellen', priority: '0.8', changefreq: 'weekly' },
+      { url: '/partner', priority: '0.7', changefreq: 'weekly' },
       { url: '/blog', priority: '0.8', changefreq: 'daily' },
     ];
 
