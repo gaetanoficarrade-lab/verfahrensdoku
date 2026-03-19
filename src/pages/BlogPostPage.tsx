@@ -172,11 +172,13 @@ export default function BlogPostPage() {
   useSEO({
     title: post ? `${post.meta_title || post.title} | GoBD-Suite Blog` : 'Blog | GoBD-Suite',
     description: post?.meta_description || post?.excerpt || '',
-    canonical: post ? `https://gobd-suite.de/blog/${post.slug}` : undefined,
-    ogTitle: post?.meta_title || post?.title,
+    canonical: post ? `https://gobd-suite.de/blog/${post.slug}/` : undefined,
+    ogTitle: post ? `${post.meta_title || post.title} | GoBD-Suite Blog` : undefined,
     ogDescription: post?.meta_description || post?.excerpt,
-    ogImage: post?.cover_image_url || undefined,
+    ogImage: post?.cover_image_url || 'https://gobd-suite.de/og-image.png',
     ogType: 'article',
+    ogLocale: 'de_DE',
+    twitterCard: 'summary_large_image',
     robots: 'index, follow',
     jsonLd,
   });
