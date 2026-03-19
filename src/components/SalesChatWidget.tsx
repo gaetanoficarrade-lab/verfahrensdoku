@@ -116,13 +116,7 @@ export function SalesChatWidget() {
     (transcript) => setInput((prev) => (prev ? prev + ' ' + transcript : transcript))
   );
 
-  // Auto-open after 10 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setOpen(true);
-    }, 10000);
-    return () => clearTimeout(timer);
-  }, []);
+  // No auto-open – user must click the button to open the chat
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -130,14 +124,12 @@ export function SalesChatWidget() {
     }
   }, [messages, loading]);
 
-  // Auto-greet on first open
+  // Auto-greet on first open (no auto-TTS to save costs)
   const greetText = 'Hi! 👋 Ich bin Lena von der GoBD-Suite. Wie kann ich dir helfen? Suchst du eine Lösung für deine eigene Verfahrensdokumentation oder betreust du Mandanten?';
   useEffect(() => {
     if (open && !greeted && messages.length === 0) {
       setGreeted(true);
       setMessages([{ role: 'assistant', content: greetText }]);
-      // Auto-play greeting
-      setTimeout(() => speak(greetText, 0), 100);
     }
   }, [open, greeted, messages.length]);
 
@@ -205,13 +197,7 @@ export function SalesChatWidget() {
         const { cta: finalCta } = parseCtaFromText(assistantSoFar);
         if (finalCta) setCta(finalCta);
 
-        // Auto-play TTS for the new assistant message
-        const finalIdx = newMessages.length; // index of the assistant message
-        const { clean: finalClean } = parseCtaFromText(assistantSoFar);
-        if (finalClean) {
-          // Small delay to let state settle, then speak
-          setTimeout(() => speak(finalClean, finalIdx), 100);
-        }
+        // TTS is available via the speaker button – no auto-play to save costs
       } catch (e) {
         console.error('Chat error:', e);
         setMessages((prev) => [
