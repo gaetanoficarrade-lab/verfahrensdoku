@@ -124,14 +124,12 @@ export function SalesChatWidget() {
     }
   }, [messages, loading]);
 
-  // Auto-greet on first open
+  // Auto-greet on first open (no auto-TTS to save costs)
   const greetText = 'Hi! 👋 Ich bin Lena von der GoBD-Suite. Wie kann ich dir helfen? Suchst du eine Lösung für deine eigene Verfahrensdokumentation oder betreust du Mandanten?';
   useEffect(() => {
     if (open && !greeted && messages.length === 0) {
       setGreeted(true);
       setMessages([{ role: 'assistant', content: greetText }]);
-      // Auto-play greeting
-      setTimeout(() => speak(greetText, 0), 100);
     }
   }, [open, greeted, messages.length]);
 
