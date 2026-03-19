@@ -116,13 +116,7 @@ export function SalesChatWidget() {
     (transcript) => setInput((prev) => (prev ? prev + ' ' + transcript : transcript))
   );
 
-  // Auto-open after 10 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setOpen(true);
-    }, 10000);
-    return () => clearTimeout(timer);
-  }, []);
+  // No auto-open – user must click the button to open the chat
 
   useEffect(() => {
     if (scrollRef.current) {
