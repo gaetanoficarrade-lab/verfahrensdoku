@@ -197,13 +197,7 @@ export function SalesChatWidget() {
         const { cta: finalCta } = parseCtaFromText(assistantSoFar);
         if (finalCta) setCta(finalCta);
 
-        // Auto-play TTS for the new assistant message
-        const finalIdx = newMessages.length; // index of the assistant message
-        const { clean: finalClean } = parseCtaFromText(assistantSoFar);
-        if (finalClean) {
-          // Small delay to let state settle, then speak
-          setTimeout(() => speak(finalClean, finalIdx), 100);
-        }
+        // TTS is available via the speaker button – no auto-play to save costs
       } catch (e) {
         console.error('Chat error:', e);
         setMessages((prev) => [
