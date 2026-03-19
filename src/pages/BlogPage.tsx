@@ -40,11 +40,15 @@ export default function BlogPage() {
   const perPage = 9;
 
   useSEO({
-    title: 'Blog | GoBD-Suite',
-    description: 'Alles über GoBD, Verfahrensdokumentation und digitale Buchführung.',
-    canonical: 'https://gobd-suite.de/blog',
-    ogTitle: 'GoBD-Suite Blog',
-    ogDescription: 'Alles über GoBD, Verfahrensdokumentation und digitale Buchführung.',
+    title: 'Blog – GoBD & Verfahrensdokumentation | GoBD-Suite',
+    description: 'Ratgeber und Artikel rund um GoBD, Verfahrensdokumentation und digitale Buchführung.',
+    canonical: 'https://gobd-suite.de/blog/',
+    ogTitle: 'Blog – GoBD & Verfahrensdokumentation | GoBD-Suite',
+    ogDescription: 'Ratgeber und Artikel rund um GoBD, Verfahrensdokumentation und digitale Buchführung.',
+    ogType: 'website',
+    ogLocale: 'de_DE',
+    ogImage: 'https://gobd-suite.de/og-image.png',
+    twitterCard: 'summary_large_image',
     robots: 'index, follow',
   });
 

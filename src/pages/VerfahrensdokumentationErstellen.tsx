@@ -108,14 +108,15 @@ export default function VerfahrensdokumentationErstellen() {
   }), []);
 
   useSEO({
-    title: 'Verfahrensdokumentation erstellen 2025 – GoBD-konform, KI-gestützt | GoBD-Suite',
-    description: 'Verfahrensdokumentation erstellen leicht gemacht: GoBD-Suite führt dich Schritt für Schritt durch alle 30 Kapitel. KI-gestützt, GoBD-konform, fertig in 60 Minuten.',
-    canonical: 'https://gobd-suite.de/verfahrensdokumentation-erstellen',
+    title: 'Verfahrensdokumentation erstellen – So geht\'s mit GoBD-Suite',
+    description: 'Schritt-für-Schritt Verfahrensdokumentation erstellen. KI-gestützt, GoBD-konform, in unter einer Stunde fertig.',
+    canonical: 'https://gobd-suite.de/verfahrensdokumentation-erstellen/',
     keywords: 'Verfahrensdokumentation erstellen, Verfahrensdokumentation GoBD, Verfahrensdokumentation Pflicht, GoBD-Suite',
     author: 'Gaetano Ficarra', robots: 'index, follow',
-    ogTitle: 'Verfahrensdokumentation erstellen 2025 – So geht es richtig',
-    ogDescription: 'GoBD-konforme Verfahrensdokumentation in 60 Minuten erstellen. KI-gestützt, alle 30 Kapitel, fertig als PDF.',
-    ogType: 'website', ogLocale: 'de_DE', ogImage: 'https://gobd-suite.de/images/logo.png',
+    ogTitle: 'Verfahrensdokumentation erstellen – So geht\'s mit GoBD-Suite',
+    ogDescription: 'Schritt-für-Schritt Verfahrensdokumentation erstellen. KI-gestützt, GoBD-konform, in unter einer Stunde fertig.',
+    ogType: 'website', ogLocale: 'de_DE', ogImage: 'https://gobd-suite.de/og-image.png',
+    twitterCard: 'summary_large_image',
     jsonLd: [howToSchema, faqSchema],
   });
 

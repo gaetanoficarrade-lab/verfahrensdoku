@@ -105,14 +105,15 @@ export default function FuerDienstleister() {
   }), []);
 
   useSEO({
-    title: 'Verfahrensdokumentation als Dienstleistung anbieten – GoBD-Suite für Berater & Agenturen',
-    description: 'Biete deinen Kunden GoBD-konforme Verfahrensdokumentationen an. Mit GoBD-Suite als Berater oder Agentur neue Einnahmen generieren. Whitelabel inklusive.',
-    canonical: 'https://gobd-suite.de/fuer-dienstleister',
+    title: 'Verfahrensdokumentation für Dienstleister – Als Service anbieten | GoBD-Suite',
+    description: 'Verfahrensdokumentation als Dienstleistung anbieten. Für Steuerberater, Agenturen und Berater.',
+    canonical: 'https://gobd-suite.de/fuer-dienstleister/',
     keywords: 'Verfahrensdokumentation Dienstleister, GoBD Berater, Verfahrensdokumentation Whitelabel, GoBD-Suite Agentur',
     author: 'Gaetano Ficarra', robots: 'index, follow',
-    ogTitle: 'GoBD-Suite für Berater & Agenturen – Verfahrensdokumentation als Dienstleistung',
-    ogDescription: 'Neue Einnahmequelle für Steuerberater, Buchhalter und Consultants. Whitelabel. Unbegrenzte Kunden.',
-    ogType: 'website', ogLocale: 'de_DE', ogImage: 'https://gobd-suite.de/images/logo.png',
+    ogTitle: 'Verfahrensdokumentation für Dienstleister – Als Service anbieten | GoBD-Suite',
+    ogDescription: 'Verfahrensdokumentation als Dienstleistung anbieten. Für Steuerberater, Agenturen und Berater.',
+    ogType: 'website', ogLocale: 'de_DE', ogImage: 'https://gobd-suite.de/og-image.png',
+    twitterCard: 'summary_large_image',
     jsonLd: [jsonLd],
   });
 
