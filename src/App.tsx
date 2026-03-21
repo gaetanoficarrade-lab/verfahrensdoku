@@ -60,6 +60,7 @@ import FuerSelbststaendige from "./pages/FuerSelbststaendige";
 import FuerDienstleister from "./pages/FuerDienstleister";
 import VerfahrensdokumentationErstellen from "./pages/VerfahrensdokumentationErstellen";
 import PartnerPage from "./pages/PartnerPage";
+import AngebotPage from "./pages/AngebotPage";
 import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
 
