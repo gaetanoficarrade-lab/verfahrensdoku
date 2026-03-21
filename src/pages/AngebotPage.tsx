@@ -3,33 +3,33 @@ import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import {
   AlertTriangle, Euro, FileX, Play, UserPlus, Sparkles, Download,
-  Clock, TrendingUp, Globe, ShieldCheck, Cpu, BookOpen, ChevronDown,
+  Clock, TrendingUp, Globe, ShieldCheck, Cpu, BookOpen, Check, X,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { CookieBanner } from '@/components/CookieBanner';
 import { useSEO } from '@/hooks/useSEO';
 import landingLogo from '@/assets/landing-logo.png';
 
-/* ── Colors (landing-specific, inline — no pollution of design system) ── */
-const navy = '#0B1929';
-const navyLight = '#132238';
-const navyMid = '#0F1F33';
-const teal = '#14B8A6';
-const tealGlow = '#2DD4BF';
-const slate = '#94A3B8';
-const white = '#F8FAFC';
+/* ── Brand palette ── */
+const gold = '#e8a91a';
+const goldLight = '#f5c842';
+const dark = '#1d1d1f';
+const darkSoft = '#2d2d2f';
+const warmGray = '#86868b';
+const lightBg = '#faf9f6';
+const white = '#ffffff';
 
-/* ── Animation helpers ── */
+/* ── Animation ── */
 const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' as const } },
+  hidden: { opacity: 0, y: 36 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.75, ease: 'easeOut' as const } },
 };
-const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
+const stagger = { visible: { transition: { staggerChildren: 0.13 } } };
 
-function Section({ children, className = '', dark = true, id }: { children: ReactNode; className?: string; dark?: boolean; id?: string }) {
+function Section({ children, className = '', variant = 'light', id }: { children: ReactNode; className?: string; variant?: 'light' | 'white' | 'dark'; id?: string }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
+  const bg = variant === 'dark' ? dark : variant === 'white' ? white : lightBg;
   return (
     <motion.section
       ref={ref}
@@ -37,15 +37,15 @@ function Section({ children, className = '', dark = true, id }: { children: Reac
       initial="hidden"
       animate={inView ? 'visible' : 'hidden'}
       variants={stagger}
-      className={`px-4 sm:px-6 lg:px-8 ${className}`}
-      style={{ background: dark ? navy : navyLight }}
+      className={`px-5 sm:px-8 lg:px-12 ${className}`}
+      style={{ background: bg }}
     >
-      <div className="mx-auto max-w-5xl">{children}</div>
+      <div className="mx-auto max-w-6xl">{children}</div>
     </motion.section>
   );
 }
 
-function MotionDiv({ children, className = '' }: { children: ReactNode; className?: string }) {
+function M({ children, className = '' }: { children: ReactNode; className?: string }) {
   return <motion.div variants={fadeUp} className={className}>{children}</motion.div>;
 }
 
@@ -56,10 +56,14 @@ function CtaButton({ large = false }: { large?: boolean }) {
   return (
     <Link to={CTA_URL}>
       <button
-        className={`font-semibold rounded-lg transition-all duration-200 ${large ? 'px-8 py-4 text-lg' : 'px-6 py-3 text-sm'}`}
-        style={{ background: teal, color: navy, boxShadow: `0 0 24px ${teal}44` }}
-        onMouseOver={e => { (e.target as HTMLElement).style.background = tealGlow; }}
-        onMouseOut={e => { (e.target as HTMLElement).style.background = teal; }}
+        className={`font-semibold rounded-full transition-all duration-300 hover:shadow-lg ${large ? 'px-10 py-4 text-base sm:text-lg' : 'px-7 py-3 text-sm'}`}
+        style={{
+          background: gold,
+          color: white,
+          boxShadow: '0 4px 20px rgba(232,169,26,0.25)',
+        }}
+        onMouseOver={e => { (e.target as HTMLElement).style.background = goldLight; }}
+        onMouseOut={e => { (e.target as HTMLElement).style.background = gold; }}
       >
         {CTA_TEXT}
       </button>
@@ -77,128 +81,132 @@ export default function AngebotPage() {
   });
 
   return (
-    <div style={{ background: navy, color: white, fontFamily: "'Inter', system-ui, sans-serif" }} className="min-h-screen">
+    <div style={{ color: dark }} className="min-h-screen antialiased selection:bg-[#e8a91a]/20">
       {/* ── Navbar ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 backdrop-blur-md" style={{ background: `${navy}E6` }}>
-        <div className="mx-auto max-w-5xl flex items-center justify-between h-16">
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl border-b" style={{ background: `${white}E6`, borderColor: '#e5e5e5' }}>
+        <div className="mx-auto max-w-6xl flex items-center justify-between h-16 px-5 sm:px-8 lg:px-12">
           <Link to="/">
-            <img src={landingLogo} alt="GoBD-Suite" className="h-8" />
+            <img src={landingLogo} alt="GoBD-Suite" className="h-10 sm:h-12 object-contain" />
           </Link>
           <CtaButton />
         </div>
       </nav>
 
       {/* ═══ BLOCK 1 – Hero ═══ */}
-      <Section className="pt-32 pb-20 sm:pt-40 sm:pb-28" id="hero">
-        <MotionDiv className="max-w-3xl">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-6" style={{ color: white }}>
+      <Section className="pt-32 pb-20 sm:pt-44 sm:pb-32" variant="white" id="hero">
+        <M className="max-w-3xl">
+          <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] mb-6" style={{ color: gold }}>
+            Für Dienstleister & Berater
+          </p>
+          <h1 className="text-3xl sm:text-5xl lg:text-[3.5rem] font-bold leading-[1.08] tracking-tight mb-6" style={{ color: dark }}>
             Du bist Buchhalter, Berater oder Consultant. Deine Kunden brauchen eine Verfahrensdokumentation.{' '}
-            <span style={{ color: teal }}>Du hast kein skalierbares Tool dafür.</span>
+            <span style={{ color: gold }}>Du hast kein skalierbares Tool dafür.</span>
           </h1>
-          <p className="text-lg sm:text-xl mb-10" style={{ color: slate }}>
+          <p className="text-lg sm:text-xl mb-10 leading-relaxed" style={{ color: warmGray }}>
             Das kostet dich Aufträge, die du eigentlich schon hättest haben können.
           </p>
           <CtaButton large />
-          <p className="mt-4 text-xs" style={{ color: slate }}>Keine Kreditkarte nötig</p>
-        </MotionDiv>
+          <p className="mt-4 text-xs font-medium" style={{ color: warmGray }}>Keine Kreditkarte nötig</p>
+        </M>
       </Section>
 
       {/* ═══ BLOCK 2 – Der Konflikt ═══ */}
-      <Section className="py-20 sm:py-28" dark={false} id="konflikt">
-        <MotionDiv>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6 text-center" style={{ color: white }}>
-            Seit 2025 prüft das Finanzamt aktiv.{' '}
-            <span style={{ color: teal }}>Die meisten Unternehmen sind nicht vorbereitet.</span>
+      <Section className="py-24 sm:py-32" variant="light" id="konflikt">
+        <M>
+          <h2 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-bold mb-5 text-center leading-tight" style={{ color: dark }}>
+            Seit 2025 prüft das Finanzamt aktiv.
           </h2>
-          <p className="text-center max-w-3xl mx-auto mb-14" style={{ color: slate, lineHeight: 1.7 }}>
-            Ohne ordnungsgemäße Verfahrensdokumentation drohen Bußgelder bis zu 25.000&nbsp;Euro, Hinzuschätzungen durch das Finanzamt und im schlimmsten Fall die Verwerfung der gesamten Buchführung. Deine Kunden wissen das nicht – oder sie hoffen, dass es niemand merkt. Eine VD manuell zu erstellen dauert 40&nbsp;Stunden, braucht tiefes Fachwissen und lässt sich kaum skalieren.
+          <p className="text-center text-lg sm:text-xl max-w-2xl mx-auto mb-16" style={{ color: warmGray, lineHeight: 1.7 }}>
+            Ohne ordnungsgemäße Verfahrensdokumentation drohen Bußgelder bis zu 25.000&nbsp;Euro, Hinzuschätzungen durch das Finanzamt und im schlimmsten Fall die Verwerfung der gesamten Buchführung.
           </p>
-        </MotionDiv>
+        </M>
         <motion.div variants={stagger} className="grid sm:grid-cols-3 gap-6">
           {[
             { icon: Euro, title: 'Bußgeld bis 25.000 €', text: 'Bei fehlender oder mangelhafter Verfahrensdokumentation drohen empfindliche Geldbußen.' },
             { icon: AlertTriangle, title: 'Hinzuschätzung', text: 'Das Finanzamt schätzt Umsätze und Gewinne – meist zu Ungunsten deines Kunden.' },
             { icon: FileX, title: 'Buchführungsverwerfung', text: 'Im schlimmsten Fall wird die gesamte Buchführung verworfen und neu geschätzt.' },
           ].map(({ icon: Icon, title, text }) => (
-            <MotionDiv key={title}>
-              <div className="rounded-xl p-6 h-full" style={{ background: navyMid, border: `1px solid ${teal}22` }}>
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ background: `${teal}18` }}>
-                  <Icon size={24} style={{ color: teal }} />
+            <M key={title}>
+              <div className="rounded-2xl p-7 h-full bg-white border border-[#e5e5e5] hover:shadow-md transition-shadow duration-300">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style={{ background: `${gold}15` }}>
+                  <Icon size={22} style={{ color: gold }} />
                 </div>
-                <h3 className="font-semibold text-lg mb-2" style={{ color: white }}>{title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: slate }}>{text}</p>
+                <h3 className="font-semibold text-lg mb-2" style={{ color: dark }}>{title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: warmGray }}>{text}</p>
               </div>
-            </MotionDiv>
+            </M>
           ))}
         </motion.div>
       </Section>
 
-      {/* ═══ BLOCK 3 – Der Mentor / Das Tool ═══ */}
-      <Section className="py-20 sm:py-28" id="tool">
-        <MotionDiv className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4" style={{ color: white }}>
-            GoBD-Suite gibt dir das <span style={{ color: teal }}>komplette Werkzeug.</span>
+      {/* ═══ BLOCK 3 – Der Mentor ═══ */}
+      <Section className="py-24 sm:py-32" variant="dark" id="tool">
+        <M className="text-center mb-14">
+          <h2 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-bold mb-5 leading-tight" style={{ color: white }}>
+            GoBD-Suite gibt dir das{' '}
+            <span style={{ color: gold }}>komplette Werkzeug.</span>
           </h2>
-          <p className="text-lg" style={{ color: slate }}>
+          <p className="text-lg max-w-2xl mx-auto" style={{ color: '#a1a1a6' }}>
             Das einzige Tool im DACH-Raum für vollständige, prüfungssichere Verfahrensdokumentationen – in unter einer Stunde, unter deinem Brand.
           </p>
-        </MotionDiv>
-        <MotionDiv>
+        </M>
+        <M>
           <div
             className="rounded-2xl flex items-center justify-center cursor-pointer group relative overflow-hidden"
-            style={{ background: navyLight, border: `1px solid ${teal}22`, aspectRatio: '16/9', maxHeight: 440 }}
+            style={{ background: darkSoft, border: '1px solid #3a3a3c', aspectRatio: '16/9', maxHeight: 440 }}
           >
             <div className="text-center">
               <div
                 className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 group-hover:scale-110"
-                style={{ background: `${teal}22`, border: `2px solid ${teal}` }}
+                style={{ background: `${gold}22`, border: `2px solid ${gold}` }}
               >
-                <Play size={32} style={{ color: teal }} fill={teal} />
+                <Play size={32} style={{ color: gold }} fill={gold} />
               </div>
-              <p className="font-medium" style={{ color: slate }}>Demo ansehen – 4 Minuten</p>
+              <p className="font-medium" style={{ color: '#a1a1a6' }}>Demo ansehen – 4 Minuten</p>
             </div>
           </div>
-        </MotionDiv>
-        <MotionDiv className="text-center mt-10">
+        </M>
+        <M className="text-center mt-12">
           <CtaButton large />
-        </MotionDiv>
+        </M>
       </Section>
 
       {/* ═══ BLOCK 4 – So funktioniert es ═══ */}
-      <Section className="py-20 sm:py-28" dark={false} id="schritte">
-        <MotionDiv className="text-center mb-14">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold" style={{ color: white }}>
-            In 3 Schritten zur fertigen <span style={{ color: teal }}>Verfahrensdokumentation</span>
+      <Section className="py-24 sm:py-32" variant="white" id="schritte">
+        <M className="text-center mb-16">
+          <h2 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-bold leading-tight" style={{ color: dark }}>
+            In 3 Schritten zur fertigen{' '}
+            <span style={{ color: gold }}>Verfahrensdokumentation</span>
           </h2>
-        </MotionDiv>
-        <motion.div variants={stagger} className="grid sm:grid-cols-3 gap-8">
+        </M>
+        <motion.div variants={stagger} className="grid sm:grid-cols-3 gap-10">
           {[
             { num: '01', icon: UserPlus, title: 'Kunden einladen', text: 'Kunden anlegen und per Link ins Portal einladen. Der Kunde beschreibt seine Prozesse selbst – keine Fachkenntnisse nötig.' },
             { num: '02', icon: Sparkles, title: 'KI erstellt Kapitel', text: 'Die KI erstellt automatisch alle relevanten Kapitel. Du prüfst, passt an, finalisierst.' },
             { num: '03', icon: Download, title: 'PDF exportieren', text: 'Ein Klick – professionelles PDF mit deinem Logo. Prüfungssicher, revisionssicher, sofort lieferbar.' },
           ].map(({ num, icon: Icon, title, text }) => (
-            <MotionDiv key={num}>
+            <M key={num}>
               <div className="text-center">
-                <span className="text-5xl font-black" style={{ color: `${teal}33` }}>{num}</span>
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mt-2 mb-4" style={{ background: `${teal}18` }}>
-                  <Icon size={26} style={{ color: teal }} />
+                <span className="text-6xl font-black tracking-tight" style={{ color: `${gold}25` }}>{num}</span>
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mt-3 mb-5" style={{ background: `${gold}12` }}>
+                  <Icon size={26} style={{ color: gold }} />
                 </div>
-                <h3 className="font-semibold text-lg mb-2" style={{ color: white }}>{title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: slate }}>{text}</p>
+                <h3 className="font-semibold text-lg mb-2" style={{ color: dark }}>{title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: warmGray }}>{text}</p>
               </div>
-            </MotionDiv>
+            </M>
           ))}
         </motion.div>
       </Section>
 
       {/* ═══ BLOCK 5 – FAQ ═══ */}
-      <Section className="py-20 sm:py-28" id="faq">
-        <MotionDiv className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold" style={{ color: white }}>
+      <Section className="py-24 sm:py-32" variant="light" id="faq">
+        <M className="text-center mb-14">
+          <h2 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-bold" style={{ color: dark }}>
             Häufige Fragen
           </h2>
-        </MotionDiv>
-        <MotionDiv className="max-w-2xl mx-auto">
+        </M>
+        <M className="max-w-2xl mx-auto">
           <Accordion type="single" collapsible className="space-y-3">
             {[
               { q: 'Ich habe keine Ahnung von GoBD.', a: 'Das Tool führt dich durch jeden Schritt. Du brauchst kein Vorwissen – das System erkennt automatisch, welche Kapitel relevant sind.' },
@@ -209,110 +217,112 @@ export default function AngebotPage() {
               <AccordionItem
                 key={i}
                 value={`faq-${i}`}
-                className="rounded-xl px-6 border-0"
-                style={{ background: navyLight, border: `1px solid ${teal}15` }}
+                className="rounded-2xl px-6 bg-white border border-[#e5e5e5] data-[state=open]:shadow-sm transition-shadow"
               >
-                <AccordionTrigger className="hover:no-underline py-5" style={{ color: white }}>
+                <AccordionTrigger className="hover:no-underline py-5 font-medium" style={{ color: dark }}>
                   {q}
                 </AccordionTrigger>
                 <AccordionContent>
-                  <p className="pb-2 leading-relaxed" style={{ color: slate }}>{a}</p>
+                  <p className="pb-3 leading-relaxed text-sm" style={{ color: warmGray }}>{a}</p>
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
-        </MotionDiv>
+        </M>
       </Section>
 
       {/* ═══ BLOCK 6 – Trust ═══ */}
-      <Section className="py-20 sm:py-28" dark={false} id="trust">
-        <MotionDiv className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold" style={{ color: white }}>
-            Gebaut für den <span style={{ color: teal }}>DACH-Markt</span>
+      <Section className="py-24 sm:py-32" variant="white" id="trust">
+        <M className="text-center mb-14">
+          <h2 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-bold" style={{ color: dark }}>
+            Gebaut für den <span style={{ color: gold }}>DACH-Markt</span>
           </h2>
-        </MotionDiv>
-        <motion.div variants={stagger} className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-14">
+        </M>
+        <motion.div variants={stagger} className="grid grid-cols-2 sm:grid-cols-4 gap-5 mb-16">
           {[
             { icon: Globe, label: 'Gehostet in Deutschland' },
             { icon: ShieldCheck, label: 'DSGVO-konform' },
-            { icon: BookOpen, label: '5 Hauptkapitel / 30 Unterkapitel' },
+            { icon: BookOpen, label: '5 Hauptkapitel · 30 Unterkapitel' },
             { icon: Cpu, label: 'KI-gestützt mit GPT-4' },
           ].map(({ icon: Icon, label }) => (
-            <MotionDiv key={label}>
-              <div className="rounded-xl p-5 text-center h-full" style={{ background: navyMid, border: `1px solid ${teal}15` }}>
-                <Icon size={28} className="mx-auto mb-3" style={{ color: teal }} />
-                <p className="text-sm font-medium" style={{ color: white }}>{label}</p>
+            <M key={label}>
+              <div className="rounded-2xl p-6 text-center h-full border border-[#e5e5e5] bg-[#faf9f6] hover:shadow-sm transition-shadow">
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: `${gold}15` }}>
+                  <Icon size={22} style={{ color: gold }} />
+                </div>
+                <p className="text-sm font-medium" style={{ color: dark }}>{label}</p>
               </div>
-            </MotionDiv>
+            </M>
           ))}
         </motion.div>
-        <MotionDiv>
-          <div className="rounded-xl p-8 text-center" style={{ background: navyMid, border: `1px dashed ${teal}33` }}>
-            <p className="italic text-lg" style={{ color: slate }}>"Testimonial folgt"</p>
-            <p className="text-sm mt-2" style={{ color: `${slate}88` }}>— Kundenstimme Platzhalter</p>
+        <M>
+          <div className="rounded-2xl p-10 text-center border border-dashed border-[#d1d1d6]" style={{ background: lightBg }}>
+            <p className="italic text-lg" style={{ color: warmGray }}>"Testimonial folgt"</p>
+            <p className="text-sm mt-2" style={{ color: '#c7c7cc' }}>— Kundenstimme Platzhalter</p>
           </div>
-        </MotionDiv>
+        </M>
       </Section>
 
       {/* ═══ BLOCK 7 – Transformation ═══ */}
-      <Section className="py-20 sm:py-28" id="transformation">
-        <MotionDiv className="text-center mb-14">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight max-w-3xl mx-auto" style={{ color: white }}>
+      <Section className="py-24 sm:py-32" variant="dark" id="transformation">
+        <M className="text-center mb-16">
+          <h2 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-bold leading-tight max-w-3xl mx-auto" style={{ color: white }}>
             Stell dir vor, du kannst jedem neuen Kunden ab sofort sagen:{' '}
-            <span style={{ color: teal }}>"Ich kümmere mich auch um deine Verfahrensdokumentation."</span>
+            <span style={{ color: gold }}>"Ich kümmere mich auch um deine Verfahrensdokumentation."</span>
           </h2>
-          <p className="mt-6 text-lg max-w-2xl mx-auto" style={{ color: slate }}>
-            Fertig in einer Woche. Prüfungssicher. Professionell. Unter deinem Logo. Während andere Berater noch in Word rumkopieren, lieferst du ein Dokument, das sich sehen lassen kann.
+          <p className="mt-6 text-lg max-w-2xl mx-auto" style={{ color: '#a1a1a6' }}>
+            Fertig in einer Woche. Prüfungssicher. Professionell. Unter deinem Logo.
           </p>
-        </MotionDiv>
+        </M>
         <motion.div variants={stagger} className="grid sm:grid-cols-2 gap-6">
           {/* Ohne */}
-          <MotionDiv>
-            <div className="rounded-xl p-8 h-full" style={{ background: '#1E293B', border: '1px solid #334155' }}>
-              <h3 className="font-bold text-lg mb-5" style={{ color: '#F87171' }}>Ohne GoBD-Suite</h3>
-              <ul className="space-y-3">
+          <M>
+            <div className="rounded-2xl p-8 h-full" style={{ background: '#2a2a2c', border: '1px solid #3a3a3c' }}>
+              <h3 className="font-bold text-lg mb-6" style={{ color: '#ff6b6b' }}>Ohne GoBD-Suite</h3>
+              <ul className="space-y-4">
                 {['Manuelle Erstellung in Word', '40+ Stunden pro Dokument', 'Kein skalierbares Angebot möglich', 'Kein einheitliches Branding'].map(t => (
-                  <li key={t} className="flex items-start gap-3 text-sm" style={{ color: slate }}>
-                    <span style={{ color: '#F87171' }}>✕</span> {t}
+                  <li key={t} className="flex items-center gap-3 text-sm" style={{ color: '#a1a1a6' }}>
+                    <X size={16} style={{ color: '#ff6b6b' }} /> {t}
                   </li>
                 ))}
               </ul>
             </div>
-          </MotionDiv>
+          </M>
           {/* Mit */}
-          <MotionDiv>
-            <div className="rounded-xl p-8 h-full" style={{ background: navyMid, border: `1px solid ${teal}33` }}>
-              <h3 className="font-bold text-lg mb-5" style={{ color: teal }}>Mit GoBD-Suite</h3>
-              <ul className="space-y-3">
+          <M>
+            <div className="rounded-2xl p-8 h-full" style={{ background: '#2a2a2c', border: `1px solid ${gold}44` }}>
+              <h3 className="font-bold text-lg mb-6" style={{ color: gold }}>Mit GoBD-Suite</h3>
+              <ul className="space-y-4">
                 {['KI-gestützte Erstellung', 'Unter einer Stunde pro VD', 'Skalierbares Angebot für alle Kunden', 'Eigenes Logo & Branding'].map(t => (
-                  <li key={t} className="flex items-start gap-3 text-sm" style={{ color: white }}>
-                    <span style={{ color: teal }}>✓</span> {t}
+                  <li key={t} className="flex items-center gap-3 text-sm" style={{ color: '#e5e5e5' }}>
+                    <Check size={16} style={{ color: gold }} /> {t}
                   </li>
                 ))}
               </ul>
             </div>
-          </MotionDiv>
+          </M>
         </motion.div>
       </Section>
 
       {/* ═══ BLOCK 8 – Pricing CTA ═══ */}
-      <Section className="py-20 sm:py-28" dark={false} id="pricing">
-        <MotionDiv className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold" style={{ color: white }}>
-            Teste GoBD-Suite <span style={{ color: teal }}>7 Tage kostenlos.</span>
+      <Section className="py-24 sm:py-32" variant="white" id="pricing">
+        <M className="text-center mb-14">
+          <h2 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-bold" style={{ color: dark }}>
+            Teste GoBD-Suite{' '}
+            <span style={{ color: gold }}>7 Tage kostenlos.</span>
           </h2>
-          <p className="mt-4 text-lg" style={{ color: slate }}>
+          <p className="mt-5 text-lg" style={{ color: warmGray }}>
             Keine Kreditkarte. Kein Risiko. Einfach rein und selbst sehen, wie schnell eine VD fertig ist.
           </p>
-        </MotionDiv>
-        <MotionDiv className="flex justify-center">
-          <div className="rounded-2xl p-8 sm:p-10 w-full max-w-md" style={{ background: navyMid, border: `2px solid ${teal}44` }}>
-            <p className="text-sm font-semibold uppercase tracking-wider mb-2" style={{ color: teal }}>Berater-Plan</p>
-            <div className="flex items-end gap-1 mb-6">
-              <span className="text-5xl font-black" style={{ color: white }}>399&nbsp;€</span>
-              <span className="text-lg mb-1" style={{ color: slate }}>/Monat</span>
+        </M>
+        <M className="flex justify-center">
+          <div className="rounded-3xl p-9 sm:p-12 w-full max-w-md bg-[#faf9f6] border border-[#e5e5e5] shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-[0.15em] mb-2" style={{ color: gold }}>Berater-Plan</p>
+            <div className="flex items-end gap-1 mb-7">
+              <span className="text-5xl font-black tracking-tight" style={{ color: dark }}>399&nbsp;€</span>
+              <span className="text-lg mb-1 font-medium" style={{ color: warmGray }}>/Monat</span>
             </div>
-            <ul className="space-y-3 mb-8">
+            <ul className="space-y-3.5 mb-9">
               {[
                 'Bis zu 5 Kunden',
                 'Kundenportal mit Self-Service',
@@ -321,51 +331,53 @@ export default function AngebotPage() {
                 'PDF-Export mit deinem Logo',
                 'Mindestlaufzeit 3 Monate',
               ].map(t => (
-                <li key={t} className="flex items-start gap-3 text-sm" style={{ color: white }}>
-                  <span style={{ color: teal }}>✓</span> {t}
+                <li key={t} className="flex items-center gap-3 text-sm" style={{ color: dark }}>
+                  <Check size={16} style={{ color: gold }} /> {t}
                 </li>
               ))}
             </ul>
             <Link to={CTA_URL} className="block">
               <button
-                className="w-full py-4 rounded-lg font-semibold text-lg transition-all duration-200"
-                style={{ background: teal, color: navy }}
-                onMouseOver={e => { (e.target as HTMLElement).style.background = tealGlow; }}
-                onMouseOut={e => { (e.target as HTMLElement).style.background = teal; }}
+                className="w-full py-4 rounded-full font-semibold text-base transition-all duration-300 hover:shadow-lg"
+                style={{ background: gold, color: white, boxShadow: '0 4px 20px rgba(232,169,26,0.25)' }}
+                onMouseOver={e => { (e.target as HTMLElement).style.background = goldLight; }}
+                onMouseOut={e => { (e.target as HTMLElement).style.background = gold; }}
               >
                 {CTA_TEXT}
               </button>
             </Link>
           </div>
-        </MotionDiv>
+        </M>
       </Section>
 
       {/* ═══ BLOCK 9 – Footer CTA ═══ */}
-      <Section className="py-16 sm:py-20" id="footer-cta">
-        <motion.div variants={stagger} className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+      <Section className="py-20 sm:py-24" variant="light" id="footer-cta">
+        <motion.div variants={stagger} className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-14">
           {[
             { icon: Clock, text: 'Unter einer Stunde pro VD' },
             { icon: TrendingUp, text: 'Ab dem ersten Kunden rentabel' },
             { icon: Globe, text: 'Gehostet in Deutschland' },
           ].map(({ icon: Icon, text }) => (
-            <MotionDiv key={text}>
+            <M key={text}>
               <div className="flex items-center gap-4 justify-center">
-                <Icon size={24} style={{ color: teal }} />
-                <span className="font-medium" style={{ color: white }}>{text}</span>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${gold}15` }}>
+                  <Icon size={20} style={{ color: gold }} />
+                </div>
+                <span className="font-medium text-sm" style={{ color: dark }}>{text}</span>
               </div>
-            </MotionDiv>
+            </M>
           ))}
         </motion.div>
-        <MotionDiv className="text-center mb-16">
+        <M className="text-center mb-20">
           <CtaButton large />
-        </MotionDiv>
+        </M>
 
         {/* Minimal footer */}
-        <div className="border-t pt-8 text-center text-sm" style={{ borderColor: `${teal}15`, color: slate }}>
+        <div className="border-t pt-8 text-center text-sm" style={{ borderColor: '#e5e5e5', color: warmGray }}>
           <div className="flex items-center justify-center gap-4 flex-wrap">
-            <Link to="/impressum" className="hover:underline" style={{ color: slate }}>Impressum</Link>
+            <Link to="/impressum" className="hover:underline" style={{ color: warmGray }}>Impressum</Link>
             <span>|</span>
-            <Link to="/datenschutz" className="hover:underline" style={{ color: slate }}>Datenschutz</Link>
+            <Link to="/datenschutz" className="hover:underline" style={{ color: warmGray }}>Datenschutz</Link>
             <span>|</span>
             <span>© 2025 GoBD-Suite</span>
           </div>
