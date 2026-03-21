@@ -1,0 +1,1 @@
+Build-Script darf NUR "vite build" sein. Kein "node prerender.mjs" im Build. Prerendering läuft serverseitig nach Deploy.
