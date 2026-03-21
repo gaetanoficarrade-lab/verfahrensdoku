@@ -151,18 +151,20 @@ export default function AngebotPage() {
           </p>
         </M>
         <M>
-          <div
-            className="rounded-2xl flex items-center justify-center cursor-pointer group relative overflow-hidden"
-            style={{ background: darkSoft, border: '1px solid #3a3a3c', aspectRatio: '16/9', maxHeight: 440 }}
-          >
-            <div className="text-center">
-              <div
-                className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 group-hover:scale-110"
-                style={{ background: `${gold}22`, border: `2px solid ${gold}` }}
-              >
-                <Play size={32} style={{ color: gold }} fill={gold} />
+          <div className="max-w-4xl mx-auto">
+            <div
+              className="rounded-2xl flex items-center justify-center cursor-pointer group relative overflow-hidden"
+              style={{ background: darkSoft, border: '1px solid #3a3a3c', aspectRatio: '16/9', maxHeight: 440 }}
+            >
+              <div className="text-center">
+                <div
+                  className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 group-hover:scale-110"
+                  style={{ background: `${gold}22`, border: `2px solid ${gold}` }}
+                >
+                  <Play size={32} style={{ color: gold }} fill={gold} />
+                </div>
+                <p className="font-medium" style={{ color: '#a1a1a6' }}>Demo ansehen – 4 Minuten</p>
               </div>
-              <p className="font-medium" style={{ color: '#a1a1a6' }}>Demo ansehen – 4 Minuten</p>
             </div>
           </div>
         </M>
