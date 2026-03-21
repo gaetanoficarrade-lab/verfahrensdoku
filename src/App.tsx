@@ -99,6 +99,7 @@ const App = () => (
               <Route path="/fuer-dienstleister" element={<FuerDienstleister />} />
               <Route path="/verfahrensdokumentation-erstellen" element={<VerfahrensdokumentationErstellen />} />
               <Route path="/partner" element={<PartnerPage />} />
+              <Route path="/angebot" element={<AngebotPage />} />
               <Route path="/blog/:slug" element={<BlogPostPage />} />
 
               {/* Protected routes with layout */}
