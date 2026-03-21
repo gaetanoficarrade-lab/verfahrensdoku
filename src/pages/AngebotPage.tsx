@@ -141,7 +141,7 @@ export default function AngebotPage() {
 
       {/* ═══ BLOCK 3 – Der Mentor ═══ */}
       <Section className="py-24 sm:py-32" variant="dark" id="tool">
-        <M className="text-center mb-14">
+        <M className="text-center mb-14 max-w-3xl mx-auto">
           <h2 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-bold mb-5 leading-tight" style={{ color: white }}>
             GoBD-Suite gibt dir das{' '}
             <span style={{ color: gold }}>komplette Werkzeug.</span>
