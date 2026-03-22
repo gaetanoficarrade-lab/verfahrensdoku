@@ -86,42 +86,6 @@ export default function HelpPage() {
     loadTickets();
   }, [effectiveTenantId]);
 
-  const takeScreenshot = async () => {
-    formRef.current = { ...form };
-    setScreenshotting(true);
-
-    await new Promise(r => setTimeout(r, 200));
-
-    try {
-      const html2canvas = (await import('html2canvas')).default;
-      const canvas = await html2canvas(document.body, {
-        useCORS: true,
-        allowTaint: true,
-        scale: 1,
-        logging: false,
-      });
-      canvas.toBlob((blob) => {
-        if (blob) {
-          setScreenshotBlob(blob);
-          setScreenshotPreview(URL.createObjectURL(blob));
-        }
-        setForm(formRef.current);
-        setScreenshotting(false);
-      }, 'image/png');
-    } catch (err) {
-      console.error('Screenshot error:', err);
-      setForm(formRef.current);
-      setScreenshotting(false);
-      toast({ variant: 'destructive', title: 'Fehler', description: 'Screenshot konnte nicht erstellt werden.' });
-    }
-  };
-
-  const removeScreenshot = () => {
-    if (screenshotPreview) URL.revokeObjectURL(screenshotPreview);
-    setScreenshotBlob(null);
-    setScreenshotPreview(null);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!effectiveTenantId || !user) return;
@@ -132,21 +96,6 @@ export default function HelpPage() {
     }
 
     setSending(true);
-
-    let screenshotUrl: string | null = null;
-    if (screenshotBlob) {
-      const fileName = `${effectiveTenantId}/${Date.now()}.png`;
-      const { error: uploadErr } = await supabase.storage
-        .from('support-screenshots')
-        .upload(fileName, screenshotBlob, { contentType: 'image/png' });
-      if (!uploadErr) {
-        const { data: urlData } = supabase.storage
-          .from('support-screenshots')
-          .getPublicUrl(fileName);
-        screenshotUrl = urlData.publicUrl;
-      }
-    }
-
     const { error } = await supabase.from('support_tickets').insert({
       tenant_id: effectiveTenantId,
       user_id: user.id,
@@ -154,7 +103,6 @@ export default function HelpPage() {
       message: form.message.trim(),
       category: form.category,
       priority: form.priority,
-      screenshot_url: screenshotUrl,
     });
 
     if (error) {
@@ -162,7 +110,6 @@ export default function HelpPage() {
     } else {
       toast({ title: 'Ticket erstellt', description: 'Wir kümmern uns schnellstmöglich um Ihr Anliegen.' });
       setForm({ subject: '', category: 'question', priority: 'medium', message: '' });
-      removeScreenshot();
       loadTickets();
     }
     setSending(false);
