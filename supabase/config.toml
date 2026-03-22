@@ -52,3 +52,12 @@ verify_jwt = false
 
 [functions.elevenlabs-tts]
 verify_jwt = false
+
+[functions.send-support-notification]
+verify_jwt = false
+
+[functions.send-support-reply]
+verify_jwt = false
+
+[functions.receive-support-reply]
+verify_jwt = false

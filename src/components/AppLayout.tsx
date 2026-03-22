@@ -44,6 +44,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                   {roleLabel}
                 </Badge>
               )}
+              <SupportWidget />
               <NotificationBell />
             </div>
           </header>
