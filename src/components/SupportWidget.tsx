@@ -30,23 +30,27 @@ export function SupportWidget() {
 
   const isSuperAdmin = roles.includes('super_admin');
 
-  // Check if tenant has widget enabled
-  const { data: widgetEnabled } = useQuery({
+  // Check if tenant has widget enabled — default to showing it if query fails
+  const { data: widgetEnabled = true } = useQuery({
     queryKey: ['support-widget-enabled', effectiveTenantId],
     queryFn: async () => {
-      if (!effectiveTenantId) return false;
-      const { data } = await supabase
-        .from('tenants')
-        .select('support_widget_disabled')
-        .eq('id', effectiveTenantId)
-        .maybeSingle();
-      return data ? !data.support_widget_disabled : true;
+      if (!effectiveTenantId) return true;
+      try {
+        const { data } = await supabase
+          .from('tenants')
+          .select('support_widget_disabled')
+          .eq('id', effectiveTenantId)
+          .maybeSingle();
+        return data ? !data.support_widget_disabled : true;
+      } catch {
+        return true;
+      }
     },
     enabled: !!effectiveTenantId && !isSuperAdmin,
   });
 
-  // Don't show for super admins or if widget is disabled
-  if (isSuperAdmin || (!widgetEnabled && !isSuperAdmin)) return null;
+  // Don't show for super admins or if widget is explicitly disabled
+  if (isSuperAdmin || !widgetEnabled) return null;
 
   const takeScreenshot = async () => {
     formRef.current = { title, description };
