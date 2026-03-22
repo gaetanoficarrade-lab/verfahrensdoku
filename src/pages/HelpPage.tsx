@@ -63,6 +63,10 @@ export default function HelpPage() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loadingTickets, setLoadingTickets] = useState(true);
   const [sending, setSending] = useState(false);
+  const [screenshotting, setScreenshotting] = useState(false);
+  const [screenshotBlob, setScreenshotBlob] = useState<Blob | null>(null);
+  const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null);
+  const formRef = useRef({ subject: '', category: 'question', priority: 'medium', message: '' });
   const [form, setForm] = useState({
     subject: '',
     category: 'question',
