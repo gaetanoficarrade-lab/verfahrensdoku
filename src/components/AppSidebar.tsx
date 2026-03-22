@@ -13,7 +13,10 @@ import {
   HelpCircle,
   Eye,
   Lock,
+  LifeBuoy,
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import sidebarLogo from '@/assets/sidebar-logo.png';
 import { NavLink } from '@/components/NavLink';
 import { useLocation, useNavigate } from 'react-router-dom';
