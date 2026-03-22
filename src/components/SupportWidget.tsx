@@ -28,6 +28,8 @@ export function SupportWidget() {
   const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null);
   const formRef = useRef({ title: '', description: '' });
 
+  const isSuperAdmin = roles.includes('super_admin');
+
   // Check if tenant has widget enabled — default to showing it if query fails
   // Super admins always see the widget
   const { data: widgetEnabled = true } = useQuery({
