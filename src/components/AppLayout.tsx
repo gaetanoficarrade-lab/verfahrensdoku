@@ -6,6 +6,7 @@ import { AppFooter } from '@/components/AppFooter';
 import { NotificationBell } from '@/components/NotificationBell';
 import { SessionTimeoutWarning } from '@/components/SessionTimeoutWarning';
 import { TrialBanner } from '@/components/TrialBanner';
+import { SupportWidget } from '@/components/SupportWidget';
 import { FirstStepsGuide } from '@/components/FirstStepsGuide';
 import { TrialOnboardingGuide } from '@/components/TrialOnboardingGuide';
 import { useAuthContext } from '@/contexts/AuthContext';
