@@ -244,6 +244,28 @@ export default function HelpPage() {
                     required
                   />
                 </div>
+                {screenshotPreview ? (
+                  <div className="space-y-2">
+                    <Label>Screenshot</Label>
+                    <div className="relative rounded-lg border overflow-hidden">
+                      <img src={screenshotPreview} alt="Screenshot" className="w-full h-auto max-h-40 object-contain bg-muted" />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2 h-7 w-7"
+                        onClick={removeScreenshot}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <Button type="button" variant="outline" size="sm" onClick={takeScreenshot} disabled={screenshotting} className="gap-2">
+                    {screenshotting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+                    Screenshot erstellen
+                  </Button>
+                )}
                 <Button type="submit" disabled={sending}>
                   {sending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Send className="h-4 w-4 mr-2" />}
                   Ticket absenden
