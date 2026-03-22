@@ -52,6 +52,7 @@ import MarketingPage from "./pages/MarketingPage";
 import BlogPage from "./pages/BlogPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import AdminBlog from "./pages/AdminBlog";
+import AdminSupport from "./pages/AdminSupport";
 import Impressum from "./pages/Impressum";
 import Datenschutz from "./pages/Datenschutz";
 import AGB from "./pages/AGB";
