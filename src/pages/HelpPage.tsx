@@ -191,11 +191,6 @@ export default function HelpPage() {
                   {sending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Send className="h-4 w-4 mr-2" />}
                   Ticket absenden
                 </Button>
-                )}
-                <Button type="submit" disabled={sending}>
-                  {sending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Send className="h-4 w-4 mr-2" />}
-                  Ticket absenden
-                </Button>
               </form>
             </CardContent>
           </Card>
