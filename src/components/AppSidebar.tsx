@@ -74,6 +74,22 @@ export function AppSidebar() {
   const { data: tenantSettings } = useTenantSettings();
   const { isTrialing } = useTrialRestrictions();
 
+  // Fetch unread support count for admin
+  const [supportUnread, setSupportUnread] = useState(0);
+  useEffect(() => {
+    if (!isSuperAdmin || impersonation.isImpersonating) return;
+    const fetchUnread = async () => {
+      const { count } = await supabase
+        .from('support_requests')
+        .select('*', { count: 'exact', head: true })
+        .eq('admin_unread', true);
+      setSupportUnread(count || 0);
+    };
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 30000);
+    return () => clearInterval(interval);
+  }, [isSuperAdmin, impersonation.isImpersonating]);
+
   const currentPath = location.pathname;
   const isActive = (path: string) => {
     if (path === '/admin' && currentPath === '/admin') return true;
