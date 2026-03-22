@@ -158,7 +158,19 @@ export function AppSidebar() {
                   activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                 >
                   <item.icon className="h-4 w-4" />
-                  {!collapsed && <span>{item.title}</span>}
+                  {!collapsed && (
+                    <>
+                      <span className="flex-1">{item.title}</span>
+                      {item.url === '/admin/support' && supportUnread > 0 && (
+                        <Badge className="h-5 min-w-[20px] flex items-center justify-center p-0 text-[10px] bg-destructive text-destructive-foreground">
+                          {supportUnread > 9 ? '9+' : supportUnread}
+                        </Badge>
+                      )}
+                    </>
+                  )}
+                  {collapsed && item.url === '/admin/support' && supportUnread > 0 && (
+                    <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-destructive" />
+                  )}
                 </NavLink>
               )}
             </SidebarMenuButton>
