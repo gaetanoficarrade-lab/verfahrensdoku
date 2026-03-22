@@ -31,10 +31,11 @@ export function SupportWidget() {
   const isSuperAdmin = roles.includes('super_admin');
 
   // Check if tenant has widget enabled — default to showing it if query fails
+  // Super admins always see the widget
   const { data: widgetEnabled = true } = useQuery({
     queryKey: ['support-widget-enabled', effectiveTenantId],
     queryFn: async () => {
-      if (!effectiveTenantId) return true;
+      if (!effectiveTenantId || isSuperAdmin) return true;
       try {
         const { data } = await supabase
           .from('tenants')
@@ -46,11 +47,10 @@ export function SupportWidget() {
         return true;
       }
     },
-    enabled: !!effectiveTenantId && !isSuperAdmin,
+    enabled: !!effectiveTenantId || isSuperAdmin,
   });
 
-  // Don't show for super admins or if widget is explicitly disabled
-  if (isSuperAdmin || !widgetEnabled) return null;
+  if (!widgetEnabled) return null;
 
   const takeScreenshot = async () => {
     formRef.current = { title, description };
