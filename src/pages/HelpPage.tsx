@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { HelpCircle, ChevronDown, Send, Loader2, MessageSquarePlus, Clock, CheckCircle2, AlertCircle, CircleDot, Camera, Trash2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { HelpCircle, ChevronDown, Send, Loader2, MessageSquarePlus, Clock, CheckCircle2, AlertCircle, CircleDot } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
