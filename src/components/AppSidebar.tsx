@@ -42,6 +42,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 const adminItems = [
   { title: 'Dashboard', url: '/admin', icon: LayoutDashboard },
   { title: 'Unterkonten', url: '/admin/tenants', icon: Building2 },
+  { title: 'Support', url: '/admin/support', icon: LifeBuoy },
   { title: 'Webhook-Protokoll', url: '/admin/webhook-logs', icon: ScrollText },
   { title: 'Einstellungen', url: '/admin/settings/general', icon: Settings },
 ];
