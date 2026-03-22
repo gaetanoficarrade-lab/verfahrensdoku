@@ -13,7 +13,10 @@ import {
   HelpCircle,
   Eye,
   Lock,
+  LifeBuoy,
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import sidebarLogo from '@/assets/sidebar-logo.png';
 import { NavLink } from '@/components/NavLink';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -21,6 +24,7 @@ import { useAuthContext } from '@/contexts/AuthContext';
 import { useTenantSettings } from '@/hooks/useTenantSettings';
 import { useTrialRestrictions } from '@/hooks/useTrialRestrictions';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Sidebar,
   SidebarContent,
@@ -39,6 +43,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 const adminItems = [
   { title: 'Dashboard', url: '/admin', icon: LayoutDashboard },
   { title: 'Unterkonten', url: '/admin/tenants', icon: Building2 },
+  { title: 'Support', url: '/admin/support', icon: LifeBuoy },
   { title: 'Webhook-Protokoll', url: '/admin/webhook-logs', icon: ScrollText },
   { title: 'Einstellungen', url: '/admin/settings/general', icon: Settings },
 ];
@@ -68,6 +73,22 @@ export function AppSidebar() {
   const { signOut, isSuperAdmin, impersonation, roles } = useAuthContext();
   const { data: tenantSettings } = useTenantSettings();
   const { isTrialing } = useTrialRestrictions();
+
+  // Fetch unread support count for admin
+  const [supportUnread, setSupportUnread] = useState(0);
+  useEffect(() => {
+    if (!isSuperAdmin || impersonation.isImpersonating) return;
+    const fetchUnread = async () => {
+      const { count } = await supabase
+        .from('support_requests')
+        .select('*', { count: 'exact', head: true })
+        .eq('admin_unread', true);
+      setSupportUnread(count || 0);
+    };
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 30000);
+    return () => clearInterval(interval);
+  }, [isSuperAdmin, impersonation.isImpersonating]);
 
   const currentPath = location.pathname;
   const isActive = (path: string) => {
@@ -137,7 +158,19 @@ export function AppSidebar() {
                   activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                 >
                   <item.icon className="h-4 w-4" />
-                  {!collapsed && <span>{item.title}</span>}
+                  {!collapsed && (
+                    <>
+                      <span className="flex-1">{item.title}</span>
+                      {item.url === '/admin/support' && supportUnread > 0 && (
+                        <Badge className="h-5 min-w-[20px] flex items-center justify-center p-0 text-[10px] bg-destructive text-destructive-foreground">
+                          {supportUnread > 9 ? '9+' : supportUnread}
+                        </Badge>
+                      )}
+                    </>
+                  )}
+                  {collapsed && item.url === '/admin/support' && supportUnread > 0 && (
+                    <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-destructive" />
+                  )}
                 </NavLink>
               )}
             </SidebarMenuButton>
