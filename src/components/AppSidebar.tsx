@@ -24,6 +24,7 @@ import { useAuthContext } from '@/contexts/AuthContext';
 import { useTenantSettings } from '@/hooks/useTenantSettings';
 import { useTrialRestrictions } from '@/hooks/useTrialRestrictions';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Sidebar,
   SidebarContent,
