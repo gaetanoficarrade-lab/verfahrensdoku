@@ -167,7 +167,7 @@ export async function seedDemoData() {
         client_precheck_hints: null,
         generated_text: null,
         editor_text: null,
-        status: isActive ? 'open' : 'inactive',
+        status: isActive ? 'empty' : 'empty',
         precheck_hints_count: 0,
       });
     }
