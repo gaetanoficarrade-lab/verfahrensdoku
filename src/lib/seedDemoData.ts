@@ -132,7 +132,7 @@ export async function seedDemoData() {
       client_id: clientId,
       name: 'Verfahrensdokumentation 2024',
       status: 'active',
-      workflow_status: 'in_progress',
+      workflow_status: 'data_entry',
     })
     .select()
     .single();
