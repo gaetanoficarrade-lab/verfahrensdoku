@@ -45,6 +45,7 @@ export function useSEO({
   twitterCard,
   twitterTitle,
   twitterDescription,
+  twitterImage,
   keywords,
   author,
   robots,
