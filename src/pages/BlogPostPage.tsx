@@ -6,6 +6,7 @@ import { useSEO } from '@/hooks/useSEO';
 import MarketingNav from '@/components/MarketingNav';
 import { CookieBanner } from '@/components/CookieBanner';
 import { seedBlogArticleVD2025, SEEDED_BLOG_ARTICLES } from '@/lib/seedBlogArticle';
+
 const C = {
   yellow: '#FAC81E', dark: '#44484E', white: '#FFFFFF',
   bgLight: '#F5F5F7', textGray: '#6E6E73', border: '#E5E5E5',
@@ -60,6 +61,7 @@ export default function BlogPostPage() {
   const [headings, setHeadings] = useState<{ id: string; text: string }[]>([]);
   const [activeHeading, setActiveHeading] = useState('');
 
+  // LOAD POST FIRST
   useEffect(() => {
     if (!slug) return;
     (async () => {
@@ -69,7 +71,6 @@ export default function BlogPostPage() {
       const currentSeeded = SEEDED_BLOG_ARTICLES.find(a => a.slug === slug);
       const fallbackPost = SEEDED_FULL_POSTS.find(p => p.slug === slug) ?? null;
 
-      // Use specific related slugs if defined, otherwise default
       const relatedSlugs = currentSeeded?.related_slugs;
       const fallbackRelated = (relatedSlugs
         ? SEEDED_FULL_POSTS.filter(p => relatedSlugs.includes(p.slug))
@@ -127,28 +128,8 @@ export default function BlogPostPage() {
     })();
   }, [slug]);
 
-  // Active heading observer
-  useEffect(() => {
-    if (headings.length === 0) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveHeading(entry.target.id);
-          }
-        }
-      },
-      { rootMargin: '-80px 0px -60% 0px', threshold: 0.1 }
-    );
-    headings.forEach(h => {
-      const el = document.getElementById(h.id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, [headings]);
-
+  // CALL useSEO AFTER post is loaded — separate effect
   const seededArticle = SEEDED_BLOG_ARTICLES.find(a => a.slug === slug);
-
   const jsonLd = useMemo(() => {
     if (!post) return [];
     const base = [{
@@ -169,19 +150,82 @@ export default function BlogPostPage() {
     return base;
   }, [post, seededArticle]);
 
-  useSEO({
-    title: post ? `${post.meta_title || post.title} | GoBD-Suite Blog` : 'Blog | GoBD-Suite',
-    description: post?.meta_description || post?.excerpt || '',
-    canonical: post ? `https://gobd-suite.de/blog/${post.slug}/` : undefined,
-    ogTitle: post ? `${post.meta_title || post.title} | GoBD-Suite Blog` : undefined,
-    ogDescription: post?.meta_description || post?.excerpt,
-    ogImage: post?.cover_image_url || 'https://gobd-suite.de/og-image.png',
-    ogType: 'article',
-    ogLocale: 'de_DE',
-    twitterCard: 'summary_large_image',
-    robots: 'index, follow',
-    jsonLd,
-  });
+  // TRIGGER useSEO when post is ready
+  useEffect(() => {
+    if (!post) {
+      // Set fallback SEO while loading
+      useSEO({
+        title: 'Blog | GoBD-Suite',
+        description: 'Lese unsere Blog-Artikel über Verfahrensdokumentation und GoBD.',
+        canonical: slug ? `https://gobd-suite.de/blog/${slug}` : 'https://gobd-suite.de/blog',
+        robots: 'index, follow',
+      });
+      return;
+    }
+
+    // Set actual post SEO once post is loaded
+    useSEO({
+      title: `${post.meta_title || post.title} | GoBD-Suite Blog`,
+      description: post.meta_description || post.excerpt || '',
+      canonical: `https://gobd-suite.de/blog/${post.slug}`,
+      ogTitle: `${post.meta_title || post.title} | GoBD-Suite Blog`,
+      ogDescription: post.meta_description || post.excerpt,
+      ogImage: post.cover_image_url || 'https://gobd-suite.de/og-blog.png',
+      ogUrl: `https://gobd-suite.de/blog/${post.slug}`,
+      ogType: 'article',
+      ogLocale: 'de_DE',
+      twitterCard: 'summary_large_image',
+      twitterImage: post.cover_image_url || 'https://gobd-suite.de/og-blog.png',
+      twitterTitle: `${post.meta_title || post.title} | GoBD-Suite Blog`,
+      twitterDescription: post.meta_description || post.excerpt,
+      robots: 'index, follow',
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          {
+            '@type': 'ListItem',
+            'position': 1,
+            'name': 'Startseite',
+            'item': 'https://gobd-suite.de'
+          },
+          {
+            '@type': 'ListItem',
+            'position': 2,
+            'name': 'Blog',
+            'item': 'https://gobd-suite.de/blog'
+          },
+          {
+            '@type': 'ListItem',
+            'position': 3,
+            'name': post.title,
+            'item': `https://gobd-suite.de/blog/${post.slug}`
+          }
+        ]
+      },
+      jsonLd,
+    });
+  }, [post, slug, seededArticle, jsonLd]);
+
+  // Active heading observer
+  useEffect(() => {
+    if (headings.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveHeading(entry.target.id);
+          }
+        }
+      },
+      { rootMargin: '-80px 0px -60% 0px', threshold: 0.1 }
+    );
+    headings.forEach(h => {
+      const el = document.getElementById(h.id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [headings]);
 
   if (loading) {
     return (
@@ -249,7 +293,7 @@ export default function BlogPostPage() {
                 <ul className="space-y-1.5">
                   {headings.map(h => (
                     <li key={h.id}>
-                      <a
+                      
                         href={`#${h.id}`}
                         className="text-[13px] block py-1 pl-3 transition-all duration-200 leading-snug rounded-r"
                         style={{
