@@ -13,6 +13,7 @@ interface SEOProps {
   twitterCard?: string;
   twitterTitle?: string;
   twitterDescription?: string;
+  twitterImage?: string;
   keywords?: string;
   author?: string;
   robots?: string;
