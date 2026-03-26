@@ -8,6 +8,7 @@ interface SEOProps {
   ogDescription?: string;
   ogImage?: string;
   ogType?: string;
+  ogUrl?: string;
   ogLocale?: string;
   twitterCard?: string;
   twitterTitle?: string;
@@ -37,6 +38,7 @@ export function useSEO({
   ogTitle,
   ogDescription,
   ogImage,
+  ogUrl,
   ogType,
   ogLocale,
   twitterCard,
@@ -102,7 +104,8 @@ export function useSEO({
     if (ogImage) setMeta("og:image", ogImage, "property");
     if (ogType) setMeta("og:type", ogType, "property");
     if (ogLocale) setMeta("og:locale", ogLocale, "property");
-    if (normalizedCanonical) setMeta("og:url", normalizedCanonical, "property");
+    const effectiveOgUrl = ogUrl || normalizedCanonical;
+    if (effectiveOgUrl) setMeta("og:url", effectiveOgUrl, "property");
 
     if (twitterCard) setMeta("twitter:card", twitterCard);
     if (twitterTitle) setMeta("twitter:title", twitterTitle);
@@ -132,6 +135,7 @@ export function useSEO({
     ogDescription,
     ogImage,
     ogType,
+    ogUrl,
     ogLocale,
     twitterCard,
     twitterTitle,
