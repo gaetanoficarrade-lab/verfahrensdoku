@@ -38,6 +38,7 @@ export function useSEO({
   ogTitle,
   ogDescription,
   ogImage,
+  ogUrl,
   ogType,
   ogLocale,
   twitterCard,
