@@ -118,8 +118,7 @@ export default function AngebotPage() {
     ogType: "website",
     ogLocale: "de_DE",
     twitterCard: "summary_large_image",
-    twitterImage: "https://gobd-suite.de/og-angebot.png",
-    structuredData: {
+    jsonLd: [{
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
@@ -136,7 +135,7 @@ export default function AngebotPage() {
           item: "https://gobd-suite.de/angebot",
         },
       ],
-    },
+    }],
   });
 
   // Zusätzliches JSON-LD Schema für SoftwareApplication
