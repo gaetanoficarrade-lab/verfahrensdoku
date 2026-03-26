@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 interface SEOProps {
   title?: string;
@@ -18,12 +18,11 @@ interface SEOProps {
   jsonLd?: object[];
 }
 
-/** Normalizes canonical URLs: strips trailing slash except for the homepage. */
 function normalizeCanonical(url: string): string {
   try {
     const parsed = new URL(url);
-    if (parsed.pathname !== '/') {
-      parsed.pathname = parsed.pathname.replace(/\/+$/, '');
+    if (parsed.pathname !== "/") {
+      parsed.pathname = parsed.pathname.replace(/\/+$/, "");
     }
     return parsed.toString();
   } catch {
@@ -53,66 +52,68 @@ export function useSEO({
   useEffect(() => {
     const cleanup: (() => void)[] = [];
 
-    function setMeta(name: string, content: string, attr = 'name') {
+    function setMeta(name: string, content: string, attr = "name") {
       let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
       const existed = !!el;
       if (!el) {
-        el = document.createElement('meta');
+        el = document.createElement("meta");
         el.setAttribute(attr, name);
         document.head.appendChild(el);
       }
-      const prev = el.getAttribute('content');
-      el.setAttribute('content', content);
+      const prev = el.getAttribute("content");
+      el.setAttribute("content", content);
       cleanup.push(() => {
         if (!existed) el!.remove();
-        else if (prev) el!.setAttribute('content', prev);
+        else if (prev) el!.setAttribute("content", prev);
       });
     }
 
     if (title) {
       const prev = document.title;
       document.title = title;
-      cleanup.push(() => { document.title = prev; });
+      cleanup.push(() => {
+        document.title = prev;
+      });
     }
 
-    if (description) setMeta('description', description);
-    if (keywords) setMeta('keywords', keywords);
-    if (author) setMeta('author', author);
-    if (robots) setMeta('robots', robots);
+    if (description) setMeta("description", description);
+    if (keywords) setMeta("keywords", keywords);
+    if (author) setMeta("author", author);
+    if (robots) setMeta("robots", robots);
 
     if (normalizedCanonical) {
       let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
       const existed = !!link;
       if (!link) {
-        link = document.createElement('link');
-        link.setAttribute('rel', 'canonical');
+        link = document.createElement("link");
+        link.setAttribute("rel", "canonical");
         document.head.appendChild(link);
       }
-      const prev = link.getAttribute('href');
-      link.setAttribute('href', normalizedCanonical);
+      const prev = link.getAttribute("href");
+      link.setAttribute("href", normalizedCanonical);
       cleanup.push(() => {
         if (!existed) link!.remove();
-        else if (prev) link!.setAttribute('href', prev);
+        else if (prev) link!.setAttribute("href", prev);
       });
     }
 
-    if (ogTitle) setMeta('og:title', ogTitle, 'property');
-    if (ogDescription) setMeta('og:description', ogDescription, 'property');
-    if (ogImage) setMeta('og:image', ogImage, 'property');
-    if (ogType) setMeta('og:type', ogType, 'property');
-    if (ogLocale) setMeta('og:locale', ogLocale, 'property');
-    if (normalizedCanonical) setMeta('og:url', normalizedCanonical, 'property');
+    if (ogTitle) setMeta("og:title", ogTitle, "property");
+    if (ogDescription) setMeta("og:description", ogDescription, "property");
+    if (ogImage) setMeta("og:image", ogImage, "property");
+    if (ogType) setMeta("og:type", ogType, "property");
+    if (ogLocale) setMeta("og:locale", ogLocale, "property");
+    if (normalizedCanonical) setMeta("og:url", normalizedCanonical, "property");
 
-    if (twitterCard) setMeta('twitter:card', twitterCard);
-    if (twitterTitle) setMeta('twitter:title', twitterTitle);
-    if (twitterDescription) setMeta('twitter:description', twitterDescription);
+    if (twitterCard) setMeta("twitter:card", twitterCard);
+    if (twitterTitle) setMeta("twitter:title", twitterTitle);
+    if (twitterDescription) setMeta("twitter:description", twitterDescription);
 
     const scripts: HTMLScriptElement[] = [];
     if (jsonLd) {
       document.querySelectorAll('script[type="application/ld+json"]').forEach((el) => el.remove());
       jsonLd.forEach((data) => {
-        const script = document.createElement('script');
-        script.type = 'application/ld+json';
+        const script = document.createElement("script");
+        script.type = "application/ld+json";
         script.textContent = JSON.stringify(data);
         document.head.appendChild(script);
         scripts.push(script);
@@ -123,14 +124,21 @@ export function useSEO({
       cleanup.forEach((fn) => fn());
       scripts.forEach((s) => s.remove());
     };
-  }, [title, description, normalizedCanonical, ogTitle, ogDescription, ogImage, ogType, ogLocale, twitterCard, twitterTitle, twitterDescription, keywords, author, robots, jsonLd]);
+  }, [
+    title,
+    description,
+    normalizedCanonical,
+    ogTitle,
+    ogDescription,
+    ogImage,
+    ogType,
+    ogLocale,
+    twitterCard,
+    twitterTitle,
+    twitterDescription,
+    keywords,
+    author,
+    robots,
+    jsonLd,
+  ]);
 }
-```
-
-Der Lovable-Prompt dazu:
-```
-Replace the entire content of src/hooks/useSEO.ts with the following code:
-
-[paste the code above]
-
-This adds automatic canonical URL normalization: trailing slashes are stripped from all URLs except the homepage ("/"). No changes needed to any page files — the hook handles it automatically.
