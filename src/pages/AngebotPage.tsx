@@ -114,12 +114,11 @@ export default function AngebotPage() {
     ogTitle: "GoBD-Suite für Dienstleister – Verfahrensdokumentation als Service",
     ogDescription: "Verfahrensdokumentation als Dienstleistung anbieten. KI-gestützt, GoBD-konform, White-Label-fähig.",
     ogImage: "https://gobd-suite.de/og-angebot.png",
-    ogUrl: "https://gobd-suite.de/angebot",
+    
     ogType: "website",
     ogLocale: "de_DE",
     twitterCard: "summary_large_image",
-    twitterImage: "https://gobd-suite.de/og-angebot.png",
-    structuredData: {
+    jsonLd: [{
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
@@ -136,7 +135,7 @@ export default function AngebotPage() {
           item: "https://gobd-suite.de/angebot",
         },
       ],
-    },
+    }],
   });
 
   // Zusätzliches JSON-LD Schema für SoftwareApplication
