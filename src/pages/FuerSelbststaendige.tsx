@@ -138,7 +138,7 @@ export default function FuerSelbststaendige() {
   useSEO({
     title: 'Verfahrensdokumentation für Selbstständige – GoBD-konform in 60 Minuten | GoBD-Suite',
     description: 'Als Selbstständiger GoBD-konform werden ohne Steuerberater. KI-gestützt in unter einer Stunde.',
-    canonical: 'https://gobd-suite.de/fuer-selbststaendige/',
+    canonical: 'https://gobd-suite.de/fuer-selbststaendige',
     keywords: 'Verfahrensdokumentation Selbstständige, GoBD Freelancer, Verfahrensdokumentation erstellen, GoBD-konform',
     author: 'Gaetano Ficarra',
     robots: 'index, follow',
@@ -146,9 +146,23 @@ export default function FuerSelbststaendige() {
     ogDescription: 'Als Selbstständiger GoBD-konform werden ohne Steuerberater. KI-gestützt in unter einer Stunde.',
     ogType: 'website',
     ogLocale: 'de_DE',
-    ogImage: 'https://gobd-suite.de/og-image.png',
+    ogUrl: 'https://gobd-suite.de/fuer-selbststaendige',
+    ogImage: 'https://gobd-suite.de/og-selbststaendige.png',
     twitterCard: 'summary_large_image',
-    jsonLd: [jsonLd],
+    twitterImage: 'https://gobd-suite.de/og-selbststaendige.png',
+    twitterTitle: 'Verfahrensdokumentation für Selbstständige – GoBD-konform in 60 Minuten | GoBD-Suite',
+    twitterDescription: 'Als Selbstständiger GoBD-konform werden ohne Steuerberater. KI-gestützt in unter einer Stunde.',
+    jsonLd: [
+      jsonLd,
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Startseite', item: 'https://gobd-suite.de' },
+          { '@type': 'ListItem', position: 2, name: 'Für Selbstständige', item: 'https://gobd-suite.de/fuer-selbststaendige' },
+        ],
+      },
+    ],
   });
 
   const problemPoints = [
