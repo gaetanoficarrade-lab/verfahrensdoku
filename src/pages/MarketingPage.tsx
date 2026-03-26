@@ -686,19 +686,21 @@ export default function MarketingPage() {
     twitterTitle: "GoBD-Suite – Verfahrensdokumentation erstellen",
     twitterDescription:
       "Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde.",
-    structuredData: {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Startseite",
-          item: "https://gobd-suite.de",
-        },
-      ],
-    },
-    jsonLd: jsonLdSchemas,
+    jsonLd: [
+      ...jsonLdSchemas,
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Startseite",
+            item: "https://gobd-suite.de",
+          },
+        ],
+      },
+    ],
   });
 
   /* ─── Float keyframes (injected once) ─── */
