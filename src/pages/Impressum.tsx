@@ -1,16 +1,14 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import landingLogo from '@/assets/landing-logo.png';
+import { useSEO } from '@/hooks/useSEO';
 
 export default function Impressum() {
-  useEffect(() => {
-    const meta = document.createElement('meta');
-    meta.name = 'robots';
-    meta.content = 'noindex, nofollow';
-    document.head.appendChild(meta);
-    return () => { document.head.removeChild(meta); };
-  }, []);
+  useSEO({
+    title: 'Impressum | GoBD-Suite',
+    robots: 'noindex, nofollow',
+  });
+
   return (
     <div className="min-h-screen bg-white text-[#1d1d1f] antialiased">
       <nav className="border-b border-[#e5e5e5]">
@@ -77,7 +75,7 @@ export default function Impressum() {
             <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">EU-Streitschlichtung</h2>
             <p>
               Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{' '}
-              <a
+              
                 href="https://ec.europa.eu/consumers/odr/"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -124,7 +122,7 @@ export default function Impressum() {
           <section>
             <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">Hinweis zur Zielgruppe</h2>
             <p>
-              Dieses Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB. 
+              Dieses Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
               Ein Widerrufsrecht für Verbraucher besteht nicht.
             </p>
           </section>
