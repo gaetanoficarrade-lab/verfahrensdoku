@@ -135,6 +135,7 @@ export function useSEO({
     ogDescription,
     ogImage,
     ogType,
+    ogUrl,
     ogLocale,
     twitterCard,
     twitterTitle,
