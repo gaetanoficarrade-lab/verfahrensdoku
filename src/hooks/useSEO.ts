@@ -8,6 +8,7 @@ interface SEOProps {
   ogDescription?: string;
   ogImage?: string;
   ogType?: string;
+  ogUrl?: string;
   ogLocale?: string;
   twitterCard?: string;
   twitterTitle?: string;
