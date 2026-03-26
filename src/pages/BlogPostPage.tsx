@@ -293,7 +293,7 @@ export default function BlogPostPage() {
                 <ul className="space-y-1.5">
                   {headings.map(h => (
                     <li key={h.id}>
-                      
+                      <a
                         href={`#${h.id}`}
                         className="text-[13px] block py-1 pl-3 transition-all duration-200 leading-snug rounded-r"
                         style={{
