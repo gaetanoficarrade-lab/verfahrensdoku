@@ -13,6 +13,7 @@ interface SEOProps {
   twitterCard?: string;
   twitterTitle?: string;
   twitterDescription?: string;
+  twitterImage?: string;
   keywords?: string;
   author?: string;
   robots?: string;
@@ -44,6 +45,7 @@ export function useSEO({
   twitterCard,
   twitterTitle,
   twitterDescription,
+  twitterImage,
   keywords,
   author,
   robots,
@@ -110,6 +112,7 @@ export function useSEO({
     if (twitterCard) setMeta("twitter:card", twitterCard);
     if (twitterTitle) setMeta("twitter:title", twitterTitle);
     if (twitterDescription) setMeta("twitter:description", twitterDescription);
+    if (twitterImage) setMeta("twitter:image", twitterImage);
 
     const scripts: HTMLScriptElement[] = [];
     if (jsonLd) {
@@ -140,6 +143,7 @@ export function useSEO({
     twitterCard,
     twitterTitle,
     twitterDescription,
+    twitterImage,
     keywords,
     author,
     robots,
