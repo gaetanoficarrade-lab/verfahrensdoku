@@ -107,14 +107,31 @@ export default function FuerDienstleister() {
   useSEO({
     title: 'Verfahrensdokumentation für Dienstleister – Als Service anbieten | GoBD-Suite',
     description: 'Verfahrensdokumentation als Dienstleistung anbieten. Für Steuerberater, Agenturen und Berater.',
-    canonical: 'https://gobd-suite.de/fuer-dienstleister/',
+    canonical: 'https://gobd-suite.de/fuer-dienstleister',
     keywords: 'Verfahrensdokumentation Dienstleister, GoBD Berater, Verfahrensdokumentation Whitelabel, GoBD-Suite Agentur',
-    author: 'Gaetano Ficarra', robots: 'index, follow',
+    author: 'Gaetano Ficarra',
+    robots: 'index, follow',
     ogTitle: 'Verfahrensdokumentation für Dienstleister – Als Service anbieten | GoBD-Suite',
     ogDescription: 'Verfahrensdokumentation als Dienstleistung anbieten. Für Steuerberater, Agenturen und Berater.',
-    ogType: 'website', ogLocale: 'de_DE', ogImage: 'https://gobd-suite.de/og-image.png',
+    ogType: 'website',
+    ogLocale: 'de_DE',
+    ogUrl: 'https://gobd-suite.de/fuer-dienstleister',
+    ogImage: 'https://gobd-suite.de/og-dienstleister.png',
     twitterCard: 'summary_large_image',
-    jsonLd: [jsonLd],
+    twitterImage: 'https://gobd-suite.de/og-dienstleister.png',
+    twitterTitle: 'Verfahrensdokumentation für Dienstleister – Als Service anbieten | GoBD-Suite',
+    twitterDescription: 'Verfahrensdokumentation als Dienstleistung anbieten. Für Steuerberater, Agenturen und Berater.',
+    jsonLd: [
+      jsonLd,
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Startseite', item: 'https://gobd-suite.de' },
+          { '@type': 'ListItem', position: 2, name: 'Für Dienstleister', item: 'https://gobd-suite.de/fuer-dienstleister' },
+        ],
+      },
+    ],
   });
 
   const timelineSteps = [
