@@ -112,6 +112,7 @@ export function useSEO({
     if (twitterCard) setMeta("twitter:card", twitterCard);
     if (twitterTitle) setMeta("twitter:title", twitterTitle);
     if (twitterDescription) setMeta("twitter:description", twitterDescription);
+    if (twitterImage) setMeta("twitter:image", twitterImage);
 
     const scripts: HTMLScriptElement[] = [];
     if (jsonLd) {
