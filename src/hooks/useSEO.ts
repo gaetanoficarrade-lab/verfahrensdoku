@@ -18,6 +18,19 @@ interface SEOProps {
   jsonLd?: object[];
 }
 
+/** Normalizes canonical URLs: strips trailing slash except for the homepage. */
+function normalizeCanonical(url: string): string {
+  try {
+    const parsed = new URL(url);
+    if (parsed.pathname !== '/') {
+      parsed.pathname = parsed.pathname.replace(/\/+$/, '');
+    }
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
 export function useSEO({
   title,
   description,
@@ -35,6 +48,8 @@ export function useSEO({
   robots,
   jsonLd,
 }: SEOProps) {
+  const normalizedCanonical = canonical ? normalizeCanonical(canonical) : undefined;
+
   useEffect(() => {
     const cleanup: (() => void)[] = [];
 
@@ -65,7 +80,7 @@ export function useSEO({
     if (author) setMeta('author', author);
     if (robots) setMeta('robots', robots);
 
-    if (canonical) {
+    if (normalizedCanonical) {
       let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
       const existed = !!link;
       if (!link) {
@@ -74,7 +89,7 @@ export function useSEO({
         document.head.appendChild(link);
       }
       const prev = link.getAttribute('href');
-      link.setAttribute('href', canonical);
+      link.setAttribute('href', normalizedCanonical);
       cleanup.push(() => {
         if (!existed) link!.remove();
         else if (prev) link!.setAttribute('href', prev);
@@ -86,16 +101,14 @@ export function useSEO({
     if (ogImage) setMeta('og:image', ogImage, 'property');
     if (ogType) setMeta('og:type', ogType, 'property');
     if (ogLocale) setMeta('og:locale', ogLocale, 'property');
-    if (canonical) setMeta('og:url', canonical, 'property');
+    if (normalizedCanonical) setMeta('og:url', normalizedCanonical, 'property');
 
     if (twitterCard) setMeta('twitter:card', twitterCard);
     if (twitterTitle) setMeta('twitter:title', twitterTitle);
     if (twitterDescription) setMeta('twitter:description', twitterDescription);
 
-    // JSON-LD – remove pre-rendered duplicates first, then add fresh
     const scripts: HTMLScriptElement[] = [];
     if (jsonLd) {
-      // Remove any existing JSON-LD scripts to prevent duplicates from SSR/prerender
       document.querySelectorAll('script[type="application/ld+json"]').forEach((el) => el.remove());
       jsonLd.forEach((data) => {
         const script = document.createElement('script');
@@ -110,5 +123,14 @@ export function useSEO({
       cleanup.forEach((fn) => fn());
       scripts.forEach((s) => s.remove());
     };
-  }, [title, description, canonical, ogTitle, ogDescription, ogImage, ogType, ogLocale, twitterCard, twitterTitle, twitterDescription, keywords, author, robots, jsonLd]);
+  }, [title, description, normalizedCanonical, ogTitle, ogDescription, ogImage, ogType, ogLocale, twitterCard, twitterTitle, twitterDescription, keywords, author, robots, jsonLd]);
 }
+```
+
+Der Lovable-Prompt dazu:
+```
+Replace the entire content of src/hooks/useSEO.ts with the following code:
+
+[paste the code above]
+
+This adds automatic canonical URL normalization: trailing slashes are stripped from all URLs except the homepage ("/"). No changes needed to any page files — the hook handles it automatically.
