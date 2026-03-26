@@ -179,31 +179,33 @@ export default function BlogPostPage() {
       twitterTitle: `${post.meta_title || post.title} | GoBD-Suite Blog`,
       twitterDescription: post.meta_description || post.excerpt,
       robots: 'index, follow',
-      structuredData: {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        'itemListElement': [
-          {
-            '@type': 'ListItem',
-            'position': 1,
-            'name': 'Startseite',
-            'item': 'https://gobd-suite.de'
-          },
-          {
-            '@type': 'ListItem',
-            'position': 2,
-            'name': 'Blog',
-            'item': 'https://gobd-suite.de/blog'
-          },
-          {
-            '@type': 'ListItem',
-            'position': 3,
-            'name': post.title,
-            'item': `https://gobd-suite.de/blog/${post.slug}`
-          }
-        ]
-      },
-      jsonLd,
+      jsonLd: [
+        ...jsonLd,
+        {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          'itemListElement': [
+            {
+              '@type': 'ListItem',
+              'position': 1,
+              'name': 'Startseite',
+              'item': 'https://gobd-suite.de'
+            },
+            {
+              '@type': 'ListItem',
+              'position': 2,
+              'name': 'Blog',
+              'item': 'https://gobd-suite.de/blog'
+            },
+            {
+              '@type': 'ListItem',
+              'position': 3,
+              'name': post.title,
+              'item': `https://gobd-suite.de/blog/${post.slug}`
+            }
+          ]
+        },
+      ],
     });
   }, [post, slug, seededArticle, jsonLd]);
 
@@ -293,7 +295,7 @@ export default function BlogPostPage() {
                 <ul className="space-y-1.5">
                   {headings.map(h => (
                     <li key={h.id}>
-                      
+                      <a
                         href={`#${h.id}`}
                         className="text-[13px] block py-1 pl-3 transition-all duration-200 leading-snug rounded-r"
                         style={{
