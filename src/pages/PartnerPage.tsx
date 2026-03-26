@@ -417,7 +417,7 @@ export default function PartnerPage() {
     ogLocale: "de_DE",
     twitterCard: "summary_large_image",
     twitterImage: "https://gobd-suite.de/og-partner.png",
-    jsonLd: [{
+    structuredData: {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
@@ -434,7 +434,7 @@ export default function PartnerPage() {
           item: "https://gobd-suite.de/partner",
         },
       ],
-    }],
+    },
   });
 
   useEffect(() => {
