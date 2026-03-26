@@ -75,7 +75,7 @@ export default function Impressum() {
             <h2 className="text-xl font-semibold text-[#1d1d1f] mb-3">EU-Streitschlichtung</h2>
             <p>
               Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{' '}
-              
+              <a
                 href="https://ec.europa.eu/consumers/odr/"
                 target="_blank"
                 rel="noopener noreferrer"
