@@ -417,6 +417,8 @@ export default function PartnerPage() {
     ogLocale: "de_DE",
     twitterCard: "summary_large_image",
     twitterImage: "https://gobd-suite.de/og-partner.png",
+    twitterTitle: "Partner werden – GoBD-Suite Affiliate-Programm | 15% Provision",
+    twitterDescription: "Werde GoBD-Suite Partner und verdiene dauerhaft Provision auf jeden vermittelten Kunden – 15% monatlich, keine Zeitlimit, keine Deckelung.",
     jsonLd: [{
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
