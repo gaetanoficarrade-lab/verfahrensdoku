@@ -1,43 +1,59 @@
-import { useState, useEffect, useRef, useCallback, useMemo, type ReactNode } from 'react';
-import { SalesChatWidget } from '@/components/SalesChatWidget';
-import { useAuthContext } from '@/contexts/AuthContext';
-import { Navigate } from 'react-router-dom';
-import { CookieBanner, CookieSettingsButton } from '@/components/CookieBanner';
-import MarketingNav from '@/components/MarketingNav';
-import mockupDashboard from '@/assets/mockup-dashboard.png';
-import mockupEditor from '@/assets/mockup-editor.png';
-import mockupPdf from '@/assets/mockup-pdf.png';
-import mockupClients from '@/assets/mockup-clients.png';
-import mockupOverview from '@/assets/mockup-overview.png';
-import mockupOnboarding from '@/assets/mockup-onboarding.png';
-import mockupSoloDashboard from '@/assets/mockup-solo-dashboard.png';
-import mockupLaptopOverview from '@/assets/mockup-laptop-overview.png';
-import mockupLaptopPremium from '@/assets/mockup-laptop-premium.png';
-import productSolution from '@/assets/product-solution.png';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef, useCallback, useMemo, type ReactNode } from "react";
+import { SalesChatWidget } from "@/components/SalesChatWidget";
+import { useAuthContext } from "@/contexts/AuthContext";
+import { Navigate } from "react-router-dom";
+import { CookieBanner, CookieSettingsButton } from "@/components/CookieBanner";
+import MarketingNav from "@/components/MarketingNav";
+import mockupDashboard from "@/assets/mockup-dashboard.png";
+import mockupEditor from "@/assets/mockup-editor.png";
+import mockupPdf from "@/assets/mockup-pdf.png";
+import mockupClients from "@/assets/mockup-clients.png";
+import mockupOverview from "@/assets/mockup-overview.png";
+import mockupOnboarding from "@/assets/mockup-onboarding.png";
+import mockupSoloDashboard from "@/assets/mockup-solo-dashboard.png";
+import mockupLaptopOverview from "@/assets/mockup-laptop-overview.png";
+import mockupLaptopPremium from "@/assets/mockup-laptop-premium.png";
+import productSolution from "@/assets/product-solution.png";
+import { Link } from "react-router-dom";
 import {
-  AlertTriangle, Euro, Clock, Check, X, ChevronDown, ChevronUp,
-  Sparkles, FileText, History, Download, ShieldCheck, Palette, Menu, XIcon,
-  ArrowDown, Star, ThumbsUp, Shield,
-} from 'lucide-react';
-import { useScrollReveal } from '@/hooks/useScrollReveal';
-import { useSEO } from '@/hooks/useSEO';
-import SocialProofNotification from '@/components/SocialProofNotification';
+  AlertTriangle,
+  Euro,
+  Clock,
+  Check,
+  X,
+  ChevronDown,
+  ChevronUp,
+  Sparkles,
+  FileText,
+  History,
+  Download,
+  ShieldCheck,
+  Palette,
+  Menu,
+  XIcon,
+  ArrowDown,
+  Star,
+  ThumbsUp,
+  Shield,
+} from "lucide-react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useSEO } from "@/hooks/useSEO";
+import SocialProofNotification from "@/components/SocialProofNotification";
 
 /* ─── Design tokens ─── */
 const C = {
-  yellow: '#FAC81E',
-  dark: '#44484E',
-  white: '#FFFFFF',
-  bgLight: '#F5F5F7',
-  hoverDark: '#3A3D42',
-  green: '#34C759',
-  textGray: '#6E6E73',
-  border: '#E5E5E5',
+  yellow: "#FAC81E",
+  dark: "#44484E",
+  white: "#FFFFFF",
+  bgLight: "#F5F5F7",
+  hoverDark: "#3A3D42",
+  green: "#34C759",
+  textGray: "#6E6E73",
+  border: "#E5E5E5",
 } as const;
 
 /* ─── Reveal wrapper (upgraded: translateY(-20px → 0), 0.6s) ─── */
-function Reveal({ children, className = '', delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
+function Reveal({ children, className = "", delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>();
   return (
     <div
@@ -45,7 +61,7 @@ function Reveal({ children, className = '', delay = 0 }: { children: ReactNode; 
       className={className}
       style={{
         opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+        transform: isVisible ? "translateY(0)" : "translateY(20px)",
         transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
       }}
     >
@@ -61,9 +77,9 @@ function useCountUp(end: number, duration = 1500, trigger = false) {
   const hasAnimated = useRef(false);
 
   useEffect(() => {
-    const isPrerenderAgent = typeof navigator !== 'undefined' && (
-      navigator.webdriver || /HeadlessChrome|puppeteer|playwright/i.test(navigator.userAgent)
-    );
+    const isPrerenderAgent =
+      typeof navigator !== "undefined" &&
+      (navigator.webdriver || /HeadlessChrome|puppeteer|playwright/i.test(navigator.userAgent));
 
     if (!trigger || hasAnimated.current || isPrerenderAgent) return;
 
@@ -91,14 +107,16 @@ function useCountUp(end: number, duration = 1500, trigger = false) {
 function CounterStat({ num, suffix, text }: { num: number; suffix: string; text: string }) {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>(0.3);
   const count = useCountUp(num, 1500, isVisible);
-  const display = suffix === '< ' ? `< ${count}` : `${count}${suffix}`;
-  const staticDisplay = suffix === '< ' ? `< ${num}` : `${num}${suffix}`;
+  const display = suffix === "< " ? `< ${count}` : `${count}${suffix}`;
+  const staticDisplay = suffix === "< " ? `< ${num}` : `${num}${suffix}`;
   return (
     <div ref={ref} data-target={num}>
       <p className="text-3xl md:text-4xl font-bold mb-2" style={{ color: C.dark }} data-static-value={staticDisplay}>
         {display}
       </p>
-      <p className="text-sm font-medium leading-snug" style={{ color: C.dark, opacity: 0.8 }}>{text}</p>
+      <p className="text-sm font-medium leading-snug" style={{ color: C.dark, opacity: 0.8 }}>
+        {text}
+      </p>
     </div>
   );
 }
@@ -106,7 +124,10 @@ function CounterStat({ num, suffix, text }: { num: number; suffix: string; text:
 /* ─── Wave Divider ─── */
 function WaveDivider({ from, to, flip = false }: { from: string; to: string; flip?: boolean }) {
   return (
-    <div className="relative w-full overflow-hidden" style={{ height: 60, background: to, transform: flip ? 'scaleY(-1)' : undefined }}>
+    <div
+      className="relative w-full overflow-hidden"
+      style={{ height: 60, background: to, transform: flip ? "scaleY(-1)" : undefined }}
+    >
       <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
         <path d="M0,0 C360,60 1080,0 1440,60 L1440,0 L0,0 Z" fill={from} />
       </svg>
@@ -116,29 +137,29 @@ function WaveDivider({ from, to, flip = false }: { from: string; to: string; fli
 
 /* ─── Glassmorphism style helper ─── */
 const glass: React.CSSProperties = {
-  background: 'rgba(255, 255, 255, 0.7)',
-  backdropFilter: 'blur(20px)',
-  WebkitBackdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255, 255, 255, 0.8)',
-  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
+  background: "rgba(255, 255, 255, 0.7)",
+  backdropFilter: "blur(20px)",
+  WebkitBackdropFilter: "blur(20px)",
+  border: "1px solid rgba(255, 255, 255, 0.8)",
+  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
 };
 
 /* ─── Primary Button with glow ─── */
-function PrimaryBtn({ children, to, className = '' }: { children: ReactNode; to: string; className?: string }) {
+function PrimaryBtn({ children, to, className = "" }: { children: ReactNode; to: string; className?: string }) {
   return (
     <Link
       to={to}
       className={`inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200 ${className}`}
-      style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}
-      onMouseEnter={e => {
-        e.currentTarget.style.background = '#e5b71a';
-        e.currentTarget.style.boxShadow = '0 0 20px rgba(250, 200, 30, 0.4)';
-        e.currentTarget.style.transform = 'translateY(-1px)';
+      style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: "12px 24px" }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = "#e5b71a";
+        e.currentTarget.style.boxShadow = "0 0 20px rgba(250, 200, 30, 0.4)";
+        e.currentTarget.style.transform = "translateY(-1px)";
       }}
-      onMouseLeave={e => {
+      onMouseLeave={(e) => {
         e.currentTarget.style.background = C.yellow;
-        e.currentTarget.style.boxShadow = 'none';
-        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = "none";
+        e.currentTarget.style.transform = "translateY(0)";
       }}
     >
       {children}
@@ -146,11 +167,36 @@ function PrimaryBtn({ children, to, className = '' }: { children: ReactNode; to:
   );
 }
 
-function SecondaryBtn({ children, onClick, to, className = '' }: { children: ReactNode; onClick?: () => void; to?: string; className?: string }) {
-  const style: React.CSSProperties = { border: `1px solid ${C.dark}`, color: C.dark, borderRadius: 980, padding: '12px 24px', background: 'transparent' };
+function SecondaryBtn({
+  children,
+  onClick,
+  to,
+  className = "",
+}: {
+  children: ReactNode;
+  onClick?: () => void;
+  to?: string;
+  className?: string;
+}) {
+  const style: React.CSSProperties = {
+    border: `1px solid ${C.dark}`,
+    color: C.dark,
+    borderRadius: 980,
+    padding: "12px 24px",
+    background: "transparent",
+  };
   const cls = `inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200 hover:opacity-80 ${className}`;
-  if (to) return <Link to={to} className={cls} style={style}>{children}</Link>;
-  return <button onClick={onClick} className={cls} style={style}>{children}</button>;
+  if (to)
+    return (
+      <Link to={to} className={cls} style={style}>
+        {children}
+      </Link>
+    );
+  return (
+    <button onClick={onClick} className={cls} style={style}>
+      {children}
+    </button>
+  );
 }
 
 /* ─── FAQ Accordion ─── */
@@ -158,12 +204,21 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
     <div style={{ borderBottom: `1px solid ${C.border}` }}>
-      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between py-5 text-left font-semibold text-lg transition-colors" style={{ color: C.dark }}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between py-5 text-left font-semibold text-lg transition-colors"
+        style={{ color: C.dark }}
+      >
         {q}
         {open ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
       </button>
-      <div className="overflow-hidden transition-all duration-300" style={{ maxHeight: open ? 800 : 0, opacity: open ? 1 : 0 }}>
-        <p className="pb-5 leading-relaxed" style={{ color: C.textGray }}>{a}</p>
+      <div
+        className="overflow-hidden transition-all duration-300"
+        style={{ maxHeight: open ? 800 : 0, opacity: open ? 1 : 0 }}
+      >
+        <p className="pb-5 leading-relaxed" style={{ color: C.textGray }}>
+          {a}
+        </p>
       </div>
     </div>
   );
@@ -173,7 +228,9 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 function Stars() {
   return (
     <div className="flex gap-0.5 mb-3">
-      {[...Array(5)].map((_, i) => <Star key={i} size={16} fill={C.yellow} stroke={C.yellow} />)}
+      {[...Array(5)].map((_, i) => (
+        <Star key={i} size={16} fill={C.yellow} stroke={C.yellow} />
+      ))}
     </div>
   );
 }
@@ -186,21 +243,29 @@ function PricingToggleSection() {
     <>
       {/* Toggle */}
       <div className="flex items-center justify-center gap-3 mb-14">
-        <div className="inline-flex rounded-full p-1" style={{ background: C.bgLight, border: `1px solid ${C.border}` }}>
+        <div
+          className="inline-flex rounded-full p-1"
+          style={{ background: C.bgLight, border: `1px solid ${C.border}` }}
+        >
           <button
             onClick={() => setAnnual(false)}
             className="px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300"
-            style={{ background: !annual ? C.yellow : 'transparent', color: C.dark }}
+            style={{ background: !annual ? C.yellow : "transparent", color: C.dark }}
           >
             Monatlich
           </button>
           <button
             onClick={() => setAnnual(true)}
             className="px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2"
-            style={{ background: annual ? C.yellow : 'transparent', color: C.dark }}
+            style={{ background: annual ? C.yellow : "transparent", color: C.dark }}
           >
             Jährlich
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: C.green, color: '#fff' }}>–17 %</span>
+            <span
+              className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+              style={{ background: C.green, color: "#fff" }}
+            >
+              –17 %
+            </span>
           </button>
         </div>
       </div>
@@ -215,57 +280,101 @@ function PricingToggleSection() {
           sub="12 Monate Zugang · Renewal 199 €/Jahr"
           checkoutUrl="https://funnelpay.de/checkout/GoBD-Suite Solo Plan"
           features={[
-            { text: '1 Kunde (du selbst)', ok: true }, { text: 'Alle 30 Kapitel', ok: true }, { text: 'KI-Unterstützung', ok: true },
-            { text: 'Unbegrenzte Revisionen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false }, { text: 'Kein Berater-Portal', ok: false },
+            { text: "1 Kunde (du selbst)", ok: true },
+            { text: "Alle 30 Kapitel", ok: true },
+            { text: "KI-Unterstützung", ok: true },
+            { text: "Unbegrenzte Revisionen", ok: true },
+            { text: "PDF-Export", ok: true },
+            { text: "Kein Whitelabel", ok: false },
+            { text: "Kein Berater-Portal", ok: false },
           ]}
         />
         {/* Agentur */}
         <PriceCard
           name="Agentur"
-          checkoutUrl={annual ? "https://funnelpay.de/checkout/GoBD-Suite Agentur Plan-Jährl." : "https://funnelpay.de/checkout/GoBD-Suite Agentur Plan"}
-          price={annual ? '665 €' : '799 €'}
-          originalPrice={annual ? '799 €' : undefined}
+          checkoutUrl={
+            annual
+              ? "https://funnelpay.de/checkout/GoBD-Suite Agentur Plan-Jährl."
+              : "https://funnelpay.de/checkout/GoBD-Suite Agentur Plan"
+          }
+          price={annual ? "665 €" : "799 €"}
+          originalPrice={annual ? "799 €" : undefined}
           isAnnual={annual}
           unit="/Monat"
-          sub={annual ? '7.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
+          sub={annual ? "7.990 € jährlich · 17 % gespart" : "3 Monate Mindestlaufzeit · danach monatlich kündbar"}
           highlighted
           features={[
-            { text: 'Unbegrenzte Kunden', ok: true }, { text: 'Whitelabel (Logo + Brand)', ok: true }, { text: 'Eigene Domain im PDF', ok: true },
-            { text: 'Alle Berater-Features', ok: true }, { text: 'Prioritäts-Support', ok: true },
+            { text: "Unbegrenzte Kunden", ok: true },
+            { text: "Whitelabel (Logo + Brand)", ok: true },
+            { text: "Eigene Domain im PDF", ok: true },
+            { text: "Alle Berater-Features", ok: true },
+            { text: "Prioritäts-Support", ok: true },
           ]}
-          annualNote={annual ? 'Jährliche Laufzeit · danach jährlich kündbar' : undefined}
+          annualNote={annual ? "Jährliche Laufzeit · danach jährlich kündbar" : undefined}
         />
         {/* Berater */}
         <PriceCard
           name="Berater"
-          checkoutUrl={annual ? "https://funnelpay.de/checkout/GoBD-Suite Berater Plan Jährl." : "https://funnelpay.de/checkout/GoBD-Suite Berater Plan"}
-          price={annual ? '332 €' : '399 €'}
-          originalPrice={annual ? '399 €' : undefined}
+          checkoutUrl={
+            annual
+              ? "https://funnelpay.de/checkout/GoBD-Suite Berater Plan Jährl."
+              : "https://funnelpay.de/checkout/GoBD-Suite Berater Plan"
+          }
+          price={annual ? "332 €" : "399 €"}
+          originalPrice={annual ? "399 €" : undefined}
           isAnnual={annual}
           unit="/Monat"
-          sub={annual ? '3.990 € jährlich · 17 % gespart' : '3 Monate Mindestlaufzeit · danach monatlich kündbar'}
+          sub={annual ? "3.990 € jährlich · 17 % gespart" : "3 Monate Mindestlaufzeit · danach monatlich kündbar"}
           features={[
-            { text: 'Bis zu 5 Kunden', ok: true }, { text: 'Berater-Portal', ok: true }, { text: 'Alle KI-Funktionen', ok: true },
-            { text: 'Kunden-Einladungen', ok: true }, { text: 'PDF-Export', ok: true }, { text: 'Kein Whitelabel', ok: false },
+            { text: "Bis zu 5 Kunden", ok: true },
+            { text: "Berater-Portal", ok: true },
+            { text: "Alle KI-Funktionen", ok: true },
+            { text: "Kunden-Einladungen", ok: true },
+            { text: "PDF-Export", ok: true },
+            { text: "Kein Whitelabel", ok: false },
           ]}
-          annualNote={annual ? 'Jährliche Laufzeit · danach jährlich kündbar' : undefined}
+          annualNote={annual ? "Jährliche Laufzeit · danach jährlich kündbar" : undefined}
         />
       </div>
 
-      <p className="text-center mt-10 text-sm" style={{ color: C.textGray }}>Kostenloser Testaccount verfügbar · Keine Kreditkarte nötig</p>
+      <p className="text-center mt-10 text-sm" style={{ color: C.textGray }}>
+        Kostenloser Testaccount verfügbar · Keine Kreditkarte nötig
+      </p>
       <p className="text-center mt-2 text-xs" style={{ color: C.textGray, opacity: 0.7 }}>
-        Alle Preise zzgl. gesetzlich gültiger MwSt. · Dieses Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
+        Alle Preise zzgl. gesetzlich gültiger MwSt. · Dieses Angebot richtet sich ausschließlich an Unternehmer im Sinne
+        des § 14 BGB.
       </p>
       <p className="text-center mt-2">
-        <Link to="/test-starten" className="text-sm font-semibold hover:opacity-70 transition-opacity" style={{ color: C.dark }}>→ Kostenlos testen</Link>
+        <Link
+          to="/test-starten"
+          className="text-sm font-semibold hover:opacity-70 transition-opacity"
+          style={{ color: C.dark }}
+        >
+          → Kostenlos testen
+        </Link>
       </p>
     </>
   );
 }
 
 /* ─── Price Card ─── */
-function PriceCard({ name, price, originalPrice, unit, sub, features, highlighted = false, annualNote, checkoutUrl, isAnnual }: {
-  name: string; price: string; originalPrice?: string; unit: string; sub: string;
+function PriceCard({
+  name,
+  price,
+  originalPrice,
+  unit,
+  sub,
+  features,
+  highlighted = false,
+  annualNote,
+  checkoutUrl,
+  isAnnual,
+}: {
+  name: string;
+  price: string;
+  originalPrice?: string;
+  unit: string;
+  sub: string;
   features: { text: string; ok: boolean }[];
   highlighted?: boolean;
   annualNote?: string;
@@ -277,26 +386,50 @@ function PriceCard({ name, price, originalPrice, unit, sub, features, highlighte
       className="rounded-[18px] p-8 flex flex-col h-full relative"
       style={{
         background: C.white,
-        boxShadow: highlighted ? '0 4px 32px rgba(0,0,0,0.10)' : '0 2px 16px rgba(0,0,0,0.06)',
+        boxShadow: highlighted ? "0 4px 32px rgba(0,0,0,0.10)" : "0 2px 16px rgba(0,0,0,0.06)",
         borderTop: highlighted ? `4px solid ${C.yellow}` : undefined,
       }}
     >
       {highlighted && (
-        <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full" style={{ background: C.yellow, color: C.dark }}>Beliebt</span>
+        <span
+          className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full"
+          style={{ background: C.yellow, color: C.dark }}
+        >
+          Beliebt
+        </span>
       )}
-      <h3 className="text-xl font-bold mb-2" style={{ color: C.dark }}>{name}</h3>
+      <h3 className="text-xl font-bold mb-2" style={{ color: C.dark }}>
+        {name}
+      </h3>
       <div className="flex items-baseline flex-wrap gap-x-2 gap-y-0 mb-1">
         {isAnnual && originalPrice && (
-          <span className="text-xl sm:text-2xl font-bold line-through whitespace-nowrap" style={{ color: '#E53E3E' }}>{originalPrice}</span>
+          <span className="text-xl sm:text-2xl font-bold line-through whitespace-nowrap" style={{ color: "#E53E3E" }}>
+            {originalPrice}
+          </span>
         )}
-        <span className="text-3xl sm:text-4xl font-bold transition-all duration-300 whitespace-nowrap" style={{ color: isAnnual && originalPrice ? '#38A169' : C.dark }}>{price}</span>
-        <span className="text-sm" style={{ color: C.textGray }}>{unit}</span>
+        <span
+          className="text-3xl sm:text-4xl font-bold transition-all duration-300 whitespace-nowrap"
+          style={{ color: isAnnual && originalPrice ? "#38A169" : C.dark }}
+        >
+          {price}
+        </span>
+        <span className="text-sm" style={{ color: C.textGray }}>
+          {unit}
+        </span>
       </div>
       {isAnnual && originalPrice && (
-        <p className="text-xs font-semibold mb-1" style={{ color: '#38A169' }}>17 % gespart</p>
+        <p className="text-xs font-semibold mb-1" style={{ color: "#38A169" }}>
+          17 % gespart
+        </p>
       )}
-      <p className="text-xs mb-1" style={{ color: C.textGray }}>{sub}</p>
-      {annualNote && <p className="text-xs mb-4" style={{ color: C.textGray, opacity: 0.7 }}>{annualNote}</p>}
+      <p className="text-xs mb-1" style={{ color: C.textGray }}>
+        {sub}
+      </p>
+      {annualNote && (
+        <p className="text-xs mb-4" style={{ color: C.textGray, opacity: 0.7 }}>
+          {annualNote}
+        </p>
+      )}
       {!annualNote && <div className="mb-5" />}
       <ul className="space-y-2 mb-8 flex-1">
         {features.map((f, i) => (
@@ -307,14 +440,25 @@ function PriceCard({ name, price, originalPrice, unit, sub, features, highlighte
         ))}
       </ul>
       {checkoutUrl ? (
-        <a href={checkoutUrl} target="_blank" rel="noopener noreferrer"
+        <a
+          href={checkoutUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200 w-full text-center"
-          style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}
-          onMouseEnter={e => { e.currentTarget.style.background = '#e5b71a'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = C.yellow; }}
-        >Jetzt kaufen</a>
+          style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: "12px 24px" }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "#e5b71a";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = C.yellow;
+          }}
+        >
+          Jetzt kaufen
+        </a>
       ) : (
-        <PrimaryBtn to="/test-starten" className="w-full text-center">Jetzt starten</PrimaryBtn>
+        <PrimaryBtn to="/test-starten" className="w-full text-center">
+          Jetzt starten
+        </PrimaryBtn>
       )}
     </div>
   );
@@ -325,23 +469,26 @@ function useActiveStep(count: number) {
   const refs = useRef<(HTMLDivElement | null)[]>([]);
   const [active, setActive] = useState(0);
 
-  const setRef = useCallback((i: number) => (el: HTMLDivElement | null) => {
-    refs.current[i] = el;
-  }, []);
+  const setRef = useCallback(
+    (i: number) => (el: HTMLDivElement | null) => {
+      refs.current[i] = el;
+    },
+    [],
+  );
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const idx = refs.current.indexOf(entry.target as HTMLDivElement);
             if (idx !== -1) setActive(idx);
           }
         });
       },
-      { threshold: 0.6 }
+      { threshold: 0.6 },
     );
-    refs.current.forEach(el => el && observer.observe(el));
+    refs.current.forEach((el) => el && observer.observe(el));
     return () => observer.disconnect();
   }, [count]);
 
@@ -359,79 +506,206 @@ export default function MarketingPage() {
   /* 6. Nav scroll effect */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   /* 5. Sticky steps */
   const steps = [
-    { num: '1', icon: FileText, title: 'Onboarding ausfüllen', text: 'Beantworte 7 kurze Fragen zu deinem Unternehmen. Das dauert 5 Minuten und steuert welche Kapitel für dich relevant sind.', img: mockupOnboarding },
-    { num: '2', icon: Sparkles, title: 'Kapitel beschreiben', text: 'Beschreibe in deinen eigenen Worten wie du arbeitest. Kein Fachjargon, keine Paragraphen. Die KI prüft und vervollständigt.', img: mockupEditor },
-    { num: '3', icon: Download, title: 'PDF herunterladen', text: 'Deine fertige, GoBD-konforme Verfahrensdokumentation als professionelles PDF. Bereit für die nächste Prüfung.', img: mockupPdf },
+    {
+      num: "1",
+      icon: FileText,
+      title: "Onboarding ausfüllen",
+      text: "Beantworte 7 kurze Fragen zu deinem Unternehmen. Das dauert 5 Minuten und steuert welche Kapitel für dich relevant sind.",
+      img: mockupOnboarding,
+    },
+    {
+      num: "2",
+      icon: Sparkles,
+      title: "Kapitel beschreiben",
+      text: "Beschreibe in deinen eigenen Worten wie du arbeitest. Kein Fachjargon, keine Paragraphen. Die KI prüft und vervollständigt.",
+      img: mockupEditor,
+    },
+    {
+      num: "3",
+      icon: Download,
+      title: "PDF herunterladen",
+      text: "Deine fertige, GoBD-konforme Verfahrensdokumentation als professionelles PDF. Bereit für die nächste Prüfung.",
+      img: mockupPdf,
+    },
   ];
   const { active: activeStep, setRef: setStepRef } = useActiveStep(steps.length);
 
-  const jsonLdSchemas = useMemo(() => [
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "GoBD-Suite",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web",
-      "description": "Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt und GoBD-konform.",
-      "url": "https://gobd-suite.de",
-      "offers": [
-        { "@type": "Offer", "name": "Solo", "price": "980", "priceCurrency": "EUR", "priceSpecification": { "@type": "UnitPriceSpecification", "billingDuration": "P1Y" } },
-        { "@type": "Offer", "name": "Berater", "price": "399", "priceCurrency": "EUR", "priceSpecification": { "@type": "UnitPriceSpecification", "billingDuration": "P1M" } },
-        { "@type": "Offer", "name": "Agentur", "price": "799", "priceCurrency": "EUR", "priceSpecification": { "@type": "UnitPriceSpecification", "billingDuration": "P1M" } },
-      ],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        { "@type": "Question", "name": "Brauche ich das wirklich?", "acceptedAnswer": { "@type": "Answer", "text": "Ja – und zwar seit 2014. Die GoBD verpflichten alle Unternehmen die digital buchen zur Verfahrensdokumentation. Seit 2025 wird das aktiv bei Betriebsprüfungen kontrolliert. Wer keine hat, riskiert dass das Finanzamt seine gesamte digitale Buchführung als nicht ordnungsgemäß einstuft – und schätzt statt prüft. Das bedeutet fast immer Nachzahlungen. Mit GoBD-Suite bist du in unter einer Stunde abgesichert." } },
-        { "@type": "Question", "name": "Ist das nicht Aufgabe meines Steuerberaters?", "acceptedAnswer": { "@type": "Answer", "text": "Nein. Die Verfahrensdokumentation muss das Unternehmen selbst erstellen, weil sie deine internen Abläufe beschreibt – nicht die des Steuerberaters. Dein Steuerberater kann beraten, aber erstellen musst du sie. GoBD-Suite führt dich Schritt für Schritt durch den gesamten Prozess." } },
-        { "@type": "Question", "name": "Das klingt kompliziert.", "acceptedAnswer": { "@type": "Answer", "text": "Genau dafür wurde GoBD-Suite entwickelt. Du beantwortest Fragen in normaler Sprache – so wie du einem Freund erklärst wie dein Business läuft. Die KI übernimmt die fachliche Aufbereitung. Die meisten Nutzer sind in unter einer Stunde fertig. Teste es 7 Tage kostenlos und überzeuge dich selbst." } },
-        { "@type": "Question", "name": "Was wenn sich mein Prozess ändert?", "acceptedAnswer": { "@type": "Answer", "text": "Einfach das entsprechende Kapitel aktualisieren. Alle Änderungen werden automatisch mit Datum, Versionsnummer und Änderungsgrund dokumentiert. So bist du immer auf dem neuesten Stand – und kannst bei einer Prüfung lückenlos nachweisen was sich wann geändert hat." } },
-        { "@type": "Question", "name": "Kann ich das Tool kostenlos testen?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Du kannst GoBD-Suite 7 Tage lang kostenlos und ohne Kreditkarte testen. Du siehst die vollständige Struktur und kannst zwei Kapitel mit KI-Unterstützung ausprobieren. Starte jetzt – es dauert 2 Minuten." } },
-        { "@type": "Question", "name": "Was ist der Unterschied zwischen Berater und Agentur?", "acceptedAnswer": { "@type": "Answer", "text": "Der Berater-Plan ist für bis zu 5 Kunden ohne Whitelabel – ideal zum Einstieg als Dienstleister. Der Agentur-Plan bietet unbegrenzte Kunden und vollständiges Whitelabel: dein Logo, dein Brand, deine Domain im PDF. Upgrade jederzeit möglich." } },
-        { "@type": "Question", "name": "Wann gilt die Zufriedenheitsgarantie?", "acceptedAnswer": { "@type": "Answer", "text": "Wenn das Tool technische Probleme hat, nicht das tut was es soll oder zu kompliziert ist und wir das Problem nicht lösen können – bekommst du dein Geld zurück. Melde dich einfach bei uns. Die Garantie gilt nicht für bereits vollständig erstellte Verfahrensdokumentationen, da die Leistung dann erbracht wurde." } },
-      ],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "GoBD-Suite",
-      "url": "https://gobd-suite.de",
-      "logo": "https://gobd-suite.de/images/logo.png",
-      "contactPoint": { "@type": "ContactPoint", "contactType": "customer service", "availableLanguage": "German" },
-    },
-  ], []);
+  const jsonLdSchemas = useMemo(
+    () => [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "GoBD-Suite",
+        url: "https://gobd-suite.de",
+        description: "Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum",
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: "https://gobd-suite.de/search?q={search_term_string}",
+          },
+          "query-input": "required name=search_term_string",
+        },
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: "GoBD-Suite",
+        url: "https://gobd-suite.de",
+        logo: "https://gobd-suite.de/images/logo.png",
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "customer service",
+          email: "info@gobd-suite.de",
+          availableLanguage: ["de"],
+        },
+        sameAs: ["https://www.linkedin.com/company/gobd-suite", "https://www.youtube.com/@GoBDSuite"],
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        name: "GoBD-Suite",
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "Web",
+        description: "Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt und GoBD-konform.",
+        url: "https://gobd-suite.de",
+        offers: [
+          {
+            "@type": "Offer",
+            name: "Solo",
+            price: "980",
+            priceCurrency: "EUR",
+            priceSpecification: { "@type": "UnitPriceSpecification", billingDuration: "P1Y" },
+          },
+          {
+            "@type": "Offer",
+            name: "Berater",
+            price: "399",
+            priceCurrency: "EUR",
+            priceSpecification: { "@type": "UnitPriceSpecification", billingDuration: "P1M" },
+          },
+          {
+            "@type": "Offer",
+            name: "Agentur",
+            price: "799",
+            priceCurrency: "EUR",
+            priceSpecification: { "@type": "UnitPriceSpecification", billingDuration: "P1M" },
+          },
+        ],
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: [
+          {
+            "@type": "Question",
+            name: "Brauche ich das wirklich?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Ja – und zwar seit 2014. Die GoBD verpflichten alle Unternehmen die digital buchen zur Verfahrensdokumentation. Seit 2025 wird das aktiv bei Betriebsprüfungen kontrolliert. Wer keine hat, riskiert dass das Finanzamt seine gesamte digitale Buchführung als nicht ordnungsgemäß einstuft – und schätzt statt prüft. Das bedeutet fast immer Nachzahlungen. Mit GoBD-Suite bist du in unter einer Stunde abgesichert.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Ist das nicht Aufgabe meines Steuerberaters?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Nein. Die Verfahrensdokumentation muss das Unternehmen selbst erstellen, weil sie deine internen Abläufe beschreibt – nicht die des Steuerberaters. Dein Steuerberater kann beraten, aber erstellen musst du sie. GoBD-Suite führt dich Schritt für Schritt durch den gesamten Prozess.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Das klingt kompliziert.",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Genau dafür wurde GoBD-Suite entwickelt. Du beantwortest Fragen in normaler Sprache – so wie du einem Freund erklärst wie dein Business läuft. Die KI übernimmt die fachliche Aufbereitung. Die meisten Nutzer sind in unter einer Stunde fertig. Teste es 7 Tage kostenlos und überzeuge dich selbst.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Was wenn sich mein Prozess ändert?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Einfach das entsprechende Kapitel aktualisieren. Alle Änderungen werden automatisch mit Datum, Versionsnummer und Änderungsgrund dokumentiert. So bist du immer auf dem neuesten Stand – und kannst bei einer Prüfung lückenlos nachweisen was sich wann geändert hat.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Kann ich das Tool kostenlos testen?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Ja. Du kannst GoBD-Suite 7 Tage lang kostenlos und ohne Kreditkarte testen. Du siehst die vollständige Struktur und kannst zwei Kapitel mit KI-Unterstützung ausprobieren. Starte jetzt – es dauert 2 Minuten.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Was ist der Unterschied zwischen Berater und Agentur?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Der Berater-Plan ist für bis zu 5 Kunden ohne Whitelabel – ideal zum Einstieg als Dienstleister. Der Agentur-Plan bietet unbegrenzte Kunden und vollständiges Whitelabel: dein Logo, dein Brand, deine Domain im PDF. Upgrade jederzeit möglich.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Wann gilt die Zufriedenheitsgarantie?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Wenn das Tool technische Probleme hat, nicht das tut was es soll oder zu kompliziert ist und wir das Problem nicht lösen können – bekommst du dein Geld zurück. Melde dich einfach bei uns. Die Garantie gilt nicht für bereits vollständig erstellte Verfahrensdokumentationen, da die Leistung dann erbracht wurde.",
+            },
+          },
+        ],
+      },
+    ],
+    [],
+  );
 
   useSEO({
-    title: 'GoBD-Suite – Verfahrensdokumentation erstellen | GoBD-konform & KI-gestützt',
-    description: 'GoBD-Suite ist das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde. Jetzt kostenlos testen.',
-    canonical: 'https://gobd-suite.de',
-    keywords: 'Verfahrensdokumentation, GoBD, GoBD-konform, Verfahrensdokumentation erstellen, GoBD Tool, Buchhaltung Software, Betriebsprüfung',
-    author: 'Gaetano Ficarra',
-    robots: 'index, follow',
-    ogTitle: 'GoBD-Suite – Verfahrensdokumentation erstellen',
-    ogDescription: 'Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde.',
-    ogType: 'website',
-    ogLocale: 'de_DE',
-    ogImage: 'https://gobd-suite.de/images/logo.png',
-    twitterCard: 'summary_large_image',
-    twitterTitle: 'GoBD-Suite',
-    twitterDescription: 'Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum.',
+    title: "GoBD-Suite – Verfahrensdokumentation erstellen | GoBD-konform & KI-gestützt",
+    description:
+      "GoBD-Suite ist das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde. Jetzt kostenlos testen.",
+    canonical: "https://gobd-suite.de",
+    keywords:
+      "Verfahrensdokumentation, GoBD, GoBD-konform, Verfahrensdokumentation erstellen, GoBD Tool, Buchhaltung Software, Betriebsprüfung",
+    author: "Gaetano Ficarra",
+    robots: "index, follow",
+    ogTitle: "GoBD-Suite – Verfahrensdokumentation erstellen",
+    ogDescription:
+      "Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde.",
+    ogType: "website",
+    ogLocale: "de_DE",
+    ogImage: "https://gobd-suite.de/og-homepage.png",
+    ogUrl: "https://gobd-suite.de",
+    twitterCard: "summary_large_image",
+    twitterImage: "https://gobd-suite.de/og-homepage.png",
+    twitterTitle: "GoBD-Suite – Verfahrensdokumentation erstellen",
+    twitterDescription:
+      "Das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. KI-gestützt, GoBD-konform, fertig in unter einer Stunde.",
+    structuredData: {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: "https://gobd-suite.de",
+        },
+      ],
+    },
     jsonLd: jsonLdSchemas,
   });
 
   /* ─── Float keyframes (injected once) ─── */
   useEffect(() => {
-    const id = 'marketing-float-keyframes';
+    const id = "marketing-float-keyframes";
     if (document.getElementById(id)) return;
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.id = id;
     style.textContent = `
       @keyframes heroFloat {
@@ -444,7 +718,9 @@ export default function MarketingPage() {
       }
     `;
     document.head.appendChild(style);
-    return () => { document.getElementById(id)?.remove(); };
+    return () => {
+      document.getElementById(id)?.remove();
+    };
   }, []);
 
   // Redirect logged-in users to dashboard – show nothing while auth loads
@@ -467,31 +743,46 @@ export default function MarketingPage() {
           style={{ background: C.white }}
         >
           {/* Radial gradient overlay */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(250, 200, 30, 0.15), transparent)' }} />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(250, 200, 30, 0.15), transparent)",
+            }}
+          />
 
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full relative z-10">
             {/* Left */}
-            <div style={{ animation: 'heroSlideUp 0.8s ease-out both' }}>
+            <div style={{ animation: "heroSlideUp 0.8s ease-out both" }}>
               <Reveal>
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full mb-6" style={{ background: C.yellow, color: C.dark }}>
+                <span
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full mb-6"
+                  style={{ background: C.yellow, color: C.dark }}
+                >
                   Das erste Verfahrensdokumentations-Tool im DACH-Raum
                 </span>
               </Reveal>
               <Reveal delay={0.1}>
-                <h1 className="text-4xl md:text-[48px] lg:text-[56px] font-bold leading-[1.1] mb-6" style={{ color: C.dark }}>
-                  Das Finanzamt kann deine gesamte Buchführung verwerfen.<br />
+                <h1
+                  className="text-4xl md:text-[48px] lg:text-[56px] font-bold leading-[1.1] mb-6"
+                  style={{ color: C.dark }}
+                >
+                  Das Finanzamt kann deine gesamte Buchführung verwerfen.
+                  <br />
                   <span style={{ color: C.textGray }}>Auch ohne einen einzigen Fehler.</span>
                 </h1>
               </Reveal>
               <Reveal delay={0.15}>
                 <p className="text-lg md:text-xl max-w-[540px] mb-10 leading-relaxed" style={{ color: C.textGray }}>
-                  Der Grund: Fehlende Verfahrensdokumentation. Seit 2025 wird das aktiv geprüft. GoBD-Suite schützt dich – in unter einer Stunde.
+                  Der Grund: Fehlende Verfahrensdokumentation. Seit 2025 wird das aktiv geprüft. GoBD-Suite schützt dich
+                  – in unter einer Stunde.
                 </p>
               </Reveal>
               <Reveal delay={0.2}>
                 <div className="flex flex-wrap items-center gap-4">
                   <PrimaryBtn to="/test-starten">Jetzt kostenlos testen</PrimaryBtn>
-                  <SecondaryBtn onClick={() => document.getElementById('funktionen')?.scrollIntoView({ behavior: 'smooth' })}>
+                  <SecondaryBtn
+                    onClick={() => document.getElementById("funktionen")?.scrollIntoView({ behavior: "smooth" })}
+                  >
                     Wie es funktioniert <ArrowDown size={16} />
                   </SecondaryBtn>
                 </div>
@@ -501,8 +792,15 @@ export default function MarketingPage() {
               </Reveal>
               <Reveal delay={0.3}>
                 <div className="flex flex-wrap gap-x-6 gap-y-2 mt-8 text-sm" style={{ color: C.textGray }}>
-                  {['GoBD-konform seit 2014', 'KI-gestützte Erstellung', 'Fertig in unter 60 Minuten', 'Automatisch versioniert'].map(t => (
-                    <span key={t} className="flex items-center gap-1.5"><Check size={14} style={{ color: C.green }} /> {t}</span>
+                  {[
+                    "GoBD-konform seit 2014",
+                    "KI-gestützte Erstellung",
+                    "Fertig in unter 60 Minuten",
+                    "Automatisch versioniert",
+                  ].map((t) => (
+                    <span key={t} className="flex items-center gap-1.5">
+                      <Check size={14} style={{ color: C.green }} /> {t}
+                    </span>
                   ))}
                 </div>
               </Reveal>
@@ -510,17 +808,18 @@ export default function MarketingPage() {
 
             {/* Right: Dashboard mockup (9. floating animation) */}
             <Reveal delay={0.25} className="hidden lg:block">
-              <div
-                className="rounded-xl overflow-hidden"
-                style={{ animation: 'heroFloat 3s ease-in-out infinite' }}
-              >
+              <div className="rounded-xl overflow-hidden" style={{ animation: "heroFloat 3s ease-in-out infinite" }}>
                 {/* macOS dots */}
-                <div className="flex items-center gap-1.5 px-4 py-2.5" style={{ background: '#f0f0f0' }}>
-                  <span className="w-3 h-3 rounded-full" style={{ background: '#FF5F57' }} />
-                  <span className="w-3 h-3 rounded-full" style={{ background: '#FEBC2E' }} />
-                  <span className="w-3 h-3 rounded-full" style={{ background: '#28C840' }} />
+                <div className="flex items-center gap-1.5 px-4 py-2.5" style={{ background: "#f0f0f0" }}>
+                  <span className="w-3 h-3 rounded-full" style={{ background: "#FF5F57" }} />
+                  <span className="w-3 h-3 rounded-full" style={{ background: "#FEBC2E" }} />
+                  <span className="w-3 h-3 rounded-full" style={{ background: "#28C840" }} />
                 </div>
-                <img src={mockupDashboard} alt="GoBD-Suite Dashboard mit Kunden- und Projektübersicht" className="w-full h-auto" />
+                <img
+                  src={mockupDashboard}
+                  alt="GoBD-Suite Dashboard mit Kunden- und Projektübersicht"
+                  className="w-full h-auto"
+                />
               </div>
             </Reveal>
           </div>
@@ -530,31 +829,63 @@ export default function MarketingPage() {
         <WaveDivider from={C.white} to={C.bgLight} />
 
         {/* ─── 3. AGITATION (8. gradient bg) ─── */}
-        <section style={{ background: `linear-gradient(180deg, ${C.bgLight} 0%, ${C.white} 100%)` }} className="py-20 md:py-24 px-6" aria-labelledby="pain-headline">
+        <section
+          style={{ background: `linear-gradient(180deg, ${C.bgLight} 0%, ${C.white} 100%)` }}
+          className="py-20 md:py-24 px-6"
+          aria-labelledby="pain-headline"
+        >
           <div className="max-w-6xl mx-auto">
             <Reveal>
-              <h2 id="pain-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>
-                Was passiert ohne <span style={{ background: 'rgba(250, 200, 30, 0.2)', borderRadius: 4, padding: '0 6px' }}>Verfahrensdokumentation</span>?
+              <h2
+                id="pain-headline"
+                className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16"
+                style={{ color: C.dark }}
+              >
+                Was passiert ohne{" "}
+                <span style={{ background: "rgba(250, 200, 30, 0.2)", borderRadius: 4, padding: "0 6px" }}>
+                  Verfahrensdokumentation
+                </span>
+                ?
               </h2>
             </Reveal>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { Icon: AlertTriangle, title: 'Finanzamt verwirft deine Buchführung', text: 'Der Prüfer kann deine gesamte digitale Buchführung als nicht ordnungsgemäß einstufen – und einfach schätzen.' },
-                { Icon: Euro, title: 'Nachzahlungen die dein Business gefährden', text: 'Steuerliche Schätzungen liegen fast immer über deinen tatsächlichen Einnahmen. Das tut weh.' },
-                { Icon: Clock, title: 'Stundenlanger Stress statt 5 Minuten vorlegen', text: 'Wer vorbereitet ist, übergibt ein Dokument und geht. Wer es nicht ist, erklärt sich stundenlang.' },
+                {
+                  Icon: AlertTriangle,
+                  title: "Finanzamt verwirft deine Buchführung",
+                  text: "Der Prüfer kann deine gesamte digitale Buchführung als nicht ordnungsgemäß einstufen – und einfach schätzen.",
+                },
+                {
+                  Icon: Euro,
+                  title: "Nachzahlungen die dein Business gefährden",
+                  text: "Steuerliche Schätzungen liegen fast immer über deinen tatsächlichen Einnahmen. Das tut weh.",
+                },
+                {
+                  Icon: Clock,
+                  title: "Stundenlanger Stress statt 5 Minuten vorlegen",
+                  text: "Wer vorbereitet ist, übergibt ein Dokument und geht. Wer es nicht ist, erklärt sich stundenlang.",
+                },
               ].map((c, i) => (
                 <Reveal key={i} delay={i * 0.1}>
                   <article className="rounded-[18px] p-8 h-full" style={{ ...glass }}>
                     <c.Icon size={32} style={{ color: C.yellow }} className="mb-4" aria-hidden="true" />
-                    <h3 className="text-lg font-bold mb-2" style={{ color: C.dark }}>{c.title}</h3>
-                    <p className="leading-relaxed" style={{ color: C.textGray }}>{c.text}</p>
+                    <h3 className="text-lg font-bold mb-2" style={{ color: C.dark }}>
+                      {c.title}
+                    </h3>
+                    <p className="leading-relaxed" style={{ color: C.textGray }}>
+                      {c.text}
+                    </p>
                   </article>
                 </Reveal>
               ))}
             </div>
             <Reveal delay={0.3}>
-              <p className="text-center font-bold mt-14 max-w-[700px] mx-auto text-lg leading-relaxed" style={{ color: C.dark }}>
-                Seit 2025 prüft das Finanzamt aktiv ob eine Verfahrensdokumentation vorliegt. Die meisten Selbstständigen haben keine.
+              <p
+                className="text-center font-bold mt-14 max-w-[700px] mx-auto text-lg leading-relaxed"
+                style={{ color: C.dark }}
+              >
+                Seit 2025 prüft das Finanzamt aktiv ob eine Verfahrensdokumentation vorliegt. Die meisten
+                Selbstständigen haben keine.
               </p>
             </Reveal>
           </div>
@@ -578,20 +909,30 @@ export default function MarketingPage() {
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <Reveal>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.1em] mb-4" style={{ color: C.yellow }}>Die Lösung</p>
-                <h2 id="solution-headline" className="text-3xl md:text-[44px] lg:text-[52px] font-bold leading-[1.1] mb-6" style={{ color: C.dark }}>
-                  Deine Verfahrens-<br className="hidden md:inline" />dokumentation. Fertig. Rechtssicher. In deiner Sprache.
+                <p className="text-xs font-semibold uppercase tracking-[0.1em] mb-4" style={{ color: C.yellow }}>
+                  Die Lösung
+                </p>
+                <h2
+                  id="solution-headline"
+                  className="text-3xl md:text-[44px] lg:text-[52px] font-bold leading-[1.1] mb-6"
+                  style={{ color: C.dark }}
+                >
+                  Deine Verfahrens-
+                  <br className="hidden md:inline" />
+                  dokumentation. Fertig. Rechtssicher. In deiner Sprache.
                 </h2>
                 <p className="leading-relaxed mb-8" style={{ color: C.textGray }}>
-                  GoBD-Suite ist das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. Du beantwortest Fragen wie in einem Gespräch – die KI erstellt daraus das fertige, GoBD-konforme Dokument. Kein Juristendeutsch. Kein Steuerberater nötig.
+                  GoBD-Suite ist das erste vollständige Verfahrensdokumentations-Tool im DACH-Raum. Du beantwortest
+                  Fragen wie in einem Gespräch – die KI erstellt daraus das fertige, GoBD-konforme Dokument. Kein
+                  Juristendeutsch. Kein Steuerberater nötig.
                 </p>
                 <ul className="space-y-3">
                   {[
-                    'KI versteht Alltagssprache – kein Fachjargon nötig',
-                    'Alle 30 GoBD-Kapitel automatisch abgedeckt',
-                    'Fertige PDF auf Knopfdruck',
-                    'Änderungen werden automatisch versioniert und dokumentiert',
-                  ].map(t => (
+                    "KI versteht Alltagssprache – kein Fachjargon nötig",
+                    "Alle 30 GoBD-Kapitel automatisch abgedeckt",
+                    "Fertige PDF auf Knopfdruck",
+                    "Änderungen werden automatisch versioniert und dokumentiert",
+                  ].map((t) => (
                     <li key={t} className="flex items-start gap-2 text-[15px]" style={{ color: C.dark }}>
                       <Check size={18} className="mt-0.5 shrink-0" style={{ color: C.green }} /> {t}
                     </li>
@@ -600,8 +941,13 @@ export default function MarketingPage() {
               </div>
             </Reveal>
             <Reveal delay={0.2}>
-              <div className="rounded-2xl overflow-hidden" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.12)' }}>
-                <img src={productSolution} alt="GoBD-Suite Kapitel-Editor mit Sidebar und KI-gestütztem Texteditor" className="w-full h-auto" loading="lazy" />
+              <div className="rounded-2xl overflow-hidden" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.12)" }}>
+                <img
+                  src={productSolution}
+                  alt="GoBD-Suite Kapitel-Editor mit Sidebar und KI-gestütztem Texteditor"
+                  className="w-full h-auto"
+                  loading="lazy"
+                />
               </div>
             </Reveal>
           </div>
@@ -611,11 +957,22 @@ export default function MarketingPage() {
         <WaveDivider from={C.white} to={C.bgLight} />
 
         {/* ─── 6. WIE ES FUNKTIONIERT (5. sticky step activation) ─── */}
-        <section id="funktionen" style={{ background: `linear-gradient(180deg, ${C.bgLight} 0%, ${C.white} 100%)` }} className="py-20 md:py-28 px-6" aria-labelledby="steps-headline">
+        <section
+          id="funktionen"
+          style={{ background: `linear-gradient(180deg, ${C.bgLight} 0%, ${C.white} 100%)` }}
+          className="py-20 md:py-28 px-6"
+          aria-labelledby="steps-headline"
+        >
           <div className="max-w-5xl mx-auto text-center">
             <Reveal>
-              <p className="text-xs font-semibold uppercase tracking-[0.1em] mb-4" style={{ color: C.yellow }}>So einfach geht es</p>
-              <h2 id="steps-headline" className="text-3xl md:text-[48px] font-bold leading-tight mb-16" style={{ color: C.dark }}>
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] mb-4" style={{ color: C.yellow }}>
+                So einfach geht es
+              </p>
+              <h2
+                id="steps-headline"
+                className="text-3xl md:text-[48px] font-bold leading-tight mb-16"
+                style={{ color: C.dark }}
+              >
                 In drei Schritten zur fertigen Verfahrensdokumentation
               </h2>
             </Reveal>
@@ -627,18 +984,31 @@ export default function MarketingPage() {
                     className="flex flex-col items-center transition-all duration-500"
                     style={{
                       opacity: activeStep === i ? 1 : 0.4,
-                      transform: activeStep === i ? 'scale(1)' : 'scale(0.95)',
+                      transform: activeStep === i ? "scale(1)" : "scale(0.95)",
                     }}
                   >
-                    <span className="text-[80px] font-bold leading-none mb-4" style={{ color: C.yellow, opacity: 0.3 }} aria-hidden="true">{s.num}</span>
-                    <h3 className="text-lg font-bold mb-2" style={{ color: C.dark }}>{s.title}</h3>
-                    <p className="leading-relaxed mb-4" style={{ color: C.textGray }}>{s.text}</p>
+                    <span
+                      className="text-[80px] font-bold leading-none mb-4"
+                      style={{ color: C.yellow, opacity: 0.3 }}
+                      aria-hidden="true"
+                    >
+                      {s.num}
+                    </span>
+                    <h3 className="text-lg font-bold mb-2" style={{ color: C.dark }}>
+                      {s.title}
+                    </h3>
+                    <p className="leading-relaxed mb-4" style={{ color: C.textGray }}>
+                      {s.text}
+                    </p>
                     {s.img && (
-                      <div className="rounded-xl overflow-hidden mt-2" style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.10)' }}>
-                        <div className="flex items-center gap-1.5 px-3 py-2" style={{ background: '#f0f0f0' }}>
-                          <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF5F57' }} />
-                          <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FEBC2E' }} />
-                          <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
+                      <div
+                        className="rounded-xl overflow-hidden mt-2"
+                        style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.10)" }}
+                      >
+                        <div className="flex items-center gap-1.5 px-3 py-2" style={{ background: "#f0f0f0" }}>
+                          <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#FF5F57" }} />
+                          <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#FEBC2E" }} />
+                          <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#28C840" }} />
                         </div>
                         <img src={s.img} alt={s.title} className="w-full h-auto" loading="lazy" />
                       </div>
@@ -654,46 +1024,119 @@ export default function MarketingPage() {
         <WaveDivider from={C.white} to={C.white} />
 
         {/* ─── 7. FÜR WEN ─── */}
-        <section id="fuer-wen" className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="audience-headline">
+        <section
+          id="fuer-wen"
+          className="py-20 md:py-28 px-6"
+          style={{ background: C.white }}
+          aria-labelledby="audience-headline"
+        >
           <div className="max-w-5xl mx-auto">
             <Reveal>
-              <h2 id="audience-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>
+              <h2
+                id="audience-headline"
+                className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16"
+                style={{ color: C.dark }}
+              >
                 Für Selbstständige. Für Dienstleister. Für alle.
               </h2>
             </Reveal>
             <div className="grid md:grid-cols-2 gap-6 items-stretch">
               <Reveal>
-                <article className="rounded-[18px] p-8 h-full flex flex-col" style={{ background: C.white, border: `1px solid ${C.border}` }}>
-                  <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-4" style={{ background: C.bgLight, color: C.dark }}>Solo-Plan</span>
-                  <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>Du willst deine Verfahrensdokumentation selbst erstellen</h3>
+                <article
+                  className="rounded-[18px] p-8 h-full flex flex-col"
+                  style={{ background: C.white, border: `1px solid ${C.border}` }}
+                >
+                  <span
+                    className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-4"
+                    style={{ background: C.bgLight, color: C.dark }}
+                  >
+                    Solo-Plan
+                  </span>
+                  <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>
+                    Du willst deine Verfahrensdokumentation selbst erstellen
+                  </h3>
                   <ul className="space-y-2 mb-8">
-                    {['Kein Steuerberater nötig', 'Einmalig zahlen, 12 Monate nutzen', 'Unbegrenzte Revisionen', 'Fertig in unter einer Stunde'].map(t => (
-                      <li key={t} className="flex items-center gap-2 text-[15px]" style={{ color: C.textGray }}><Check size={16} style={{ color: C.green }} /> {t}</li>
+                    {[
+                      "Kein Steuerberater nötig",
+                      "Einmalig zahlen, 12 Monate nutzen",
+                      "Unbegrenzte Revisionen",
+                      "Fertig in unter einer Stunde",
+                    ].map((t) => (
+                      <li key={t} className="flex items-center gap-2 text-[15px]" style={{ color: C.textGray }}>
+                        <Check size={16} style={{ color: C.green }} /> {t}
+                      </li>
                     ))}
                   </ul>
-                  <Link to="/fuer-selbststaendige" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Solo-Plan ansehen</Link>
-                  <div className="rounded-xl overflow-hidden mt-6 flex-1 flex flex-col" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-                    <div className="flex items-center gap-1.5 px-3 py-2 shrink-0" style={{ background: '#f0f0f0' }}>
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF5F57' }} />
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FEBC2E' }} />
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#28C840' }} />
+                  <Link
+                    to="/fuer-selbststaendige"
+                    className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200"
+                    style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: "12px 24px" }}
+                  >
+                    Solo-Plan ansehen
+                  </Link>
+                  <div
+                    className="rounded-xl overflow-hidden mt-6 flex-1 flex flex-col"
+                    style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}
+                  >
+                    <div className="flex items-center gap-1.5 px-3 py-2 shrink-0" style={{ background: "#f0f0f0" }}>
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#FF5F57" }} />
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#FEBC2E" }} />
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#28C840" }} />
                     </div>
-                    <img src={mockupSoloDashboard} alt="GoBD-Suite Solo Dashboard mit Projektfortschritt" className="w-full flex-1 object-cover object-top" loading="lazy" />
+                    <img
+                      src={mockupSoloDashboard}
+                      alt="GoBD-Suite Solo Dashboard mit Projektfortschritt"
+                      className="w-full flex-1 object-cover object-top"
+                      loading="lazy"
+                    />
                   </div>
                 </article>
               </Reveal>
               <Reveal delay={0.1}>
-                <article className="rounded-[18px] p-8 h-full flex flex-col" style={{ background: C.white, border: `1px solid ${C.border}`, borderTopWidth: 3, borderTopColor: C.yellow }}>
-                  <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-4" style={{ background: C.yellow, color: C.dark }}>Berater & Agentur</span>
-                  <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>Du willst Verfahrensdokumentationen als Dienstleistung anbieten</h3>
+                <article
+                  className="rounded-[18px] p-8 h-full flex flex-col"
+                  style={{
+                    background: C.white,
+                    border: `1px solid ${C.border}`,
+                    borderTopWidth: 3,
+                    borderTopColor: C.yellow,
+                  }}
+                >
+                  <span
+                    className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-4"
+                    style={{ background: C.yellow, color: C.dark }}
+                  >
+                    Berater & Agentur
+                  </span>
+                  <h3 className="text-xl font-bold mb-4" style={{ color: C.dark }}>
+                    Du willst Verfahrensdokumentationen als Dienstleistung anbieten
+                  </h3>
                   <ul className="space-y-2 mb-8">
-                    {['Mehrere Kunden verwalten', 'Whitelabel unter deinem Brand (Agentur)', 'Neue Einnahmequelle für dein Business', 'Kunden füllen selbst aus – du prüfst und finalisierst'].map(t => (
-                      <li key={t} className="flex items-center gap-2 text-[15px]" style={{ color: C.textGray }}><Check size={16} style={{ color: C.green }} /> {t}</li>
+                    {[
+                      "Mehrere Kunden verwalten",
+                      "Whitelabel unter deinem Brand (Agentur)",
+                      "Neue Einnahmequelle für dein Business",
+                      "Kunden füllen selbst aus – du prüfst und finalisierst",
+                    ].map((t) => (
+                      <li key={t} className="flex items-center gap-2 text-[15px]" style={{ color: C.textGray }}>
+                        <Check size={16} style={{ color: C.green }} /> {t}
+                      </li>
                     ))}
                   </ul>
-                  <Link to="/fuer-dienstleister" className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200" style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: '12px 24px' }}>Für Dienstleister</Link>
+                  <Link
+                    to="/fuer-dienstleister"
+                    className="inline-flex items-center justify-center gap-2 font-semibold text-[15px] transition-all duration-200"
+                    style={{ background: C.yellow, color: C.dark, borderRadius: 980, padding: "12px 24px" }}
+                  >
+                    Für Dienstleister
+                  </Link>
                   <div className="mt-6 flex-1 flex items-end">
-                    <img src={mockupLaptopOverview} alt="GoBD-Suite Berater-Übersicht auf einem Laptop" className="w-full h-auto" loading="lazy" />
+                    <img
+                      src={mockupLaptopOverview}
+                      alt="GoBD-Suite Berater-Übersicht auf einem Laptop"
+                      className="w-full h-auto"
+                      loading="lazy"
+                    />
                   </div>
                 </article>
               </Reveal>
@@ -705,34 +1148,75 @@ export default function MarketingPage() {
         <WaveDivider from={C.white} to={C.bgLight} />
 
         {/* ─── 8. FEATURES (4. glassmorphism cards, 8. gradient bg) ─── */}
-        <section style={{ background: `linear-gradient(180deg, ${C.bgLight} 0%, ${C.white} 100%)` }} className="py-20 md:py-28 px-6" aria-labelledby="features-headline">
+        <section
+          style={{ background: `linear-gradient(180deg, ${C.bgLight} 0%, ${C.white} 100%)` }}
+          className="py-20 md:py-28 px-6"
+          aria-labelledby="features-headline"
+        >
           <div className="max-w-6xl mx-auto">
             <Reveal>
-              <h2 id="features-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>
+              <h2
+                id="features-headline"
+                className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16"
+                style={{ color: C.dark }}
+              >
                 Alles was du brauchst. Nichts was du nicht brauchst.
               </h2>
             </Reveal>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { Icon: Sparkles, title: 'KI versteht deine Sprache', text: 'Du erzählst wie dein Business läuft – die KI schreibt den GoBD-konformen Text.' },
-                { Icon: FileText, title: '30 Kapitel automatisch abgedeckt', text: 'Alle GoBD-relevanten Bereiche werden vollständig dokumentiert.' },
-                { Icon: History, title: 'Automatische Versionierung', text: 'Jede Änderung wird mit Datum und Grund dokumentiert. Immer prüfungsbereit.' },
-                { Icon: Download, title: 'Professionelles PDF', text: 'Auf Knopfdruck. Mit Deckblatt, Inhaltsverzeichnis und Änderungshistorie.' },
-                { Icon: ShieldCheck, title: 'Negativvermerke inklusive', text: 'Nicht relevante Kapitel werden automatisch korrekt ausgeschlossen – kein leeres Kapitel.' },
-                { Icon: Palette, title: 'Whitelabel für Dienstleister', text: 'Dein Logo, dein Brand, deine Domain im PDF. Für Agentur-Kunden.' },
+                {
+                  Icon: Sparkles,
+                  title: "KI versteht deine Sprache",
+                  text: "Du erzählst wie dein Business läuft – die KI schreibt den GoBD-konformen Text.",
+                },
+                {
+                  Icon: FileText,
+                  title: "30 Kapitel automatisch abgedeckt",
+                  text: "Alle GoBD-relevanten Bereiche werden vollständig dokumentiert.",
+                },
+                {
+                  Icon: History,
+                  title: "Automatische Versionierung",
+                  text: "Jede Änderung wird mit Datum und Grund dokumentiert. Immer prüfungsbereit.",
+                },
+                {
+                  Icon: Download,
+                  title: "Professionelles PDF",
+                  text: "Auf Knopfdruck. Mit Deckblatt, Inhaltsverzeichnis und Änderungshistorie.",
+                },
+                {
+                  Icon: ShieldCheck,
+                  title: "Negativvermerke inklusive",
+                  text: "Nicht relevante Kapitel werden automatisch korrekt ausgeschlossen – kein leeres Kapitel.",
+                },
+                {
+                  Icon: Palette,
+                  title: "Whitelabel für Dienstleister",
+                  text: "Dein Logo, dein Brand, deine Domain im PDF. Für Agentur-Kunden.",
+                },
               ].map((f, i) => (
                 <Reveal key={i} delay={i * 0.08}>
                   <article className="rounded-[18px] p-8 h-full" style={{ ...glass }}>
                     <f.Icon size={28} className="mb-4" style={{ color: C.yellow }} aria-hidden="true" />
-                    <h3 className="text-lg font-bold mb-2" style={{ color: C.dark }}>{f.title}</h3>
-                    <p className="leading-relaxed text-[15px]" style={{ color: C.textGray }}>{f.text}</p>
+                    <h3 className="text-lg font-bold mb-2" style={{ color: C.dark }}>
+                      {f.title}
+                    </h3>
+                    <p className="leading-relaxed text-[15px]" style={{ color: C.textGray }}>
+                      {f.text}
+                    </p>
                   </article>
                 </Reveal>
               ))}
             </div>
             <Reveal delay={0.5}>
               <div className="mt-14 max-w-4xl mx-auto">
-                <img src={mockupLaptopPremium} alt="GoBD-Suite Dashboard auf einem Laptop – Berater-Übersicht mit Ampel-Status für alle Kapitel" className="w-full h-auto drop-shadow-2xl" loading="lazy" />
+                <img
+                  src={mockupLaptopPremium}
+                  alt="GoBD-Suite Dashboard auf einem Laptop – Berater-Übersicht mit Ampel-Status für alle Kapitel"
+                  className="w-full h-auto drop-shadow-2xl"
+                  loading="lazy"
+                />
               </div>
             </Reveal>
           </div>
@@ -742,38 +1226,58 @@ export default function MarketingPage() {
         <WaveDivider from={C.white} to={C.white} />
 
         {/* ─── 9. TESTIMONIALS (4. glassmorphism) ─── */}
-        <section className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="testimonials-headline">
+        <section
+          className="py-20 md:py-28 px-6"
+          style={{ background: C.white }}
+          aria-labelledby="testimonials-headline"
+        >
           <div className="max-w-5xl mx-auto">
             <Reveal>
-              <h2 id="testimonials-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16" style={{ color: C.dark }}>
+              <h2
+                id="testimonials-headline"
+                className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-16"
+                style={{ color: C.dark }}
+              >
                 Was andere Selbstständige sagen
               </h2>
             </Reveal>
             <div className="grid md:grid-cols-3 gap-6">
               {[
                 {
-                  quote: 'Ich hatte keine Ahnung dass ich eine Verfahrensdokumentation brauche. GoBD-Suite hat mir in 45 Minuten ein professionelles Dokument erstellt das ich direkt beim Finanzamt vorlegen kann.',
-                  name: 'Marcus T.',
-                  role: 'Freelance Designer, Berlin',
+                  quote:
+                    "Ich hatte keine Ahnung dass ich eine Verfahrensdokumentation brauche. GoBD-Suite hat mir in 45 Minuten ein professionelles Dokument erstellt das ich direkt beim Finanzamt vorlegen kann.",
+                  name: "Marcus T.",
+                  role: "Freelance Designer, Berlin",
                 },
                 {
-                  quote: 'Als Steuerberaterin empfehle ich meinen Kunden jetzt GoBD-Suite. Die Qualität der generierten Dokumente ist beeindruckend – und ich spare enorm viel Zeit.',
-                  name: 'Sandra K.',
-                  role: 'Steuerberaterin, München',
+                  quote:
+                    "Als Steuerberaterin empfehle ich meinen Kunden jetzt GoBD-Suite. Die Qualität der generierten Dokumente ist beeindruckend – und ich spare enorm viel Zeit.",
+                  name: "Sandra K.",
+                  role: "Steuerberaterin, München",
                 },
                 {
-                  quote: 'Der Agentur-Plan ist perfekt für mein Business. Ich erstelle jetzt Verfahrensdokumentationen für meine Kunden unter meinem eigenen Brand. Neue Einnahmequelle mit minimalem Aufwand.',
-                  name: 'Thomas R.',
-                  role: 'Marketing-Consultant, Hamburg',
+                  quote:
+                    "Der Agentur-Plan ist perfekt für mein Business. Ich erstelle jetzt Verfahrensdokumentationen für meine Kunden unter meinem eigenen Brand. Neue Einnahmequelle mit minimalem Aufwand.",
+                  name: "Thomas R.",
+                  role: "Marketing-Consultant, Hamburg",
                 },
               ].map((t, i) => (
                 <Reveal key={i} delay={i * 0.1}>
-                  <article className="rounded-[18px] p-8 h-full flex flex-col" style={{ ...glass, background: 'rgba(245, 245, 247, 0.7)' }}>
+                  <article
+                    className="rounded-[18px] p-8 h-full flex flex-col"
+                    style={{ ...glass, background: "rgba(245, 245, 247, 0.7)" }}
+                  >
                     <Stars />
-                    <p className="leading-relaxed flex-1 mb-6 text-[15px]" style={{ color: C.dark }}>"{t.quote}"</p>
+                    <p className="leading-relaxed flex-1 mb-6 text-[15px]" style={{ color: C.dark }}>
+                      "{t.quote}"
+                    </p>
                     <div>
-                      <p className="font-bold text-sm" style={{ color: C.dark }}>{t.name}</p>
-                      <p className="text-xs" style={{ color: C.textGray }}>{t.role}</p>
+                      <p className="font-bold text-sm" style={{ color: C.dark }}>
+                        {t.name}
+                      </p>
+                      <p className="text-xs" style={{ color: C.textGray }}>
+                        {t.role}
+                      </p>
                     </div>
                   </article>
                 </Reveal>
@@ -781,7 +1285,8 @@ export default function MarketingPage() {
             </div>
             <Reveal delay={0.3}>
               <p className="text-center text-xs mt-8" style={{ color: C.textGray, opacity: 0.7 }}>
-                * Die dargestellten Ergebnisse können variieren. Individuelle Ergebnisse hängen von verschiedenen Faktoren ab.
+                * Die dargestellten Ergebnisse können variieren. Individuelle Ergebnisse hängen von verschiedenen
+                Faktoren ab.
               </p>
             </Reveal>
           </div>
@@ -791,10 +1296,21 @@ export default function MarketingPage() {
         <WaveDivider from={C.white} to={C.bgLight} />
 
         {/* ─── 11. PREISE (8. gradient bg) ─── */}
-        <section id="preise" style={{ background: `linear-gradient(180deg, ${C.bgLight} 0%, ${C.white} 50%, ${C.bgLight} 100%)` }} className="py-20 md:py-28 px-6" aria-labelledby="pricing-headline">
+        <section
+          id="preise"
+          style={{ background: `linear-gradient(180deg, ${C.bgLight} 0%, ${C.white} 50%, ${C.bgLight} 100%)` }}
+          className="py-20 md:py-28 px-6"
+          aria-labelledby="pricing-headline"
+        >
           <div className="max-w-6xl mx-auto">
             <Reveal>
-              <h2 id="pricing-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-10" style={{ color: C.dark }}>Transparent. Fair. Skalierbar.</h2>
+              <h2
+                id="pricing-headline"
+                className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-10"
+                style={{ color: C.dark }}
+              >
+                Transparent. Fair. Skalierbar.
+              </h2>
             </Reveal>
             <Reveal delay={0.1}>
               <PricingToggleSection />
@@ -810,32 +1326,52 @@ export default function MarketingPage() {
           <div className="max-w-4xl mx-auto text-center">
             <Reveal>
               <Shield size={56} style={{ color: C.yellow }} className="mx-auto mb-6" aria-hidden="true" />
-              <h2 id="guarantee-headline" className="text-3xl md:text-[48px] font-bold leading-tight mb-14" style={{ color: C.dark }}>
+              <h2
+                id="guarantee-headline"
+                className="text-3xl md:text-[48px] font-bold leading-tight mb-14"
+                style={{ color: C.dark }}
+              >
                 Unsere Versprechen an dich
               </h2>
             </Reveal>
             <div className="grid md:grid-cols-2 gap-6">
               <Reveal>
-                <div className="rounded-[18px] p-8 h-full text-left" style={{ ...glass, background: 'rgba(245, 245, 247, 0.7)' }}>
+                <div
+                  className="rounded-[18px] p-8 h-full text-left"
+                  style={{ ...glass, background: "rgba(245, 245, 247, 0.7)" }}
+                >
                   <ThumbsUp size={28} style={{ color: C.yellow }} className="mb-4" aria-hidden="true" />
-                  <h3 className="text-xl font-bold mb-3" style={{ color: C.dark }}>100% Zufriedenheitsgarantie</h3>
+                  <h3 className="text-xl font-bold mb-3" style={{ color: C.dark }}>
+                    100% Zufriedenheitsgarantie
+                  </h3>
                   <p className="leading-relaxed mb-4" style={{ color: C.textGray }}>
-                    Wenn das Tool nicht das tut was es soll, es zu kompliziert ist oder technische Probleme auftreten die wir nicht lösen können – bekommst du dein Geld zurück. Melde dich einfach bei uns.
+                    Wenn das Tool nicht das tut was es soll, es zu kompliziert ist oder technische Probleme auftreten
+                    die wir nicht lösen können – bekommst du dein Geld zurück. Melde dich einfach bei uns.
                   </p>
                   <p className="text-xs leading-relaxed max-w-[300px]" style={{ color: C.textGray, opacity: 0.7 }}>
-                    Die Garantie gilt für technische Mängel und Funktionsprobleme – nicht für bereits fertig erstellte Verfahrensdokumentationen.
+                    Die Garantie gilt für technische Mängel und Funktionsprobleme – nicht für bereits fertig erstellte
+                    Verfahrensdokumentationen.
                   </p>
                 </div>
               </Reveal>
               <Reveal delay={0.1}>
-                <div className="rounded-[18px] p-8 h-full text-left" style={{ ...glass, background: 'rgba(245, 245, 247, 0.7)' }}>
+                <div
+                  className="rounded-[18px] p-8 h-full text-left"
+                  style={{ ...glass, background: "rgba(245, 245, 247, 0.7)" }}
+                >
                   <ShieldCheck size={28} style={{ color: C.yellow }} className="mb-4" aria-hidden="true" />
-                  <h3 className="text-xl font-bold mb-3" style={{ color: C.dark }}>GoBD-konforme Struktur. Deine Verantwortung.</h3>
+                  <h3 className="text-xl font-bold mb-3" style={{ color: C.dark }}>
+                    GoBD-konforme Struktur. Deine Verantwortung.
+                  </h3>
                   <p className="leading-relaxed mb-4" style={{ color: C.textGray }}>
-                    GoBD-Suite erstellt dein Dokument nach der aktuellen GoBD-Struktur Stand 2025. Die inhaltliche Richtigkeit hängt von deinen Angaben ab. Prüfe den generierten Text und passe ihn an deine tatsächlichen Abläufe an – du bist als Unternehmer verantwortlich für den Inhalt deiner Verfahrensdokumentation.
+                    GoBD-Suite erstellt dein Dokument nach der aktuellen GoBD-Struktur Stand 2025. Die inhaltliche
+                    Richtigkeit hängt von deinen Angaben ab. Prüfe den generierten Text und passe ihn an deine
+                    tatsächlichen Abläufe an – du bist als Unternehmer verantwortlich für den Inhalt deiner
+                    Verfahrensdokumentation.
                   </p>
                   <p className="text-xs leading-relaxed" style={{ color: C.textGray, opacity: 0.7 }}>
-                    GoBD-Suite übernimmt keine Haftung für die steuerliche Anerkennung deiner Verfahrensdokumentation. Das Tool ersetzt keine steuerliche Beratung.
+                    GoBD-Suite übernimmt keine Haftung für die steuerliche Anerkennung deiner Verfahrensdokumentation.
+                    Das Tool ersetzt keine steuerliche Beratung.
                   </p>
                 </div>
               </Reveal>
@@ -849,7 +1385,7 @@ export default function MarketingPage() {
             <p className="text-2xl md:text-3xl font-bold leading-tight mb-4" style={{ color: C.white }}>
               Jede Woche ohne Verfahrensdokumentation ist ein vermeidbares Risiko.
             </p>
-            <p className="text-lg mb-10" style={{ color: 'rgba(255,255,255,0.8)' }}>
+            <p className="text-lg mb-10" style={{ color: "rgba(255,255,255,0.8)" }}>
               Das Finanzamt wartet nicht. Deine Verfahrensdokumentation kann heute fertig sein.
             </p>
             <PrimaryBtn to="/test-starten">Jetzt in 60 Minuten absichern</PrimaryBtn>
@@ -863,17 +1399,44 @@ export default function MarketingPage() {
         <section className="py-20 md:py-28 px-6" style={{ background: C.white }} aria-labelledby="faq-headline">
           <div className="max-w-3xl mx-auto">
             <Reveal>
-              <h2 id="faq-headline" className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-14" style={{ color: C.dark }}>Häufige Fragen</h2>
+              <h2
+                id="faq-headline"
+                className="text-3xl md:text-[48px] font-bold text-center leading-tight mb-14"
+                style={{ color: C.dark }}
+              >
+                Häufige Fragen
+              </h2>
             </Reveal>
             <Reveal delay={0.1}>
               <div>
-                <FaqItem q="Brauche ich das wirklich?" a="Ja – und zwar seit 2014. Die GoBD verpflichten alle Unternehmen die digital buchen zur Verfahrensdokumentation. Seit 2025 wird das aktiv bei Betriebsprüfungen kontrolliert. Wer keine hat, riskiert dass das Finanzamt seine gesamte digitale Buchführung als nicht ordnungsgemäß einstuft – und schätzt statt prüft. Das bedeutet fast immer Nachzahlungen. Mit GoBD-Suite bist du in unter einer Stunde abgesichert." />
-                <FaqItem q="Ist das nicht Aufgabe meines Steuerberaters?" a="Nein. Die Verfahrensdokumentation muss das Unternehmen selbst erstellen, weil sie deine internen Abläufe beschreibt – nicht die des Steuerberaters. Dein Steuerberater kann beraten, aber erstellen musst du sie. GoBD-Suite führt dich Schritt für Schritt durch den gesamten Prozess." />
-                <FaqItem q="Das klingt kompliziert." a="Genau dafür wurde GoBD-Suite entwickelt. Du beantwortest Fragen in normaler Sprache – so wie du einem Freund erklärst wie dein Business läuft. Die KI übernimmt die fachliche Aufbereitung. Die meisten Nutzer sind in unter einer Stunde fertig. Teste es 7 Tage kostenlos und überzeuge dich selbst." />
-                <FaqItem q="Was wenn sich mein Prozess ändert?" a="Einfach das entsprechende Kapitel aktualisieren. Alle Änderungen werden automatisch mit Datum, Versionsnummer und Änderungsgrund dokumentiert. So bist du immer auf dem neuesten Stand – und kannst bei einer Prüfung lückenlos nachweisen was sich wann geändert hat." />
-                <FaqItem q="Kann ich das Tool kostenlos testen?" a="Ja. Du kannst GoBD-Suite 7 Tage lang kostenlos und ohne Kreditkarte testen. Du siehst die vollständige Struktur und kannst zwei Kapitel mit KI-Unterstützung ausprobieren. Starte jetzt – es dauert 2 Minuten." />
-                <FaqItem q="Was ist der Unterschied zwischen Berater und Agentur?" a="Der Berater-Plan ist für bis zu 5 Kunden ohne Whitelabel – ideal zum Einstieg als Dienstleister. Der Agentur-Plan bietet unbegrenzte Kunden und vollständiges Whitelabel: dein Logo, dein Brand, deine Domain im PDF. Upgrade jederzeit möglich." />
-                <FaqItem q="Wann gilt die Zufriedenheitsgarantie?" a="Wenn das Tool technische Probleme hat, nicht das tut was es soll oder zu kompliziert ist und wir das Problem nicht lösen können – bekommst du dein Geld zurück. Melde dich einfach bei uns. Die Garantie gilt nicht für bereits vollständig erstellte Verfahrensdokumentationen, da die Leistung dann erbracht wurde." />
+                <FaqItem
+                  q="Brauche ich das wirklich?"
+                  a="Ja – und zwar seit 2014. Die GoBD verpflichten alle Unternehmen die digital buchen zur Verfahrensdokumentation. Seit 2025 wird das aktiv bei Betriebsprüfungen kontrolliert. Wer keine hat, riskiert dass das Finanzamt seine gesamte digitale Buchführung als nicht ordnungsgemäß einstuft – und schätzt statt prüft. Das bedeutet fast immer Nachzahlungen. Mit GoBD-Suite bist du in unter einer Stunde abgesichert."
+                />
+                <FaqItem
+                  q="Ist das nicht Aufgabe meines Steuerberaters?"
+                  a="Nein. Die Verfahrensdokumentation muss das Unternehmen selbst erstellen, weil sie deine internen Abläufe beschreibt – nicht die des Steuerberaters. Dein Steuerberater kann beraten, aber erstellen musst du sie. GoBD-Suite führt dich Schritt für Schritt durch den gesamten Prozess."
+                />
+                <FaqItem
+                  q="Das klingt kompliziert."
+                  a="Genau dafür wurde GoBD-Suite entwickelt. Du beantwortest Fragen in normaler Sprache – so wie du einem Freund erklärst wie dein Business läuft. Die KI übernimmt die fachliche Aufbereitung. Die meisten Nutzer sind in unter einer Stunde fertig. Teste es 7 Tage kostenlos und überzeuge dich selbst."
+                />
+                <FaqItem
+                  q="Was wenn sich mein Prozess ändert?"
+                  a="Einfach das entsprechende Kapitel aktualisieren. Alle Änderungen werden automatisch mit Datum, Versionsnummer und Änderungsgrund dokumentiert. So bist du immer auf dem neuesten Stand – und kannst bei einer Prüfung lückenlos nachweisen was sich wann geändert hat."
+                />
+                <FaqItem
+                  q="Kann ich das Tool kostenlos testen?"
+                  a="Ja. Du kannst GoBD-Suite 7 Tage lang kostenlos und ohne Kreditkarte testen. Du siehst die vollständige Struktur und kannst zwei Kapitel mit KI-Unterstützung ausprobieren. Starte jetzt – es dauert 2 Minuten."
+                />
+                <FaqItem
+                  q="Was ist der Unterschied zwischen Berater und Agentur?"
+                  a="Der Berater-Plan ist für bis zu 5 Kunden ohne Whitelabel – ideal zum Einstieg als Dienstleister. Der Agentur-Plan bietet unbegrenzte Kunden und vollständiges Whitelabel: dein Logo, dein Brand, deine Domain im PDF. Upgrade jederzeit möglich."
+                />
+                <FaqItem
+                  q="Wann gilt die Zufriedenheitsgarantie?"
+                  a="Wenn das Tool technische Probleme hat, nicht das tut was es soll oder zu kompliziert ist und wir das Problem nicht lösen können – bekommst du dein Geld zurück. Melde dich einfach bei uns. Die Garantie gilt nicht für bereits vollständig erstellte Verfahrensdokumentationen, da die Leistung dann erbracht wurde."
+                />
               </div>
             </Reveal>
           </div>
@@ -881,38 +1444,87 @@ export default function MarketingPage() {
       </main>
 
       {/* ─── 15. FOOTER ─── */}
-      <footer className="py-16 px-6" style={{ background: C.dark, color: 'rgba(255,255,255,0.7)' }}>
+      <footer className="py-16 px-6" style={{ background: C.dark, color: "rgba(255,255,255,0.7)" }}>
         <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <img src="/images/logo-light.png" alt="GoBD-Suite Logo" className="h-10 w-auto mb-4" loading="lazy" />
-            <p className="text-sm leading-relaxed">Die erste vollständige Verfahrensdokumentations-Lösung für Selbstständige und Dienstleister im DACH-Raum.</p>
+            <p className="text-sm leading-relaxed">
+              Die erste vollständige Verfahrensdokumentations-Lösung für Selbstständige und Dienstleister im DACH-Raum.
+            </p>
           </div>
           <div>
-            <h4 className="font-semibold mb-4" style={{ color: C.white }}>Produkt</h4>
+            <h4 className="font-semibold mb-4" style={{ color: C.white }}>
+              Produkt
+            </h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#funktionen" className="hover:text-white transition-colors">Funktionen</a></li>
-              <li><a href="#preise" className="hover:text-white transition-colors">Preise</a></li>
-              <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-              <li><Link to="/partner" className="hover:text-white transition-colors">Partner werden</Link></li>
-              <li><Link to="/test-starten" className="hover:text-white transition-colors">Kostenlos testen</Link></li>
+              <li>
+                <a href="#funktionen" className="hover:text-white transition-colors">
+                  Funktionen
+                </a>
+              </li>
+              <li>
+                <a href="#preise" className="hover:text-white transition-colors">
+                  Preise
+                </a>
+              </li>
+              <li>
+                <Link to="/blog" className="hover:text-white transition-colors">
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link to="/partner" className="hover:text-white transition-colors">
+                  Partner werden
+                </Link>
+              </li>
+              <li>
+                <Link to="/test-starten" className="hover:text-white transition-colors">
+                  Kostenlos testen
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-4" style={{ color: C.white }}>Rechtliches</h4>
+            <h4 className="font-semibold mb-4" style={{ color: C.white }}>
+              Rechtliches
+            </h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/impressum" className="hover:text-white transition-colors">Impressum</Link></li>
-              <li><Link to="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link></li>
-              <li><Link to="/agb" className="hover:text-white transition-colors">AGB</Link></li>
-              <li><Link to="/avv" className="hover:text-white transition-colors">AVV</Link></li>
-              <li><CookieSettingsButton /></li>
+              <li>
+                <Link to="/impressum" className="hover:text-white transition-colors">
+                  Impressum
+                </Link>
+              </li>
+              <li>
+                <Link to="/datenschutz" className="hover:text-white transition-colors">
+                  Datenschutz
+                </Link>
+              </li>
+              <li>
+                <Link to="/agb" className="hover:text-white transition-colors">
+                  AGB
+                </Link>
+              </li>
+              <li>
+                <Link to="/avv" className="hover:text-white transition-colors">
+                  AVV
+                </Link>
+              </li>
+              <li>
+                <CookieSettingsButton />
+              </li>
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-4" style={{ color: C.white }}>Kontakt</h4>
+            <h4 className="font-semibold mb-4" style={{ color: C.white }}>
+              Kontakt
+            </h4>
             <p className="text-sm">info@gobd-suite.de</p>
           </div>
         </div>
-        <div className="max-w-6xl mx-auto mt-12 pt-8 text-center text-xs" style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>
+        <div
+          className="max-w-6xl mx-auto mt-12 pt-8 text-center text-xs"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.15)" }}
+        >
           © {new Date().getFullYear()} GoBD-Suite · Alle Rechte vorbehalten
         </div>
       </footer>
