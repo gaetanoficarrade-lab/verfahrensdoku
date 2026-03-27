@@ -105,43 +105,7 @@ function CtaButton({ large = false }: { large?: boolean }) {
 /* ════════════════════════════════════════════════════════════════════ */
 
 export default function AngebotPage() {
-  useSEO({
-    title: "GoBD-Suite für Dienstleister – Verfahrensdokumentation als Service anbieten",
-    description:
-      "Verfahrensdokumentation als Dienstleistung anbieten. KI-gestützt, GoBD-konform, White-Label-fähig. 7 Tage kostenlos testen.",
-    canonical: "https://gobd-suite.de/angebot",
-    robots: "index, follow",
-    ogTitle: "GoBD-Suite für Dienstleister – Verfahrensdokumentation als Service",
-    ogDescription: "Verfahrensdokumentation als Dienstleistung anbieten. KI-gestützt, GoBD-konform, White-Label-fähig.",
-    ogImage: "https://gobd-suite.de/og-angebot.png",
-    ogUrl: "https://gobd-suite.de/angebot",
-    ogType: "website",
-    ogLocale: "de_DE",
-    twitterCard: "summary_large_image",
-    twitterImage: "https://gobd-suite.de/og-angebot.png",
-    twitterTitle: "GoBD-Suite für Dienstleister – Verfahrensdokumentation als Service anbieten",
-    twitterDescription: "Verfahrensdokumentation als Dienstleistung anbieten. KI-gestützt, GoBD-konform, White-Label-fähig. 7 Tage kostenlos testen.",
-    jsonLd: [{
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Startseite",
-          item: "https://gobd-suite.de",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Für Dienstleister",
-          item: "https://gobd-suite.de/angebot",
-        },
-      ],
-    }],
-  });
-
-  // Zusätzliches JSON-LD Schema für SoftwareApplication
+  // JSON-LD Schema für SoftwareApplication
   const applicationSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -157,10 +121,49 @@ export default function AngebotPage() {
     },
   };
 
+  // Call useSEO on top level with applicationSchema in jsonLd ✅
+  useSEO({
+    title: "GoBD-Suite für Dienstleister – Verfahrensdokumentation als Service anbieten",
+    description:
+      "Verfahrensdokumentation als Dienstleistung anbieten. KI-gestützt, GoBD-konform, White-Label-fähig. 7 Tage kostenlos testen.",
+    canonical: "https://gobd-suite.de/angebot",
+    robots: "index, follow",
+    ogTitle: "GoBD-Suite für Dienstleister – Verfahrensdokumentation als Service",
+    ogDescription: "Verfahrensdokumentation als Dienstleistung anbieten. KI-gestützt, GoBD-konform, White-Label-fähig.",
+    ogImage: "https://gobd-suite.de/og-angebot.png",
+    ogUrl: "https://gobd-suite.de/angebot",
+    ogType: "website",
+    ogLocale: "de_DE",
+    twitterCard: "summary_large_image",
+    twitterImage: "https://gobd-suite.de/og-angebot.png",
+    twitterTitle: "GoBD-Suite für Dienstleister – Verfahrensdokumentation als Service anbieten",
+    twitterDescription:
+      "Verfahrensdokumentation als Dienstleistung anbieten. KI-gestützt, GoBD-konform, White-Label-fähig. 7 Tage kostenlos testen.",
+    jsonLd: [
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Startseite",
+            item: "https://gobd-suite.de",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Für Dienstleister",
+            item: "https://gobd-suite.de/angebot",
+          },
+        ],
+      },
+      applicationSchema,
+    ],
+  });
+
   return (
     <div style={{ color: dark }} className="min-h-screen antialiased selection:bg-[#e8a91a]/20">
-      <script type="application/ld+json">{JSON.stringify(applicationSchema)}</script>
-
       {/* ── Navbar ── */}
       <nav
         className="fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl border-b"
