@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
-Allow: /blog
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /clients
@@ -11,5 +10,4 @@ Disallow: /register
 Disallow: /set-password
 Disallow: /client-register
 Disallow: /client
-
 Sitemap: https://gobd-suite.de/sitemap.xml
